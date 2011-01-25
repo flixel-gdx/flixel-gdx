@@ -27,10 +27,6 @@ public class FlxSound extends FlxObject
 	
 	protected boolean _init;
 	protected MediaPlayer _mediaPlayer;
-	//protected var _sound:Sound;
-	//protected var _channel:SoundChannel;
-	//protected var _transform:SoundTransform;
-	//protected float _position;
 	protected float _volume;
 	protected float _volumeAdjust;
 	protected boolean _looped;
@@ -52,7 +48,6 @@ public class FlxSound extends FlxObject
 	{
 		super();
 		_point2 = new FlxPoint();
-		//_transform = new SoundTransform();
 		init();
 		setFixed(true); //no movement usually
 	}
@@ -62,9 +57,6 @@ public class FlxSound extends FlxObject
 	 */
 	protected void init()
 	{
-		//_transform.pan = 0;
-		//_sound = null;
-		//_position = 0;
 		_volume = 1.0f;
 		_volumeAdjust = 1.0f;
 		_looped = false;
@@ -105,6 +97,13 @@ public class FlxSound extends FlxObject
 		return this;
 	}
 	
+	/**
+	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
+	 * 
+	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
+	 * 
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSound loadEmbedded(int EmbeddedSound)
 	{
 		return loadEmbedded(EmbeddedSound, false);
@@ -148,6 +147,13 @@ public class FlxSound extends FlxObject
 		return this;
 	}
 	
+	/**
+	 * One of two main setup functions for sounds, this function loads a sound from a URL.
+	 * 
+	 * @param	EmbeddedSound	A string representing the URL of the MP3 file you want to play.
+	 * 
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSound loadStream(String SoundURL)
 	{
 		return loadStream(SoundURL, false);
@@ -162,6 +168,7 @@ public class FlxSound extends FlxObject
 	 * @param	Y		The Y position of the sound.
 	 * @param	Core	The object you want to track.
 	 * @param	Radius	The maximum distance this sound can travel.
+	 * @param	Pan
 	 * 
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -175,6 +182,17 @@ public class FlxSound extends FlxObject
 		return this;
 	}
 	
+	/**
+	 * Call this function if you want this sound's volume to change
+	 * based on distance from a particular FlxCore object.
+	 * 
+	 * @param	X		The X position of the sound.
+	 * @param	Y		The Y position of the sound.
+	 * @param	Core	The object you want to track.
+	 * @param	Radius	The maximum distance this sound can travel.
+	 * 
+	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSound proximity(float X, float Y, FlxObject Core, float Radius)
 	{
 		return proximity(X, Y, Core, Radius, true);
@@ -227,6 +245,11 @@ public class FlxSound extends FlxObject
 		_fadeOutTotal = _fadeOutTimer;
 	}
 	
+	/**
+	 * Call this function to make this sound fade out over a certain time interval.
+	 * 
+	 * @param	Seconds			The amount of time the fade out operation should take.
+	 */
 	public void fadeOut(float Seconds)
 	{
 		fadeOut(Seconds, false);
@@ -248,7 +271,8 @@ public class FlxSound extends FlxObject
 	}
 	
 	/**
-	 * Set <code>volume</code> to a value between 0 and 1 to change how this sound is.
+	 * 
+	 * @return get the volume.
 	 */
 	public float getVolume()
 	{
@@ -256,7 +280,7 @@ public class FlxSound extends FlxObject
 	}
 	
 	/**
-	 * @private
+	 * Set <code>volume</code> to a value between 0 and 1 to change how this sound is.
 	 */
 	public void setVolume(float Volume)
 	{
@@ -360,6 +384,9 @@ public class FlxSound extends FlxObject
 		_mediaPlayer.setVolume(volume * panLeft, volume * panRight);
 	}
 	
+	/**
+	 * An internal helper function used to help the game resume playing a looped sound.
+	 */
 	private OnCompletionListener stopped = new OnCompletionListener()
 	{
 		@Override

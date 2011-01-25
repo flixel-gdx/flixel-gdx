@@ -4,6 +4,13 @@ import java.util.ArrayList;
 
 import org.flixel.data.FlxList;
 
+/**
+ * A fairly generic quad tree structure for rapid overlap checks.
+ * FlxQuadTree is also configured for single or dual list operation.
+ * You can add items either to its A list or its B list.
+ * When you do an overlap check, you can compare the A list to itself,
+ * or the A list against the B list.  Handy for different things!
+ */
 public class FlxQuadTree extends FlxRect
 {
 	/**
@@ -71,12 +78,29 @@ public class FlxQuadTree extends FlxRect
 	static protected int _oa;
 	static protected FlxOverlapListener _oc;
 
+	/**
+	 * Instantiate a new Quad Tree node.
+	 * 
+	 * @param	X			The X-coordinate of the point in space.
+	 * @param	Y			The Y-coordinate of the point in space.
+	 * @param	Width		Desired width of this node.
+	 * @param	Height		Desired height of this node.
+	 * @param	Parent		The parent branch or node.  Pass null to create a root.
+	 */
 	public FlxQuadTree(float X, float Y, int Width, int Height, FlxQuadTree Parent)
 	{
 		super(X, Y, Width, Height);
 		constructor(X, Y, Width, Height, Parent);	
 	}
 	
+	/**
+	 * Instantiate a new Quad Tree node.
+	 * 
+	 * @param	X			The X-coordinate of the point in space.
+	 * @param	Y			The Y-coordinate of the point in space.
+	 * @param	Width		Desired width of this node.
+	 * @param	Height		Desired height of this node.
+	 */
 	public FlxQuadTree(float X, float Y, int Width, int Height)
 	{
 		super(X, Y, Width, Height);
@@ -453,6 +477,11 @@ public class FlxQuadTree extends FlxRect
 		return c;
 	}
 	
+	/**
+	 * An internal function for comparing an object against the contents of a node.
+	 * 
+	 * @return	Whether or not any overlaps were found.
+	 */
 	protected boolean overlapNode()
 	{
 		return overlapNode(null);

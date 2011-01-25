@@ -41,12 +41,27 @@ public class FlxText extends FlxSprite
 		constructor(X, Y, Width, Text, EmbeddedFont);
 	}
 
+	/**
+	 * Creates a new <code>FlxText</code> object at the specified position.
+	 * 
+	 * @param	X				The X position of the text.
+	 * @param	Y				The Y position of the text.
+	 * @param	Width			The width of the text object (height is determined automatically).
+	 * @param	Text			The actual text you would like to display initially.
+	 */
 	public FlxText(int X, int Y, int Width, String Text)
 	{
 		super(X, Y);
 		constructor(X, Y, Width, Text, true);
 	}
 	
+	/**
+	 * Creates a new <code>FlxText</code> object at the specified position.
+	 * 
+	 * @param	X				The X position of the text.
+	 * @param	Y				The Y position of the text.
+	 * @param	Width			The width of the text object (height is determined automatically).
+	 */
 	public FlxText(int X, int Y, int Width)
 	{
 		super(X, Y);
@@ -99,41 +114,84 @@ public class FlxText extends FlxSprite
 		return this;
 	}
 	
+	/**
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
+	 * 
+	 * @param	Font		The name of the font face for the text display.
+	 * @param	Size		The size of the font (in pixels essentially).
+	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
+	 * @param	Alignment	A int representing the desired alignment (Gravity.right e.g.);
+	 * 
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxText setFormat(String Font, float Size, int Color, Align Alignment)
 	{
 		return setFormat(Font, Size, Color, Alignment, 0xFFFFFF);
 	}
 	
+	/**
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
+	 * 
+	 * @param	Font		The name of the font face for the text display.
+	 * @param	Size		The size of the font (in pixels essentially).
+	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
+	 * 
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxText setFormat(String Font, float Size, int Color)
 	{
 		return setFormat(Font, Size, Color, Align.LEFT, 0xFFFFFF);
 	}
 	
+	/**
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
+	 * 
+	 * @param	Font		The name of the font face for the text display.
+	 * @param	Size		The size of the font (in pixels essentially).
+	 * 
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxText setFormat(String Font, float Size)
 	{
 		return setFormat(Font, Size, 0xFFFFFF, Align.LEFT, 0xFFFFFF);
 	}
 	
+	/**
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
+	 * 
+	 * @param	Font		The name of the font face for the text display.
+	 * 
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxText setFormat(String Font)
 	{
 		return setFormat(Font, 8, 0xFFFFFF, Align.LEFT, 0xFFFFFF);
 	}
 	
+	/**
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
+	 * 
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxText setFormat()
 	{
 		return setFormat(null, 8, 0xFFFFFF, Align.LEFT, 0xFFFFFF);
 	}
 	
-	/**
-	 * The text being displayed.
-	 */
+	
 	public String getText()
 	{
 		return _text;
 	}
 	
 	/**
-	 * @private
+	 * The text being displayed.
+	 * @param Text
 	 */
 	public void setText(String Text)
 	{
@@ -146,17 +204,15 @@ public class FlxText extends FlxSprite
 		}
 	}
 	
-	
-	/**
-	 * The size of the text being displayed.
-	 */
+		
 	 public float getSize()
 	{
 		return _textSize;
 	}
 
 	/**
-	 * @private
+	 * The size of the text being displayed.
+	 * @param Size
 	 */
 	public void setSize(float Size)
 	{
@@ -166,9 +222,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	
-	/**
-	 * The color of the text being displayed.
-	 */
+	
 	@Override
 	public int getColor()
 	{
@@ -176,7 +230,8 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * @private
+	 * The color of the text being displayed.
+	 * @param Color
 	 */
 	@Override
 	public void setColor(int Color)
@@ -186,9 +241,7 @@ public class FlxText extends FlxSprite
 		calcFrame();
 	}
 	
-	/**
-	 * The font used for this text.
-	 */
+	
 	public String getFont()
 	{
 		return _font.toString();
@@ -196,7 +249,8 @@ public class FlxText extends FlxSprite
 	 
 	
 	/**
-	 * @private
+	 * The font used for this text.
+	 * @param Font
 	 */
 	public void setFont(String Font)
 	{
@@ -205,16 +259,14 @@ public class FlxText extends FlxSprite
 		calcFrame();
 	}
 	
-	/**
-	 * The alignment of the font ("left", "right", or "center").
-	 */
+	
 	public Align getAlignment()
 	{
 		return _align;
 	}
 	
 	/**
-	 * @private
+	 * The alignment of the font ("Align.LEFT", "Align.RIGHT", or "Align.CENTER").
 	 */
 	public void setAlignment(Align Alignment)
 	{
@@ -222,16 +274,15 @@ public class FlxText extends FlxSprite
 		calcFrame();
 	}
 	
-	/**
-	 * The alignment of the font ("left", "right", or "center").
-	 */
+	
 	public int getShadow()
 	{
 		return _shadow;
 	}
 	
 	/**
-	 * @private
+	 * The color of the shadow.
+	 * @param Color
 	 */
 	public void setShadow(int Color)
 	{

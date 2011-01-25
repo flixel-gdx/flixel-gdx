@@ -3,7 +3,9 @@ package org.flixel.data;
 import android.view.MotionEvent;
 
 
-
+/**
+ * This class helps contain and track the touch pointer in your game.
+ */
 public class FlxTouch
 {
 	/**
@@ -49,27 +51,44 @@ public class FlxTouch
 		_last = 0;
 	}
 	
+	/**
+	 * Check to see if the screen is pressed.
+	 * 
+	 * @return	Whether the screen is pressed.
+	 */
 	public boolean pressed()
 	{
 		return _current > 0;
 	}
 	
+	/**
+	 * Check to see if the screen was just pressed.
+	 * 
+	 * @return Whether the screen was just pressed.
+	 */
 	public boolean justTouched()
 	{
 		return _current == 2;
 	}
 	
+	/**
+	 * Check to see if the screen was just released.
+	 * 
+	 * @return	Whether the screen was just released.
+	 */
 	public boolean justRemoved()
 	{
 		return _current == -1;
 	}
 	
+	/**
+	 * Event handler so FlxGame can toggle the touch.
+	 * @param event A <code>MotionEvent</code> object.
+	 */
 	public void handleTouchDown(MotionEvent event)
 	{
 		x = event.getX();
 		y = event.getY();
-		//Log.i("coordinates", Float.toString(x) + " : " + Float.toString(y));
-		//Log.i("coordinates", Float.toString(x/1.5f) + " : " + Float.toString(y/1.5f));
 		
 		if(_current > 0) 
 			_current = 1;
@@ -77,7 +96,10 @@ public class FlxTouch
 			_current = 2;
 	}
 	
-	
+	/**
+	 * Event handler so FlxGame can toggle the touch.
+	 * @param event A <code>MotionEvent</code> object.
+	 */
 	public void handleTouchRemove(MotionEvent event)
 	{
 		x = event.getX();

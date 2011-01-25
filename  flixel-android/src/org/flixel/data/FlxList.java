@@ -2,6 +2,11 @@ package org.flixel.data;
 
 import org.flixel.FlxObject;
 
+/**
+ * The world's smallest linked list class.
+ * Useful for optimizing time-critical or highly repetitive tasks!
+ * See <code>FlxQuadTree</code> for how to use it, IF YOU DARE.
+ */
 public class FlxList
 {
 	/**

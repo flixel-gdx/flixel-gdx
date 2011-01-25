@@ -5,7 +5,6 @@ import android.view.SurfaceHolder;
 
 
 /**
- * @author Ka Wing Chin
  * This should not be created except by FlxGameView. It should be an inner class actually.
  */
 public class FlxThread extends Thread

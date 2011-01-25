@@ -1,5 +1,8 @@
 package org.flixel;
 
+/**
+ * Stores a rectangle.
+ */
 public class FlxRect extends FlxPoint
 {
 	/**
@@ -26,12 +29,36 @@ public class FlxRect extends FlxPoint
 		constructor(X, Y, Width, Height);
 	}
 	
-	public FlxRect(int X, int Y)
+	/**
+	 * Instantiate a new rectangle.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	Width	Desired width of the rectangle.
+	 */
+	public FlxRect(float X, float Y, int Width)
+	{
+		super(X, Y);
+		constructor(X, Y, Width, 0);
+	}
+	
+	/**
+	 * Instantiate a new rectangle.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	Width	Desired width of the rectangle.
+	 * @param	Height	Desired height of the rectangle.
+	 */
+	public FlxRect(float X, float Y)
 	{
 		super(X, Y);
 		constructor(X, Y, 0, 0);
 	}
 	
+	/**
+	 * Instantiate a new rectangle.
+	 */
 	public FlxRect()
 	{
 		super();

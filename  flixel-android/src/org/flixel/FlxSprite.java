@@ -12,6 +12,9 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+/**
+ * The main "game object" class, handles basic physics and animation.
+ */	
 public class FlxSprite extends FlxObject
 {
 	
@@ -116,12 +119,35 @@ public class FlxSprite extends FlxObject
 		constructor(X, Y, SimpleGraphic);
 	}
 	
+	/**
+	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
+	 * Optionally can load a simple, one-frame graphic instead.
+	 * 
+	 * @param	X				The initial X position of the sprite.
+	 * @param	Y				The initial Y position of the sprite.
+	 */
 	public FlxSprite(float X, float Y)
 	{		
 		super();
 		constructor(X, Y, null);
 	}
 	
+	/**
+	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
+	 * Optionally can load a simple, one-frame graphic instead.
+	 * 
+	 * @param	X				The initial X position of the sprite.
+	 */
+	public FlxSprite(float X)
+	{		
+		super();
+		constructor(X, 0, null);
+	}
+	
+	/**
+	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
+	 * Optionally can load a simple, one-frame graphic instead.
+	 */
 	public FlxSprite()
 	{
 		super();
@@ -211,21 +237,59 @@ public class FlxSprite extends FlxObject
 		return this;
 	}
 	
+	/**
+	 * Load an image from an embedded graphic file.
+	 * 
+	 * @param	Graphic		The image you want to use.
+	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
+	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
+	 * @param	Width		OPTIONAL - Specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
+	 * @param	Height		OPTIONAL - Specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite loadGraphic(int Graphic, boolean Animated, boolean Reverse, int Width, int Height)
 	{
 		return loadGraphic(Graphic, Animated, Reverse, Width, Height, false);
 	}
 	
+	/**
+	 * Load an image from an embedded graphic file.
+	 * 
+	 * @param	Graphic		The image you want to use.
+	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
+	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
+	 * @param	Width		OPTIONAL - Specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite loadGraphic(int Graphic, boolean Animated, boolean Reverse, int Width)
 	{
 		return loadGraphic(Graphic, Animated, Reverse, Width, 0, false);
 	}
 	
+	/**
+	 * Load an image from an embedded graphic file.
+	 * 
+	 * @param	Graphic		The image you want to use.
+	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
+	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
+		 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite loadGraphic(int Graphic, boolean Animated, boolean Reverse)
 	{
 		return loadGraphic(Graphic, Animated, Reverse, 0, 0, false);
 	}
 	
+	/**
+	 * Load an image from an embedded graphic file.
+	 * 
+	 * @param	Graphic		The image you want to use.
+	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite loadGraphic(int Graphic, boolean Animated)
 	{
 		return loadGraphic(Graphic, Animated, false, 0, 0, false);
@@ -328,21 +392,59 @@ public class FlxSprite extends FlxObject
 		return this;
 	}
 	
+	/**
+	 * Create a pre-rotated sprite sheet from a simple sprite.
+	 * This can make a huge difference in graphical performance!
+	 * 
+	 * @param	Graphic			The image you want to rotate & stamp.
+	 * @param	Frames			The number of frames you want to use (more == smoother rotations).
+	 * @param	Offset			Use this to select a specific frame to draw from the graphic.
+	 * @param	AntiAliasing	Whether to use high quality rotations when creating the graphic.
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite loadRotatedGraphic(int Graphic, int Rotations, int Frame, boolean AntiAliasing)
 	{
 		return loadRotatedGraphic(Graphic, Rotations, Frame, AntiAliasing, false);
 	}
 	
+	/**
+	 * Create a pre-rotated sprite sheet from a simple sprite.
+	 * This can make a huge difference in graphical performance!
+	 * 
+	 * @param	Graphic			The image you want to rotate & stamp.
+	 * @param	Frames			The number of frames you want to use (more == smoother rotations).
+	 * @param	Offset			Use this to select a specific frame to draw from the graphic.
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite loadRotatedGraphic(int Graphic, int Rotations, int Frame)
 	{
 		return loadRotatedGraphic(Graphic, Rotations, Frame, false, false);
 	}
 	
+	/**
+	 * Create a pre-rotated sprite sheet from a simple sprite.
+	 * This can make a huge difference in graphical performance!
+	 * 
+	 * @param	Graphic			The image you want to rotate & stamp.
+	 * @param	Frames			The number of frames you want to use (more == smoother rotations).
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite loadRotatedGraphic(int Graphic, int Rotations)
 	{
 		return loadRotatedGraphic(Graphic, Rotations, -1, false, false);
 	}
 	
+	/**
+	 * Create a pre-rotated sprite sheet from a simple sprite.
+	 * This can make a huge difference in graphical performance!
+	 * 
+	 * @param	Graphic			The image you want to rotate & stamp.
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite loadRotatedGraphic(int Graphic)
 	{
 		return loadRotatedGraphic(Graphic, 16, -1, false, false);
@@ -370,16 +472,43 @@ public class FlxSprite extends FlxObject
 		return this;
 	}
 	
+	/**
+	 * This function creates a flat colored square image dynamically.
+	 * 
+	 * @param	Width		The width of the sprite you want to generate.
+	 * @param	Height		The height of the sprite you want to generate.
+	 * @param	Color		Specifies the color of the generated block.
+	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite createGraphic(int Width, int Height, int Color, boolean Unique)
 	{
 		return createGraphic(Width, Height, Color, Unique, null);		
 	}
 	
+	/**
+	 * This function creates a flat colored square image dynamically.
+	 * 
+	 * @param	Width		The width of the sprite you want to generate.
+	 * @param	Height		The height of the sprite you want to generate.
+	 * @param	Color		Specifies the color of the generated block.
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite createGraphic(int Width, int Height, int Color)
 	{
 		return createGraphic(Width, Height, Color, false, null);		
 	}
 	
+	/**
+	 * This function creates a flat colored square image dynamically.
+	 * 
+	 * @param	Width		The width of the sprite you want to generate.
+	 * @param	Height		The height of the sprite you want to generate.
+	 * 
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxSprite createGraphic(int Width, int Height)
 	{
 		return createGraphic(Width, Height, 0xffffffff, false, null);		
@@ -387,8 +516,8 @@ public class FlxSprite extends FlxObject
 	
 	
 	/**
-	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
-	 * Automatically adjust graphic size and render helpers.
+	 * 
+	 * @return Get pixels.
 	 */
 	public BitmapData getPixels()
 	{
@@ -396,7 +525,8 @@ public class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * @private
+	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
+	 * Automatically adjust graphic size and render helpers.
 	 */
 	public void setPixels(BitmapData Pixels)
 	{
@@ -438,7 +568,8 @@ public class FlxSprite extends FlxObject
 	
 	
 	/**
-	 * @private
+	 * Set an object object collidable or not (see <code>solid</code>).
+	 * @param Solid
 	 */
 	@Override
 	public void setSolid(boolean Solid) 
@@ -450,7 +581,8 @@ public class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * @private
+	 * Set an object will move/alter position after a collision.
+	 * @param Fixed 
 	 */
 	@Override
 	public void setFixed(boolean Fixed)
@@ -481,16 +613,14 @@ public class FlxSprite extends FlxObject
 		if(c) calcFrame();
 	}
 	
-	/**
-	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
-	 */
+	
 	public float getAlpha()
 	{
 		return _alpha;
 	}
 	
 	/**
-	 * @private
+	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
 	 */
 	public void setAlpha(float Alpha)
 	{
@@ -508,18 +638,16 @@ public class FlxSprite extends FlxObject
 		calcFrame();
 	}
 	
-	/**
-	 * Set <code>color</code> to a number in this format: 0xRRGGBB.
-	 * <code>color</code> IGNORES ALPHA.  To change the opacity use <code>alpha</code>.
-	 * Tints the whole sprite to be this color (similar to OpenGL vertex colors).
-	 */
+	
 	public int getColor()
 	{
 		return _color;
 	}
 	
 	/**
-	 * @private
+	 * Set <code>color</code> to a number in this format: 0xRRGGBB.
+	 * <code>color</code> IGNORES ALPHA.  To change the opacity use <code>alpha</code>.
+	 * Tints the whole sprite to be this color (similar to OpenGL vertex colors).
 	 */
 	public void setColor(int Color)
 	{
@@ -584,11 +712,24 @@ public class FlxSprite extends FlxObject
 		calcFrame();
 	}
 	
+	/**
+	 * This function draws or stamps one <code>FlxSprite</code> onto another.
+	 * This function is NOT intended to replace <code>render()</code>!
+	 * 
+	 * @param	Brush		The image you want to use as a brush or stamp or pen or whatever.
+	 * @param	X			The X coordinate of the brush's top left corner on this sprite.
+	 */
 	public void draw(FlxSprite Brush, int X)
 	{
 		draw(Brush, X, 0);
 	}
 	
+	/**
+	 * This function draws or stamps one <code>FlxSprite</code> onto another.
+	 * This function is NOT intended to replace <code>render()</code>!
+	 * 
+	 * @param	Brush		The image you want to use as a brush or stamp or pen or whatever.
+	 */
 	public void draw(FlxSprite Brush)
 	{
 		draw(Brush, 0, 0);
@@ -784,11 +925,24 @@ public class FlxSprite extends FlxObject
 		_animations.add(new FlxAnim(Name,Frames,FrameRate,Looped));
 	}
 	
+	/**
+	 * Adds a new animation to the sprite.
+	 * 
+	 * @param	Name		What this animation should be called (e.g. "run").
+	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40 fps).
+	 */
 	public void addAnimation(String Name, int[] Frames, float FrameRate)
 	{
 		addAnimation(Name, Frames, FrameRate, true);
 	}
 	
+	/**
+	 * Adds a new animation to the sprite.
+	 * 
+	 * @param	Name		What this animation should be called (e.g. "run").
+	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 */
 	public void addAnimation(String Name, int[] Frames)
 	{
 		addAnimation(Name, Frames, 0, true);
@@ -843,11 +997,26 @@ public class FlxSprite extends FlxObject
 		}
 	}
 	
+	/**
+	 * Plays an existing animation (e.g. "run").
+	 * If you call an animation that is already playing it will be ignored.
+	 * If the requested starting frame is greater than the available frames, it will revert to frame 0.
+	 * 
+	 * @param	AnimName	The string name of the animation you want to play.
+	 * @param	Force		Whether to force the animation to restart.
+	 */
 	public void play(String AnimName, boolean Force)
 	{
 		play(AnimName, Force, 0);
 	}
 	
+	/**
+	 * Plays an existing animation (e.g. "run").
+	 * If you call an animation that is already playing it will be ignored.
+	 * If the requested starting frame is greater than the available frames, it will revert to frame 0.
+	 * 
+	 * @param	AnimName	The string name of the animation you want to play.
+	 */
 	public void play(String AnimName)
 	{
 		play(AnimName, false, 0);
@@ -865,18 +1034,16 @@ public class FlxSprite extends FlxObject
 		calcFrame();
 	}
 	
-	/**
-	 * Tell the sprite to change to a specific frame of animation.
-	 * 
-	 * @param	Frame	The frame you want to display.
-	 */
+	
 	public int getFrame()
 	{
 		return _caf;
 	}
 	
 	/**
-	 * @private
+	 * Tell the sprite to change to a specific frame of animation.
+	 * 
+	 * @param	Frame	The frame you want to display.
 	 */
 	public void setFrame(int Frame)
 	{
@@ -902,6 +1069,11 @@ public class FlxSprite extends FlxObject
 		return Point;
 	}
 	
+	/**
+	 * Call this function to figure out the on-screen position of the object.
+	 * 
+	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
+	 */
 	public FlxPoint getScreenXY()
 	{
 		return getScreenXY(null);

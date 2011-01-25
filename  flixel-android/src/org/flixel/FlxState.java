@@ -129,11 +129,4 @@ public class FlxState extends Canvas
 	{
 		defaultGroup.destroy();
 	}
-
-
-
-	
-
-	
-
 }

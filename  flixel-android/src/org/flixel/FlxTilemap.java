@@ -905,7 +905,7 @@ public class FlxTilemap extends FlxObject
 			layout = new BitmapData(tmp.width*Scale,tmp.height*Scale);
 			Matrix mtx = new Matrix();
 			mtx.scale(Scale,Scale);
-					
+			
 			Bitmap.createBitmap(tmp.getBitmap());
 //			layout.bitmapData.draw(tmp,mtx);
 		}

@@ -105,6 +105,13 @@ public class FlxGroup extends FlxObject
 		return Object;
 	}
 	
+	/**
+	 * Removes an object from the group.
+	 * 
+	 * @param	Object	The <code>FlxObject</code> you want to remove.
+	 * 
+	 * @return	The removed object.
+	 */
 	public FlxObject remove(FlxObject Object)
 	{
 		return remove(Object, false);
@@ -190,11 +197,21 @@ public class FlxGroup extends FlxObject
 		return true;
 	}
 	
+	/**
+	 * Finds the first object with exists == false and calls reset on it.
+	 * 
+	 * @param	X	The new X position of this object.
+	 * 
+	 * @return	Whether a suitable <code>FlxObject</code> was found and reset.
+	 */
 	public boolean resetFirstAvail(float X)
 	{
 		return resetFirstAvail(X, 0);
 	}
 	
+	/**
+	 * Finds the first object with exists == false and calls reset on it.
+	 */
 	public boolean resetFirstAvail()
 	{
 		return resetFirstAvail(0, 0);
@@ -595,28 +612,4 @@ public class FlxGroup extends FlxObject
 			return -_sortOrder;*/
 		return 0;
 	}
-	
-	/*int getIndex(FlxObject[] array, FlxObject Object)
-	{
-		int l = array.length;
-		
-		for(int i = 0; i < l; i++)
-		{
-			if(members[i].equals(Object))
-				return i;
-		}
-		return -1;
-	}*/
-	
-	/*FlxObject[] splice(FlxObject[] array, int startIndex, int endIndex)
-	{
-		int l = array.length;		
-		for(int i = endIndex; i < l; i++)
-		{
-			Arrays.asList(array).remove(startIndex);	
-		}		
-		return array;
-	}*/
-	
-
 }

@@ -5,6 +5,11 @@ import java.util.ArrayList;
 
 import flash.geom.Point;
 
+/**
+ * This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).
+ * It includes some basic attributes about game objects, including retro-style flickering,
+ * basic state information, sizes, scrolling, and basic physics & motion.
+ */
 public class FlxObject extends FlxRect
 {
 	/**
@@ -173,13 +178,59 @@ public class FlxObject extends FlxRect
 	 */
 	public boolean collideBottom;
 	
-	
+	/**
+	 * Creates a new <code>FlxObject</code>.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	Width	Desired width of the rectangle.
+	 * @param	Height	Desired height of the rectangle.
+	 */
 	public FlxObject(int X, int Y, int Width, int Height)
 	{
 		super(X, Y, Width, Height);
 		constructor();
 	}
 	
+	/**
+	 * Creates a new <code>FlxObject</code>.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	Width	Desired width of the rectangle.
+	 */
+	public FlxObject(int X, int Y, int Width)
+	{
+		super(X, Y, Width, 0);
+		constructor();
+	}
+	
+	/**
+	 * Creates a new <code>FlxObject</code>.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 */
+	public FlxObject(int X, int Y)
+	{
+		super(X, Y, 0, 0);
+		constructor();
+	}
+	
+	/**
+	 * Creates a new <code>FlxObject</code>.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 */
+	public FlxObject(int X)
+	{
+		super(X, 0, 0, 0);
+		constructor();
+	}
+	
+	/**
+	 * Creates a new <code>FlxObject</code>.
+	 */
 	public FlxObject()
 	{
 		super();
@@ -241,7 +292,8 @@ public class FlxObject extends FlxRect
 	}
 	
 	/**
-	 * Set <code>solid</code> to true if you want to collide this object.
+	 * 
+	 * @return	Whether <code><FlxObject</code> is solid or not.
 	 */
 	public boolean getSolid()
 	{
@@ -249,7 +301,7 @@ public class FlxObject extends FlxRect
 	}
 	
 	/**
-	 * @private
+	 * Set <code>solid</code> to true if you want to collide this object.
 	 */
 	public void setSolid(boolean Solid)
 	{
@@ -257,8 +309,8 @@ public class FlxObject extends FlxRect
 	}
 	
 	/**
-	 * Set <code>fixed</code> to true if you want the object to stay in place during collisions.
-	 * Useful for levels and other environmental objects.
+	 * 
+	 * @return Whether <code>FlxObject</code> is fixed or not.
 	 */
 	public boolean getFixed()
 	{
@@ -266,7 +318,8 @@ public class FlxObject extends FlxRect
 	}
 	
 	/**
-	 * @private
+	 * Set <code>fixed</code> to true if you want the object to stay in place during collisions.
+	 * Useful for levels and other environmental objects.
 	 */
 	public void setFixed(boolean Fixed)
 	{
@@ -431,6 +484,14 @@ public class FlxObject extends FlxRect
 		return true;
 	}
 	
+	/**
+	 * Checks to see if a point in 2D space overlaps this <code>FlxObject</code> object.
+	 * 
+	 * @param	X			The X coordinate of the point.
+	 * @param	Y			The Y coordinate of the point.
+	 * 
+	 * @return	Whether or not the point overlaps this object.
+	 */
 	public boolean overlapsPoint(float X, float Y)
 	{
 		return overlapsPoint(X, Y, false);
@@ -554,7 +615,16 @@ public class FlxObject extends FlxRect
 		if(_flickerTimer < 0) 
 		{ 
 			_flicker = false; visible = true; 
-		} 
+		}
+	}
+	
+	/**
+	 * Tells this object to flicker, retro-style.
+	 * @default Duration = 1
+	 */
+	public void flicker()
+	{ 
+		flicker(1);
 	}
 	
 	/**

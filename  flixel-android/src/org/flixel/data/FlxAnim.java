@@ -1,6 +1,8 @@
 package org.flixel.data;
 
-
+/**
+ * Just a helper structure for the FlxSprite animation system
+ */
 public class FlxAnim
 {
 	/**

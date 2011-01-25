@@ -41,10 +41,6 @@ public class FlxButton extends FlxGroup
 	 */
 	protected boolean _pressed;
 	/**
-	 * Whether or not the button has initialized itself yet.
-	 */	
-//	protected boolean _initialized;
-	/**
 	 * Helper variable for correcting its members' <code>scrollFactor</code>
 	 * objects.
 	 */
@@ -64,7 +60,9 @@ public class FlxButton extends FlxGroup
 	 * 
 	 * @param X The X position of the button.
 	 * @param Y The Y position of the button.
-	 * @param Callback The function to call whenever the button is clicked.
+	 * @param Callback The function to call whenever the button is touched.
+	 * @param Width The width of the button.
+	 * @param Height The height of the button.
 	 */
 	public FlxButton(float X, float Y, FlxButtonListener Callback, int Width, int Height)
 	{
@@ -72,18 +70,43 @@ public class FlxButton extends FlxGroup
 		constructor(X, Y, Callback, Width, Height);
 	}
 	
+	/**
+	 * Creates a new <code>FlxButton</code> object with a gray background and a
+	 * callback function on the UI thread.
+	 * 
+	 * @param X The X position of the button.
+	 * @param Y The Y position of the button.
+	 * @param Callback The function to call whenever the button is touched.
+	 * @param Width The width of the button.
+	 */
 	public FlxButton(int X, int Y, FlxButtonListener Callback, int Width)
 	{
 		super();
 		constructor(X, Y, Callback, Width, 20);
 	}
 	
+	/**
+	 * Creates a new <code>FlxButton</code> object with a gray background and a
+	 * callback function on the UI thread.
+	 * 
+	 * @param X The X position of the button.
+	 * @param Y The Y position of the button.
+	 * @param Callback The function to call whenever the button is touched.
+	 */
 	public FlxButton(float X, float Y, FlxButtonListener Callback)
 	{
 		super();
 		constructor(X, Y, Callback, 100, 20);
 	}
 	
+	
+	/**
+	 * Creates a new <code>FlxButton</code> object with a gray background and a
+	 * callback function on the UI thread.
+	 * 
+	 * @param X The X position of the button.
+	 * @param Y The Y position of the button.
+	 */
 	public FlxButton(float X, float Y)
 	{
 		super();
@@ -116,11 +139,11 @@ public class FlxButton extends FlxGroup
 	/**
 	 * Set your own image as the button background.
 	 * 
-	 * @param Image A FlxSprite object to use for the button background.
-	 * @param ImageHighlight A FlxSprite object to use for the button background
+	 * @param Image A <code>FlxSprite</code> object to use for the button background.
+	 * @param ImageHighlight A <code>FlxSprite</code> object to use for the button background
 	 *        when highlighted (optional).
 	 * 
-	 * @return This FlxButton instance (nice for chaining stuff together, if
+	 * @return This <code>FlxButton</code> instance (nice for chaining stuff together, if
 	 *         you're into that).
 	 */
 	public FlxButton loadGraphic(FlxSprite Image, FlxSprite ImageHighlight)
@@ -144,6 +167,14 @@ public class FlxButton extends FlxGroup
 		return this;
 	}
 	
+	/**
+	 * Set your own image as the button background.
+	 * 
+	 * @param Image A <code>FlxSprite</code> object to use for the button background.
+	 * 
+	 * @return This <code>FlxButton</code> instance (nice for chaining stuff together, if
+	 *         you're into that).
+	 */
 	public FlxButton loadGraphic(FlxSprite Image)
 	{
 		return loadGraphic(Image, null);
@@ -152,12 +183,12 @@ public class FlxButton extends FlxGroup
 	/**
 	 * Add a text label to the button.
 	 * 
-	 * @param Text A FlxText object to use to display text on this button
+	 * @param Text A <code>FlxText</code> object to use to display text on this button
 	 *        (optional).
-	 * @param TextHighlight A FlxText object that is used when the button is
+	 * @param TextHighlight A <code>FlxText</code> object that is used when the button is
 	 *        highlighted (optional).
 	 * 
-	 * @return This FlxButton instance (nice for chaining stuff together, if
+	 * @return This <code>FlxButton</code> instance (nice for chaining stuff together, if
 	 *         you're into that).
 	 */
 	public FlxButton loadText(FlxText Text, FlxText TextHighlight)
@@ -189,13 +220,23 @@ public class FlxButton extends FlxGroup
 		return this;
 	}
 	
+	
+	/**
+	 * Add a text label to the button.
+	 * 
+	 * @param Text A <code>FlxText</code> object to use to display text on this button
+	 *        (optional).
+	 * 
+	 * @return This <code>FlxButton</code> instance (nice for chaining stuff together, if
+	 *         you're into that).
+	 */
 	public FlxButton loadText(FlxText Text)
 	{
 		return loadText(Text, null);
 	}
 
 	/**
-	 * Called by the game loop automatically, handles mouseover and click
+	 * Called by the game loop automatically, handles move-over and touch
 	 * detection.
 	 */
 	@Override
@@ -230,8 +271,10 @@ public class FlxButton extends FlxGroup
 		super.update();
 	}
 
+
 	/**
-	 * Use this to toggle checkbox-style behavior.
+	 * 
+	 * @return	Wheter toggle checkbox-style is on.
 	 */
 	public boolean getOn()
 	{
@@ -239,7 +282,8 @@ public class FlxButton extends FlxGroup
 	}
 
 	/**
-	 * @private
+	 * Use this to toggle checkbox-style behavior.
+	 * @param On
 	 */
 	public void setOn(boolean On)
 	{
@@ -249,6 +293,7 @@ public class FlxButton extends FlxGroup
 	/**
 	 * Called by the game state when state is changed (if this object belongs to
 	 * the state)
+	 * The method is empty.
 	 */
 	@Override
 	public void destroy()
@@ -286,43 +331,37 @@ public class FlxButton extends FlxGroup
 
 	/**
 	 * 
-	 * @return
+	 * @return Whether the button is pressed by touch.
 	 */
 	public boolean getPressed()
 	{
 		return _pressed;
 	}
 		
+	/**
+	 * 
+	 * @return Whether the button is removed from touch.
+	 */
 	public boolean getRemoved()
 	{
 		return !_pressed && _inArea && FlxG.touch.justRemoved();
 	}
 	
+	/**
+	 * 
+	 * @return Whether the button is touched.
+	 */
 	public boolean getTouched()
 	{
 		return _pressed && FlxG.touch.justTouched();
 	}
 	
-	public void setTouchMove(boolean value)
-	{
-		_swipeTouch = value;
-	}
-	
-	
 	/**
-	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxU.openURL()</code>).
+	 * Toggle the button to enable/disable the on-touch-move.
+	 * @param On Whether the button should be pressed on-touch-move should be on or off.
 	 */
-	/*protected OnTouchListener onMouseUp = new OnTouchListener()
-	{		
-		@Override
-		public boolean onTouch(View v, MotionEvent event)
-		{				
-			if(!exists || !visible || !active || (event.getAction() != MotionEvent.ACTION_UP)  || (FlxG.getPause() && !pauseProof)	|| (_callback == null))
-				return false;
-			if(overlapsPoint(FlxG.touch.x/FlxG.ratio, FlxG.touch.y/FlxG.ratio))
-				return _callback.onTouchUp();
-			else
-				return false;
-		}
-	};*/
+	public void setTouchMove(boolean On)
+	{
+		_swipeTouch = On;
+	}
 }

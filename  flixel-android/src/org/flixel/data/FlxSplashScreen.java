@@ -4,6 +4,10 @@ import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 
+/**
+ * A splash screen is displayed when the game launches. 
+ * The duration is 2 seconds.
+ */
 public class FlxSplashScreen extends FlxState
 {
 	private float _logoTimer;

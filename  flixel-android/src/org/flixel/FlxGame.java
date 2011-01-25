@@ -5,21 +5,21 @@ import org.flixel.data.FlxSplashScreen;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceView;
 import flash.display.BitmapData;
 import flash.geom.Point;
 
 /**
- * 
- * @author Ka Wing Chin
- *
+ * FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.
+ * It is a long and sloppy file that you shouldn't have to worry about too much!
+ * It is basically only used to create your game object in the first place,
+ * after that FlxG and FlxState have all the useful stuff you actually need.
  */
 public class FlxGame
 {
 	
 	/**
-	 * Sets 0, -, and + to control the global volume and P to pause.
+	 * MENU to pause.
 	 * @default true
 	 */
 	public boolean useDefaultHotKeys;
@@ -58,6 +58,8 @@ public class FlxGame
 	 * @param	GameSizeX		The width of your game in pixels (e.g. 320).
 	 * @param	GameSizeY		The height of your game in pixels (e.g. 240).
 	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	context
+	 * @param	Resource
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, Context context, Class<? extends Object> Resource)
 	{
@@ -89,33 +91,6 @@ public class FlxGame
 		create();
 	}
 	
-	
-	/**
-	 * Makes the little volume tray slide out.
-	 * 
-	 * @param	Silent	Whether or not it should beep.
-	 */
-	public void showSoundTray(boolean Silent)
-	{
-		//if(!Silent)
-			//FlxG.play(SndBeep);
-		//_soundTrayTimer = 1;
-/*		_soundTray.y = _gameYOffset*_zoom;
-		_soundTray.visible = true;
-		var gv:uint = Math.round(FlxG.volume*10);
-		if(FlxG.mute)
-			gv = 0;
-		for (var i:uint = 0; i < _soundTrayBars.length; i++)
-		{
-			if(i < gv) _soundTrayBars[i].alpha = 1;
-			else _soundTrayBars[i].alpha = 0.5;
-		}*/
-	}
-	
-	public void showSoundTray()
-	{
-		
-	}
 
 	/**
 	 * Internal event handler for input and focus.
@@ -201,7 +176,6 @@ public class FlxGame
 	 */
 	protected void onKeyDown(int KeyCode)
 	{
-		Log.i("keyCode", Integer.toString(KeyCode));
 		FlxG.keys.handleKeyDown(KeyCode);
 	}
 	
@@ -214,26 +188,10 @@ public class FlxGame
 		if(useDefaultHotKeys)
 		{
 			switch(KeyCode)
-			{
-				case 48:
-				case 96:
-					FlxG.setMute(!FlxG.getMute());
-//					showSoundTray();
-					return;
-				case 109:
-				case 189:
-					//FlxG.mute = false;
-		    		//FlxG.volume = FlxG.volume - 0.1;
-		    		//showSoundTray();
-					return;
-				case 107:
-				case 187:
-					//FlxG.mute = false;
-		    		//FlxG.volume = FlxG.volume + 0.1;
-		    		//showSoundTray();
-					return;
+			{				
 				case 82: // MENU button
 					FlxG.setPause(!FlxG.getPause());
+					return;
 				default: break;
 			}
 		}
@@ -243,6 +201,7 @@ public class FlxGame
 	
 	/**
 	 * This is the main game loop.  It controls all the updating and rendering.
+	 * @param	canvas
 	 */
 	protected boolean update(Canvas canvas)
 	{	

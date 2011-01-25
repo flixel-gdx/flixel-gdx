@@ -3,7 +3,10 @@ package org.flixel.data;
 import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 
-//@desc		This automates the color-rotation effect on the 'f' logo during game launch, not used in actual game code
+/**
+ * This automates the color-rotation effect on the 'f' logo during game launch,
+ * not used in actual game code.
+ */
 public class FlxLogoPixel extends FlxGroup
 {
 	private FlxSprite[] _layers;

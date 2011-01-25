@@ -4,7 +4,19 @@ import java.util.ArrayList;
 
 import org.flixel.data.FlxParticle;
 
+import android.util.Log;
 
+/**
+ * <code>FlxEmitter</code> is a lightweight particle emitter.
+ * It can be used for one-time explosions or for
+ * continuous fx like rain and fire.  <code>FlxEmitter</code>
+ * is not optimized or anything; all it does is launch
+ * <code>FlxSprite</code> objects out at set intervals
+ * by setting their positions and velocities accordingly.
+ * It is easy to use and relatively efficient, since it
+ * automatically redelays its sprites and/or kills
+ * them once they've been launched.
+ */
 public class FlxEmitter extends FlxGroup
 {
 	/**
@@ -90,12 +102,22 @@ public class FlxEmitter extends FlxGroup
 		constructor(X, Y);		
 	}
 	
+	/**
+	 * Creates a new <code>FlxEmitter</code> object at a specific position.
+	 * Does not automatically generate or attach particles!
+	 * 
+	 * @param	X			The X position of the emitter.
+	 */
 	public FlxEmitter(float X)
 	{
 		super();
 		constructor(X, 0);		
 	}
 	
+	/**
+	 * Creates a new <code>FlxEmitter</code> object at a specific position.
+	 * Does not automatically generate or attach particles!
+	 */
 	public FlxEmitter()
 	{
 		super();
@@ -196,26 +218,71 @@ public class FlxEmitter extends FlxGroup
 		return this;
 	}
 	
+	/**
+	 * This function generates a new array of sprites to attach to the emitter.
+	 * 
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
+	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
+	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+	 * 
+	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxEmitter createSprites(Integer Graphics, int Quantity, int BakedRotations, boolean Multiple, float Collide)
 	{
 		return createSprites(Graphics, Quantity, BakedRotations, Multiple, Collide, 0);
 	}
 	
+	/**
+	 * This function generates a new array of sprites to attach to the emitter.
+	 * 
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
+	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
+	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+	 * 
+	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxEmitter createSprites(Integer Graphics, int Quantity, int BakedRotations, boolean Multiple)
 	{
 		return createSprites(Graphics, Quantity, BakedRotations, Multiple, 0, 0);
 	}
 	
+	/**
+	 * This function generates a new array of sprites to attach to the emitter.
+	 * 
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
+	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
+	 * 
+	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxEmitter createSprites(Integer Graphics, int Quantity, int BakedRotations)
 	{
 		return createSprites(Graphics, Quantity, BakedRotations, true, 0, 0);
 	}
 	
+	/**
+	 * This function generates a new array of sprites to attach to the emitter.
+	 * 
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
+	 * 
+	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxEmitter createSprites(Integer Graphics, int Quantity)
 	{
 		return createSprites(Graphics, Quantity, 16, true, 0, 0);
 	}
 	
+	/**
+	 * This function generates a new array of sprites to attach to the emitter.
+	 * 
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * 
+	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
+	 */
 	public FlxEmitter createSprites(Integer Graphics)
 	{
 		return createSprites(Graphics, 50, 16, true, 0, 0);
@@ -245,11 +312,19 @@ public class FlxEmitter extends FlxGroup
 		maxParticleSpeed.x = Max;
 	}
 	
+	/**
+	 * A more compact way of setting the X velocity range of the emitter.
+	 * 
+	 * @param	Min		The minimum value for this range.
+	 */
 	public void setXSpeed(float Min)
 	{
 		setXSpeed(Min, 0);
 	}
 	
+	/**
+	 * A more compact way of setting the X velocity range of the emitter.
+	 */
 	public void setXSpeed()
 	{
 		setXSpeed(0, 0);
@@ -267,11 +342,19 @@ public class FlxEmitter extends FlxGroup
 		maxParticleSpeed.y = Max;
 	}
 	
+	/**
+	 * A more compact way of setting the Y velocity range of the emitter.
+	 * 
+	 * @param	Min		The minimum value for this range.
+	 */
 	public void setYSpeed(float Min)
 	{
 		setYSpeed(Min, 0);
 	}
 	
+	/**
+	 * A more compact way of setting the Y velocity range of the emitter.
+	 */
 	public void setYSpeed()
 	{
 		setYSpeed(0, 0);
@@ -289,11 +372,19 @@ public class FlxEmitter extends FlxGroup
 		maxRotation = Max;
 	}
 	
+	/**
+	 * A more compact way of setting the angular velocity constraints of the emitter.
+	 * 
+	 * @param	Min		The minimum value for this range.
+	 */
 	public void setRotation(float Min)
 	{
 		setRotation(Min, 0);
 	}
 	
+	/**
+	 * A more compact way of setting the angular velocity constraints of the emitter.
+	 */
 	public void setRotation()
 	{
 		setRotation(0, 0);
@@ -379,7 +470,7 @@ public class FlxEmitter extends FlxGroup
 	{		
 		if(members.size() <= 0)
 		{
-			//FlxG.log("WARNING: there are no sprites loaded in your emitter.\nAdd some to FlxEmitter.members or use FlxEmitter.createSprites().");
+			Log.w("FlxEmitter", "WARNING: there are no sprites loaded in your emitter.\nAdd some to FlxEmitter.members or use FlxEmitter.createSprites().");
 			return;
 		}
 		_explode = Explode;
@@ -410,16 +501,30 @@ public class FlxEmitter extends FlxGroup
 		}
 	}
 	
+	/**
+	 * Call this function to start emitting particles.
+	 * 
+	 * @param	Explode		Whether the particles should all burst out at once.
+	 * @param	Delay		You can set the delay (or lifespan) here if you want.
+	 */
 	public void start(boolean Explode, float Delay)
 	{
 		start(Explode, Delay, 0);
 	}
 	
+	/**
+	 * Call this function to start emitting particles.
+	 * 
+	 * @param	Explode		Whether the particles should all burst out at once.
+	 */	
 	public void start(boolean Explode)
 	{
 		start(Explode, 0, 0);
 	}
 	
+	/**
+	 * Call this function to start emitting particles.
+	 */
 	public void start()
 	{
 		start(true, 0, 0);
@@ -482,6 +587,9 @@ public class FlxEmitter extends FlxGroup
 		on = false;
 	}
 	
+	/**
+	 * Call this function to stop the emitter without killing it.
+	 */
 	public void stop()
 	{
 		stop(3);

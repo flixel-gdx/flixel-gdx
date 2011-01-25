@@ -94,6 +94,13 @@ public class FlxU
 		}
 	}
 	
+	/**
+	 * Generates a random number. NOTE: To create a series of predictable random
+	 * numbers, add the random number you generate each time to the
+	 * <code>Seed</code> value before calling <code>random()</code> again.
+	 * 
+	 * @return A <code>Number</code> between 0 and 1.
+	 */
 	static public float random()
 	{
 		return random((float) Math.random());

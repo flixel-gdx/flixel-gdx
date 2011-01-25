@@ -26,11 +26,19 @@ public class FlxPoint
 		constructor(X, Y);
 	}
 	
+	/**
+	 * Instantiate a new point object.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 */
 	public FlxPoint(float X)
 	{
 		constructor(X, 0);
 	}
 	
+	/**
+	 * Instantiate a new point object.
+	 */
 	public FlxPoint()
 	{
 		constructor(0, 0);

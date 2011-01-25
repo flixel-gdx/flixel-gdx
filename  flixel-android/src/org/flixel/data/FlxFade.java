@@ -54,21 +54,42 @@ public class FlxFade extends FlxSprite
 		exists = true;
 	}
 	
+	/**
+	 * Reset and trigger this special effect
+	 * 
+	 * @param	Color			The color you want to use
+	 * @param	Duration		How long it should take to fade the screen out
+	 * @param	FadeComplete	A function you want to run when the fade finishes
+	 */
 	public void start(int Color, float Duration, FlxFadeListener FadeComplete)
 	{
 		start(Color, Duration, FadeComplete, false);
 	}
 	
+	/**
+	 * Reset and trigger this special effect
+	 * 
+	 * @param	Color			The color you want to use
+	 * @param	Duration		How long it should take to fade the screen out
+	 */
 	public void start(int Color, float Duration)
 	{
 		start(Color, Duration, null, false);
 	}
 	
+	/**
+	 * Reset and trigger this special effect
+	 * 
+	 * @param	Color			The color you want to use
+	 */
 	public void start(int Color)
 	{
 		start(Color, 1, null, false);
 	}
 	
+	/**
+	 * Reset and trigger this special effect
+	 */
 	public void start()
 	{
 		start(0xFF000000, 1, null, false);

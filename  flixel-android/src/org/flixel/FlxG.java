@@ -7,13 +7,10 @@ import org.flixel.data.FlxDigitalPad;
 import org.flixel.data.FlxFade;
 import org.flixel.data.FlxFlash;
 import org.flixel.data.FlxKeyboard;
-import org.flixel.data.FlxMouse;
-import org.flixel.data.FlxPanel;
 import org.flixel.data.FlxQuake;
 import org.flixel.data.FlxTouch;
 import org.flixel.data.R;
 
-import android.view.SurfaceView;
 import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
@@ -78,25 +75,6 @@ public class FlxG
 	 * The ratio
 	 */
 	static public float ratio;
-	/**
-	 * <code>FlxG.levels</code> and <code>FlxG.scores</code> are generic global
-	 * variables that can be used for various cross-state stuff.
-	 */
-	static public ArrayList<Integer> levels;
-	static public int level;
-	static public ArrayList<Integer> scores;
-	static public int score;
-	/**
-	 * <code>FlxG.saves</code> is a generic bucket for storing FlxSaves so you
-	 * can access them whenever you want.
-	 */
-	static public ArrayList<FlxSave> saves;
-	static public int save;
-
-	/**
-	 * A reference to a <code>FlxMouse</code> object. Important for input!
-	 */
-	static public FlxMouse mouse;
 	/**
 	 * A reference to a <code>FlxKeyboard</code> object. Important for input!
 	 */
@@ -166,11 +144,6 @@ public class FlxG
 	 * memory.
 	 */
 	static protected Hashtable<String, BitmapData> _cache;
-
-	/**
-	 * The support panel (twitter, reddit, stumbleupon, paypal, etc) visor thing
-	 */
-	static public FlxPanel panel;
 	/**
 	 * A special effect that shakes the screen. Usage: FlxG.quake.start();
 	 */
@@ -188,8 +161,8 @@ public class FlxG
 
 
 	/**
-	 * Set <code>pause</code> to true to pause the game, all sounds, and display
-	 * the pause popup.
+	 * 
+	 * @return Whether the pause is paused.
 	 */
 	static public boolean getPause()
 	{
@@ -197,7 +170,7 @@ public class FlxG
 	}
 
 	/**
-	 * @private
+	 * Set <code>pause</code> to true to pause the game and all sounds.
 	 */
 	static public void setPause(boolean Pause)
 	{
@@ -223,9 +196,13 @@ public class FlxG
 		}
 	}
 	
-	static public void setDisablePause(boolean Pause)
+	/**
+	 * Disable pause function.
+	 * @param Pause
+	 */
+	static public void setDisablePause(boolean On)
 	{
-		_disablePause = Pause;
+		_disablePause = On;
 	}
 
 	
@@ -256,6 +233,11 @@ public class FlxG
 		music.play();
 	}
 
+	/**
+	 * Set up and play a looping background soundtrack.
+	 * 
+	 * @param Music The sound file you want to loop in the background.
+	 */
 	static public void playMusic(int Music)
 	{
 		playMusic(Music, 1);
@@ -289,11 +271,26 @@ public class FlxG
 		return s;
 	}
 
+	/**
+	 * Creates a new sound object from an embedded <code>Class</code> object.
+	 * 
+	 * @param EmbeddedSound The sound you want to play.
+	 * @param Volume How loud to play it (0 to 1).
+	 * 
+	 * @return A <code>FlxSound</code> object.
+	 */
 	static public FlxSound play(int EmbeddedSound, float Volume)
 	{
 		return play(EmbeddedSound, Volume, false);
 	}
 
+	/**
+	 * Creates a new sound object from an embedded <code>Class</code> object.
+	 * 
+	 * @param EmbeddedSound The sound you want to play.
+	 * 
+	 * @return A <code>FlxSound</code> object.
+	 */
 	static public FlxSound play(int EmbeddedSound)
 	{
 		return play(EmbeddedSound, 1, false);
@@ -327,20 +324,34 @@ public class FlxG
 		return s;
 	}
 
+	/**
+	 * Creates a new sound object from a URL.
+	 * 
+	 * @param EmbeddedSound The sound you want to play.
+	 * @param Volume How loud to play it (0 to 1).
+	 * 
+	 * @return A FlxSound object.
+	 */
 	static public FlxSound stream(String URL, float Volume)
 	{
 		return stream(URL, Volume, false);
 	}
 
+	/**
+	 * Creates a new sound object from a URL.
+	 * 
+	 * @param EmbeddedSound The sound you want to play.
+	 * 
+	 * @return A FlxSound object.
+	 */
 	static public FlxSound stream(String URL)
 	{
 		return stream(URL, 1, false);
 	}
 
 	/**
-	 * Set <code>mute</code> to true to turn off the sound.
 	 * 
-	 * @default false
+	 * @return Whether the sound is muted.
 	 */
 	static public boolean getMute()
 	{
@@ -348,7 +359,9 @@ public class FlxG
 	}
 
 	/**
-	 * @private
+	 * Set <code>mute</code> to true to turn off the sound.
+	 * 
+	 * @default false
 	 */
 	static public void setMute(boolean Mute)
 	{
@@ -371,10 +384,8 @@ public class FlxG
 	}
 
 	/**
-	 * Set <code>volume</code> to a number between 0 and 1 to change the global
-	 * volume.
 	 * 
-	 * @default 0.5
+	 * @return Get the current volume.
 	 */
 	static public float getVolume()
 	{
@@ -382,7 +393,10 @@ public class FlxG
 	}
 
 	/**
-	 * @private
+	 * Set <code>volume</code> to a number between 0 and 1 to change the global
+	 * volume.
+	 * 
+	 * @default 0.5
 	 */
 	static public void setVolume(float Volume)
 	{
@@ -417,6 +431,9 @@ public class FlxG
 		}
 	}
 
+	/**
+	 * Called by FlxGame on state changes to stop and destroy sounds.
+	 */
 	static void destroySounds()
 	{
 		destroySounds(false);
@@ -548,6 +565,8 @@ public class FlxG
 	 * 
 	 * @param Graphic The image file that you want to load.
 	 * @param Reverse Whether to generate a flipped version.
+	 * @param Unique Make the bitmap unique, no duplicate allowed.
+	 * @param Key
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 */
@@ -594,16 +613,43 @@ public class FlxG
 		return pixels;
 	}
 
+	/**
+	 * Loads a bitmap from a file, caches it, and generates a horizontally
+	 * flipped version if necessary.
+	 * 
+	 * @param Graphic The image file that you want to load.
+	 * @param Reverse Whether to generate a flipped version.
+	 * @param Unique Make the bitmap unique, no duplicate allowed.
+	 * 
+	 * @return The <code>BitmapData</code> we just created.
+	 */
 	static public BitmapData addBitmap(int Graphic, boolean Reverse, boolean Unique)
 	{
 		return addBitmap(Graphic, Reverse, Unique, null);
 	}
 
+	/**
+	 * Loads a bitmap from a file, caches it, and generates a horizontally
+	 * flipped version if necessary.
+	 * 
+	 * @param Graphic The image file that you want to load.
+	 * @param Reverse Whether to generate a flipped version.
+	 * 
+	 * @return The <code>BitmapData</code> we just created.
+	 */
 	static public BitmapData addBitmap(int Graphic, boolean Reverse)
 	{
 		return addBitmap(Graphic, Reverse, false, null);
 	}
 
+	/**
+	 * Loads a bitmap from a file, caches it, and generates a horizontally
+	 * flipped version if necessary.
+	 * 
+	 * @param Graphic The image file that you want to load.
+	 * 
+	 * @return The <code>BitmapData</code> we just created.
+	 */
 	static public BitmapData addBitmap(int Graphic)
 	{
 		return addBitmap(Graphic, false, false, null);
@@ -639,11 +685,21 @@ public class FlxG
 		followLead = new Point(LeadX, LeadY);
 	}
 
+	/**
+	 * Specify an additional camera component - the velocity-based "lead", or
+	 * amount the camera should track in front of a sprite.
+	 * 
+	 * @param LeadX Percentage of X velocity to add to the camera's motion.
+	 */
 	static public void followAdjust(float LeadX)
 	{
 		followAdjust(LeadX, 0);
 	}
 
+	/**
+	 * Specify an additional camera component - the velocity-based "lead", or
+	 * amount the camera should track in front of a sprite.
+	 */
 	static public void followAdjust()
 	{
 		followAdjust(0, 0);
@@ -673,42 +729,63 @@ public class FlxG
 		doFollow();
 	}
 	
+	/**
+	 * Specify the boundaries of the level or where the camera is allowed to
+	 * move.
+	 * 
+	 * @param MinX The smallest X value of your level (usually 0).
+	 * @param MinY The smallest Y value of your level (usually 0).
+	 * @param MaxX The largest X value of your level (usually the level width).
+	 * @param MaxY The largest Y value of your level (usually the level height).
+	 */
 	static public void followBounds(int MinX, int MinY, int MaxX, int MaxY)
 	{
 		followBounds(MinX, MinY, MaxX, MaxY, true);
 	}
 	
+	/**
+	 * Specify the boundaries of the level or where the camera is allowed to
+	 * move.
+	 * 
+	 * @param MinX The smallest X value of your level (usually 0).
+	 * @param MinY The smallest Y value of your level (usually 0).
+	 * @param MaxX The largest X value of your level (usually the level width).
+	 */
 	static public void followBounds(int MinX, int MinY, int MaxX)
 	{
 		followBounds(MinX, MinY, MaxX, 0, true);
 	}
 	
+	/**
+	 * Specify the boundaries of the level or where the camera is allowed to
+	 * move.
+	 * 
+	 * @param MinX The smallest X value of your level (usually 0).
+	 * @param MinY The smallest Y value of your level (usually 0).
+	 */
 	static public void followBounds(int MinX, int MinY)
 	{
 		followBounds(MinX, MinY, 0, 0, true);
 	}
 	
+	/**
+	 * Specify the boundaries of the level or where the camera is allowed to
+	 * move.
+	 * 
+	 * @param MinX The smallest X value of your level (usually 0).
+	 */
 	static public void followBounds(int MinX)
 	{
 		followBounds(MinX, 0, 0, 0, true);
 	}
 	
+	/**
+	 * Specify the boundaries of the level or where the camera is allowed to
+	 * move.
+	 */
 	static public void followBounds()
 	{
 		followBounds(0, 0, 0, 0, true);
-	}
-
-	/**
-	 * Retrieves the Flash stage object (required for event listeners)
-	 * 
-	 * @return A Flash <code>MovieClip</code> object.
-	 */
-
-	static public SurfaceView getStage()
-	{
-		if(_game._state != null)
-			return _game.stage;
-		return null;
 	}
 
 	/**
@@ -767,10 +844,6 @@ public class FlxG
 		scroll = null;
 		_scrollTarget = null;
 		unfollow();
-		FlxG.levels = new ArrayList<Integer>();
-		FlxG.scores = new ArrayList<Integer>();
-		level = 0;
-		score = 0;
 		setPause(false);
 		timeScale = 1;
 		maxElapsed = 0.0333333f;
@@ -836,7 +909,6 @@ public class FlxG
 	 * Create a d-pad. It will be added on screen.
 	 * @param X		The x-pos on screen.
 	 * @param Y		The y-pos on screen.
-	 * @param Scale	The size of the d-pad.
 	 */
 	public static void createDPad(float X, float Y)
 	{
@@ -846,18 +918,25 @@ public class FlxG
 	
 	
 	/**
-	 * Shut down the game
+	 * Shutdown the game.
+	 * @param	Force to shutdown the sound.
 	 */
 	public static void shutdown(boolean forceSoundShutdown)
 	{
 		_game.shutdown(forceSoundShutdown);
 	}
 
+	/**
+	 * Shutdown the game.
+	 */
 	public static void shutdown()
 	{
 		_game.shutdown(false);
 	}
 
+	/**
+	 * Resume the game.
+	 */
 	public static void resume()
 	{
 		_game.resume();
