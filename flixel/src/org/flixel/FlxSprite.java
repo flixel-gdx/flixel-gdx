@@ -556,40 +556,27 @@ public class FlxSprite extends FlxObject
 		if(dirty)	//rarely 
 			calcFrame();
 		
-		if(cameras == null)
-			cameras = FlxG.cameras;
-		FlxCamera camera;
-		int i = 0;
-		int l = cameras.size;
-		while(i < l)
-		{
-			camera = cameras.get(i++);
-			if(!onScreen(camera))
-				continue;
-			_point.x = x - (camera.scroll.x*scrollFactor.x) - offset.x;
-			_point.y = y - (camera.scroll.y*scrollFactor.y) - offset.y;
-			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
-			_point.y += (_point.y > 0)?0.0000001:-0.0000001;
-			if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
-			{	//Simple render				
-				framePixels.setPosition(_point.x, _point.y);
-				framePixels.setRotation(angle);
-				framePixels.draw(FlxG.batch);
-			}
-			else
-			{	//Advanced render
-				framePixels.setPosition(-origin.x, -origin.y);
-				framePixels.setScale(scale.x, scale.y);
-				if((angle != 0) && (_bakedRotation <= 0))
-					framePixels.setRotation(angle);
-//					framePixels.setRotation(angle * 0.017453293f); // TODO: removing the 0.017453293f makes the rotation better.
-				framePixels.setPosition(_point.x,_point.y);
-				framePixels.draw(FlxG.batch);
-			}
-			_VISIBLECOUNT++;
-//			if(FlxG.visualDebug && !ignoreDrawDebug)
-//				drawDebug(camera);
+		_point.x = x - (FlxG.camera.scroll.x * scrollFactor.x) - offset.x;
+		_point.y = y - (FlxG.camera.scroll.y * scrollFactor.y) - offset.y;
+		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
+		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
+		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
+		{ 	// Simple render
+			framePixels.setPosition(_point.x, _point.y);
+			framePixels.setRotation(angle);
+			framePixels.draw(FlxG.batch);
 		}
+		else
+		{ 	// Advanced render
+			framePixels.setPosition(-origin.x, -origin.y);
+			framePixels.setScale(scale.x, scale.y);
+			if((angle != 0) && (_bakedRotation <= 0))
+				framePixels.setRotation(angle);
+			// framePixels.setRotation(angle * 0.017453293f); // TODO: removing the 0.017453293f makes the rotation better.
+			framePixels.setPosition(_point.x, _point.y);
+			framePixels.draw(FlxG.batch);
+		}
+		_VISIBLECOUNT++;
 		
 	}
 	

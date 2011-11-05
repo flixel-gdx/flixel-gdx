@@ -4,6 +4,7 @@ import org.flixel.data.SystemAsset;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -50,6 +51,8 @@ public class FlxGame extends Game
 	
 	private BitmapFontCache font;
 		
+	private boolean _GL11Supported;
+	private GL10 gl;
 		
 	/**
 	 * Instantiate a new game object.
@@ -126,9 +129,20 @@ public class FlxGame extends Game
 //		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(FlxG.touch);
 //		Gdx.input.setInputProcessor(FlxG.keys);
+		
+		if(Gdx.graphics.isGL11Available())
+		{
+			gl = Gdx.graphics.getGL11();
+			_GL11Supported = true;
+		}
+		else
+			gl = Gdx.graphics.getGL10();
+		gl.glEnable(GL10.GL_CULL_FACE);
+		gl.glCullFace(GL10.GL_BACK);
+		
 		FlxG.batch = new SpriteBatch();
 		font = SystemAsset.system;
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+//		Gdx.gl.glClearColor(0, 0, 0, 1);
 		_total = System.currentTimeMillis();
 	}
 
@@ -167,36 +181,29 @@ public class FlxGame extends Game
 	 */
 	private void draw()
 	{
-//		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT); // Clear the screen. It's not needed because of FlxG.lockCameras().	
-//		float[] rgba = FlxU.getRGBA(FlxG.getBgColor()); // TODO: Set the main color background.
-//		Gdx.gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
-//		Gdx.gl.glClearColor(0, 0, 0, 0); //TODO; get background color from FlxG.gameBackground?
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT); // Clear the screen. It's not needed because of FlxG.lockCameras().	
+		float[] rgba = FlxU.getRGBA(FlxG.getBgColor());
+		gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
 		
 		FlxG.batch.begin();
-		int i = 0;
-		int l = FlxG.cameras.size;
-		FlxCamera cam;
-		while(i < l)
-		{		
-			cam = FlxG.cameras.get(i++);			
-			if((cam != null) && cam.exists)
-			{
-				if(cam.active)
-				{
-					cam.buffer.update();
-//					FlxG.batch.setProjectionMatrix(cam.buffer.combined);
-					cam.buffer.apply(Gdx.gl10);
-					cam.draw();
-				}
-			}
-//			FlxG.lockCameras();
-			_state.draw();
-			FlxG.drawPlugins();
-			font.setText("fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width-45, 0);
-			font.draw(FlxG.batch);//TODO:delete FPS counter
-			FlxG.unlockCameras();
-			i++;
+		FlxG.camera.buffer.update();
+		if(_GL11Supported)
+		{
+			FlxG.camera.buffer.apply(Gdx.gl11);
+			// TODO: performance boost for OpenGL ES 1.1?
 		}
+		else
+		{
+			FlxG.camera.buffer.apply(Gdx.gl10);
+		}
+//		FlxG.camera.draw();
+//		FlxG.lockCameras();
+		_state.draw();
+//		FlxG.drawPlugins();
+		font.setText("fps:"+Gdx.graphics.getFramesPerSecond(), 435, 0);
+		font.draw(FlxG.batch);//TODO:delete FPS counter
+		FlxG.camera.drawFX();
+//		FlxG.unlockCameras();
 		FlxG.batch.end();
 	}
 

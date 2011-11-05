@@ -456,20 +456,7 @@ public class FlxObject extends FlxBasic
 	@Override
 	public void draw()
 	{
-		if(cameras == null)
-			cameras = FlxG.cameras;
-		FlxCamera camera;
-		int i = 0;
-		int l = cameras.size;
-		while(i < l)
-		{
-			camera = cameras.get(i++);
-			if(!onScreen(camera))
-				continue;
-			_VISIBLECOUNT++;
-			if(FlxG.visualDebug && !ignoreDrawDebug)
-				drawDebug(camera);
-		}
+		_VISIBLECOUNT++;
 	}
 	
 	

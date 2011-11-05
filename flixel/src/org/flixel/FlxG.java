@@ -3,6 +3,7 @@ package org.flixel;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 
+import org.flixel.event.AFlxCamera;
 import org.flixel.event.AFlxG;
 import org.flixel.event.AFlxObject;
 import org.flixel.system.FlxQuadTree;
@@ -963,13 +964,51 @@ public class FlxG
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	/*static public void flash(int Color, float Duration, Interface OnComplete:Function=null, boolean Force)
+	static public void flash(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
-		int i = 0;
-		int l = FlxG.cameras.length;
-		while(i < l)
-			(FlxG.cameras[i++]).flash(Color,Duration,OnComplete,Force);
-	}*/
+		FlxG.camera.flash(Color,Duration,OnComplete,Force);
+	}
+	
+	/**
+	 * All screens are filled with this color and gradually return to normal.
+	 * 
+	 * @param	Color		The color you want to use.
+	 * @param	Duration	How long it takes for the flash to fade.
+	 * @param	OnComplete	A function you want to run when the flash finishes.
+	 */
+	static public void flash(int Color, float Duration, AFlxCamera OnComplete)
+	{
+		flash(Color, Duration, OnComplete, false);
+	}
+	
+	/**
+	 * All screens are filled with this color and gradually return to normal.
+	 * 
+	 * @param	Color		The color you want to use.
+	 * @param	Duration	How long it takes for the flash to fade.
+	 */
+	static public void flash(int Color, float Duration)
+	{
+		flash(Color, Duration, null, false);
+	}
+	
+	/**
+	 * All screens are filled with this color and gradually return to normal.
+	 * 
+	 * @param	Color		The color you want to use.
+	 */
+	static public void flash(int Color)
+	{
+		flash(Color, 1, null, false);
+	}
+	
+	/**
+	 * All screens are filled with this color and gradually return to normal.
+	 */
+	static public void flash()
+	{
+		flash(0xFFFFFFFF, 1, null, false);
+	}
 	
 	
 	/**
@@ -980,13 +1019,51 @@ public class FlxG
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	/*static public void fade(int Color, float Duration, interface OnComplete:Function=null, boolean Force)
+	static public void fade(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
-		int i = 0;
-		int l = FlxG.cameras.length;
-		while(i < l)
-			(FlxG.cameras[i++]).fade(Color,Duration,OnComplete,Force);
-	}*/
+		FlxG.camera.fade(Color,Duration,OnComplete,Force);
+	}
+	
+	/**
+	 * The screen is gradually filled with this color.
+	 * 
+	 * @param	Color		The color you want to use.
+	 * @param	Duration	How long it takes for the fade to finish.
+	 * @param	OnComplete	A function you want to run when the fade finishes.
+	 */
+	static public void fade(int Color, float Duration, AFlxCamera OnComplete)
+	{
+		FlxG.camera.fade(Color,Duration,OnComplete,false);
+	}
+	
+	/**
+	 * The screen is gradually filled with this color.
+	 * 
+	 * @param	Color		The color you want to use.
+	 * @param	Duration	How long it takes for the fade to finish.
+	 */
+	static public void fade(int Color, float Duration)
+	{
+		FlxG.camera.fade(Color,Duration,null,false);
+	}
+	
+	/**
+	 * The screen is gradually filled with this color.
+	 * 
+	 * @param	Color		The color you want to use.
+	 */
+	static public void fade(int Color)
+	{
+		FlxG.camera.fade(Color,1,null,false);
+	}
+	
+	/**
+	 * The screen is gradually filled with this color.
+	 */
+	static public void fade()
+	{
+		FlxG.camera.fade(0xFF000000,1,null,false);
+	}
 	
 	
 	/**
@@ -998,13 +1075,64 @@ public class FlxG
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).  Default value is SHAKE_BOTH_AXES (0).
 	 */
-	/*static public void shake(float Intensity, float Duration, Interface OnComplete:Function=null, boolean Force, int Direction)
+	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete, boolean Force, int Direction)
 	{
-		int i = 0;
-		int l = FlxG.cameras.length;
-		while(i < l)
-			(FlxG.cameras[i++]).shake(Intensity,Duration,OnComplete,Force,Direction);
-	}*/
+		FlxG.camera.shake(Intensity,Duration,OnComplete,Force,Direction);
+	}
+	
+	/**
+	 * A simple screen-shake effect.
+	 * 
+	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param	Duration	The length in seconds that the shaking effect should last.
+	 * @param	OnComplete	A function you want to run when the shake effect finishes.
+	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
+	 */
+	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete, boolean Force)
+	{
+		FlxG.camera.shake(Intensity,Duration,OnComplete,Force,0);
+	}
+	
+	/**
+	 * A simple screen-shake effect.
+	 * 
+	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param	Duration	The length in seconds that the shaking effect should last.
+	 * @param	OnComplete	A function you want to run when the shake effect finishes.
+	 */
+	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete)
+	{
+		FlxG.camera.shake(Intensity,Duration,OnComplete,false,0);
+	}
+	
+	/**
+	 * A simple screen-shake effect.
+	 * 
+	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param	Duration	The length in seconds that the shaking effect should last.
+	 */
+	static public void shake(float Intensity, float Duration)
+	{
+		FlxG.camera.shake(Intensity,Duration,null,false,0);
+	}
+	
+	/**
+	 * A simple screen-shake effect.
+	 * 
+	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 */
+	static public void shake(float Intensity)
+	{
+		FlxG.camera.shake(Intensity,0.5f,null,false,0);
+	}
+	
+	/**
+	 * A simple screen-shake effect.
+	 */
+	static public void shake()
+	{
+		FlxG.camera.shake(0.05f,0.5f,null,false,0);
+	}
 	
 	
 	/**
