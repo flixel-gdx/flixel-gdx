@@ -3,6 +3,7 @@ package org.flixel;
 import org.flixel.event.AFlxCamera;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -212,15 +213,15 @@ public class FlxCamera extends FlxBasic
 		bgColor = FlxG.getBgColor();
 		_color = 0xFFFFFFFF;
 		
-//		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(Width), FlxU.ceilPowerOfTwo(Height), Format.RGBA8888);
-		/*p.setColor(1, 1, 1, 1);
+		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo((int) (Width*getZoom())), FlxU.ceilPowerOfTwo((int) (Height*getZoom())), Format.RGBA8888);
+		p.setColor(1, 1, 1, 1);
 		p.fillRectangle(0, 0, Width, Height);
 		_flashBitmap = new Sprite(new Texture(p), width, height);
 		_flashBitmap.setPosition(x, y);
-		_flashBitmap.setColor(1,1,1,.9f);
-		p.dispose();*/
+		_flashBitmap.setColor(0,0,0,0);
+		p.dispose();
 		
-		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo((int) (Width*getZoom())), FlxU.ceilPowerOfTwo((int) (Height*getZoom())), Format.RGBA8888);
+		p = new Pixmap(FlxU.ceilPowerOfTwo((int) (Width*getZoom())), FlxU.ceilPowerOfTwo((int) (Height*getZoom())), Format.RGBA8888);
 		p.setColor(1, 1, 1, 1);
 		p.fillRectangle(-x, -y, ((int)(Width*2)), ((int)(Height*2)));
 		_flashSprite = new Sprite(new Texture(p), ((int)(width)), ((int)(height)));
@@ -372,6 +373,12 @@ public class FlxCamera extends FlxBasic
 	public void draw()
 	{
 		_flashSprite.draw(FlxG.batch);
+	}
+	
+	
+	public void drawFront()
+	{
+		_flashBitmap.draw(FlxG.batch);
 	}
 
 	
@@ -768,26 +775,27 @@ public class FlxCamera extends FlxBasic
 			_zoom = defaultZoom;
 		else
 			_zoom = Zoom;
-		//buffer.project(new Vector3(x, y, 0), x, y, width, height);
-		setScale(_zoom, _zoom); //TODO setScale
+		setScale(_zoom, _zoom);
 	}
 	
 	/**
 	 * The alpha value of this camera display (a Number between 0.0 and 1.0).
-	 */ //TODO: get Alpha.
-	/*public float getAlpha()
+	 */
+	public float getAlpha()
 	{
-		return _flashSprite.alpha;
-	}*/
+		return _flashBitmap.getColor().a;
+	}
 	
 	
 	/**
 	 * @private
-	 */ //TODO: set alpha. Putting a layer above and do this (current alpha = 1-Alpha)? 
-	/*public function set alpha(Alpha:Number):void
-	{
-		_flashSprite.alpha = Alpha;
-	}*/
+	 */ 
+	public void setAlpha(float Alpha)
+	{		
+		Color color = _flashBitmap.getColor();
+		_flashBitmap.setColor(color.r, color.g, color.b, Alpha);
+		_flashBitmap.setColor(0,0,0,0);
+	}
 	
 	
 	/**
@@ -857,29 +865,27 @@ public class FlxCamera extends FlxBasic
 	}
 	
 	
-	
-	
-	
 	/**
 	 * Internal helper function, handles the actual drawing of all the special effects.
 	 */
 	void drawFX()
 	{
-//		float alphaComponent;
-//		
-//		//Draw the "flash" special effect onto the buffer
-//		if(_fxFlashAlpha > 0.0)
-//		{
-//			alphaComponent = _fxFlashColor >> 24;
-//			//fill(((((alphaComponent <= 0)?0xff:alphaComponent)*_fxFlashAlpha)<<24)+(_fxFlashColor&0x00ffffff));
-//		}
-//		
-//		//Draw the "fade" special effect onto the buffer
-//		if(_fxFadeAlpha > 0.0)
-//		{
-//			alphaComponent = _fxFadeColor>>24;
-//			fill((uint(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFadeAlpha)<<24)+(_fxFadeColor&0x00ffffff));
-//		}
+		float[] rgba;
+		//Draw the "flash" special effect onto the buffer
+		if(_fxFlashAlpha > 0.0)
+		{
+			rgba =  FlxU.getRGBA(_fxFlashColor);
+			_flashBitmap.setColor(rgba[0],rgba[1],rgba[2],_fxFlashAlpha);
+			drawFront();
+		}
+		
+		//Draw the "fade" special effect onto the buffer
+		if(_fxFadeAlpha > 0.0)
+		{
+			rgba =  FlxU.getRGBA(_fxFadeColor);
+			_flashBitmap.setColor(rgba[0],rgba[1],rgba[2],_fxFadeAlpha);
+			drawFront();
+		}
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
