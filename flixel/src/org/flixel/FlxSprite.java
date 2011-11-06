@@ -119,10 +119,14 @@ public class FlxSprite extends FlxObject
 	protected TextureRegion _pixels;
 
 
-	
-	
-	
-	
+	/**
+	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
+	 * Optionally can load a simple, one-frame graphic instead.
+	 * 
+	 * @param	X				The initial X position of the sprite.
+	 * @param	Y				The initial Y position of the sprite.
+	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
+	 */
 	public FlxSprite(float X, float Y, TextureRegion SimpleGraphic)
 	{
 		super(X, Y);
@@ -153,22 +157,42 @@ public class FlxSprite extends FlxObject
 		loadGraphic(SimpleGraphic);
 	}
 		
+	/**
+	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
+	 * Optionally can load a simple, one-frame graphic instead.
+	 * 
+	 * @param	X				The initial X position of the sprite.
+	 * @param	Y				The initial Y position of the sprite.
+	 */
 	public FlxSprite(float X, float Y)
 	{
 		this(X, Y, null);
 	}
 	
+	/**
+	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
+	 * Optionally can load a simple, one-frame graphic instead.
+	 * 
+	 * @param	X				The initial X position of the sprite.
+	 */
 	public FlxSprite(float X)
 	{
 		this(X, 0, null);
 	}
 	
+	/**
+	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
+	 * Optionally can load a simple, one-frame graphic instead.
+	 */
 	public FlxSprite()
 	{
 		this(0, 0, null);
 	}
 	
 	
+	/**
+	 * Clean up memory.
+	 */
 	@Override
 	public void destroy()
 	{
@@ -201,17 +225,16 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
-	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
 	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Height		Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, boolean Reverse, int Width, int Height, boolean Unique)
+	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, int Width, int Height, boolean Unique)
 	{
 		_bakedRotation = 0;
-		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
+		_pixels = FlxG.addBitmap(Graphic, Unique);
 		
 		if(Width == 0)
 		{
@@ -239,15 +262,14 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
-	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
 	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Height		Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, boolean Reverse, int Width, int Height)
+	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, int Width, int Height)
 	{
-		return loadGraphic(Graphic, Animated, Reverse, Width, Height, false);
+		return loadGraphic(Graphic, Animated, Width, Height, false);
 	}
 	
 	/**
@@ -255,14 +277,13 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
-	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
 	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, boolean Reverse, int Width)
 	{
-		return loadGraphic(Graphic, Animated, Reverse, Width, 0, false);
+		return loadGraphic(Graphic, Animated, Width, 0, false);
 	}
 		
 	/**
@@ -270,13 +291,12 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
-	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, boolean Reverse)
 	{
-		return loadGraphic(Graphic, Animated, Reverse, 0, 0, false);
+		return loadGraphic(Graphic, Animated, 0, 0, false);
 	}
 	
 	/**
@@ -289,7 +309,7 @@ public class FlxSprite extends FlxObject
 	 */
 	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated)
 	{
-		return loadGraphic(Graphic, Animated, false, 0, 0, false);
+		return loadGraphic(Graphic, Animated, 0, 0, false);
 	}
 		
 	/**
@@ -301,7 +321,7 @@ public class FlxSprite extends FlxObject
 	 */
 	public FlxSprite loadGraphic(TextureRegion Graphic)
 	{
-		return loadGraphic(Graphic, false, false, 0, 0, false);
+		return loadGraphic(Graphic, false, 0, 0, false);
 	}
 	
 	
@@ -535,6 +555,10 @@ public class FlxSprite extends FlxObject
 	}
 	
 	
+	/**
+	 * Automatically called after update() by the game loop,
+	 * this function just calls updateAnimation().
+	 */
 	@Override
 	public void postUpdate()
 	{		
@@ -543,6 +567,9 @@ public class FlxSprite extends FlxObject
 	}
 	
 	
+	/**
+	 * Called by game loop, updates then blits or renders current frame of animation to the screen
+	 */
 	@Override
 	public void draw()
 	{

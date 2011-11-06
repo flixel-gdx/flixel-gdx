@@ -71,12 +71,12 @@ public class PlayState extends FlxState
 		for (int i = 0; i < theEmitter.getMaxSize()/2; i++) 
 		{
 			whitePixel = new FlxParticle();
-			whitePixel.loadGraphic(Asset.particle2, false, false, 2, 2);
+			whitePixel.loadGraphic(Asset.particle2, false, 2, 2);
 //			whitePixel.makeGraphic(2, 2, 0xFFFFFFFF);
 			whitePixel.visible = false; // Make sure the particle doesn't show up at (0, 0)
 			theEmitter.add(whitePixel);
 			whitePixel = new FlxParticle();
-			whitePixel.loadGraphic(Asset.particle1, false, false, 1, 1);
+			whitePixel.loadGraphic(Asset.particle1, false, 1, 1);
 //			whitePixel.makeGraphic(1, 1, 0xFFFFFFFF);
 			whitePixel.visible = false;
 			theEmitter.add(whitePixel);

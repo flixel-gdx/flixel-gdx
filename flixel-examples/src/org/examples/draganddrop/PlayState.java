@@ -19,7 +19,7 @@ public class PlayState extends FlxState
 		FlxG.setBgColor(0xFF333333);
 		
 		// A shiny flixel logo, untouchable.
-		FlxSprite s = new FlxSprite(100, 20).loadGraphic(Asset.ImgLogo, true, true, 60, 60);
+		FlxSprite s = new FlxSprite(100, 20).loadGraphic(Asset.ImgLogo, true, 60, 60);
 		s.addAnimation("shine", new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4}, 14);
 		s.acceleration.y = 400;
 		s.setSolid(true);
