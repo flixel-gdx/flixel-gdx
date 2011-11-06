@@ -221,14 +221,14 @@ public class FlxCamera extends FlxBasic
 		_flashBitmap.setColor(0,0,0,0);
 		p.dispose();
 		
-		p = new Pixmap(FlxU.ceilPowerOfTwo((int) (Width*getZoom())), FlxU.ceilPowerOfTwo((int) (Height*getZoom())), Format.RGBA8888);
-		p.setColor(1, 1, 1, 1);
-		p.fillRectangle(-x, -y, ((int)(Width*2)), ((int)(Height*2)));
-		_flashSprite = new Sprite(new Texture(p), ((int)(width)), ((int)(height)));
-		_flashSprite.setPosition(0, 0);
-//		_flashSprite.setColor(-120,0,1,1);
-		_flashSprite.flip(false, true);
-		p.dispose();
+		//TODO: this is the background of the camera, but it is replaced by FlxGame.draw() --> gl.glClearColor().
+//		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo((int) (Width*getZoom())), FlxU.ceilPowerOfTwo((int) (Height*getZoom())), Format.RGBA8888);
+//		p.setColor(1, 1, 1, 1);
+//		p.fillRectangle(-x, -y, ((int)(Width*2)), ((int)(Height*2)));
+//		_flashSprite = new Sprite(new Texture(p), ((int)(width)), ((int)(height)));
+//		_flashSprite.setPosition(0, 0);
+//		_flashSprite.flip(false, true);
+//		p.dispose();
 		setColor(bgColor);
 				
 		_fxFlashColor = 0;
@@ -369,13 +369,18 @@ public class FlxCamera extends FlxBasic
 	}
 	
 	
+	/**
+	 * Draw the background of the camera.
+	 */
 	@Override
 	public void draw()
 	{
 		_flashSprite.draw(FlxG.batch);
 	}
 	
-	
+	/**
+	 * Draw the front of the camera. Use for fade and flash.
+	 */
 	public void drawFront()
 	{
 		_flashBitmap.draw(FlxG.batch);
@@ -832,7 +837,7 @@ public class FlxCamera extends FlxBasic
 	public void setColor(int Color)
 	{
 		bgColor = Color;
-		_flashSprite.setColor(FlxU.colorFromHex(Color));
+//		_flashSprite.setColor(FlxU.colorFromHex(Color)); //TODO: the background color for the camera.
 	}
 	
 	/**

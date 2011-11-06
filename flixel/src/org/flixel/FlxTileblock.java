@@ -34,7 +34,7 @@ public class FlxTileblock extends FlxSprite
 			return this;
 		
 		//First create a tile brush
-		FlxSprite sprite = new FlxSprite().loadGraphic(TileGraphic,true,false,TileWidth,TileHeight);
+		FlxSprite sprite = new FlxSprite().loadGraphic(TileGraphic,true,TileWidth,TileHeight);
 		int spriteWidth = sprite.width;
 		int spriteHeight = sprite.height;
 		int total = sprite.frames + Empties;

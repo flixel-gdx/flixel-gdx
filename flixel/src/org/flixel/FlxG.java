@@ -790,13 +790,12 @@ public class FlxG
 	 * flipped version if necessary.
 	 * 
 	 * @param Graphic The image file that you want to load.
-	 * @param Reverse Whether to generate a flipped version.
 	 * @param Unique Make the bitmap unique, no duplicate allowed.
 	 * @param Key
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 */
-	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Reverse, boolean Unique, String Key)
+	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Unique, String Key)
 	{
 		if(Key == null)
 		{	
@@ -831,24 +830,9 @@ public class FlxG
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 */
-	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Reverse, boolean Unique)
+	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Unique)
 	{
-		return addBitmap(Graphic, Reverse, Unique, null);
-	}
-	
-	
-	/**
-	 * Loads a bitmap from a file, caches it, and generates a horizontally
-	 * flipped version if necessary.
-	 * 
-	 * @param Graphic The image file that you want to load.
-	 * @param Reverse Whether to generate a flipped version.
-	 * 
-	 * @return The <code>BitmapData</code> we just created.
-	 */
-	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Reverse)
-	{
-		return addBitmap(Graphic, Reverse, false, null);
+		return addBitmap(Graphic, Unique, null);
 	}
 	
 	
@@ -862,8 +846,9 @@ public class FlxG
 	 */
 	static public TextureRegion addBitmap(TextureRegion Graphic)
 	{
-		return addBitmap(Graphic, false, false, null);
+		return addBitmap(Graphic, false, null);
 	}
+	
 	
 	
 	/**
