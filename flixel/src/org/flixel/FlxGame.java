@@ -130,6 +130,11 @@ public class FlxGame extends Game
 		Gdx.input.setInputProcessor(FlxG.touch);
 //		Gdx.input.setInputProcessor(FlxG.keys);
 		
+		FlxG.resWidth = Gdx.graphics.getWidth();
+		FlxG.resHeight = Gdx.graphics.getHeight();
+		FlxG.difWidth = ((float)FlxG.resWidth / FlxG.width);
+		FlxG.difHeight = ((float)FlxG.resHeight / FlxG.height);
+		
 		if(Gdx.graphics.isGL11Available())
 		{
 			gl = Gdx.graphics.getGL11();

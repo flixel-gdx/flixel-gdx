@@ -55,7 +55,7 @@ public class FlxObject extends FlxBasic
 	/**
 	 * Handy const used during collision resolution (see <code>separateX()</code> and <code>separateY()</code>).
 	 */
-	static public final int OVERLAP_BIAS = 4;
+	static public final float OVERLAP_BIAS = 4;
 	
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
@@ -972,23 +972,27 @@ public class FlxObject extends FlxBasic
 		
 		//If one of the objects is a tilemap, just pass it off.
 		if(Object1 instanceof FlxTilemap)
+		{
 			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2, new AFlxObject()
 			{
 				@Override
-				public boolean onSeparateX(FlxObject Object1, FlxObject Object2)
+				public boolean overlapsWith(FlxObject Object1, FlxObject Object2)
 				{
 					return separateX(Object1, Object2);
 				}
-			});
+			});			
+		}
 		if(Object2 instanceof FlxTilemap)
+		{
 			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,new AFlxObject()
 			{
 				@Override
-				public boolean onSeparateX(FlxObject Object1, FlxObject Object2)
+				public boolean overlapsWith(FlxObject Object1, FlxObject Object2)
 				{					
 					return separateX(Object1, Object2);
 				}
-			},true);
+			},true);			
+		}
 		
 		//First, get the two object deltas
 		float overlap = 0;
@@ -1009,8 +1013,7 @@ public class FlxObject extends FlxBasic
 				if(obj1delta > obj2delta)
 				{
 					overlap = Object1.x + Object1.width - Object2.x;
-					
-					if((overlap > maxOverlap) || (Object1.allowCollisions & RIGHT) == 0 || (Object2.allowCollisions & LEFT) == 0) // TODO: recheck this BITWISE AND
+					if((overlap > maxOverlap) || (Object1.allowCollisions & RIGHT) == 0 || (Object2.allowCollisions & LEFT) == 0)
 						overlap = 0;
 					else
 					{
@@ -1021,7 +1024,8 @@ public class FlxObject extends FlxBasic
 				else if(obj1delta < obj2delta)
 				{
 					overlap = Object1.x - Object2.width - Object2.x;
-					if((-overlap > maxOverlap) || (Object1.allowCollisions & LEFT) == 0 || (Object2.allowCollisions & RIGHT) == 0) // TODO: recheck this BITWISE AND
+//					FlxG.log("separateX: " +(-overlap > maxOverlap)); // TODO: bug this will be true which shouldn't				
+					if((-overlap > maxOverlap) || (Object1.allowCollisions & LEFT) == 0 || (Object2.allowCollisions & RIGHT) == 0)
 						overlap = 0;
 					else
 					{
@@ -1087,23 +1091,27 @@ public class FlxObject extends FlxBasic
 		
 		//If one of the objects is a tilemap, just pass it off.
 		if(Object1 instanceof FlxTilemap)
+		{
 			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2,new AFlxObject()
 			{
 				@Override
-				public boolean onSeparateY(FlxObject Object1, FlxObject Object2)
+				public boolean overlapsWith(FlxObject Object1, FlxObject Object2)
 				{					
 					return separateY(Object1, Object2);
 				}
-			});
+			});			
+		}
 		if(Object2 instanceof FlxTilemap)
+		{
 			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,new AFlxObject()
 			{
 				@Override
-				public boolean onSeparateY(FlxObject Object1, FlxObject Object2)
+				public boolean overlapsWith(FlxObject Object1, FlxObject Object2)
 				{					
 					return separateY(Object1, Object2);
 				}
-			},true);
+			},true);			
+		}
 
 		//First, get the two object deltas
 		float overlap = 0;
@@ -1135,6 +1143,7 @@ public class FlxObject extends FlxBasic
 				else if(obj1delta < obj2delta)
 				{
 					overlap = Object1.y - Object2.height - Object2.y;
+//					FlxG.log("separateY: " +(-overlap > maxOverlap)); // TODO: bug this will be true which shouldn't
 					if((-overlap > maxOverlap) || (Object1.allowCollisions & UP) == 0 || (Object2.allowCollisions & DOWN) == 0)
 						overlap = 0;
 					else

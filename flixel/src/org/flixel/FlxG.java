@@ -136,6 +136,16 @@ public class FlxG
 	 */
 	static public FlxRect worldBounds;
 	/**
+	 * The width in pixels of the display surface.
+	 */
+	static public int resWidth; 
+	/**
+	 * The height in pixels of the display surface.
+	 */
+	static public int resHeight;
+	static public float difWidth;
+	static public float difHeight;
+	/**
 	 * How many times the quad tree should divide the world on each axis.
 	 * Generally, sparse collisions can have fewer divisons,
 	 * while denser collision activity usually profits from more.
@@ -564,8 +574,7 @@ public class FlxG
 		_cache = new TIntObjectHashMap<TextureRegion>();
 		width = Width;
 		height = Height;
-		
-		
+				
 		mute = false;
 		_volume = 0.5f;
 		sounds = new FlxGroup();
@@ -612,11 +621,11 @@ public class FlxG
 	{
 		FlxG.keys.update();
 		if(touches == null)
-			FlxG.touch.update(Gdx.input.getX(0), Gdx.input.getY(0));
+			FlxG.touch.update(Gdx.input.getX(0) / FlxG.difWidth, Gdx.input.getY(0) / FlxG.difHeight);
 		else
 		{
 			for (int i = 0; i < touches.length; i++)
-				touches[i].update(Gdx.input.getX(i), Gdx.input.getY(i));
+				touches[i].update(Gdx.input.getX(i) / FlxG.difWidth, Gdx.input.getY(i) / FlxG.difHeight);
 		}		
 	}
 	
@@ -1185,7 +1194,7 @@ public class FlxG
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * 
-	 * @return	Whether any oevrlaps were detected.
+	 * @return	Whether any overlaps were detected.
 	 */
 	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxG NotifyCallback)
 	{
@@ -1203,7 +1212,7 @@ public class FlxG
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
 	 * 
-	 * @return	Whether any oevrlaps were detected.
+	 * @return	Whether any overlaps were detected.
 	 */
 	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2)
 	{
@@ -1220,7 +1229,7 @@ public class FlxG
 	 * 
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
 	 * 
-	 * @return	Whether any oevrlaps were detected.
+	 * @return	Whether any overlaps were detected.
 	 */
 	static public boolean overlap(FlxBasic ObjectOrGroup1)
 	{
@@ -1235,7 +1244,7 @@ public class FlxG
 	 * 
 	 * <p>NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.</p>
 	 * 
-	 * @return	Whether any oevrlaps were detected.
+	 * @return	Whether any overlaps were detected.
 	 */
 	static public boolean overlap()
 	{
