@@ -1,0 +1,68 @@
+
+data1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+map2
+  rotate: false
+  xy: 0, 0
+  size: 40, 30
+  orig: 40, 30
+  offset: 0, 0
+  index: -1
+bg
+  rotate: false
+  xy: 40, 0
+  size: 16, 18
+  orig: 16, 18
+  offset: 0, 0
+  index: -1
+pusher
+  rotate: false
+  xy: 56, 0
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1
+map
+  rotate: false
+  xy: 64, 0
+  size: 20, 15
+  orig: 20, 15
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 0, 30
+  size: 70, 14
+  orig: 70, 14
+  offset: 0, 0
+  index: -1
+elevator
+  rotate: false
+  xy: 70, 30
+  size: 50, 12
+  orig: 50, 12
+  offset: 0, 0
+  index: -1
+crate
+  rotate: false
+  xy: 40, 18
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+tiles
+  rotate: false
+  xy: 0, 44
+  size: 128, 8
+  orig: 128, 8
+  offset: 0, 0
+  index: -1
+gibs
+  rotate: false
+  xy: 84, 0
+  size: 24, 6
+  orig: 24, 6
+  offset: 0, 0
+  index: -1

@@ -5,6 +5,7 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="libs/gdx-backend-android.jar" sourcepath="libs/gdx-backend-android-sources.jar"/>
 	<classpathentry kind="lib" path="/flixel/libs/gdx.jar" sourcepath="/flixel/libs/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-audio.jar" sourcepath="libs/gdx-audio-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/flixel"/>
 	<classpathentry kind="lib" path="/flixel/libs/trove-3.0.1.jar" sourcepath="/flixel/libs/trove-3.0.1-src.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/flixel-examples"/>

@@ -71,14 +71,16 @@ public class Touch extends InputAdapter
 	public void update(float X, float Y)
 	{
 		//update the x, y, screenX, and screenY variables based on the default camera.
-		//This is basically a combination of getWorldPosition() and getScreenPosition()
+		//This is basically a combination of getWorldPosition() and getScreenPosition()		
 		_globalScreenPosition.x = X;
 		_globalScreenPosition.y = Y;
 		FlxCamera camera = FlxG.camera;
 		screenX = (int) ((_globalScreenPosition.x - camera.x) / camera.getZoom());
 		screenY = (int) ((_globalScreenPosition.y - camera.y) / camera.getZoom());
+		
 		x = screenX + camera.scroll.x;
 		y = screenY + camera.scroll.y;
+		
 		if((_last == -1) && (_current == -1))
 			_current = 0;
 		else if((_last == 2) && (_current == 2))

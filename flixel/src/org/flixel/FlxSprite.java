@@ -5,6 +5,8 @@ import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxSprite;
 import org.flixel.system.FlxAnim;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -615,32 +617,51 @@ public class FlxSprite extends FlxObject
 	 * @param	X			The X coordinate of the brush's top left corner on this sprite.
 	 * @param	Y			They Y coordinate of the brush's top left corner on this sprite.
 	 */
-	public void stamp(FlxSprite Brush, int X, int Y)
-	{
-		Brush.drawFrame();
-		Sprite bitmapData = Brush.framePixels;
+	public void stamp(Pixmap Brush, int X, int Y, int frame)
+	{		
+		Pixmap pixS1 = Brush;
+		Pixmap pixD = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
+		pixD.drawPixmap(pixS1, 0, 0, 0, 0, 128, 64);
+//		pixD.drawPixmap(pixS2, 0, 0, 0, 0, 38, 76);
+//	
+//		_pixels.setRegion(bitmapData, 0, 0, bitmapData.getRegionWidth(), bitmapData.getRegionHeight());
+//		_pixels.setRegion(bitmapData);
+		framePixels = new Sprite(new Texture(pixD));
+		framePixels.flip(false, true);
+//		//framePixels.getTexture().draw(pixS1, 10, 0);
+//		
+////		calcFrame();
+////		resetHelpers();
+////		framePixels.setPosition(X, Y);
+//		pixS1.dispose();
+		pixD.dispose();
+		return;
 		
 		// Simple draw
-		if(((Brush.angle == 0) || (Brush._bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
-		{
-			_pixels.setRegion(bitmapData, 0, 0, bitmapData.getRegionWidth(), bitmapData.getRegionHeight());
-			calcFrame();
-			resetHelpers();
-			framePixels.setPosition(X, Y);
-			return;
-		}
-		
-		
-		//Advanced draw		
-		framePixels.setPosition(-Brush.origin.x,-Brush.origin.y);
-		framePixels.setScale(Brush.scale.x,Brush.scale.y);
-		if(Brush.angle != 0)
-			framePixels.rotate(Brush.angle * 0.017453293f);
-		framePixels.translate(X+Brush.origin.x,Y+Brush.origin.y);
-		calcFrame();
-		resetHelpers();
+//		if(((Brush.angle == 0) || (Brush._bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
+//		{
+//			_pixels.setRegion(bitmapData, 0, 0, bitmapData.getRegionWidth(), bitmapData.getRegionHeight());
+//			calcFrame();
+//			resetHelpers();
+//			framePixels.setPosition(X, Y);
+//			return;
+//		}
+//		
+//		
+//		//Advanced draw		
+//		framePixels.setPosition(-Brush.origin.x,-Brush.origin.y);
+//		framePixels.setScale(Brush.scale.x,Brush.scale.y);
+//		if(Brush.angle != 0)
+//			framePixels.rotate(Brush.angle * 0.017453293f);
+//		framePixels.translate(X+Brush.origin.x,Y+Brush.origin.y);
+//		calcFrame();
+//		resetHelpers();
 	}
 	
+	public void stamp(Pixmap Brush, int X, int Y)
+	{
+		stamp(Brush, X, Y, 0);
+	}
 	
 	/**
 	 * This function draws a line on this sprite from position X1,Y1

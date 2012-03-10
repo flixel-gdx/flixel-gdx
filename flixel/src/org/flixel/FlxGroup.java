@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.utils.ArrayExtended;
+import org.flixel.utils.FlxArray;
 
 public class FlxGroup extends FlxBasic
 {
@@ -16,7 +16,7 @@ public class FlxGroup extends FlxBasic
 	/**
 	 * Array of all the <code>FlxBasic</code>s that exist in this group.
 	 */
-	public ArrayExtended<FlxBasic> members;
+	public FlxArray<FlxBasic> members;
 	/**
 	 * The number of entries in the members array.
 	 * For performance and safety you should check this variable
@@ -50,7 +50,7 @@ public class FlxGroup extends FlxBasic
 	public FlxGroup(int MaxSize)
 	{
 		super();
-		members = new ArrayExtended<FlxBasic>();
+		members = new FlxArray<FlxBasic>();
 		if(MaxSize > 0)
 			members.setMaxSize(MaxSize);
 		length = 0;
@@ -186,7 +186,7 @@ public class FlxGroup extends FlxBasic
 	 *
 	 * @return	The same <code>FlxBasic</code> object that was passed in.
 	 */
-	public FlxBasic add(FlxBasic Object)
+	public FlxBasic add(FlxBasic Object)//TODO auto resize via FlxArray
 	{
 		//Don't bother adding an object twice.
 		if(members.indexOf(Object, true) >= 0)
