@@ -615,6 +615,7 @@ public class FlxQuadTree extends FlxRect
 					overlapProcessed = true;
 				if(overlapProcessed && (_notifyCallback != null))
 					_notifyCallback.onNotifyCallback(_object,checkObject);
+				
 			}
 			_iterator = _iterator.next;
 		}

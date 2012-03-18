@@ -2,7 +2,6 @@ package org.flixel;
 
 import org.flixel.event.AFlxCamera;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -100,7 +99,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The actual bitmap data of the camera display itself.
 	 */
-	public Camera buffer;
+	public OrthographicCamera buffer;
 	/**
 	 * The natural background color of the camera. Defaults to FlxG.bgColor.
 	 * NOTE: can be transparent for crazy FX!

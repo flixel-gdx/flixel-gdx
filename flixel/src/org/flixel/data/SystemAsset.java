@@ -2,7 +2,6 @@ package org.flixel.data;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -16,7 +15,7 @@ public class SystemAsset
 	/**
 	 * Default font (Nokia Cellphone FC)
 	 */
-	static public BitmapFontCache system;
+	static public BitmapFont system;
 	static public TextureRegion ImgDefault;
 	static public TextureRegion ImgButton;
 	
@@ -26,6 +25,6 @@ public class SystemAsset
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("flixel/data/pack"));
 		ImgDefault = atlas.findRegion("default");
 		ImgButton = atlas.findRegion("button");
-		system = new BitmapFontCache(new BitmapFont(Gdx.files.internal("flixel/data/font/nokiafc22.fnt"), Gdx.files.internal("flixel/data/font/nokiafc22.png"), true));
+		system = new BitmapFont(Gdx.files.internal("flixel/data/font/nokiafc22.fnt"), Gdx.files.internal("flixel/data/font/nokiafc22.png"), true);
 	}
 }

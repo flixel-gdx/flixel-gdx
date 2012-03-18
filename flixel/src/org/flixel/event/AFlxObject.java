@@ -10,5 +10,5 @@ public abstract class AFlxObject
 	
 	public boolean onSeparateY(FlxObject Object1, FlxObject Object2){return false;}
 
-	public boolean overlapsWith(FlxObject object, FlxObject tile){return false;}
+	public boolean onOverlapsWith(FlxObject object, FlxObject tile){return false;}
 }

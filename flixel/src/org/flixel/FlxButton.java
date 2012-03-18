@@ -223,37 +223,43 @@ public class FlxButton extends FlxSprite
 		FlxCamera camera;
 		int i = 0;
 		int l = cameras.size;
+		int j = 0;
+		int k = 8;
 		boolean offAll = true;
 		while(i < l)
 		{
 			camera = cameras.get(i++);
-			FlxG.touch.getWorldPosition(camera, _point);
-			if(overlapsPoint(_point, true, camera))
+			while(j < k)
 			{
-				offAll = false;
-				if(FlxG.touch.justPressed())
+				FlxG.mouse.getWorldPosition(camera, _point, j);
+				if(overlapsPoint(_point, true, camera))
 				{
-					status = PRESSED;
-					if(buttonEvent != null)
-						buttonEvent.onDown();
+					offAll = false;
+					if(FlxG.mouse.justPressed(j))
+					{
+						status = PRESSED;
+						if(buttonEvent != null)
+							buttonEvent.onDown();
+					}
+					else if(FlxG.mouse.pressed(j))
+					{					
+						status = PRESSED;
+						if(buttonEvent != null)
+							buttonEvent.onPressed();
+					}
+					else if(FlxG.mouse.justReleased(j))
+					{
+						if(buttonEvent != null)
+							buttonEvent.onUp();
+						status = NORMAL;
+					}
 				}
-				else if(FlxG.touch.pressed())
-				{					
-					status = PRESSED;
-					if(buttonEvent != null)
-						buttonEvent.onPressed();
-				}
-				else if(FlxG.touch.justReleased())
-				{
-					if(buttonEvent != null)
-						buttonEvent.onUp();
-					status = NORMAL;
-				}
+				++j;
 			}			
 		}
 		if(offAll)
 		{
-			if(FlxG.touch.pressed() && status != NORMAL)
+			if(FlxG.mouse.pressed() && status != NORMAL)
 			{
 				if(buttonEvent != null)
 					buttonEvent.onOut();

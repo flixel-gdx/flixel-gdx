@@ -17,148 +17,118 @@ public class Keyboard extends Input
 		super();
 		
 		// LETTERS (A-Z)
-		int i = 29;
-		while(i <= 54)
-			addKey(i++);
+		addKey("A", Keys.A);
+		addKey("B", Keys.B);
+		addKey("C", Keys.C);
+		addKey("D", Keys.D);
+		addKey("E", Keys.E);
+		addKey("F", Keys.F);
+		addKey("G", Keys.G);
+		addKey("H", Keys.H);
+		addKey("I", Keys.I);
+		addKey("J", Keys.J);
+		addKey("K", Keys.K);
+		addKey("L", Keys.L);
+		addKey("M", Keys.M);
+		addKey("N", Keys.N);
+		addKey("O", Keys.O);
+		addKey("P", Keys.P);
+		addKey("Q", Keys.Q);
+		addKey("R", Keys.R);
+		addKey("S", Keys.S);
+		addKey("T", Keys.T);
+		addKey("U", Keys.U);
+		addKey("V", Keys.V);
+		addKey("W", Keys.W);
+		addKey("X", Keys.X);
+		addKey("Y", Keys.Y);
+		addKey("Z", Keys.Z);
 		
 		//NUMBERS (0-9)
-		i = 7;
-		while(i < 16)
-			addKey(i++);
+		//addKey("ZERO");
+		addKey("NUMPADZERO",Keys.NUM_0);
+		addKey("NUMPADONE",Keys.NUM_1);
+		addKey("NUMPADTWO",Keys.NUM_2);
+		addKey("NUMPADTHREE",Keys.NUM_3);
+		addKey("NUMPADFOUR",Keys.NUM_4);
+		addKey("NUMPADFIVE",Keys.NUM_5);
+		addKey("NUMPADSIX",Keys.NUM_6);
+		addKey("NUMPADSEVEN",Keys.NUM_7);
+		addKey("NUMPADEIGHT",Keys.NUM_8);
+		addKey("NUMPADNINE",Keys.NUM_9);
+		addKey("PAGEUP", Keys.PAGE_UP);
+		addKey("PAGEDOWN", Keys.PAGE_DOWN);
+		addKey("HOME", Keys.HOME);
+		addKey("END", Keys.END);
+		addKey("INSERT", Keys.INSERT);
 		
 		//FUNCTION KEYS (F1-F12)
-		i = 244;
-		while(i <= 255)
-			addKey(i++);
+		addKey("F1", Keys.F1);
+		addKey("F2", Keys.F2);
+		addKey("F3", Keys.F3);
+		addKey("F4", Keys.F4);
+		addKey("F5", Keys.F5);
+		addKey("F6", Keys.F6);
+		addKey("F7", Keys.F7);
+		addKey("F8", Keys.F8);
+		addKey("F9", Keys.F9);
+		addKey("F10", Keys.F10);
+		addKey("F11", Keys.F11);
+		addKey("F12", Keys.F12);
 		
 		//SPECIAL KEYS + PUNCTUATION
-		addKey(Keys.ALT_LEFT);		
-		addKey(Keys.ALT_RIGHT);
-		addKey(Keys.APOSTROPHE);
-		addKey(Keys.AT);
-		addKey(Keys.BACK);
-		addKey(Keys.BACKSLASH);
-		addKey(Keys.CALL);
-		addKey(Keys.CAMERA);
-		addKey(Keys.CLEAR);
-		addKey(Keys.COMMA);
-		addKey(Keys.DEL);
-		addKey(Keys.BACKSPACE);
-		addKey(Keys.FORWARD_DEL);
-		addKey(Keys.ENDCALL);
-		addKey(Keys.ENTER);
-		addKey(Keys.ENVELOPE);
-		addKey(Keys.EQUALS);
-		addKey(Keys.EXPLORER);
-		addKey(Keys.FOCUS);
-		addKey(Keys.GRAVE);
-		addKey(Keys.HEADSETHOOK);
-		addKey(Keys.HOME);
-		addKey(Keys.LEFT_BRACKET);
-		addKey(Keys.MEDIA_FAST_FORWARD);
-		addKey(Keys.MEDIA_NEXT);
-		addKey(Keys.MEDIA_PREVIOUS);
-		addKey(Keys.MEDIA_REWIND);
-		addKey(Keys.MEDIA_STOP);
-		addKey(Keys.MENU);
-		addKey(Keys.MINUS);
-		addKey(Keys.MUTE);
-		addKey(Keys.NOTIFICATION);
-		addKey(Keys.NUM);
-		addKey(Keys.PERIOD);
-		addKey(Keys.PLUS);
-		addKey(Keys.POUND);
-		addKey(Keys.POWER);
-		addKey(Keys.RIGHT_BRACKET);
-		addKey(Keys.SEARCH);
-		addKey(Keys.SEMICOLON);
-		addKey(Keys.SHIFT_LEFT);
-		addKey(Keys.SHIFT_RIGHT);
-		addKey(Keys.SLASH);
-		addKey(Keys.SOFT_LEFT);
-		addKey(Keys.SOFT_RIGHT);
-		addKey(Keys.SPACE);
-		addKey(Keys.STAR);
-		addKey(Keys.SYM);
-		addKey(Keys.TAB);
-		addKey(Keys.UNKNOWN);
-		addKey(Keys.VOLUME_DOWN);
-		addKey(Keys.VOLUME_UP);
-		addKey(Keys.META_ALT_LEFT_ON);
-		addKey(Keys.META_ALT_ON);
-		addKey(Keys.META_ALT_RIGHT_ON);
-		addKey(Keys.META_SHIFT_LEFT_ON);
-		addKey(Keys.META_SHIFT_ON);
-		addKey(Keys.META_SHIFT_RIGHT_ON);
-		addKey(Keys.META_SYM_ON);
-		addKey(Keys.CONTROL_LEFT);
-		addKey(Keys.CONTROL_RIGHT);
-		addKey(Keys.ESCAPE);
-		addKey(Keys.END);
-		addKey(Keys.INSERT);
-		addKey(Keys.PAGE_UP);
-		addKey(Keys.PAGE_DOWN);
-		addKey(Keys.PICTSYMBOLS);
-		addKey(Keys.SWITCH_CHARSET);
-		addKey(Keys.BUTTON_CIRCLE);
-		addKey(Keys.BUTTON_A);
-		addKey(Keys.BUTTON_B);
-		addKey(Keys.BUTTON_C);
-		addKey(Keys.BUTTON_X);
-		addKey(Keys.BUTTON_Y);
-		addKey(Keys.BUTTON_Z);
-		addKey(Keys.BUTTON_L1);
-		addKey(Keys.BUTTON_R1);
-		addKey(Keys.BUTTON_L2);
-		addKey(Keys.BUTTON_R2);
-		addKey(Keys.BUTTON_THUMBL);
-		addKey(Keys.BUTTON_THUMBR);
-		addKey(Keys.BUTTON_START);
-		addKey(Keys.BUTTON_SELECT);
-		addKey(Keys.BUTTON_MODE);
-		addKey(Keys.COLON);
-		
-		// ARROWS
-		addKey(Keys.CENTER);
-		addKey(Keys.DOWN);
-		addKey(Keys.LEFT);
-		addKey(Keys.RIGHT);
-		addKey(Keys.UP);
-		
-		// D-PAD
-		addKey(Keys.DPAD_CENTER);
-		addKey(Keys.DPAD_DOWN);
-		addKey(Keys.DPAD_LEFT);
-		addKey(Keys.DPAD_RIGHT);
-		addKey(Keys.DPAD_UP);
+		addKey("ESCAPE",Keys.ESCAPE);
+		addKey("MINUS",Keys.MINUS);
+		//addKey("NUMPADMINUS", Keys.MINUS);
+		addKey("PLUS",Keys.PLUS);
+		//addKey("NUMPADPLUS",Keys.PLUS);
+		addKey("DELETE",Keys.DEL);
+		addKey("BACKSPACE",Keys.BACKSPACE);
+		addKey("LBRACKET",Keys.LEFT_BRACKET);
+		addKey("RBRACKET",Keys.RIGHT_BRACKET);
+		addKey("BACKSLASH",Keys.BACKSLASH);
+		//addKey("CAPSLOCK",Keys.CAPS_LOCK);
+		addKey("SEMICOLON",Keys.SEMICOLON);
+		//addKey("QUOTE",Keys.QUOTE);
+		addKey("ENTER",Keys.ENTER);
+		addKey("SHIFT",Keys.SHIFT_LEFT);
+		addKey("COMMA",Keys.COMMA);
+		addKey("PERIOD",Keys.PERIOD);
+		//addKey("NUMPADPERIOD",Keys.PERIOD);
+		addKey("SLASH",Keys.SLASH);
+		//addKey("NUMPADSLASH",Keys.SLASH);
+		addKey("CONTROL",Keys.CONTROL_LEFT);
+		addKey("ALT",Keys.ALT_LEFT);
+		addKey("SPACE",Keys.SPACE);
+		addKey("UP",Keys.UP);
+		addKey("DOWN",Keys.DOWN);
+		addKey("LEFT",Keys.LEFT);
+		addKey("RIGHT",Keys.RIGHT);
+		addKey("TAB",Keys.TAB);
 	}
 		
 
-	@Override
-	public boolean keyDown(int KeyCode)
+	public void handleKeyDown(int KeyCode)
 	{
-		KeyboardData o = _map.get(KeyCode);
+		KeyState o = _map.get(KeyCode);
 		if(o == null)
-			return false;
+			return;
 		
 		if(o.current > 0)
 			o.current = 1;
 		else
-			o.current = 2;		
-		return false;
+			o.current = 2;
 	}
 	
-	
-	@Override
-	public boolean keyUp(int KeyCode)
+	public void handleKeyUp(int KeyCode)
 	{
-		KeyboardData o = _map.get(KeyCode);
+		KeyState o = _map.get(KeyCode);
 		if(o == null)
-			return false;
+			return;
+		
 		if(o.current > 0)
 			o.current = -1;
 		else
 			o.current = 0;
-		return false;
 	}
 }

@@ -39,6 +39,10 @@
 				  android:name=".ScrollingDemo"
 				  android:screenOrientation="landscape"
 				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Bitmapfont Demo"
+				  android:name=".BitmapfontDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
 		<activity android:label="MultiTouch Demo"
 				  android:name=".MultiTouchDemo"
 				  android:screenOrientation="landscape"

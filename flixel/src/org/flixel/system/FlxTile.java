@@ -13,6 +13,13 @@ public class FlxTile extends FlxObject
 	 */
 	public AFlxTile callback;
 	/**
+	 * Each tile can store its own filter class for their callback functions.
+	 * That is, the callback will only be triggered if an object with a class
+	 * type matching the filter touched it.
+	 * Defaults to null, set through <code>FlxTilemap.setTileProperties()</code>.
+	 */
+	public Class<? extends FlxObject> filter;
+	/**
 	 * A reference to the tilemap this tile object belongs to.
 	 */
 	public FlxTilemap tilemap;

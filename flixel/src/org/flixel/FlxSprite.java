@@ -110,7 +110,7 @@ public class FlxSprite extends FlxObject
 	/**
 	 * Internal tracker for color tint, used with Flash getter/setter.
 	 */
-	protected int _color;
+	protected long _color;
 	/**
 	 * Internal tracker for how many frames of "baked" rotation there are (if any).
 	 */
@@ -235,13 +235,18 @@ public class FlxSprite extends FlxObject
 	 */
 	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, int Width, int Height, boolean Unique)
 	{
+		if((Graphic == null))
+		{
+			FlxG.log("WARNING: Graphic is null. " + toString());
+			return this;
+		}
 		_bakedRotation = 0;
 		_pixels = FlxG.addBitmap(Graphic, Unique);
 		
 		if(Width == 0)
 		{
 			if(Animated)
-				Width = (int) ((int) _pixels.getRegionHeight());
+				Width = (int) _pixels.getRegionHeight();
 			else
 				Width = (int) _pixels.getRegionWidth();
 		}
@@ -584,9 +589,9 @@ public class FlxSprite extends FlxObject
 		
 		if(dirty)	//rarely 
 			calcFrame();
-		
-		_point.x = x - (FlxG.camera.scroll.x * scrollFactor.x) - offset.x;
-		_point.y = y - (FlxG.camera.scroll.y * scrollFactor.y) - offset.y;
+		FlxCamera camera = FlxG.camera;
+		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
+		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
 		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
@@ -594,6 +599,8 @@ public class FlxSprite extends FlxObject
 			framePixels.setPosition(_point.x, _point.y);
 			framePixels.setRotation(angle);
 			framePixels.draw(FlxG.batch);
+			if(FlxG.visualDebug && !ignoreDrawDebug)
+				drawDebug(camera);
 		}
 		else
 		{ 	// Advanced render
@@ -603,9 +610,13 @@ public class FlxSprite extends FlxObject
 				framePixels.setRotation(angle);
 			// framePixels.setRotation(angle * 0.017453293f); // TODO: removing the 0.017453293f makes the rotation better.
 			framePixels.setPosition(_point.x, _point.y);
-			framePixels.draw(FlxG.batch);
+
+				framePixels.draw(FlxG.batch);
+			if(FlxG.visualDebug && !ignoreDrawDebug)
+				drawDebug(camera);
 		}
 		_VISIBLECOUNT++;
+		
 		
 	}
 	
@@ -838,7 +849,7 @@ public class FlxSprite extends FlxObject
 	 */
 	public void play(String AnimName, boolean Force)
 	{
-		if(!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished)) return;
+		if(!Force && (_curAnim != null) && (AnimName.equals(_curAnim.name)) && (!_curAnim.looped || !finished)) return;
 		_curFrame = 0;
 		_curIndex = 0;
 		_frameTimer = 0;
@@ -1006,6 +1017,13 @@ public class FlxSprite extends FlxObject
 	 */
 	public void setAlpha(float Alpha)
 	{
+		if(Alpha > 1)
+			Alpha = 1;
+		if(Alpha < 0)
+			Alpha = 0;
+		if(Alpha == _alpha)
+			return;
+		_alpha = Alpha;
 		framePixels.setColor(framePixels.getColor().r, framePixels.getColor().g, framePixels.getColor().b, Alpha);
 //		dirty = true;
 	}
@@ -1015,7 +1033,7 @@ public class FlxSprite extends FlxObject
 	 * <code>color</code> IGNORES ALPHA.  To change the opacity use <code>alpha</code>.
 	 * Tints the whole sprite to be this color (similar to OpenGL vertex colors).
 	 */
-	public int getColor()
+	public long getColor()
 	{
 		return _color;
 	}
@@ -1024,8 +1042,9 @@ public class FlxSprite extends FlxObject
 	/**
 	 * @private
 	 */
-	public void setColor(int Color)
+	public void setColor(long Color)
 	{
+		_color = Color;
 		framePixels.setColor(FlxU.colorFromHex(Color));
 //		dirty = true;
 	}
@@ -1124,13 +1143,19 @@ public class FlxSprite extends FlxObject
 		
 		//Handle sprite sheets		
 		int widthHelper = _pixels.getRegionWidth();
-		
+		int heightHelper = _pixels.getRegionHeight();
 		if(indexX >= widthHelper)
 		{
 			indexY = (indexX/widthHelper)*frameHeight;
 			indexX %= widthHelper;
 		}
 				
+		if(indexY >= heightHelper)
+		{
+			indexY = heightHelper - frameHeight;
+			indexX = widthHelper - frameWidth;
+		}
+		
 		//Update display bitmap		
 		framePixels.setRegion(indexX+_pixels.getRegionX(), indexY+_pixels.getRegionY(), frameWidth, frameHeight);
 		
