@@ -2,6 +2,9 @@ package org.flixel;
 
 import org.flixel.event.AFlxObject;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 
@@ -257,6 +260,8 @@ public class FlxObject extends FlxBasic
 	 */
 	protected boolean _pathRotate;
 	
+	protected TextureRegion _debug;
+		
 	/**
 	 * Instantiates a <code>FlxObject</code>.
 	 * 
@@ -303,6 +308,7 @@ public class FlxObject extends FlxBasic
 		path = null;
 		pathSpeed = 0;
 		pathAngle = 0;
+		
 	}
 	
 	/**
@@ -370,6 +376,9 @@ public class FlxObject extends FlxBasic
 		if(path != null)
 			path.destroy();
 		path = null;
+		if(_debug != null)
+			_debug.getTexture().dispose();
+		_debug = null;
 	}
 	
 	
@@ -431,18 +440,18 @@ public class FlxObject extends FlxBasic
 		float delta;
 		float velocityDelta;
 
-		velocityDelta = (FlxU.computeVelocity(angularVelocity,angularAcceleration,angularDrag,maxAngular) - angularVelocity)/2;
+		velocityDelta = (FlxU.computeVelocity(angularVelocity,angularAcceleration,angularDrag,maxAngular) - angularVelocity)/2.f;
 		angularVelocity += velocityDelta; 
 		angle += angularVelocity*FlxG.elapsed;
 		angularVelocity += velocityDelta;
 		
-		velocityDelta = (FlxU.computeVelocity(velocity.x,acceleration.x,drag.x,maxVelocity.x) - velocity.x)/2;
+		velocityDelta = (FlxU.computeVelocity(velocity.x,acceleration.x,drag.x,maxVelocity.x) - velocity.x)/2.f;
 		velocity.x += velocityDelta;
 		delta = velocity.x*FlxG.elapsed;
 		velocity.x += velocityDelta;
 		x += delta;
 		
-		velocityDelta = (FlxU.computeVelocity(velocity.y,acceleration.y,drag.y,maxVelocity.y) - velocity.y)/2;
+		velocityDelta = (FlxU.computeVelocity(velocity.y,acceleration.y,drag.y,maxVelocity.y) - velocity.y)/2.f;
 		velocity.y += velocityDelta;
 		delta = velocity.y*FlxG.elapsed;
 		velocity.y += velocityDelta;
@@ -469,23 +478,17 @@ public class FlxObject extends FlxBasic
 	@Override
 	public void drawDebug(FlxCamera Camera)
 	{
-		/*if(Camera == null)
+		if(Camera == null)
 			Camera = FlxG.camera;
-
+		
 		//get bounding box coordinates
 		float boundingBoxX = x - (Camera.scroll.x*scrollFactor.x); //copied from getScreenXY()
 		float boundingBoxY = y - (Camera.scroll.y*scrollFactor.y);
-		boundingBoxX = (int)(boundingBoxX + ((boundingBoxX > 0)?0.0000001:-0.0000001));
-		boundingBoxY = (int)(boundingBoxY + ((boundingBoxY > 0)?0.0000001:-0.0000001));
-		int boundingBoxWidth = (int) ((width != (width))?width:width-1);
-		int boundingBoxHeight = (int) ((height != (height))?height:height-1);*/
+		boundingBoxX = (float) (boundingBoxX + ((boundingBoxX > 0)?0.0000001:-0.0000001f));
+		boundingBoxY = (float) (boundingBoxY + ((boundingBoxY > 0)?0.0000001:-0.0000001f));
 
-		//fill static graphics object with square shape
-		/*var gfx:Graphics = FlxG.flashGfx;
-		gfx.clear();
-		gfx.moveTo(boundingBoxX,boundingBoxY);
 		int boundingBoxColor;
-		if(allowCollisions != 0)
+		if(allowCollisions > 0)
 		{
 			if(allowCollisions != ANY)
 				boundingBoxColor = FlxG.PINK;
@@ -496,14 +499,19 @@ public class FlxObject extends FlxBasic
 		}
 		else
 			boundingBoxColor = FlxG.BLUE;
-		gfx.lineStyle(1,boundingBoxColor,0.5);
-		gfx.lineTo(boundingBoxX+boundingBoxWidth,boundingBoxY);
-		gfx.lineTo(boundingBoxX+boundingBoxWidth,boundingBoxY+boundingBoxHeight);
-		gfx.lineTo(boundingBoxX,boundingBoxY+boundingBoxHeight);
-		gfx.lineTo(boundingBoxX,boundingBoxY);
 		
-		//draw graphics shape to camera buffer
-		Camera.buffer.draw(FlxG.flashGfxSprite);*/
+		if(_debug == null)
+		{	
+			Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(width), FlxU.ceilPowerOfTwo(height),Pixmap.Format.RGBA8888);
+			p.setColor(FlxU.colorFromHex(boundingBoxColor));			
+			p.drawRectangle(0, 0, width, height);
+			_debug = new TextureRegion(new Texture(p));
+			_debug.flip(false, true);
+			p.dispose();
+		}
+		
+		//draw graphics shape to SpriteBatch.
+		FlxG.batch.draw(_debug, boundingBoxX, boundingBoxY);
 	}
 	
 	
@@ -976,7 +984,7 @@ public class FlxObject extends FlxBasic
 			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2, new AFlxObject()
 			{
 				@Override
-				public boolean overlapsWith(FlxObject Object1, FlxObject Object2)
+				public boolean onOverlapsWith(FlxObject Object1, FlxObject Object2)
 				{
 					return separateX(Object1, Object2);
 				}
@@ -987,7 +995,7 @@ public class FlxObject extends FlxBasic
 			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,new AFlxObject()
 			{
 				@Override
-				public boolean overlapsWith(FlxObject Object1, FlxObject Object2)
+				public boolean onOverlapsWith(FlxObject Object1, FlxObject Object2)
 				{					
 					return separateX(Object1, Object2);
 				}
@@ -1095,7 +1103,7 @@ public class FlxObject extends FlxBasic
 			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2,new AFlxObject()
 			{
 				@Override
-				public boolean overlapsWith(FlxObject Object1, FlxObject Object2)
+				public boolean onOverlapsWith(FlxObject Object1, FlxObject Object2)
 				{					
 					return separateY(Object1, Object2);
 				}
@@ -1106,7 +1114,7 @@ public class FlxObject extends FlxBasic
 			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,new AFlxObject()
 			{
 				@Override
-				public boolean overlapsWith(FlxObject Object1, FlxObject Object2)
+				public boolean onOverlapsWith(FlxObject Object1, FlxObject Object2)
 				{					
 					return separateY(Object1, Object2);
 				}

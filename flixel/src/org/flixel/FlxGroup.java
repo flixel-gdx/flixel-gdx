@@ -1,6 +1,8 @@
 package org.flixel;
 
-import org.flixel.utils.FlxArray;
+
+
+import com.badlogic.gdx.utils.Array;
 
 public class FlxGroup extends FlxBasic
 {
@@ -16,7 +18,7 @@ public class FlxGroup extends FlxBasic
 	/**
 	 * Array of all the <code>FlxBasic</code>s that exist in this group.
 	 */
-	public FlxArray<FlxBasic> members;
+	public Array<FlxBasic> members;
 	/**
 	 * The number of entries in the members array.
 	 * For performance and safety you should check this variable
@@ -50,9 +52,7 @@ public class FlxGroup extends FlxBasic
 	public FlxGroup(int MaxSize)
 	{
 		super();
-		members = new FlxArray<FlxBasic>();
-		if(MaxSize > 0)
-			members.setMaxSize(MaxSize);
+		members = new Array<FlxBasic>(MaxSize);
 		length = 0;
 		_maxSize = MaxSize;
 		_marker = 0;
@@ -78,11 +78,11 @@ public class FlxGroup extends FlxBasic
 			int i = 0;
 			while(i < length)
 			{
-				basic = members.get(i++);
+				basic = members.pop();
 				if(basic != null)
 					basic.destroy();
+				++i;
 			}
-			members.clear();
 			members = null;
 		}
 		_sortIndex = null;
@@ -152,7 +152,7 @@ public class FlxGroup extends FlxBasic
 	public void setMaxSize(int Size)
 	{
 		_maxSize = Size;
-		members.setMaxSize(Size);
+		//members.setMaxSize(Size);
 		if(_marker >= _maxSize)
 			_marker = 0;
 		if((_maxSize == 0) || (members == null) || (_maxSize >= members.size))
@@ -164,11 +164,13 @@ public class FlxGroup extends FlxBasic
 		int l = members.size;
 		while(i < l)
 		{
-			basic = members.get(i++);
+			basic = members.pop();
 			if(basic != null)
 				basic.destroy();
+			++i;
 		}
-		length = members.size = _maxSize;
+		length = _maxSize;
+		members.shrink();
 	}
 	
 	
@@ -186,7 +188,7 @@ public class FlxGroup extends FlxBasic
 	 *
 	 * @return	The same <code>FlxBasic</code> object that was passed in.
 	 */
-	public FlxBasic add(FlxBasic Object)//TODO auto resize via FlxArray
+	public FlxBasic add(FlxBasic Object)
 	{
 		//Don't bother adding an object twice.
 		if(members.indexOf(Object, true) >= 0)
@@ -207,24 +209,13 @@ public class FlxGroup extends FlxBasic
 			i++;
 		}
 		
-		//Failing that, expand the array (if we can) and add the object.
-		if(_maxSize > 0)
-		{
-			if(members.size >= _maxSize)
-				return Object;
-			else if(members.size * 2 <= _maxSize)
-				members.size *= 2;
-			else
-				members.size = _maxSize;
-		}
-		else
-			members.size *= 2;
-		
+		//Don't add the object if the group is already full
+		if(_maxSize > 0 && members.size >= _maxSize)
+			return Object;
+
 		//If we made it this far, then we successfully grew the group,
 		//and we can go ahead and add the object at the first open slot.
-		if(members.size >= i)
-			members.size++;
-		members.set(i, Object);
+		members.add(Object);
 		length = i+1;
 		return Object;
 	}
@@ -251,7 +242,7 @@ public class FlxGroup extends FlxBasic
 	 * 
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
 	 * 
-	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
+	 * @return A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
@@ -282,8 +273,8 @@ public class FlxGroup extends FlxBasic
 				return basic;
 			if(ObjectClass == null)
 				return null;
-			if(length >= 16) //TODO: libgdx standard size is 16. It will throw an error if the max exceeds.
-				members.setMaxSize(members.size++);
+//			if(length >= 16) //TODO: libgdx standard size is 16. It will throw an error if the max exceeds.
+//				members.setMaxSize(members.size++);
 			return add(ObjectClass.newInstance());
 		}
 	}
@@ -366,9 +357,18 @@ public class FlxGroup extends FlxBasic
 			if(basic != null)
 			{
 				if(Recurse && (basic instanceof FlxGroup))
-					((FlxGroup)basic).setAll(VariableName,Value,Recurse);
-//				else
-//					basic[VariableName] = Value; //TODO is this possible in Java?
+					((FlxGroup) basic).setAll(VariableName, Value, Recurse);
+				else
+				{
+					try
+					{
+						basic.getClass().getField(VariableName).set(basic, Value);
+					}
+					catch(Exception e)
+					{
+						FlxG.log("FlxGroup", e.getMessage());
+					}					
+				}
 			}
 		}
 	}
@@ -402,9 +402,18 @@ public class FlxGroup extends FlxBasic
 			if(basic != null)
 			{
 				if(Recurse && (basic instanceof FlxGroup))
-					((FlxGroup)(basic)).callAll(FunctionName,Recurse);
-//				else
-//					basic[FunctionName](); //TODO is this possible in Java?
+					((FlxGroup)(basic)).callAll(FunctionName, Recurse);
+				else
+				{
+					try
+					{
+						basic.getClass().getMethod(FunctionName).invoke(basic);
+					}
+					catch(Exception e)
+					{
+						FlxG.log("FlxGroup", e.getMessage());
+					}
+				}
 			}
 		}
 	}
@@ -425,7 +434,7 @@ public class FlxGroup extends FlxBasic
 		while(i < length)
 		{
 			basic = members.get(i++);
-			if((basic != null) && !basic.exists && ((objectClass == null) || (basic instanceof FlxBasic)))
+			if((basic != null) && !basic.exists && ((objectClass == null) || (objectClass.isInstance(basic))))
 				return basic;
 		}
 		return null;
@@ -582,7 +591,8 @@ public class FlxGroup extends FlxBasic
 	 */
 	public void clear()
 	{
-		length = members.size = 0;
+		length = 0;
+		members.clear();
 	}
 	
 	

@@ -33,18 +33,18 @@ public class Crate extends FlxSprite
 		}
 		
 		// Picks up the sprite
-		if(overlapsPoint(new FlxPoint(FlxG.touch.x, FlxG.touch.y)) && FlxG.touch.pressed())
+		if(overlapsPoint(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y)) && FlxG.mouse.pressed())
 			_pressed = true;
 		
 		// Release the sprite
-		if(FlxG.touch.justReleased()) // OR if(!Gdx.input.isTouched() && _pressed)
+		if(FlxG.mouse.justReleased()) // OR if(!Gdx.input.isTouched() && _pressed)
 			_pressed = false;
 		
 		// Drag the sprite
 		if(_pressed)
 		{
-			x = FlxG.touch.x - width/2;
-			y = FlxG.touch.y - height/2;
+			x = FlxG.mouse.x - width/2;
+			y = FlxG.mouse.y - height/2;
 		}
 		if(isTouching(FLOOR) && !_pressed)
 		{

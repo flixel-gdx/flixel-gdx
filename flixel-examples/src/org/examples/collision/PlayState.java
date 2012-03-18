@@ -17,6 +17,7 @@ public class PlayState extends FlxState
 	private FlxSprite _platform;
 	private FlxEmitter _dispenser;
 	private FlxButton _btnSwitch;
+	private FlxButton _btnDebug;
 
 	@Override
 	public void create()
@@ -49,6 +50,11 @@ public class PlayState extends FlxState
 		_btnSwitch = new FlxButton(5, 5, "ON", toggleDispenser);
 		_btnSwitch.setOn(true);
 		add(_btnSwitch);
+		
+		// A button to toggle the dispenser.
+		_btnDebug = new FlxButton(5, 75, "DEBUG OFF", toggleDebug);
+		_btnDebug.setOn(false);
+		add(_btnDebug);
 	}
 	
 	
@@ -85,6 +91,27 @@ public class PlayState extends FlxState
 				_btnSwitch.setOn(true);		
 				_dispenser.on = true;
 			}				
+		}
+	};
+	
+	
+	AFlxButton toggleDebug = new AFlxButton()
+	{
+		@Override
+		public void onUp()
+		{
+			if(_btnDebug.getOn())
+			{
+				_btnDebug.label.setText("DEBUG OFF");
+				_btnDebug.setOn(false);
+				FlxG.visualDebug = false;
+			}
+			else
+			{
+				_btnDebug.label.setText("DEBUG ON");
+				_btnDebug.setOn(true);
+				FlxG.visualDebug = true;
+			}	
 		}
 	};
 }

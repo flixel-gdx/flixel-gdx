@@ -64,7 +64,7 @@ public class PlayState extends FlxState
 		FlxText tx;
 		tx = new FlxText(2, FlxG.height - 20, FlxG.width, "Interact with TOUCH.");
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
-//		tx.setColor(0x49637a);
+//		tx.setColor(0xFF49637a);
 		add(tx);
 	}
 
@@ -73,11 +73,33 @@ public class PlayState extends FlxState
 	public void update()
 	{
 		// camera controls
-		if(FlxG.touch.pressed())
+		if(FlxG.mouse.pressed())
 		{
-			_focus.x += (FlxG.touch.x -_focus.x)/20;
-			_focus.y += (FlxG.touch.y -_focus.y)/20;
+//			FlxG.mouse.getWorldPosition(FlxG.camera);
+//			FlxG.log(FlxG.difWidth + " : " + FlxG.difHeight);
+//			FlxG.log(FlxG.mouse.x + " : " + FlxG.mouse.y);
+			//FlxG.log(FlxG.mouse._pointers.get(0).x + " : " + FlxG.mouse._pointers.get(0).y);
+			_focus.x += (FlxG.mouse.x -_focus.x)/20f;
+			_focus.y += (FlxG.mouse.y -_focus.y)/20f;
 		}
+		//if(FlxG.mouse.justPressed())
+		{
+//			FlxG.log(FlxG.mouse._pointers.get(0).x + " : " + FlxG.mouse._pointers.get(0).y);
+			
+		}
+		
+//		_focus.velocity.x = 0;
+//		_focus.velocity.y = 0;
+//		float focusSpeed = 200;
+//		if(FlxG.keys.pressed(Keys.LEFT))
+//			_focus.velocity.x -= focusSpeed;
+//		if(FlxG.keys.pressed(Keys.RIGHT))
+//			_focus.velocity.x += focusSpeed;
+//		if(FlxG.keys.pressed(Keys.UP))
+//			_focus.velocity.y -= focusSpeed;
+//		if(FlxG.keys.pressed(Keys.DOWN))
+//			_focus.velocity.y += focusSpeed;
+		
 		super.update();
 		FlxG.collide();
 	}

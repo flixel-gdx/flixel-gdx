@@ -104,7 +104,7 @@ public class PlayState extends FlxState
 		//Duplicate our wall but this time it's a floor to catch gravity affected particles
 		floor = new FlxSprite(10, 267);
 		floor.makeGraphic(FlxG.width - 20, 10, 0x50FFFFFF);
-		floor.visible = false; 
+		floor.visible = false;
 		floor.setSolid(false);
 		floor.immovable = true;
 		collisionGroup.add(floor);

@@ -29,7 +29,7 @@ public class FlxU
 	 */
 	static public float floor(float Value)
 	{
-		float number = Value;
+		float number = (int)Value;
 		return (Value > 0) ? (number) : ((number != Value) ? (number - 1) : (number));
 	}
 	
@@ -42,7 +42,7 @@ public class FlxU
 	 */
 	static public float ceil(float Value)
 	{
-		float number = Value;
+		float number = (int)Value;
 		return (Value > 0) ? ((number != Value) ? (number + 1) : (number)) : (number);
 	}
 	
@@ -447,17 +447,17 @@ public class FlxU
 	 * 
 	 * @return	A nicely formatted <code>String</code>, like "1:03".
 	 */
-	static public String formatTime(int Seconds, boolean ShowMS)
+	static public String formatTime(float Seconds, boolean ShowMS)
 	{
-		String timeString = (Seconds/60) + ":";
-		int timeStringHelper = (Seconds)%60;
+		String timeString = (int)(Seconds/60) + ":";
+		int timeStringHelper = (int)Seconds%60;
 		if(timeStringHelper < 10)
 			timeString += "0";
 		timeString += timeStringHelper;
 		if(ShowMS)
 		{
 			timeString += ".";
-			timeStringHelper = (Seconds-(Seconds))*100;
+			timeStringHelper = (int)((Seconds-(Seconds))*100);
 			if(timeStringHelper < 10)
 				timeString += "0";
 			timeString += timeStringHelper;
@@ -582,10 +582,16 @@ public class FlxU
 	{
 		return formatMoney(Amount, true, true);
 	}
-	
-	
-	@SuppressWarnings("rawtypes") // TODO: return object in question?
-	static public String getClassName(Class Obj)
+			
+	/**
+	 * Get the <code>String</code> name of any <code>Object</code>.
+	 * 
+	 * @param	Obj		The <code>Object</code> object in question.
+	 * @param	Simple	Returns only the class name, not the package or packages.
+	 * 
+	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
+	 */
+	static public String getClassName(Class<?> Obj)
 	{	
 		String s = Obj.getName();
 		if(s.lastIndexOf('.') > 0)
@@ -617,8 +623,7 @@ public class FlxU
 	 * 
 	 * @return A <code>Class</code> object.
 	 */
-	@SuppressWarnings("rawtypes")
-	static public Class getClass(String Name)
+	static public Class<? extends String> getClass(String Name)
 	{
 		return Name.getClass();
 	}

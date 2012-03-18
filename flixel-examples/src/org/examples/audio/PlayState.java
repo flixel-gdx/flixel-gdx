@@ -42,7 +42,7 @@ public class PlayState extends FlxState
 	@Override
 	public void update()
 	{
-		if(FlxG.keys.justPressed(Keys.A))
+		if(FlxG.mouse.justPressed(Keys.A))
 		{
 			FlxG.log("switch state");
 			if(FlxG.music != null)
@@ -78,12 +78,13 @@ public class PlayState extends FlxState
 					FlxG.music.resume();
 				else
 					FlxG.music.play();
-				_paused = false;
+				_paused = false;				
 			}
 			else
 			{
 				_btnPlayMusic.label.setText("play music");
 				FlxG.music.pause();
+				_paused = true;
 			}
 		};
 	};

@@ -1,8 +1,8 @@
 package org.examples.tiledmap2;
 
+import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
 public class Player extends FlxSprite
@@ -18,7 +18,7 @@ public class Player extends FlxSprite
 		
 		//tweak the bounding box for better feel
 		width = 8;
-		height = 8;
+		height = 10;
 		offset.x = 3;
 		offset.y = 3;
 		
@@ -34,15 +34,15 @@ public class Player extends FlxSprite
 	{
 		//Smooth slidey walking controls
 		acceleration.x = 0;
-		if(Gdx.input.isKeyPressed(Keys.LEFT))
+		if(FlxG.keys.pressed(Keys.LEFT))
 			acceleration.x -= drag.x;
-		if(Gdx.input.isKeyPressed(Keys.RIGHT))
+		if(FlxG.keys.pressed(Keys.RIGHT))
 			acceleration.x += drag.x;
 		
 		if(isTouching(FLOOR))
 		{
 			//Jump controls			
-			if(Gdx.input.isKeyPressed(Keys.SPACE))
+			if(FlxG.keys.justPressed(Keys.SPACE))
 			{
 				velocity.y = -acceleration.y*0.51f;
 				play("jump");

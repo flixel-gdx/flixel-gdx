@@ -1,17 +1,14 @@
 package org.flixel;
 
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-
 import org.flixel.event.AFlxCamera;
 import org.flixel.event.AFlxG;
 import org.flixel.event.AFlxObject;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.input.Keyboard;
-import org.flixel.system.input.Touch;
+import org.flixel.system.input.Mouse;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -19,7 +16,9 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 
 public class FlxG
 {
@@ -108,12 +107,7 @@ public class FlxG
 	/**
 	 * A reference to a <code>Mouse</code> object.  Important for input!
 	 */
-	static public Touch touch;
-	
-	/**
-	 * A reference to multiple <code>Mouse</code> objects. Important for multi-touch.
-	 */
-	static public Touch[] touches;
+	static public Mouse mouse;
 	
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
@@ -134,7 +128,6 @@ public class FlxG
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 */
-	static public FlxRect worldBounds;
 	/**
 	 * The width in pixels of the display surface.
 	 */
@@ -145,6 +138,7 @@ public class FlxG
 	static public int resHeight;
 	static public float difWidth;
 	static public float difHeight;
+	static public FlxRect worldBounds;
 	/**
 	 * How many times the quad tree should divide the world on each axis.
 	 * Generally, sparse collisions can have fewer divisons,
@@ -166,15 +160,15 @@ public class FlxG
 	 * global variables that can be used for various cross-state stuff.
 	 */
 //	static public var levels:Array;
-//	static public var level:int;
+	static public int level;
 //	static public var scores:Array;
-//	static public var score:int;
+	static public int score;
 	/**
 	 * <code>FlxG.saves</code> is a generic bucket for storing
 	 * FlxSaves so you can access them whenever you want.
 	 */
 	//static public var saves:Array; 
-	//static public var save:int;
+	static public int save;
 
 	/**
 	 * A reference to a <code>FlxMouse</code> object.  Important for input!
@@ -188,7 +182,7 @@ public class FlxG
 	/**
 	 * A handy container for a background music object.
 	 */
-	static public FlxMusic music;
+	static public FlxSound music;
 	/**
 	 * A list of all the sounds being played in the game.
 	 */
@@ -241,12 +235,12 @@ public class FlxG
 	 * Primarily used for "debug visuals" like drawing bounding boxes directly to the screen buffer.
 	 */
 	//static public Sprite flashGfxSprite;
-	static public Graphics flashGfx;
-
+	static public ShapeRenderer flashGfx;
+	static public Texture t;
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
-	static protected TIntObjectHashMap<TextureRegion> _cache;
+	static protected IntMap<TextureRegion> _cache;
 	
 	static public SpriteBatch batch;
 	
@@ -377,12 +371,11 @@ public class FlxG
 	}
 	
 	
-	//TODO: this method can be deleted.
 	static public void resetInput()
 	{
 		keys.reset();
-//		mouse.reset();
-		touches = null;
+		mouse.reset();
+		//touches = null;
 	}
 	
 	
@@ -395,7 +388,7 @@ public class FlxG
 	static public void playMusic(Music sound, float Volume)
 	{
 		if(music == null)
-			music = new FlxMusic();
+			music = new FlxSound();
 		if(music.active)
 			music.stop();
 		music.loadEmbedded(sound, true);
@@ -440,7 +433,7 @@ public class FlxG
 		}
 		catch (Exception e) 
 		{
-			FlxG.log(e.getMessage());
+			FlxG.log("FlxG", e.getMessage());
 		}
 		if(EmbeddedSound != null)
 			sound.loadEmbedded(EmbeddedSound,Looped,AutoDestroy);
@@ -571,10 +564,11 @@ public class FlxG
 	static public void init(FlxGame Game, int Width, int Height, float Zoom)
 	{
 		_game = Game;
-		_cache = new TIntObjectHashMap<TextureRegion>();
+		_cache = new IntMap<TextureRegion>();
 		width = Width;
 		height = Height;
-				
+		
+		
 		mute = false;
 		_volume = 0.5f;
 		sounds = new FlxGroup();
@@ -585,13 +579,14 @@ public class FlxG
 		FlxCamera.defaultZoom = Zoom;
 //		FlxG._cameraRect = new Rectangle();
 		FlxG.cameras = new Array<FlxCamera>();
+		FlxG.visualDebug = false;
 //		useBufferLocking = false;
 //		
 //		plugins = new Array();
 //		addPlugin(new DebugPathDisplay());
 //		addPlugin(new TimerManager());
 //		
-		FlxG.touch = new Touch();
+		FlxG.mouse = new Mouse();
 		FlxG.keys = new Keyboard();
 	}
 	
@@ -610,7 +605,6 @@ public class FlxG
 		globalSeed = (float) Math.random();
 		worldBounds = new FlxRect(-10,-10,FlxG.width+20,FlxG.height+20);
 		worldDivisions = 6;
-		
 	}
 	
 	
@@ -619,14 +613,8 @@ public class FlxG
 	 */
 	public static void updateInput()
 	{
-		FlxG.keys.update();
-		if(touches == null)
-			FlxG.touch.update(Gdx.input.getX(0) / FlxG.difWidth, Gdx.input.getY(0) / FlxG.difHeight);
-		else
-		{
-			for (int i = 0; i < touches.length; i++)
-				touches[i].update(Gdx.input.getX(i) / FlxG.difWidth, Gdx.input.getY(i) / FlxG.difHeight);
-		}		
+		FlxG.keys.update();		
+		FlxG.mouse.update(Gdx.input.getX(), Gdx.input.getY());
 	}
 	
 	
@@ -714,10 +702,6 @@ public class FlxG
 	 */
 	static public boolean checkBitmapCache(String Key)
 	{
-		//FlxG.log("checkBitmapCache", Key);
-//		if(_map.get(Key.hashCode()) != null)
-//			FlxG.log("Hola");
-		
 		return (_cache.get(Key.hashCode()) != null);
 	}
 
@@ -1153,7 +1137,7 @@ public class FlxG
 	
 	
 	/**
-	 * Call this function to see if one <code>FlxObject</code> overlaps another.
+	 *e Call this function to see if one <code>FlxObject</code> overlaps another.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a <code>FlxGroup</code> (or even bundling groups together!).
@@ -1165,7 +1149,7 @@ public class FlxG
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * 
-	 * @return	Whether any oevrlaps were detected.
+	 * @return	Whether any overlaps were detected.
 	 */
 	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxG NotifyCallback, AFlxObject ProcessCallback)
 	{
@@ -1194,7 +1178,7 @@ public class FlxG
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * 
-	 * @return	Whether any overlaps were detected.
+	 * @return	Whether any oevrlaps were detected.
 	 */
 	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxG NotifyCallback)
 	{
@@ -1212,7 +1196,7 @@ public class FlxG
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
 	 * 
-	 * @return	Whether any overlaps were detected.
+	 * @return	Whether any oevrlaps were detected.
 	 */
 	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2)
 	{
@@ -1229,7 +1213,7 @@ public class FlxG
 	 * 
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
 	 * 
-	 * @return	Whether any overlaps were detected.
+	 * @return	Whether any oevrlaps were detected.
 	 */
 	static public boolean overlap(FlxBasic ObjectOrGroup1)
 	{
@@ -1375,6 +1359,44 @@ public class FlxG
 		if((sounds != null) && sounds.active)
 			sounds.update();
 	}
+	
+	
+	/**
+	 * Pause all sounds currently playing.
+	 */
+	public static void pauseSounds()
+	{
+		if((music != null) && music.exists && music.active)
+			music.pause();
+		int i = 0;
+		FlxSound sound;
+		int l = sounds.length;
+		while(i < l)
+		{			
+			sound = (FlxSound) sounds.members.get(i++);
+			if((sound != null) && sound.exists && sound.active)
+				sound.pause();
+		}
+	}
+
+
+	/**
+	 * Resume playing existing sounds.
+	 */
+	public static void resumeSounds()
+	{
+		if((music != null) && music.exists)
+			music.play();
+		int i = 0;
+		FlxSound sound;
+		int l = sounds.length;
+		while(i < l)
+		{
+			sound = (FlxSound) sounds.members.get(i++);
+			if((sound != null) && sound.exists)
+				sound.resume();
+		}
+	}
 
 	public static void updatePlugins()
 	{
@@ -1389,8 +1411,6 @@ public class FlxG
 		
 	}
 
-	
-	
 	/**
 	 * Creates a new sound object from an embedded <code>Class</code> object.
 	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
@@ -1447,28 +1467,5 @@ public class FlxG
 	public static FlxSound play(Sound EmbeddedSound)
 	{
 		return FlxG.loadSound(EmbeddedSound, 1.0f, false, false, true);
-	}
-	
-	/**
-	 * Enables multi-touch support.
-	 * 
-	 * @param amountOfPointers	The amount of allowed pointers. Default is 2.
-	 */
-	static public void enableMultiTouch(int amountOfPointers)
-	{
-		FlxG.touches = new Touch[amountOfPointers];
-		FlxG.touches[0] = touch;
-		for(int i = 1; i < touches.length; i++)
-		{
-			touches[i] = new Touch();
-		}
-	}
-	
-	/**
-	 * Enables multi-touch support. Default is 2 pointers.
-	 */
-	static public void enableMultiTouch()
-	{
-		enableMultiTouch(2);
 	}
 }

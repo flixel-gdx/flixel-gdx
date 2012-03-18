@@ -60,7 +60,7 @@ public class FlxBasic
 		active = true;
 		visible = true;
 		alive = true;
-		ignoreDrawDebug = true;
+		ignoreDrawDebug = false;
 	}
 	
 	/**
@@ -99,7 +99,9 @@ public class FlxBasic
 	 */
 	public void draw()
 	{
-		_VISIBLECOUNT++;	
+		_VISIBLECOUNT++;
+		if(FlxG.visualDebug && !ignoreDrawDebug)
+			drawDebug(FlxG.camera);
 	}
 	
 	/**

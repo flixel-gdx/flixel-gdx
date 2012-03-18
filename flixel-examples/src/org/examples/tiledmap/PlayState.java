@@ -63,7 +63,7 @@ public class PlayState extends FlxState
 		
 		//Create a new tilemap using our level data
 		_level = new FlxTilemap();
-		_level.loadMap(FlxTilemap.arrayToCSV(data, 40), Asset.tiles, 0, 0, FlxTilemap.AUTO);
+		_level.loadMap(FlxTilemap.arrayToCSV(data, 40), Asset.tiles, 8, 8, FlxTilemap.AUTO);
 		add(_level);
 		
 		//Create the level exit, a dark gray box that is hidden at first
@@ -126,7 +126,8 @@ public class PlayState extends FlxState
 		
 		//Create player (a red box)
 		_player = new FlxSprite(160 - 5);
-		_player.makeGraphic(6,8,0xffaa1111);
+		_player.makeGraphic(7,8,0xff0000FF);
+		_player.setAlpha(0.3f);
 		_player.maxVelocity.x = 80;
 		_player.maxVelocity.y = 200;
 		_player.acceleration.y = 200;
@@ -135,7 +136,7 @@ public class PlayState extends FlxState
 		
 //		FlxG.camera.follow(_player);
 		
-		_score = new FlxText(2,2,80, "SCORE: ");
+		_score = new FlxText(2,2,100, "SCORE: ");
 		_score.setText("SCORE: "+(_coins.countDead()*100));
 		add(_score);
 	
@@ -178,7 +179,7 @@ public class PlayState extends FlxState
 		//Check to see if the player touched the exit door this frame
 		FlxG.overlap(_exit,_player,win);
 
-		FlxG.collide(_level, _player, null);
+		FlxG.collide(_level, _player);
 		
 		//Check for player lose conditions
 		if(_player.y > FlxG.height)

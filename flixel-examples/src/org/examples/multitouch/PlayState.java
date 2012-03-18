@@ -24,10 +24,9 @@ public class PlayState extends FlxState
 	{
 		FlxG.setBgColor(0xFF000000);
 		numberOfFingers = 0;
-		txtCounter = new FlxText(20, 20, 20, "amount of fingers on screen: 0");
+		txtCounter = new FlxText(20, 20, 200, "amount of fingers on screen: 0");
 		add(txtCounter);
-		FlxG.enableMultiTouch(length = 10);
-		
+		length = 10;
 		sprites = new FlxSprite[length];
 		for(int i = 0; i<length; i++)
 		{
@@ -44,11 +43,11 @@ public class PlayState extends FlxState
 	{
 		for(int i = 0; i < length; i++)
 		{			
-			if(Gdx.input.isTouched(i))
+			if(FlxG.mouse.pressed())
 			{
 				numberOfFingers++;
-				sprites[i].x = FlxG.touches[i].x;
-				sprites[i].y = FlxG.touches[i].y;
+				sprites[i].x = FlxG.mouse.x;
+				sprites[i].y = FlxG.mouse.y;
 				sprites[i].visible = true;
 			}
 			else
@@ -65,10 +64,7 @@ public class PlayState extends FlxState
 //		{
 //			FlxG.log("just pressed");
 //		}
-//		else if(FlxG.touch.pressed())
-//		{
-//			FlxG.log("pressing");
-//		}
+		
 		txtCounter.setText("amount of fingers on screen: " + numberOfFingers);
 		numberOfFingers = 0;
 		super.update();

@@ -1,14 +1,18 @@
 package org.flixel;
 
 import org.flixel.data.SystemAsset;
+import org.flixel.system.FlxPause;
 
-import com.badlogic.gdx.Game;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public class FlxGame extends Game
+public class FlxGame implements ApplicationListener, InputProcessor
 {
 	/**
 	 * Current game state.
@@ -49,10 +53,11 @@ public class FlxGame extends Game
 	 */
 	boolean _requestedReset;
 	
-	private BitmapFontCache font;
+	private BitmapFont font;
 		
 	private boolean _GL11Supported;
 	private GL10 gl;
+	private FlxPause _pauseState;
 		
 	/**
 	 * Instantiate a new game object.
@@ -127,13 +132,16 @@ public class FlxGame extends Game
 	{
 		SystemAsset.createSystemAsset();
 //		Gdx.input.setCatchBackKey(true);
-		Gdx.input.setInputProcessor(FlxG.touch);
-//		Gdx.input.setInputProcessor(FlxG.keys);
+		Gdx.input.setInputProcessor(this);
 		
 		FlxG.resWidth = Gdx.graphics.getWidth();
 		FlxG.resHeight = Gdx.graphics.getHeight();
 		FlxG.difWidth = ((float)FlxG.resWidth / FlxG.width);
 		FlxG.difHeight = ((float)FlxG.resHeight / FlxG.height);
+		if(FlxG.flashGfx == null)
+			FlxG.flashGfx = new ShapeRenderer();
+		_pauseState = new FlxPause();
+		
 		
 		if(Gdx.graphics.isGL11Available())
 		{
@@ -190,8 +198,9 @@ public class FlxGame extends Game
 		float[] rgba = FlxU.getRGBA(FlxG.getBgColor());
 		gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
 		
+		FlxG.camera.buffer.update(false);
+		FlxG.batch.setProjectionMatrix(FlxG.camera.buffer.combined);
 		FlxG.batch.begin();
-		FlxG.camera.buffer.update();
 		if(_GL11Supported)
 		{
 			FlxG.camera.buffer.apply(Gdx.gl11);
@@ -205,8 +214,7 @@ public class FlxGame extends Game
 //		FlxG.lockCameras();
 		_state.draw();
 //		FlxG.drawPlugins();
-		font.setText("fps:"+Gdx.graphics.getFramesPerSecond(), 435, 0);
-		font.draw(FlxG.batch);//TODO:delete FPS counter
+		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), 435, 0);		
 		FlxG.camera.drawFX();
 //		FlxG.unlockCameras();
 		FlxG.batch.end();
@@ -255,6 +263,13 @@ public class FlxGame extends Game
 	protected void update()
 	{
 		FlxG.elapsed = FlxG.timeScale*(_step/1000);
+				
+		if(FlxG.paused)
+		{
+			_pauseState.update();
+			return;
+		}
+				
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
 		_state.update();
@@ -277,31 +292,113 @@ public class FlxGame extends Game
 		
 		//Destroy the old state (if there is an old state)
 		if(_state != null)
+		{
+			_state.remove(_pauseState, true);
 			_state.destroy(); //TODO: do not destroy, but give a optional parameter to do setScreen(..);
+		}
 		
 		//Finally assign and create the new state
 		_state = _requestedState;
 		_state.create();
+		_state.add(_pauseState);
 	}
 
+	
+	protected void onFocusLost()
+	{
+		FlxG.paused = true;
+		_pauseState.visible = true;
+		FlxG.pauseSounds();
+	}
+	
+	protected void onFocus()
+	{
+		FlxG.paused = false;
+		_pauseState.visible = false;
+		FlxG.resumeSounds();
+	}
+	
+	
 	@Override
 	public void pause()
 	{
 		FlxG.log("pause");
-		super.pause();
+		onFocusLost();
 	}
 
 	@Override
 	public void resume()
 	{
 		FlxG.log("resume");
-		super.resume();
 	}
 	
 	@Override
 	public void dispose()
 	{
 		FlxG.log("dispose");
-		super.dispose();
+	}
+
+	@Override
+	public boolean keyDown(int KeyCode)
+	{
+		if(KeyCode == Keys.MENU || KeyCode == Keys.F1)
+		{
+			if(!FlxG.paused)
+				onFocusLost();
+			else
+				onFocus();			
+		}
+		FlxG.keys.handleKeyDown(KeyCode);
+		return true;
+	}
+
+	@Override
+	public boolean keyUp(int KeyCode)
+	{
+		if(KeyCode == Keys.F2)
+			FlxG.visualDebug = !FlxG.visualDebug;
+		FlxG.keys.handleKeyUp(KeyCode);
+		return true;
+	}
+
+	@Override
+	public boolean keyTyped(char character)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int X, int Y, int Pointer, int Button)
+	{
+		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
+		return true;
+	}
+
+	@Override
+	public boolean touchUp(int X, int Y, int Pointer, int Button)
+	{
+		FlxG.mouse.handleMouseUp(X, Y, Pointer, Button);
+		return true;
+	}
+
+	@Override
+	public boolean touchDragged(int X, int Y, int Pointer)
+	{
+		FlxG.mouse.handleMouseDragged(X, Y, Pointer);
+		return true;
+	}
+
+	@Override
+	public boolean touchMoved(int X, int Y)
+	{
+		FlxG.mouse.handleMouseMoved(X, Y);
+		return true;
+	}
+
+	@Override
+	public boolean scrolled(int Amount)
+	{
+		FlxG.mouse.handleMouseWheel(Amount);
+		return true;
 	}
 }
