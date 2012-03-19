@@ -438,7 +438,8 @@ public class FlxTilemap extends FlxObject
 				{
 					Buffer.indexX = tile.index;
 					Buffer.x = _flashPoint.x;
-					Buffer.y = _flashPoint.y;
+					Buffer.y = _flashPoint.y;					
+					Buffer.draw();
 					
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{
@@ -449,9 +450,7 @@ public class FlxTilemap extends FlxObject
 						else
 							debugTile = _debugTileSolid;
 						FlxG.batch.draw(debugTile, Buffer.x, Buffer.y);
-					}
-					else
-						Buffer.draw();
+					}					
 				}
 				_flashPoint.x += _tileWidth;
 				column++;
