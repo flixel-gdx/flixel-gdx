@@ -1,0 +1,32 @@
+pack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+autotiles
+  rotate: false
+  xy: 2, 2
+  size: 128, 8
+  orig: 128, 8
+  offset: 0, 0
+  index: -1
+autotiles_alt
+  rotate: false
+  xy: 132, 2
+  size: 128, 8
+  orig: 128, 8
+  offset: 0, 0
+  index: -1
+button
+  rotate: false
+  xy: 2, 12
+  size: 256, 64
+  orig: 256, 64
+  offset: 0, 0
+  index: -1
+default
+  rotate: false
+  xy: 260, 12
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

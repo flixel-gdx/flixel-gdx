@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.IntArray;
 
 public class FlxTilemap extends FlxObject
 {
+	static public TextureRegion ImgAuto;
+	static public TextureRegion ImgAutoAlt;
 	
 	/**
 	 * No auto-tiling.

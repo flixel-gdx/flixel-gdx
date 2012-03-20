@@ -1,5 +1,7 @@
 package org.flixel.data;
 
+import org.flixel.FlxTilemap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,12 +21,13 @@ public class SystemAsset
 	static public TextureRegion ImgDefault;
 	static public TextureRegion ImgButton;
 	
-	
 	static public void createSystemAsset()
 	{
-		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("flixel/data/pack"));
+		TextureAtlas atlas = new TextureAtlas(Gdx.files.classpath("org/flixel/data/pack"));
 		ImgDefault = atlas.findRegion("default");
 		ImgButton = atlas.findRegion("button");
-		system = new BitmapFont(Gdx.files.internal("flixel/data/font/nokiafc22.fnt"), Gdx.files.internal("flixel/data/font/nokiafc22.png"), true);
+		FlxTilemap.ImgAuto = atlas.findRegion("autotiles");
+		FlxTilemap.ImgAutoAlt = atlas.findRegion("autotiles_alt");
+		system = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
 	}
 }
