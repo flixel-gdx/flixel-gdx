@@ -1064,7 +1064,7 @@ public class FlxTilemap extends FlxObject
 						if((tile.callback != null) && ((tile.filter == null) || (tile.filter.isInstance(Object))))
 						{
 							tile.mapIndex = rowStart+column;
-							tile.callback.onOverlap(tile,Object);
+							tile.callback.onProcessCallback(tile,Object);
 						}
 						results = true;
 					}
@@ -1072,7 +1072,7 @@ public class FlxTilemap extends FlxObject
 				else if((tile.callback != null) && ((tile.filter == null) || (tile.filter.isInstance(Object))))
 				{
 					tile.mapIndex = rowStart+column;
-					tile.callback.onOverlap(tile,Object);
+					tile.callback.onProcessCallback(tile,Object);
 				}
 				column++;
 			}

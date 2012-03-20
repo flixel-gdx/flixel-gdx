@@ -3,13 +3,16 @@ package org.flixel.system.input;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
+import org.flixel.system.replay.MouseRecord;
 
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * This class helps contain and track the mouse pointer in your game.
+ * This class helps contain and track the pointers in your game.
  * Automatically accounts for parallax scrolling, etc.
+ * For multi-touch devices the <code>x</code>, <code>y</code>, <code>screenX</code>, and <code>screenY</code>
+ * properties refer to the first pointer.
  * 
  * @author Ka Wing Chin
  */
@@ -20,11 +23,11 @@ public class Mouse extends FlxPoint
 	 */
 	public int wheel;
 	/**
-	 * Current X position of the mouse pointer on the screen.
+	 * Current X position of the pointer on the screen. For multi-touch devices this is the first pointer.
 	 */
 	public int screenX;
 	/**
-	 * Current Y position of the mouse pointer on the screen.
+	 * Current Y position of the pointer on the screen. For multi-touch devices this is the first pointer.
 	 */
 	public int screenY;	
 	
@@ -61,28 +64,38 @@ public class Mouse extends FlxPoint
 	}
 	
 	/**
-	 * Called by the internal game loop to update the mouse pointer's position in the game world.
+	 * Called by the internal game loop to update the pointers positions in the game world.
 	 * Also updates the just pressed/just released flags.
-	 * 
-	 * @param	X			The current X position of the mouse in the window.
-	 * @param	Y			The current Y position of the mouse in the window.
 	 */
-	public void update(float X, float Y)
-	{
-		updateCursor();
-	
-		for (Pointer o : _pointers)
+	public void update()
+	{	
+		Pointer o;
+		int i = 0;
+		int l = _pointers.size;
+		
+		while (i < l)
 		{
+			o = _pointers.get(i);
+			
+			o.screenPosition.x = Gdx.input.getX(i);
+			o.screenPosition.y = Gdx.input.getY(i);
+			
+			unproject(o.screenPosition);
+			
 			if((o.last == -1) && (o.current == -1))
 				o.current = 0;
 			else if((o.last == 2) && (o.current == 2))
 				o.current = 1;
 			o.last = o.current;
+			
+			++i;
 		}
+		
+		updateCursor();
 	}
 	
 	/**
-	 * Internal function for helping to update the mouse cursor and world coordinates.
+	 * Internal function for helping to update the cursor graphic and world coordinates.
 	 */
 	protected void updateCursor()
 	{
@@ -95,83 +108,107 @@ public class Mouse extends FlxPoint
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
 		FlxCamera camera = FlxG.camera;
-		screenX = (int) ((o.globalScreenPosition.x - camera.x)/camera.getZoom());
-		screenY = (int) ((o.globalScreenPosition.y - camera.y)/camera.getZoom());
+		screenX = (int) ((o.screenPosition.x - camera.x)/camera.getZoom());
+		screenY = (int) ((o.screenPosition.y - camera.y)/camera.getZoom());
 		x = screenX + camera.scroll.x;
 		y = screenY + camera.scroll.y;
 	}
 	
 	/**
-	 * Fetch the world position of the mouse on any given camera.
-	 * NOTE: Mouse.x and Mouse.y also store the world position of the mouse cursor on the main camera.
-	 * 
+	 * Fetch the world position of the specified pointer on any given camera.
+	 *
+	 * @param Pointer	The pointer id.
 	 * @param Camera	If unspecified, first/main global camera is used instead.
 	 * @param Point		An existing point object to store the results (if you don't want a new one created). 
-	 * @param Pointer	The pointer.
-	 * 
-	 * @return The mouse's location in world space.
+	 *
+	 * @return The pointer's location in world space.
 	 */
-	public FlxPoint getWorldPosition(FlxCamera Camera, FlxPoint Point, int Pointer)
+	public FlxPoint getWorldPosition(int Pointer, FlxCamera Camera, FlxPoint Point)
 	{
 		if(Camera == null)
 			Camera = FlxG.camera;
 		if(Point == null)
 			Point = new FlxPoint();
-		getScreenPosition(Camera,_point, Pointer);
+		getScreenPosition(Pointer,Camera,_point);
 		Point.x = _point.x + Camera.scroll.x;
 		Point.y = _point.y + Camera.scroll.y;
+		
 		return Point;
 	}
 	
 	/**
-	 * Fetch the world position of the mouse on any given camera.
-	 * NOTE: Mouse.x and Mouse.y also store the world position of the mouse cursor on the main camera.
+	 * Fetch the world position of the specified pointer on any given camera.
+	 * 
+	 * @param Point		The pointer id.
+	 * @param Camera	If unspecified, first/main global camera is used instead.
+	 * 
+	 * @return The pointer's location in world space.
+	 */
+	public FlxPoint getWorldPosition(int Pointer, FlxCamera Camera)
+	{
+		return getWorldPosition(Pointer, Camera, null);
+	}
+	
+	/**
+	 * Fetch the world position of the specified pointer.
+	 * 
+	 * @param Pointer	The pointer id.
+	 * 
+	 * @return The pointer's location in world space.
+	 */
+	public FlxPoint getWorldPosition(int Pointer)
+	{
+		return getWorldPosition(Pointer, null, null);
+	}
+	
+	/**
+	 * Fetch the world position of the first pointer on any given camera.
+	 * NOTE: Mouse.x and Mouse.y also store the world position of this pointer on the main camera.
 	 * 
 	 * @param Camera	If unspecified, first/main global camera is used instead.
 	 * @param Point		An existing point object to store the results (if you don't want a new one created). 
 	 * 
-	 * @return The mouse's location in world space.
+	 * @return The pointer's location in world space.
 	 */
 	public FlxPoint getWorldPosition(FlxCamera Camera, FlxPoint Point)
 	{
-		return getWorldPosition(Camera, Point, 0);
+		return getWorldPosition(0, Camera, Point);
 	}
 	
 	/**
-	 * Fetch the world position of the mouse on any given camera.
-	 * NOTE: Mouse.x and Mouse.y also store the world position of the mouse cursor on the main camera.
+	 * Fetch the world position of the first pointer on any given camera.
+	 * NOTE: Mouse.x and Mouse.y also store the world position of this pointer on the main camera.
 	 * 
 	 * @param Camera	If unspecified, first/main global camera is used instead.
 	 * 
-	 * @return The mouse's location in world space.
+	 * @return The pointer's location in world space.
 	 */
 	public FlxPoint getWorldPosition(FlxCamera Camera)
 	{
-		return getWorldPosition(Camera, null, 0);
+		return getWorldPosition(0, Camera, null);
 	}
 	
 	/**
-	 * Fetch the world position of the mouse on any given camera.
-	 * NOTE: Mouse.x and Mouse.y also store the world position of the mouse cursor on the main camera.
-	 * 	 * 
-	 * @return The mouse's location in world space.
+	 * Fetch the world position of the first pointer on any given camera.
+	 * NOTE: Mouse.x and Mouse.y also store the world position of this pointer on the main camera.
+	 * 
+	 * @return The pointer's location in world space.
 	 */
 	public FlxPoint getWorldPosition()
 	{
-		return getWorldPosition(null, null, 0);
+		return getWorldPosition(0, null, null);
 	}
 	
 	/**
-	 * Fetch the screen position of the mouse on any given camera.
-	 * NOTE: Mouse.screenX and Mouse.screenY also store the screen position of the mouse cursor on the main camera.
-	 * 
+	 * Fetch the screen position of the specified pointer on any given camera.
+	 *
+	 * @param Pointer	The pointer id.
 	 * @param Camera	If unspecified, first/main global camera is used instead.
 	 * @param Point		An existing point object to store the results (if you don't want a new one created). 
-	 * @param Pointer	The pointer.
 	 * 
-	 * @return The mouse's location in screen space.
+	 * @return The pointer's location in screen space.
 	 */
-	public FlxPoint getScreenPosition(FlxCamera Camera, FlxPoint Point, int Pointer)
+	public FlxPoint getScreenPosition(int Pointer, FlxCamera Camera, FlxPoint Point)
 	{
 		if(Camera == null)
 			Camera = FlxG.camera;
@@ -183,54 +220,73 @@ public class Mouse extends FlxPoint
 		
 		Pointer o = _pointers.get(Pointer);
 		
-		Vector3 screenPoint = new Vector3();
-		screenPoint.x = (o.globalScreenPosition.x - Camera.x)/Camera.getZoom();
-		screenPoint.y = (o.globalScreenPosition.y - Camera.y)/Camera.getZoom();
-		
-		Camera.buffer.unproject(screenPoint);
-		
-		Point.x = screenPoint.x;
-		Point.y = screenPoint.y;
+		Point.x = (o.screenPosition.x - Camera.x)/Camera.getZoom();
+		Point.y = (o.screenPosition.y - Camera.y)/Camera.getZoom();
 		
 		return Point;
 	}
 	
 	/**
-	 * Fetch the screen position of the mouse on any given camera.
-	 * NOTE: Mouse.screenX and Mouse.screenY also store the screen position of the mouse cursor on the main camera.
+	 * Fetch the screen position of the specified pointer on any given camera.
+	 * 
+	 * @param Pointer	The pointer id.
+	 * @param Camera	If unspecified, first/main global camera is used instead.
+	 * 
+	 * @return The pointer's location in screen space.
+	 */
+	public FlxPoint getScreenPosition(int Pointer,FlxCamera Camera)
+	{
+		return getScreenPosition(Pointer, Camera, null);
+	}
+	
+	/**
+	 * Fetch the screen position of the specified pointer on the main camera.
+	 * 
+	 * @param Pointer	The pointer id.
+	 * 
+	 * @return The pointer's location in screen space.
+	 */
+	public FlxPoint getScreenPosition(int Pointer)
+	{
+		return getScreenPosition(Pointer, null, null);
+	}
+	
+	/**
+	 * Fetch the screen position of the first pointer on any given camera.
+	 * NOTE: Mouse.screenX and Mouse.screenY also store the screen position of this pointer on the main camera.
 	 * 
 	 * @param Camera	If unspecified, first/main global camera is used instead.
 	 * @param Point		An existing point object to store the results (if you don't want a new one created). 
 	 * 
-	 * @return The mouse's location in screen space.
+	 * @return The pointer's location in screen space.
 	 */
 	public FlxPoint getScreenPosition(FlxCamera Camera,FlxPoint Point)
 	{
-		return getScreenPosition(Camera, Point, 0);
+		return getScreenPosition(0, Camera, Point);
 	}
 	
 	/**
-	 * Fetch the screen position of the mouse on any given camera.
-	 * NOTE: Mouse.screenX and Mouse.screenY also store the screen position of the mouse cursor on the main camera.
+	 * Fetch the screen position of the first pointer on any given camera.
+	 * NOTE: Mouse.screenX and Mouse.screenY also store the screen position of this pointer on the main camera.
 	 * 
 	 * @param Camera	If unspecified, first/main global camera is used instead.
 	 * 
-	 * @return The mouse's location in screen space.
+	 * @return The pointer's location in screen space.
 	 */
 	public FlxPoint getScreenPosition(FlxCamera Camera)
 	{
-		return getScreenPosition(Camera, null, 0);
+		return getScreenPosition(0, Camera, null);
 	}
 	
 	/**
-	 * Fetch the screen position of the mouse on any given camera.
-	 * NOTE: Mouse.screenX and Mouse.screenY also store the screen position of the mouse cursor on the main camera.
+	 * Fetch the screen position of the first pointer on the main camera.
+	 * NOTE: Mouse.screenX and Mouse.screenY also store the screen position of this pointer on the main camera.
 	 * 
-	 * @return The mouse's location in screen space.
+	 * @return The pointer's location in screen space.
 	 */
 	public FlxPoint getScreenPosition()
 	{
-		return getScreenPosition(null, null, 0);
+		return getScreenPosition(0, null, null);
 	}
 	
 	/**
@@ -245,14 +301,14 @@ public class Mouse extends FlxPoint
 	/**
 	 * Check to see if the mouse is pressed.
 	 * 
-	 * @param Pointer	The pointer id
+	 * @param Pointer	The pointer id.
 	 * 
 	 * @return	Whether the screen is pressed.
 	 */
 	public boolean pressed(int Pointer)
 	{
 		if (Pointer >= _pointers.size)
-			return false;		
+			return false;
 		return _pointers.get(Pointer).current > 0;
 	}
 	
@@ -269,7 +325,7 @@ public class Mouse extends FlxPoint
 	/**
 	 * Check to see if the screen was just pressed.
 	 * 
-	 * @param	Pointer	The pointer id
+	 * @param	Pointer	The pointer id.
 	 * 
 	 * @return Whether the screen was just pressed.
 	 */
@@ -293,7 +349,7 @@ public class Mouse extends FlxPoint
 	/**
 	 * Check to see if the screen was just released.
 	 * 
-	 * @param	Pointer	The pointer id
+	 * @param	Pointer	The pointer id.
 	 * 
 	 * @return	Whether the screen was just released.
 	 */
@@ -315,8 +371,12 @@ public class Mouse extends FlxPoint
 	}
 	
 	/**
-	 * Event handler so FlxGame can update the touch.
-	 * Don't call this.
+	 * Event handler so FlxGame can update the pointer.
+	 * 
+	 * @param	X	The x position of the pointer.
+	 * @param	Y	The y position of the pointer.
+	 * @param	Pointer	The pointer id.
+	 * @param	Button	Which mouse button was released.
 	 */
 	public void handleMouseUp(int X, int Y, int Pointer, int Button)
 	{
@@ -334,15 +394,16 @@ public class Mouse extends FlxPoint
 			o.current = -1;
 		else 
 			o.current = 0;
-		
-		o.x = o.globalScreenPosition.x = X;
-		o.y = o.globalScreenPosition.y = Y;
 	}
 	
 	
 	/**
-	 * Event handler so FlxGame can update the touch.
-	 * Don't call this.
+	 * Event handler so FlxGame can update the pointer.
+	 * 
+	 * @param	X	The x position of the pointer.
+	 * @param	Y	The y position of the pointer.
+	 * @param	Pointer	The pointer id.
+	 * @param	Button	Which mouse button was pressed.
 	 */
 	public void handleMouseDown(int X, int Y, int Pointer, int Button)
 	{
@@ -360,48 +421,12 @@ public class Mouse extends FlxPoint
 			o.current = 1;
 		else
 			o.current = 2;
-		
-		o.x = o.globalScreenPosition.x = X;
-		o.y = o.globalScreenPosition.y = Y;
-		
-		/*FlxG.log(o.x + " : " + o.y);		
-		FlxPoint p = getScreenPosition(FlxG.camera, _point, Pointer);
-		x = o.x = p.x;
-		y = o.y = p.y;
-		FlxG.log(x + " : " + y);*/
 	}
 	
 	/**
-	 * Event handler so FlxGame can update the touch.
-	 * Don't call this.
-	 */
-	public void handleMouseDragged(int X, int Y, int Pointer)
-	{
-		Pointer o;
-		
-		if (Pointer >= _pointers.size)
-		{
-			o = new Pointer();
-			_pointers.add(o);
-		}
-		else
-			o = _pointers.get(Pointer);
-		
-		o.x = o.globalScreenPosition.x = X;
-		o.y = o.globalScreenPosition.y = Y;
-	}
-	
-	public void handleMouseMoved(int X, int Y)
-	{
-		Pointer o = _pointers.get(0);
-		
-		o.x = o.globalScreenPosition.x = X;
-		o.y = o.globalScreenPosition.y = Y;
-	}
-	
-	/**
-	 * Event handler so FlxGame can update the touch.
-	 * Don't call this.
+	 * Event handler so FlxGame can update the pointer.
+	 * 
+	 * @param	Amount	The amount the wheel was scrolled.
 	 */
 	public void handleMouseWheel(int Amount)
 	{
@@ -410,17 +435,20 @@ public class Mouse extends FlxPoint
 		
 	/**
 	 * If the mouse changed state or is pressed, return that info now
-	 * 
+	 *
 	 * @return	An array of key state data.  Null if there is no data.
 	 */
-	/*public MouseRecord record()
+	//TODO: This should record all pointers, not just the first one.
+	public MouseRecord record()
 	{
-		if((_lastX == _globalScreenPosition.x) && (_lastY == _globalScreenPosition.y) && (_current == 0) && (_lastWheel == wheel))
+		Pointer o = _pointers.get(0);
+		
+		if((o.lastX == o.screenPosition.x) && (o.lastY == o.screenPosition.y) && (o.current == 0) && (_lastWheel == wheel))
 			return null;
-		_lastX = (int) _globalScreenPosition.x;
-		_lastY = (int) _globalScreenPosition.y;
+		o.lastX = (int) o.screenPosition.x;
+		o.lastY = (int) o.screenPosition.y;
 		_lastWheel = wheel;
-		return new MouseRecord(_lastX,_lastY,_current,_lastWheel);
+		return new MouseRecord(o.lastX,o.lastY,o.current,_lastWheel);
 	}
 	
 	/**
@@ -429,24 +457,68 @@ public class Mouse extends FlxPoint
 	 * 
 	 * @param	KeyStates	Array of data about key states.
 	 */
-	/*public void playback(MouseRecord Record)
+	//TODO: This should play all pointers, not just the first one.
+	public void playback(MouseRecord Record)
 	{
-		_current = Record.button;
+		Pointer o = _pointers.get(0);
+		
+		o.current = Record.button;
 		wheel = Record.wheel;
-		_globalScreenPosition.x = Record.x;
-		_globalScreenPosition.y = Record.y;
+		o.screenPosition.x = Record.x;
+		o.screenPosition.y = Record.y;
 		updateCursor();
-	}*/
+	}
 	
+	/**
+	 * Translate a point in window space to game space.
+	 * 
+	 * @param	Point	The point to unproject.
+	 * 
+	 * @return	Point	The unprojected point.
+	 */
+	//TODO: Consider moving this to either FlxG or FlxCamera?
+	protected FlxPoint unproject(FlxPoint Point)
+	{
+		Point.x *= (FlxG.width / (float) Gdx.graphics.getWidth());
+		Point.y *= (FlxG.height / (float) Gdx.graphics.getHeight());
+		
+		return Point;
+	}
+	
+	/**
+	 * An internal helper class to store the state of the pointers in game.
+	 */
 	protected class Pointer
 	{
-		public float x = 0;
-		public float y = 0;
-		public int current = 0;
-		public int last = 0;
-		public int lastX = 0;
-		public int lastY = 0;
-		public FlxPoint globalScreenPosition = new FlxPoint();
+		/**
+		 * The current pressed state of the pointer.
+		 */
+		public int current;
+		/**
+		 * The last pressed state of the pointer.
+		 */
+		public int last;
+		/**
+		 * The current position of the pointer in screen space.
+		 */
+		public FlxPoint screenPosition;
+		/**
+		 * The last X position of the pointer in screen space.
+		 */
+		public int lastX;
+		/**
+		 * The last Y position of the pointer in screen space.
+		 */
+		public int lastY;
+		
+		public Pointer()
+		{
+			current = 0;
+			last = 0;
+			screenPosition = new FlxPoint();
+			lastX = 0;
+			lastY = 0;
+		}
 	}
 }
 

@@ -223,38 +223,39 @@ public class FlxButton extends FlxSprite
 		FlxCamera camera;
 		int i = 0;
 		int l = cameras.size;
-		int j = 0;
-		int k = 8;
+		int pointerId = 0;
+		//TODO: Use FlxG.mouse.activePointers instead?
+		final int totalPointers = 8;
 		boolean offAll = true;
 		while(i < l)
 		{
 			camera = cameras.get(i++);
-			while(j < k)
+			while(pointerId < totalPointers)
 			{
-				FlxG.mouse.getWorldPosition(camera, _point, j);
+				FlxG.mouse.getWorldPosition(pointerId, camera, _point);
 				if(overlapsPoint(_point, true, camera))
 				{
 					offAll = false;
-					if(FlxG.mouse.justPressed(j))
+					if(FlxG.mouse.justPressed(pointerId))
 					{
 						status = PRESSED;
 						if(buttonEvent != null)
 							buttonEvent.onDown();
 					}
-					else if(FlxG.mouse.pressed(j))
+					else if(FlxG.mouse.pressed(pointerId))
 					{					
 						status = PRESSED;
 						if(buttonEvent != null)
 							buttonEvent.onPressed();
 					}
-					else if(FlxG.mouse.justReleased(j))
+					else if(FlxG.mouse.justReleased(pointerId))
 					{
 						if(buttonEvent != null)
 							buttonEvent.onUp();
 						status = NORMAL;
 					}
 				}
-				++j;
+				++pointerId;
 			}			
 		}
 		if(offAll)
