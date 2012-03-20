@@ -14,7 +14,7 @@ public class PlayState extends FlxState
 	public void create()
 	{
 		FlxTileblock tileblock = new FlxTileblock(0, FlxG.height-32, FlxG.width, 32);
-		tileblock.loadTiles(Gdx.files.getFileHandle("blocks.png", Files.FileType.Internal), 16, 16, 128, 16);
+		tileblock.loadTiles(Gdx.files.getFileHandle("examples/tile/blocks.png", Files.FileType.Internal), 16, 16, 128, 16);
 		add(tileblock);
 	}
 
