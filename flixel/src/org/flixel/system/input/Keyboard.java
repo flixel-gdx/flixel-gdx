@@ -1,5 +1,7 @@
 package org.flixel.system.input;
 
+import org.flixel.FlxG;
+
 import com.badlogic.gdx.Input.Keys;
 
 /**
@@ -9,9 +11,98 @@ import com.badlogic.gdx.Input.Keys;
  */
 public class Keyboard extends Input
 {
-	/**
-	 * Constructor
-	 */
+	public boolean ESCAPE;
+	public boolean F1;
+	public boolean F2;
+	public boolean F3;
+	public boolean F4;
+	public boolean F5;
+	public boolean F6;
+	public boolean F7;
+	public boolean F8;
+	public boolean F9;
+	public boolean F10;
+	public boolean F11;
+	public boolean F12;
+	public boolean ONE;
+	public boolean TWO;
+	public boolean THREE;
+	public boolean FOUR;
+	public boolean FIVE;
+	public boolean SIX;
+	public boolean SEVEN;
+	public boolean EIGHT;
+	public boolean NINE;
+	public boolean ZERO;
+	public boolean NUMPADONE;
+	public boolean NUMPADTWO;
+	public boolean NUMPADTHREE;
+	public boolean NUMPADFOUR;
+	public boolean NUMPADFIVE;
+	public boolean NUMPADSIX;
+	public boolean NUMPADSEVEN;
+	public boolean NUMPADEIGHT;
+	public boolean NUMPADNINE;
+	public boolean NUMPADZERO;
+	public boolean PAGEUP;
+	public boolean PAGEDOWN;
+	public boolean HOME;
+	public boolean END;
+	public boolean INSERT;
+	public boolean MINUS;
+	public boolean NUMPADMINUS;
+	public boolean PLUS;
+	public boolean NUMPADPLUS;
+	public boolean DELETE;
+	public boolean BACKSPACE;
+	public boolean TAB;
+	public boolean Q;
+	public boolean W;
+	public boolean E;
+	public boolean R;
+	public boolean T;
+	public boolean Y;
+	public boolean U;
+	public boolean I;
+	public boolean O;
+	public boolean P;
+	public boolean LBRACKET;
+	public boolean RBRACKET;
+	public boolean BACKSLASH;
+	public boolean CAPSLOCK;
+	public boolean A;
+	public boolean S;
+	public boolean D;
+	public boolean F;
+	public boolean G;
+	public boolean H;
+	public boolean J;
+	public boolean K;
+	public boolean L;
+	public boolean SEMICOLON;
+	public boolean QUOTE;
+	public boolean ENTER;
+	public boolean SHIFT;
+	public boolean Z;
+	public boolean X;
+	public boolean C;
+	public boolean V;
+	public boolean B;
+	public boolean N;
+	public boolean M;
+	public boolean COMMA;
+	public boolean PERIOD;
+	public boolean NUMPADPERIOD;
+	public boolean SLASH;
+	public boolean NUMPADSLASH;
+	public boolean CONTROL;
+	public boolean ALT;
+	public boolean SPACE;
+	public boolean UP;
+	public boolean DOWN;
+	public boolean LEFT;
+	public boolean RIGHT;
+	
 	public Keyboard()
 	{
 		super();
@@ -107,7 +198,11 @@ public class Keyboard extends Input
 		addKey("TAB",Keys.TAB);
 	}
 		
-
+	/**
+	 * Event handler so FlxGame can toggle keys.
+	 * 
+	 * @param	KeyCode	The key code of the pressed key.
+	 */
 	public void handleKeyDown(int KeyCode)
 	{
 		KeyState o = _map.get(KeyCode);
@@ -118,8 +213,19 @@ public class Keyboard extends Input
 			o.current = 1;
 		else
 			o.current = 2;
+		
+		try {
+			Keyboard.class.getField(o.name).setBoolean(this, true);
+		} catch (Exception e) {
+			FlxG.log("Keyboard", e.getMessage());
+		}
 	}
 	
+	/**
+	 * Event handler so FlxGame can toggle keys.
+	 * 
+	 * @param	KeyCode	The key code of the pressed key.
+	 */
 	public void handleKeyUp(int KeyCode)
 	{
 		KeyState o = _map.get(KeyCode);
@@ -130,5 +236,11 @@ public class Keyboard extends Input
 			o.current = -1;
 		else
 			o.current = 0;
+		
+		try {
+			Keyboard.class.getField(o.name).setBoolean(this, false);
+		} catch (Exception e) {
+			FlxG.log("Keyboard", e.getMessage());
+		}
 	}
 }
