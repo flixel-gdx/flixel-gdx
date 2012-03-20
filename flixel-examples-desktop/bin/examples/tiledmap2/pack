@@ -1,0 +1,54 @@
+
+tiledmap21.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tiles
+  rotate: false
+  xy: 0, 0
+  size: 128, 8
+  orig: 128, 8
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 0, 8
+  size: 70, 14
+  orig: 70, 14
+  offset: 0, 0
+  index: -1
+elevator
+  rotate: false
+  xy: 70, 8
+  size: 50, 12
+  orig: 50, 12
+  offset: 0, 0
+  index: -1
+gibs
+  rotate: false
+  xy: 0, 22
+  size: 24, 6
+  orig: 24, 6
+  offset: 0, 0
+  index: -1
+bg
+  rotate: false
+  xy: 0, 28
+  size: 16, 18
+  orig: 16, 18
+  offset: 0, 0
+  index: -1
+crate
+  rotate: false
+  xy: 0, 46
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+pusher
+  rotate: false
+  xy: 16, 28
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1

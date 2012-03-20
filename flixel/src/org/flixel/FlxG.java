@@ -614,7 +614,7 @@ public class FlxG
 	public static void updateInput()
 	{
 		FlxG.keys.update();		
-		FlxG.mouse.update(Gdx.input.getX(), Gdx.input.getY());
+		FlxG.mouse.update();
 	}
 	
 	

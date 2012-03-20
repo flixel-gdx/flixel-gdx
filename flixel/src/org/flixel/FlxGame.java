@@ -214,7 +214,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 //		FlxG.lockCameras();
 		_state.draw();
 //		FlxG.drawPlugins();
-		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), 435, 0);		
+		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);		
 		FlxG.camera.drawFX();
 //		FlxG.unlockCameras();
 		FlxG.batch.end();
@@ -252,7 +252,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		// else
 		FlxG.updateInput();
 		update();
-		
+		FlxG.mouse.wheel = 0;
 	}
 
 	
@@ -384,15 +384,13 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	@Override
 	public boolean touchDragged(int X, int Y, int Pointer)
 	{
-		FlxG.mouse.handleMouseDragged(X, Y, Pointer);
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchMoved(int X, int Y)
 	{
-		FlxG.mouse.handleMouseMoved(X, Y);
-		return true;
+		return false;
 	}
 
 	@Override

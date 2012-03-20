@@ -1,11 +1,10 @@
 package org.examples.multitouch;
 
 import org.flixel.FlxG;
+import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-
-import com.badlogic.gdx.Gdx;
 
 /**
  * A simple demo to test your multi-touch support.
@@ -14,59 +13,55 @@ import com.badlogic.gdx.Gdx;
  */
 public class PlayState extends FlxState
 {
-	private int numberOfFingers;
 	private FlxText txtCounter;
-	private int length;
-	private FlxSprite[] sprites;
+	private FlxGroup sprites;
+	private final int pointersToCheck = 10;
 
 	@Override
 	public void create()
 	{
 		FlxG.setBgColor(0xFF000000);
-		numberOfFingers = 0;
+
 		txtCounter = new FlxText(20, 20, 200, "amount of fingers on screen: 0");
 		add(txtCounter);
-		length = 10;
-		sprites = new FlxSprite[length];
-		for(int i = 0; i<length; i++)
+		
+		sprites = new FlxGroup();
+		
+		FlxSprite square;
+		for(int i = 0; i < pointersToCheck; ++i)
 		{
-			sprites[i] = new FlxSprite().makeGraphic(80, 80);
-			sprites[i].offset.x = sprites[i].width/2;
-			sprites[i].offset.y = sprites[i].height/2;
-			sprites[i].visible = false;
-			add(sprites[i]);
+			square = (FlxSprite) sprites.add(new FlxSprite().makeGraphic(80, 80));
+			square.offset.x = square.width / 2;
+			square.offset.y = square.height / 2;
+			square.visible = false;
+			sprites.add(square);
 		}
+		
+		add(sprites);
 	}
 	
 	@Override
 	public void update()
 	{
-		for(int i = 0; i < length; i++)
-		{			
-			if(FlxG.mouse.pressed())
+		int pointersDown = 0;
+		
+		for(int i = 0; i < pointersToCheck; i++)
+		{	
+			FlxSprite square = (FlxSprite) sprites.members.get(i);		
+			if(FlxG.mouse.pressed(i))
 			{
-				numberOfFingers++;
-				sprites[i].x = FlxG.mouse.x;
-				sprites[i].y = FlxG.mouse.y;
-				sprites[i].visible = true;
+				square.x = FlxG.mouse.getWorldPosition(i).x;
+				square.y = FlxG.mouse.getWorldPosition(i).y;
+				square.visible = true;
+				++pointersDown;
 			}
 			else
 			{
-				sprites[i].visible = false;
+				square.visible = false;
 			}
 		}
 		
-//		if(FlxG.touch.justReleased())
-//		{
-//			FlxG.log("just released");
-//		}
-//		else if(FlxG.touch.justPressed())
-//		{
-//			FlxG.log("just pressed");
-//		}
-		
-		txtCounter.setText("amount of fingers on screen: " + numberOfFingers);
-		numberOfFingers = 0;
+		txtCounter.setText("amount of fingers on screen: " + pointersDown);
 		super.update();
 	}
 }

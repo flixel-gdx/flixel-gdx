@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.flixel"
+      android:versionCode="1" android:versionName="0.2"
+      android:installLocation="preferExternal">
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="14" />
+	
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+        <activity android:name=".ExampleStarter"
+                  android:label="@string/app_name"
+                  android:configChanges="keyboard|keyboardHidden|orientation">                  
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+		
+            <activity android:label="Animation Demo"
+				  android:name=".AnimationDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Collision Demo"
+				  android:name=".CollisionDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Particles Demo"
+				  android:name=".ParticlesDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Blur Demo"
+				  android:name=".BlurDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="1000 Particles Demo"
+				  android:name=".ThousandParticlesDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Scrolling Demo"
+				  android:name=".ScrollingDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Bitmapfont Demo"
+				  android:name=".BitmapfontDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="MultiTouch Demo"
+				  android:name=".MultiTouchDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Drag and Drop Demo"
+				  android:name=".DragAndDropDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Camera Effects Demo"
+				  android:name=".CameraEffectsDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Audio Demo"
+				  android:name=".AudioDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="Tile Demo"
+				  android:name=".TileDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="TiledMap Demo"
+				  android:name=".TiledMapDemo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:label="TiledMap2 Demo"
+				  android:name=".TiledMap2Demo"
+				  android:screenOrientation="landscape"
+				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+    </application>
+</manifest>

@@ -1,0 +1,19 @@
+
+collision1.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+platform
+  rotate: false
+  xy: 0, 0
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
+gibs
+  rotate: false
+  xy: 64, 0
+  size: 24, 6
+  orig: 32, 8
+  offset: 0, 2
+  index: -1
