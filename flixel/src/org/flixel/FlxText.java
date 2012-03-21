@@ -327,8 +327,10 @@ public class FlxText extends FlxSprite
 				return;
 		}
 		
-		_point.x = x - (FlxG.camera.scroll.x * scrollFactor.x) - offset.x;
-		_point.y = y - (FlxG.camera.scroll.y * scrollFactor.y) - offset.y;
+		FlxCamera camera = FlxG.camera;
+		
+		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
+		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
 		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
 		
@@ -343,7 +345,7 @@ public class FlxText extends FlxSprite
 			_textField.setColor(FlxU.colorFromHex(_color));
 		}
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-			drawDebug(FlxG.camera);
+			drawDebug(camera);
 		_textField.draw(FlxG.batch);
 		
 		_VISIBLECOUNT++;

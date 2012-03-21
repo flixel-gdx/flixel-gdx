@@ -95,7 +95,6 @@ public class FlxGroup extends FlxBasic
 	@Override
 	public void preUpdate()
 	{
-		super.preUpdate();
 	}
 	
 	
@@ -122,6 +121,7 @@ public class FlxGroup extends FlxBasic
 	
 	/**
 	 * Automatically goes through and calls render on everything you added.
+	 * @param camera 
 	 */
 	@Override
 	public void draw()

@@ -55,7 +55,6 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	
 	private BitmapFont font;
 		
-	private boolean _GL11Supported;
 	private GL10 gl;
 	private FlxPause _pauseState;
 		
@@ -142,14 +141,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			FlxG.flashGfx = new ShapeRenderer();
 		_pauseState = new FlxPause();
 		
-		
-		if(Gdx.graphics.isGL11Available())
-		{
-			gl = Gdx.graphics.getGL11();
-			_GL11Supported = true;
-		}
-		else
-			gl = Gdx.graphics.getGL10();
+		gl = Gdx.graphics.getGL10();
 		gl.glEnable(GL10.GL_CULL_FACE);
 		gl.glCullFace(GL10.GL_BACK);
 		
@@ -198,25 +190,16 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		float[] rgba = FlxU.getRGBA(FlxG.getBgColor());
 		gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
 		
-		FlxG.camera.buffer.update(false);
-		FlxG.batch.setProjectionMatrix(FlxG.camera.buffer.combined);
+		FlxG.camera.glCamera.update(false);
+		FlxG.batch.setProjectionMatrix(FlxG.camera.glCamera.combined);
 		FlxG.batch.begin();
-		if(_GL11Supported)
-		{
-			FlxG.camera.buffer.apply(Gdx.gl11);
-			// TODO: performance boost for OpenGL ES 1.1?
-		}
-		else
-		{
-			FlxG.camera.buffer.apply(Gdx.gl10);
-		}
-//		FlxG.camera.draw();
-//		FlxG.lockCameras();
+					
 		_state.draw();
-//		FlxG.drawPlugins();
+			
 		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);		
+	
 		FlxG.camera.drawFX();
-//		FlxG.unlockCameras();
+		
 		FlxG.batch.end();
 	}
 

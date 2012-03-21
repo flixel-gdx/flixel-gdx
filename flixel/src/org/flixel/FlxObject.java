@@ -308,7 +308,6 @@ public class FlxObject extends FlxBasic
 		path = null;
 		pathSpeed = 0;
 		pathAngle = 0;
-		
 	}
 	
 	/**
@@ -409,8 +408,8 @@ public class FlxObject extends FlxBasic
 		last.x = x;
 		last.y = y;
 		
-//		if((path != null) && (pathSpeed != 0) && (path.nodes[_pathNodeIndex] != null))
-//			updatePathMotion();
+		if((path != null) && (pathSpeed != 0) && (path.nodes.get(_pathNodeIndex) != null))
+			updatePathMotion();
 	}
 	
 	
@@ -465,7 +464,11 @@ public class FlxObject extends FlxBasic
 	@Override
 	public void draw()
 	{
+		if(!onScreen(FlxG.camera))
+			return;
 		_VISIBLECOUNT++;
+		if(FlxG.visualDebug && !ignoreDrawDebug)
+			drawDebug(FlxG.camera);
 	}
 	
 	
@@ -514,12 +517,268 @@ public class FlxObject extends FlxBasic
 		FlxG.batch.draw(_debug, boundingBoxX, boundingBoxY);
 	}
 	
+	/**
+	 * Call this function to give this object a path to follow.
+	 * If the path does not have at least one node in it, this function
+	 * will log a warning message and return.
+	 * 
+	 * @param	Path		The <code>FlxPath</code> you want this object to follow.
+	 * @param	Speed		How fast to travel along the path in pixels per second.
+	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
+	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
+	 */
+	public void followPath(FlxPath Path,float Speed,int Mode,boolean AutoRotate)
+	{
+		if (Path == null)
+			return;
+		
+		if (Path.nodes.size <= 0)
+		{
+			FlxG.log("WARNING: Paths need at least one node in them to be followed.");
+			return;
+		}
+		
+		path = Path;
+		pathSpeed = FlxU.abs(Speed);
+		_pathMode = Mode;
+		_pathRotate = AutoRotate;
+		
+		//get starting node
+		if((_pathMode == PATH_BACKWARD) || (_pathMode == PATH_LOOP_BACKWARD))
+		{
+			_pathNodeIndex = path.nodes.size-1;
+			_pathInc = -1;
+		}
+		else
+		{
+			_pathNodeIndex = 0;
+			_pathInc = 1;
+		}
+	}
 	
+	/**
+	 * Call this function to give this object a path to follow.
+	 * If the path does not have at least one node in it, this function
+	 * will log a warning message and return.
+	 * 
+	 * @param	Path		The <code>FlxPath</code> you want this object to follow.
+	 * @param	Speed		How fast to travel along the path in pixels per second.
+	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
+	 */
+	public void followPath(FlxPath Path,float Speed,int Mode)
+	{
+		followPath(Path, Speed, Mode, false);
+	}
 	
-	// TODO: followPath
-	// TODO: stopFollowingPath
-	// TODO: advancePath
-	// TODO: updatePathMotion
+	/**
+	 * Call this function to give this object a path to follow.
+	 * If the path does not have at least one node in it, this function
+	 * will log a warning message and return.
+	 * 
+	 * @param	Path		The <code>FlxPath</code> you want this object to follow.
+	 * @param	Speed		How fast to travel along the path in pixels per second.
+	 */
+	public void followPath(FlxPath Path,float Speed)
+	{
+		followPath(Path, Speed, PATH_FORWARD, false);
+	}
+	
+	/**
+	 * Call this function to give this object a path to follow.
+	 * If the path does not have at least one node in it, this function
+	 * will log a warning message and return.
+	 * 
+	 * @param	Path		The <code>FlxPath</code> you want this object to follow.
+	 */
+	public void followPath(FlxPath Path)
+	{
+		followPath(Path, 100, PATH_FORWARD, false);
+	}
+	
+	/**
+	 * Tells this object to stop following the path its on.
+	 * 
+	 * @param	DestroyPath		Tells this function whether to call destroy on the path object.  Default value is false.
+	 */
+	public void stopFollowingPath(boolean DestroyPath)
+	{
+		pathSpeed = 0;
+		if(DestroyPath && (path != null))
+		{
+			path.destroy();
+			path = null;
+		}
+	}
+	
+	/**
+	 * Tells this object to stop following the path its on. 
+	 */
+	public void stopFollowingPath()
+	{
+		stopFollowingPath(false);
+	}
+		
+	/**
+	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
+	 * 
+	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
+	 */
+	protected FlxPoint advancePath(boolean Snap)
+	{
+		if(Snap)
+		{
+			FlxPoint oldNode = path.nodes.get(_pathNodeIndex);
+			if(oldNode != null)
+			{
+				if((_pathMode & PATH_VERTICAL_ONLY) == 0)
+					x = oldNode.x - width*0.5f;
+				if((_pathMode & PATH_HORIZONTAL_ONLY) == 0)
+					y = oldNode.y - height*0.5f;
+			}
+		}
+		
+		_pathNodeIndex += _pathInc;
+		
+		if((_pathMode & PATH_BACKWARD) > 0)
+		{
+			if(_pathNodeIndex < 0)
+			{
+				_pathNodeIndex = 0;
+				pathSpeed = 0;
+			}
+		}
+		else if((_pathMode & PATH_LOOP_FORWARD) > 0)
+		{
+			if(_pathNodeIndex >= path.nodes.size)
+				_pathNodeIndex = 0;
+		}
+		else if((_pathMode & PATH_LOOP_BACKWARD) > 0)
+		{
+			if(_pathNodeIndex < 0)
+			{
+				_pathNodeIndex = path.nodes.size-1;
+				if(_pathNodeIndex < 0)
+					_pathNodeIndex = 0;
+			}
+		}
+		else if((_pathMode & PATH_YOYO) > 0)
+		{
+			if(_pathInc > 0)
+			{
+				if(_pathNodeIndex >= path.nodes.size)
+				{
+					_pathNodeIndex = path.nodes.size-2;
+					if(_pathNodeIndex < 0)
+						_pathNodeIndex = 0;
+					_pathInc = -_pathInc;
+				}
+			}
+			else if(_pathNodeIndex < 0)
+			{
+				_pathNodeIndex = 1;
+				if(_pathNodeIndex >= path.nodes.size)
+					_pathNodeIndex = path.nodes.size-1;
+				if(_pathNodeIndex < 0)
+					_pathNodeIndex = 0;
+				_pathInc = -_pathInc;
+			}
+		}
+		else
+		{
+			if(_pathNodeIndex >= path.nodes.size)
+			{
+				_pathNodeIndex = path.nodes.size-1;
+				pathSpeed = 0;
+			}
+		}
+
+		return path.nodes.get(_pathNodeIndex);
+	}
+	
+	/**
+	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
+	 * 
+	 */
+	protected FlxPoint advancePath()
+	{
+		return advancePath(true);
+	}
+	
+	/**
+	 * Internal function for moving the object along the path.
+	 * Generally this function is called automatically by <code>preUpdate()</code>.
+	 * The first half of the function decides if the object can advance to the next node in the path,
+	 * while the second half handles actually picking a velocity toward the next node.
+	 */
+	protected void updatePathMotion()
+	{
+		//first check if we need to be pointing at the next node yet
+		_point.x = x + width*0.5f;
+		_point.y = y + height*0.5f;
+		FlxPoint node = path.nodes.get(_pathNodeIndex);
+		float deltaX = node.x - _point.x;
+		float deltaY = node.y - _point.y;
+		
+		boolean horizontalOnly = (_pathMode & PATH_HORIZONTAL_ONLY) > 0;
+		boolean verticalOnly = (_pathMode & PATH_VERTICAL_ONLY) > 0;
+		
+		if(horizontalOnly)
+		{
+			if(((deltaX>0)?deltaX:-deltaX) < pathSpeed*FlxG.elapsed)
+				node = advancePath();
+		}
+		else if(verticalOnly)
+		{
+			if(((deltaY>0)?deltaY:-deltaY) < pathSpeed*FlxG.elapsed)
+				node = advancePath();
+		}
+		else
+		{
+			if(Math.sqrt(deltaX*deltaX + deltaY*deltaY) < pathSpeed*FlxG.elapsed)
+				node = advancePath();
+		}
+		
+		//then just move toward the current node at the requested speed
+		if(pathSpeed != 0)
+		{
+			//set velocity based on path mode
+			_point.x = x + width*0.5f;
+			_point.y = y + height*0.5f;
+			if(horizontalOnly || (_point.y == node.y))
+			{
+				velocity.x = (_point.x < node.x)?pathSpeed:-pathSpeed;
+				if(velocity.x < 0)
+					pathAngle = -90;
+				else
+					pathAngle = 90;
+				if(!horizontalOnly)
+					velocity.y = 0;
+			}
+			else if(verticalOnly || (_point.x == node.x))
+			{
+				velocity.y = (_point.y < node.y)?pathSpeed:-pathSpeed;
+				if(velocity.y < 0)
+					pathAngle = 0;
+				else
+					pathAngle = 180;
+				if(!verticalOnly)
+					velocity.x = 0;
+			}
+			else
+			{
+				pathAngle = FlxU.getAngle(_point,node);
+				FlxU.rotatePoint(0,(int) pathSpeed,0,0,pathAngle,velocity);
+			}
+			
+			//then set object rotation if necessary
+			if(_pathRotate)
+			{
+				angularVelocity = 0;
+				angularAcceleration = 0;
+				angle = pathAngle;
+			}
+		}			
+	}
 	
 	/**
 	 * Checks to see if some <code>FlxObject</code> overlaps this <code>FlxObject</code> or <code>FlxGroup</code>.
@@ -946,6 +1205,7 @@ public class FlxObject extends FlxBasic
 	}
 	
 	
+
 	/**
 	 * The main collision resolution function in flixel.
 	 * 
@@ -980,27 +1240,23 @@ public class FlxObject extends FlxBasic
 		
 		//If one of the objects is a tilemap, just pass it off.
 		if(Object1 instanceof FlxTilemap)
-		{
 			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2, new AFlxObject()
 			{
 				@Override
-				public boolean onOverlapsWith(FlxObject Object1, FlxObject Object2)
+				public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
 				{
 					return separateX(Object1, Object2);
 				}
-			});			
-		}
+			});
 		if(Object2 instanceof FlxTilemap)
-		{
 			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,new AFlxObject()
 			{
 				@Override
-				public boolean onOverlapsWith(FlxObject Object1, FlxObject Object2)
+				public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
 				{					
 					return separateX(Object1, Object2);
 				}
-			},true);			
-		}
+			},true);
 		
 		//First, get the two object deltas
 		float overlap = 0;
@@ -1021,7 +1277,8 @@ public class FlxObject extends FlxBasic
 				if(obj1delta > obj2delta)
 				{
 					overlap = Object1.x + Object1.width - Object2.x;
-					if((overlap > maxOverlap) || (Object1.allowCollisions & RIGHT) == 0 || (Object2.allowCollisions & LEFT) == 0)
+					
+					if((overlap > maxOverlap) || (Object1.allowCollisions & RIGHT) == 0 || (Object2.allowCollisions & LEFT) == 0) // TODO: recheck this BITWISE AND
 						overlap = 0;
 					else
 					{
@@ -1032,8 +1289,7 @@ public class FlxObject extends FlxBasic
 				else if(obj1delta < obj2delta)
 				{
 					overlap = Object1.x - Object2.width - Object2.x;
-//					FlxG.log("separateX: " +(-overlap > maxOverlap)); // TODO: bug this will be true which shouldn't				
-					if((-overlap > maxOverlap) || (Object1.allowCollisions & LEFT) == 0 || (Object2.allowCollisions & RIGHT) == 0)
+					if((-overlap > maxOverlap) || (Object1.allowCollisions & LEFT) == 0 || (Object2.allowCollisions & RIGHT) == 0) // TODO: recheck this BITWISE AND
 						overlap = 0;
 					else
 					{
@@ -1043,7 +1299,7 @@ public class FlxObject extends FlxBasic
 				}
 			}
 		}
-		
+
 		//Then adjust their positions and velocities accordingly (if there was any overlap)
 		if(overlap != 0)
 		{
@@ -1099,27 +1355,23 @@ public class FlxObject extends FlxBasic
 		
 		//If one of the objects is a tilemap, just pass it off.
 		if(Object1 instanceof FlxTilemap)
-		{
 			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2,new AFlxObject()
 			{
 				@Override
-				public boolean onOverlapsWith(FlxObject Object1, FlxObject Object2)
+				public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
 				{					
 					return separateY(Object1, Object2);
 				}
-			});			
-		}
+			});
 		if(Object2 instanceof FlxTilemap)
-		{
 			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,new AFlxObject()
 			{
 				@Override
-				public boolean onOverlapsWith(FlxObject Object1, FlxObject Object2)
+				public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
 				{					
 					return separateY(Object1, Object2);
 				}
-			},true);			
-		}
+			},true);
 
 		//First, get the two object deltas
 		float overlap = 0;
@@ -1151,7 +1403,6 @@ public class FlxObject extends FlxBasic
 				else if(obj1delta < obj2delta)
 				{
 					overlap = Object1.y - Object2.height - Object2.y;
-//					FlxG.log("separateY: " +(-overlap > maxOverlap)); // TODO: bug this will be true which shouldn't
 					if((-overlap > maxOverlap) || (Object1.allowCollisions & UP) == 0 || (Object2.allowCollisions & DOWN) == 0)
 						overlap = 0;
 					else
@@ -1203,5 +1454,5 @@ public class FlxObject extends FlxBasic
 		}
 		else
 			return false;
-	}	
+	}		
 }

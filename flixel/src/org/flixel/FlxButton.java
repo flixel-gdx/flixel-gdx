@@ -94,10 +94,11 @@ public class FlxButton extends FlxSprite
 		if(Label != null)
 		{
 			label = new FlxText(20,0,80,Label);
-//			label.setFormat(null,8,0x333333,"center");
+			//label.setFormat(null,0,0x333333,"center");
+			label.setAlignment("center");
 			labelOffset = new FlxPoint(-1,3);
 		}
-		loadGraphic(SystemAsset.ImgButton,false,64,64);
+		loadGraphic(SystemAsset.ImgButton,false,80,20);
 		buttonEvent = ButtonEvent;
 		
 		soundOver = null;
@@ -254,13 +255,21 @@ public class FlxButton extends FlxSprite
 							buttonEvent.onUp();
 						status = NORMAL;
 					}
+					if(status == NORMAL)
+					{
+						status = HIGHLIGHT;
+						if(buttonEvent != null)
+							buttonEvent.onOver();
+						//if(soundOver != null)
+							//soundOver.play(true);
+					}
 				}
 				++pointerId;
 			}			
 		}
 		if(offAll)
 		{
-			if(FlxG.mouse.pressed() && status != NORMAL)
+			if(status != NORMAL)
 			{
 				if(buttonEvent != null)
 					buttonEvent.onOut();
