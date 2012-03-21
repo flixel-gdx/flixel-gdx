@@ -6,6 +6,6 @@ public class SplitScreen extends FlxGame
 {
 	public SplitScreen() 
 	{
-		super(480, 320, PlayState.class, 1, 20, 20);
+		super(320, 320, PlayState.class, 1, 20, 20);
 	}
 }

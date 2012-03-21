@@ -728,57 +728,57 @@ public class FlxU
 	 */
 	public static FlxPoint rotatePoint(float X, int Y, int PivotX, int PivotY, float Angle, FlxPoint Point)
 	{
-		double sin = 0;
-		double cos = 0;
-		double radians = Angle * -0.017453293;
-		while(radians < -3.14159265)
-			radians += 6.28318531;
-		while(radians > 3.14159265)
-			radians = radians - 6.28318531;
+		float sin = 0;
+		float cos = 0;
+		float radians = Angle * -0.017453293f;
+		while(radians < -3.14159265f)
+			radians += 6.28318531f;
+		while(radians > 3.14159265f)
+			radians = radians - 6.28318531f;
 
 		if(radians < 0)
 		{
-			sin = 1.27323954 * radians + .405284735 * radians * radians;
+			sin = 1.27323954f * radians + .405284735f * radians * radians;
 			if(sin < 0)
-				sin = .225 * (sin * -sin - sin) + sin;
+				sin = .225f * (sin *-sin - sin) + sin;
 			else
-				sin = .225 * (sin * sin - sin) + sin;
+				sin = .225f * (sin * sin - sin) + sin;
 		}
 		else
 		{
-			sin = 1.27323954 * radians - 0.405284735 * radians * radians;
+			sin = 1.27323954f * radians - 0.405284735f * radians * radians;
 			if(sin < 0)
-				sin = .225 * (sin * -sin - sin) + sin;
+				sin = .225f * (sin *-sin - sin) + sin;
 			else
-				sin = .225 * (sin * sin - sin) + sin;
+				sin = .225f * (sin * sin - sin) + sin;
 		}
 
-		radians += 1.57079632;
-		if(radians > 3.14159265)
-			radians = radians - 6.28318531;
+		radians += 1.57079632f;
+		if(radians > 3.14159265f)
+			radians = radians - 6.28318531f;
 		if(radians < 0)
 		{
-			cos = 1.27323954 * radians + 0.405284735 * radians * radians;
+			cos = 1.27323954f * radians + 0.405284735f * radians * radians;
 			if(cos < 0)
-				cos = .225 * (cos * -cos - cos) + cos;
+				cos = .225f * (cos *-cos - cos) + cos;
 			else
-				cos = .225 * (cos * cos - cos) + cos;
+				cos = .225f * (cos * cos - cos) + cos;
 		}
 		else
 		{
-			cos = 1.27323954 * radians - 0.405284735 * radians * radians;
+			cos = 1.27323954f * radians - 0.405284735f * radians * radians;
 			if(cos < 0)
-				cos = .225 * (cos * -cos - cos) + cos;
+				cos = .225f * (cos *-cos - cos) + cos;
 			else
-				cos = .225 * (cos * cos - cos) + cos;
+				cos = .225f * (cos * cos - cos) + cos;
 		}
 
 		float dx = X - PivotX;
-		float dy = PivotY - Y;
+		float dy = PivotY + Y;
 		if(Point == null)
 			Point = new FlxPoint();
-		Point.x = (float) (PivotX + cos * dx - sin * dy);
-		Point.y = (float) (PivotY - sin * dx - cos * dy);
+		Point.x = PivotX + cos * dx - sin * dy;
+		Point.y = PivotY - sin * dx - cos * dy;
 		return Point;
 	}
 	
@@ -814,7 +814,7 @@ public class FlxU
 		float y = Point2.y - Point1.y;
 		if((x == 0) && (y == 0))
 			return 0;
-		float c1 = (float) (3.14159265 * 0.25);
+		float c1 = 3.14159265f * 0.25f;
 		float c2 = 3 * c1;
 		float ay = (y < 0)?-y:y;
 		float angle = 0;
@@ -822,7 +822,7 @@ public class FlxU
 			angle = c1 - c1 * ((x - ay) / (x + ay));
 		else
 			angle = c2 - c1 * ((x + ay) / (ay - x));
-		angle = (float) (((y < 0)?-angle:angle)*57.2957796);
+		angle = ((y < 0)?-angle:angle)*57.2957796f;
 		if(angle > 90)
 			angle = angle - 270;
 		else

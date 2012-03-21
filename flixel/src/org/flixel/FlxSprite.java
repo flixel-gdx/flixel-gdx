@@ -589,7 +589,10 @@ public class FlxSprite extends FlxObject
 		
 		if(dirty)	//rarely 
 			calcFrame();
+		
 		FlxCamera camera = FlxG.camera;
+		if (!onScreen(camera))
+			return;
 		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
 		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
@@ -599,8 +602,6 @@ public class FlxSprite extends FlxObject
 			framePixels.setPosition(_point.x, _point.y);
 			framePixels.setRotation(angle);
 			framePixels.draw(FlxG.batch);
-			if(FlxG.visualDebug && !ignoreDrawDebug)
-				drawDebug(camera);
 		}
 		else
 		{ 	// Advanced render
@@ -610,14 +611,11 @@ public class FlxSprite extends FlxObject
 				framePixels.setRotation(angle);
 			// framePixels.setRotation(angle * 0.017453293f); // TODO: removing the 0.017453293f makes the rotation better.
 			framePixels.setPosition(_point.x, _point.y);
-
-				framePixels.draw(FlxG.batch);
-			if(FlxG.visualDebug && !ignoreDrawDebug)
-				drawDebug(camera);
+			framePixels.draw(FlxG.batch);
 		}
 		_VISIBLECOUNT++;
-		
-		
+		if(FlxG.visualDebug && !ignoreDrawDebug)
+				drawDebug(camera);		
 	}
 	
 	/**

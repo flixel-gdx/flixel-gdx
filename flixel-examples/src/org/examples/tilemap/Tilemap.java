@@ -1,11 +1,11 @@
-package org.examples.tiledmap2;
+package org.examples.tilemap;
 
 import org.flixel.FlxGame;
 
-public class TiledMap2Demo extends FlxGame
+public class Tilemap extends FlxGame
 {
 
-	public TiledMap2Demo()
+	public Tilemap()
 	{
 		super(320, 240, PlayState.class);
 	}

@@ -111,7 +111,8 @@ public class PlayState extends FlxState
 		_level = new FlxTilemap();
 //		_level.loadMap(FlxTilemap.arrayToCSV(data, 40), Asset.ImgTiles);
 //		_level.loadMap(FlxTilemap.array2DToCSV(Asset.map.layers.get(0).tiles), Asset.ImgTiles);
-		_level.loadMap(FlxTilemap.tilemapToCSV(Asset.map, 0), Asset.ImgTiles);
+		_level.loadMap(FlxTilemap.tilemapToCSV(Asset.map, 0), Asset.ImgTiles, 8, 8, FlxTilemap.OFF, 1);
+		
 		add(_level);
 		
 		

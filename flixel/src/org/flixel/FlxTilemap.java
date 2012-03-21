@@ -5,14 +5,23 @@ import org.flixel.event.AFlxTile;
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 
+/**
+ * This is a traditional tilemap display and collision class.
+ * It takes a string of comma-separated numbers and then associates
+ * those values with tiles from the sheet you pass in.
+ * It also includes some handy static parsers that can convert
+ * arrays or images into strings that can be loaded.
+ * 
+ * @author	Thomas Weston
+ */
 public class FlxTilemap extends FlxObject
 {
 	static public TextureRegion ImgAuto;
@@ -54,6 +63,11 @@ public class FlxTilemap extends FlxObject
 	 */
 	protected FlxPoint _flashPoint;
 	/**
+	 * Rendering helper, minimize new object instantiation on repetitive methods.
+	 */
+	protected TextureRegion _textureRegion;
+	
+	/**
 	 * Internal reference to the bitmap data object that stores the original tile graphics.
 	 */
 	protected TextureRegion _tiles;
@@ -64,7 +78,12 @@ public class FlxTilemap extends FlxObject
 	/**
 	 * Internal representation of the actual tile data, as a large 1D array of integers.
 	 */
-	protected IntArray _data;	
+	protected IntArray _data;
+	/**
+	 * Internal representation of rectangles, one for each tile in the entire tilemap, used to speed up drawing.
+	 */
+	protected Array<TextureRegion> _regions;
+	
 	/**
 	 * Internal, the width of a single tile.
 	 */
@@ -77,6 +96,7 @@ public class FlxTilemap extends FlxObject
 	 * Internal collection of tile objects, one for each type of tile in the map (NOTE one for every single tile in the whole map).
 	 */
 	protected Array<FlxTile> _tileObjects;
+	
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
@@ -98,12 +118,11 @@ public class FlxTilemap extends FlxObject
 	 * Internal, used to sort of insert blank tiles in front of the tiles in the provided graphic.
 	 */
 	protected int _startingIndex;
-
 	
 	/**
 	 * The tilemap constructor just initializes some basic variables.
 	 */
-	public FlxTilemap()
+	public FlxTilemap() 
 	{
 		super();
 		auto = OFF;
@@ -112,7 +131,9 @@ public class FlxTilemap extends FlxObject
 		totalTiles = 0;
 		_buffers = new Array<FlxTilemapBuffer>();
 		_flashPoint = new FlxPoint();
+		_textureRegion = null;
 		_data = null;
+		_regions = null;
 		_tileWidth = 0;
 		_tileHeight = 0;
 		_tiles = null;
@@ -126,7 +147,6 @@ public class FlxTilemap extends FlxObject
 		_startingIndex = 0;
 	}
 	
-	
 	/**
 	 * Clean up memory.
 	 */
@@ -134,27 +154,25 @@ public class FlxTilemap extends FlxObject
 	public void destroy()
 	{
 		_flashPoint = null;
+		_textureRegion = null;
 		_tiles = null;
 		int i = 0;
 		int l = _tileObjects.size;
 		while(i < l)
 			_tileObjects.get(i++).destroy();
 		_tileObjects = null;
-		i = 0;
 		l = _buffers.size;
 		while(i < l)
-			((FlxTilemapBuffer)_buffers.get(i++)).destroy();
+			_buffers.get(i++).destroy();
 		_buffers = null;
 		_data = null;
-		_debugTileNotSolid.getTexture().dispose();
+		_regions = null;
 		_debugTileNotSolid = null;
-		_debugTilePartial.getTexture().dispose();
 		_debugTilePartial = null;
-		_debugTileSolid.getTexture().dispose();
 		_debugTileSolid = null;
+
 		super.destroy();
 	}
-	
 	
 	/**
 	 * Load the tilemap with string data and a tile graphic.
@@ -164,7 +182,7 @@ public class FlxTilemap extends FlxObject
 	 * @param	TileWidth		The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param	TileHeight		The height of your tiles (e.g. 8) - defaults to width if unspecified.
 	 * @param	AutoTile		Whether to load the map using an automatic tile placement algorithm.  Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
-	 * @param	StartingIndex	Used to sort of insert empty tiles in front of the provided graphic.  Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
+	 * @param	StartingIndex	Used to sort of insert empty tiles in front of the provided graphic.  Default is 0, usually safest to leave it at that.  Ignored if AutoTile is set.
 	 * @param	DrawIndex		Initializes all tile objects equal to and after this index as visible. Default value is 1.  Ignored if AutoTile is set.
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.	
 	 * 
@@ -176,15 +194,16 @@ public class FlxTilemap extends FlxObject
 		_startingIndex = StartingIndex;
 
 		//Figure out the map dimensions based on the data string
-		String[] columns;		
+		String[] columns;
 		String[] rows = MapData.split("\n");
 		heightInTiles = rows.length;
 		_data = new IntArray();
 		int row = 0;
-		int column = 0;
+		int column;
 		while(row < heightInTiles)
 		{
 			columns = rows[row++].split(",");
+
 			if(columns.length <= 1)
 			{
 				heightInTiles = heightInTiles - 1;
@@ -193,12 +212,17 @@ public class FlxTilemap extends FlxObject
 			if(widthInTiles == 0)
 				widthInTiles = columns.length;
 			column = 0;
+			
 			while(column < widthInTiles)
+			{
 				_data.add(Integer.parseInt(columns[column++].trim()));
+			}
 		}
+				
 		//Pre-process the map data if it's auto-tiled
 		int i;
 		totalTiles = widthInTiles*heightInTiles;
+
 		if(auto > OFF)
 		{
 			_startingIndex = 1;
@@ -210,19 +234,19 @@ public class FlxTilemap extends FlxObject
 		}
 		
 		//Figure out the size of the tiles
-		_tiles = new Sprite(FlxG.addBitmap(TileGraphic));
+		_tiles = FlxG.addBitmap(TileGraphic);
+		
 		_tileWidth = TileWidth;
 		if(_tileWidth == 0)
-			_tileWidth = _tiles.getRegionHeight();
+			_tileWidth = (int) _tiles.getRegionHeight();
 		_tileHeight = TileHeight;
 		if(_tileHeight == 0)
 			_tileHeight = _tileWidth;
-		
+
 		//create some tile objects that we'll use for overlap checks (one for each tile)
 		i = 0;
-		int l = (_tiles.getRegionWidth()/_tileWidth) * (_tiles.getRegionHeight()/_tileHeight);
-		if(auto > OFF)
-			l++;
+		int l = (int) ((_tiles.getRegionWidth() / (float) _tileWidth) * (_tiles.getRegionHeight() / (float) _tileHeight));
+		l += _startingIndex;
 		_tileObjects = new Array<FlxTile>(l);
 		
 		while(i < l)
@@ -230,27 +254,27 @@ public class FlxTilemap extends FlxObject
 			_tileObjects.add(new FlxTile(this,i,_tileWidth,_tileHeight,(i >= DrawIndex),(i >= CollideIndex)?allowCollisions:NONE));
 			i++;
 		}
-		
+
 		//create debug tiles for rendering bounding boxes on demand
-		if(_debugTileNotSolid != null)
-			_debugTileNotSolid.getTexture().dispose();
-		_debugTileNotSolid = makeDebugTile(FlxG.BLUE);
-		if(_debugTilePartial != null)
-			_debugTilePartial.getTexture().dispose();
-		_debugTilePartial = makeDebugTile(FlxG.PINK);
-		if(_debugTileSolid != null)
-			_debugTileSolid.getTexture().dispose();
-		_debugTileSolid = makeDebugTile(FlxG.GREEN);
+		_debugTileNotSolid = makeDebugTile(_debugTileNotSolid, FlxG.BLUE);
+		_debugTilePartial = makeDebugTile(_debugTilePartial, FlxG.PINK);
+		_debugTileSolid = makeDebugTile(_debugTileSolid, FlxG.GREEN);
 		
 		//Then go through and create the actual map
 		width = widthInTiles*_tileWidth;
 		height = heightInTiles*_tileHeight;
+		_regions = new Array<TextureRegion>(totalTiles);
 		i = 0;
-		
-		//TODO: this is not needed anymore
-		/*while(i < totalTiles)
-			updateTile(i++);*/
-		
+		while(i < totalTiles)
+		{
+			_regions.add(null);
+			i++;
+		}
+
+		i = 0;
+		while(i < totalTiles)
+			updateTile(i++);
+
 		return this;
 	}
 	
@@ -262,7 +286,7 @@ public class FlxTilemap extends FlxObject
 	 * @param	TileWidth		The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param	TileHeight		The height of your tiles (e.g. 8) - defaults to width if unspecified.
 	 * @param	AutoTile		Whether to load the map using an automatic tile placement algorithm.  Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
-	 * @param	StartingIndex	Used to sort of insert empty tiles in front of the provided graphic.  Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
+	 * @param	StartingIndex	Used to sort of insert empty tiles in front of the provided graphic.  Default is 0, usually safest to leave it at that.  Ignored if AutoTile is set.
 	 * @param	DrawIndex		Initializes all tile objects equal to and after this index as visible. Default value is 1.  Ignored if AutoTile is set.	
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
@@ -280,7 +304,7 @@ public class FlxTilemap extends FlxObject
 	 * @param	TileWidth		The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param	TileHeight		The height of your tiles (e.g. 8) - defaults to width if unspecified.
 	 * @param	AutoTile		Whether to load the map using an automatic tile placement algorithm.  Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
-	 * @param	StartingIndex	Used to sort of insert empty tiles in front of the provided graphic.  Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.	
+	 * @param	StartingIndex	Used to sort of insert empty tiles in front of the provided graphic.  Default is 0, usually safest to leave it at that.  Ignored if AutoTile is set.	
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
@@ -312,7 +336,6 @@ public class FlxTilemap extends FlxObject
 	 * @param	TileGraphic		All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param	TileWidth		The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param	TileHeight		The height of your tiles (e.g. 8) - defaults to width if unspecified.
-	 * @param	AutoTile		Whether to load the map using an automatic tile placement algorithm.  Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.	
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
@@ -327,7 +350,6 @@ public class FlxTilemap extends FlxObject
 	 * @param	MapData			A string of comma and line-return delineated indices indicating what order the tiles should go in.
 	 * @param	TileGraphic		All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param	TileWidth		The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
-	 * @param	TileHeight		The height of your tiles (e.g. 8) - defaults to width if unspecified.	
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
@@ -341,9 +363,6 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @param	MapData			A string of comma and line-return delineated indices indicating what order the tiles should go in.
 	 * @param	TileGraphic		All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
-	 * @param	TileWidth		The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
-	 * @param	TileHeight		The height of your tiles (e.g. 8) - defaults to width if unspecified.
-	 * @param	AutoTile		Whether to load the map using an automatic tile placement algorithm.  Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.	
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
@@ -351,22 +370,30 @@ public class FlxTilemap extends FlxObject
 	{
 		return loadMap(MapData, TileGraphic, 0, 0, OFF, 0, 1, 1);
 	}
-
 	
 	/**
 	 * Internal function to clean up the map loading code.
 	 * Just generates a wireframe box the size of a tile with the specified color.
-	 * @param buffer 
 	 */
-	protected TextureRegion makeDebugTile(int Color)
-	{	
-		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(_tileWidth), FlxU.ceilPowerOfTwo(_tileHeight),Pixmap.Format.RGBA8888);
-		p.setColor(FlxU.colorFromHex(Color));
+	protected TextureRegion makeDebugTile(TextureRegion DebugTile, int Color)
+	{
+		if (DebugTile != null)
+			DebugTile.getTexture().dispose();
+		else
+			DebugTile = new TextureRegion();
+		
+		Color c = FlxU.colorFromHex(Color);
+		c.a = 0.5f;
+		
+		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(_tileWidth),FlxU.ceilPowerOfTwo(_tileHeight),Pixmap.Format.RGBA8888);
+		p.setColor(c);
 		p.drawRectangle(0, 0, _tileWidth, _tileHeight);
-		TextureRegion sprite = new TextureRegion(new Texture(p));
-		sprite.flip(false, true);
+		
+		DebugTile.setRegion(new Texture(p));
+		
 		p.dispose();
-		return sprite;
+		
+		return DebugTile;
 	}
 	
 	/**
@@ -385,7 +412,6 @@ public class FlxTilemap extends FlxObject
 		}
 	}
 	
-	
 	/**
 	 * Internal function that actually renders the tilemap to the tilemap buffer.  Called by draw().
 	 * 
@@ -393,12 +419,14 @@ public class FlxTilemap extends FlxObject
 	 * @param	Camera		The related <code>FlxCamera</code>, mainly for scroll values.
 	 */
 	protected void drawTilemap(FlxTilemapBuffer Buffer, FlxCamera Camera)
-	{		
+	{
+		Buffer.begin();
+		
 		//Copy tile images into the tile buffer
-		_point.x = (Camera.scroll.x*scrollFactor.x) - x; //modified from getScreenXY()
-		_point.y = (Camera.scroll.y*scrollFactor.y) - y;
-		int screenXInTiles = (int) ((_point.x + ((_point.x > 0)?0.0000001:-0.0000001))/_tileWidth);
-		int screenYInTiles = (int) ((_point.y + ((_point.y > 0)?0.0000001:-0.0000001))/_tileHeight);
+		_point.x = (int)(Camera.scroll.x*scrollFactor.x) - x; //modified from getScreenXY()
+		_point.y = (int)(Camera.scroll.y*scrollFactor.y) - y;
+		int screenXInTiles = (int) ((_point.x += ((_point.x > 0)?0.0000001:-0.0000001))/_tileWidth);
+		int screenYInTiles = (int) ((_point.y += ((_point.y > 0)?0.0000001:-0.0000001))/_tileHeight);
 		int screenRows = Buffer.rows;
 		int screenColumns = Buffer.columns;
 		
@@ -417,42 +445,37 @@ public class FlxTilemap extends FlxObject
 		int row = 0;
 		int column;
 		int columnIndex;
-		FlxTile tile;
+		FlxTile tile;		
 		TextureRegion debugTile;
-		_flashPoint.x = x - ((int)(Camera.scroll.x*scrollFactor.x)) + Buffer.x; //copied from getScreenXY()
-		_flashPoint.y = y - ((int)(Camera.scroll.y*scrollFactor.y)) + Buffer.y;
-		_flashPoint.x += (_flashPoint.x > 0)?0.0000001:-0.0000001;
-		_flashPoint.y += (_flashPoint.y > 0)?0.0000001:-0.0000001;
 		while(row < screenRows)
 		{
 			columnIndex = rowIndex;
 			column = 0;
-			_flashPoint.x = x - ((int)(Camera.scroll.x*scrollFactor.x));
-			_flashPoint.x += (_flashPoint.x > 0)?0.0000001:-0.0000001;
+			_flashPoint.x = 0;
 			while(column < screenColumns)
 			{
-				int dataIndex = _data.get(columnIndex);
-				if(dataIndex > 0) // All tiles will be come one digit lower, 16 to 15. Except 1 and 0 are ignored. TODO: place this into arrayToCSV?
-					dataIndex--;
-				
-				tile = _tileObjects.get(dataIndex);
-				if(tile.visible)
+				_textureRegion = _regions.get(columnIndex);
+				if(_textureRegion != null)
 				{
-					Buffer.indexX = tile.index;
-					Buffer.x = _flashPoint.x;
-					Buffer.y = _flashPoint.y;					
-					Buffer.draw();
+					FlxG.batch.draw(_textureRegion, _flashPoint.x - _point.x, _flashPoint.y - _point.y);
+					//Buffer.addTile(_textureRegion, _flashPoint.x - _point.x, _flashPoint.y - _point.y);
 					
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{
-						if(tile.allowCollisions <= NONE)
-							debugTile = _debugTileNotSolid;
-						else if(tile.allowCollisions != ANY)
-							debugTile = _debugTilePartial;
-						else
-							debugTile = _debugTileSolid;
-						FlxG.batch.draw(debugTile, Buffer.x, Buffer.y);
-					}					
+						tile = _tileObjects.get(_data.get(columnIndex));
+						if(tile != null)
+						{
+							if(tile.allowCollisions <= NONE)
+								debugTile = _debugTileNotSolid; //blue
+							else if(tile.allowCollisions != ANY)
+								debugTile = _debugTilePartial; //pink
+							else
+								debugTile = _debugTileSolid; //green
+
+							FlxG.batch.draw(debugTile, _flashPoint.x - _point.x, _flashPoint.y - _point.y);
+							//Buffer.addTile(debugTile, _flashPoint.x - _point.x, _flashPoint.y - _point.y);
+						}
+					}
 				}
 				_flashPoint.x += _tileWidth;
 				column++;
@@ -464,9 +487,10 @@ public class FlxTilemap extends FlxObject
 		}
 		Buffer.x = screenXInTiles*_tileWidth;
 		Buffer.y = screenYInTiles*_tileHeight;
+		Buffer.end();
 	}
 	
-	
+
 	/**
 	 * Draws the tilemap buffers to the cameras and handles flickering.
 	 */
@@ -480,43 +504,43 @@ public class FlxTilemap extends FlxObject
 				return;
 		}
 		
-		if(cameras == null)
-			cameras = FlxG.cameras;
 		FlxCamera camera = FlxG.camera;
 		FlxTilemapBuffer buffer;
+		int i = 0;
+		int l = 1;//FlxG.cameras.size;
+		while(i < l)
+		{			
+			if(i >= _buffers.size)
+				_buffers.add(new FlxTilemapBuffer(_tileWidth,_tileHeight,widthInTiles,heightInTiles,camera));
+			buffer = _buffers.get(i++);
+			if(!buffer.dirty)
+			{
+				_point.x = x - (int)(camera.scroll.x*scrollFactor.x) + buffer.x; //copied from getScreenXY()
+				_point.y = y - (int)(camera.scroll.y*scrollFactor.y) + buffer.y;
+				buffer.dirty = true;//(_point.x > 0) || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
+			}
+			if(buffer.dirty)
+			{
+				drawTilemap(buffer,camera);
+				buffer.dirty = false;
+			}
+			_flashPoint.x = x - (int)(camera.scroll.x*scrollFactor.x) + buffer.x; //copied from getScreenXY()
+			_flashPoint.y = y - (int)(camera.scroll.y*scrollFactor.y) + buffer.y;
+			_flashPoint.x += (_flashPoint.x > 0)?0.0000001:-0.0000001;
+			_flashPoint.y += (_flashPoint.y > 0)?0.0000001:-0.0000001;
+			buffer.draw(camera,_flashPoint);
+			_VISIBLECOUNT++;
+		}
 		
-		//int l = cameras.size;
-				
-		try
-		{
-			_buffers.get(0);
-		}
-		catch(Exception e)
-		{
-			_buffers.add(new FlxTilemapBuffer(_tiles, _tileWidth, _tileHeight, widthInTiles, heightInTiles, camera));
-		}
-			
-		buffer = _buffers.get(0);
-		if(!buffer.dirty)
-		{
-			_point.x = x - ((int)(camera.scroll.x*scrollFactor.x)) + buffer.x; //copied from getScreenXY()
-			_point.y = y - ((int)(camera.scroll.y*scrollFactor.y)) + buffer.y;
-			buffer.dirty = (_point.x > 0) || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
-		}
-		if(buffer.dirty)
-		{
-			drawTilemap(buffer,camera);
-			buffer.dirty = false;
-		}
-		
-		//TODO: normally the position of the tiles will be set here, but is been take care in drawTilemap().
-//		buffer.x = _flashPoint.x;
-//		buffer.y = _flashPoint.y;
-//		buffer.draw();//TODO: needed?
-		_VISIBLECOUNT++;		
 	}
 	
-	
+	/**
+	 * Fetches the tilemap data array.
+	 * 
+	 * @param	Simple		If true, returns the data as copy, as a series of 1s and 0s (useful for auto-tiling stuff). Default value is false, meaning it will return the actual data array (NOT a copy).
+	 * 
+	 * @return	An array the size of the tilemap full of integers indicating tile placement.
+	 */
 	public IntArray getData(boolean Simple)
 	{
 		if(!Simple)
@@ -524,14 +548,24 @@ public class FlxTilemap extends FlxObject
 		
 		int i = 0;
 		int l = _data.size;
-		IntArray data = new IntArray(); 
+		IntArray data = new IntArray(l);
 		while(i < l)
-		{			
-			data.set(i, ((_tileObjects.get(_data.get(i)).allowCollisions > 0)?1:0));
+		{
+			data.set(i, ((_tileObjects.get(_data.get(i))).allowCollisions > 0)?1:0);
+			i++;
 		}
 		return data;
 	}
 	
+	/**
+	 * Fetches the tilemap data array.
+	 * 
+	 * @return	An array the size of the tilemap full of integers indicating tile placement.
+	 */
+	public IntArray getData()
+	{
+		return getData(false);
+	}
 	
 	/**
 	 * Set the dirty flag on all the tilemap buffers.
@@ -549,13 +583,12 @@ public class FlxTilemap extends FlxObject
 	
 	/**
 	 * Set the dirty flag on all the tilemap buffers.
-	 * Basically forces a reset of the drawn tilemaps, even if it wasn'tile necessary.
+	 * Basically forces a reset of the drawn tilemaps, even if it wasn'tile necessary. 
 	 */
 	public void setDirty()
 	{
 		setDirty(true);
 	}
-	
 	
 	/**
 	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
@@ -613,6 +646,35 @@ public class FlxTilemap extends FlxObject
 				path.addPoint(node,true);
 		}
 		return path;
+	}
+	
+	/**
+	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
+	 * If no path is discovered then a null reference is returned.
+	 * 
+	 * @param	Start		The start point in world coordinates.
+	 * @param	End			The end point in world coordinates.
+	 * @param	Simplify	Whether to run a basic simplification algorithm over the path data, removing extra points that are on the same line.  Default value is true.
+	 * 
+	 * @return	A <code>FlxPath</code> from the start to the end.  If no path could be found, then a null reference is returned.
+	 */
+	public FlxPath findPath(FlxPoint Start,FlxPoint End,boolean Simplify)
+	{
+		return findPath(Start, End, Simplify, false);
+	}
+	
+	/**
+	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
+	 * If no path is discovered then a null reference is returned.
+	 * 
+	 * @param	Start		The start point in world coordinates.
+	 * @param	End			The end point in world coordinates.
+	 * 
+	 * @return	A <code>FlxPath</code> from the start to the end.  If no path could be found, then a null reference is returned.
+	 */
+	public FlxPath findPath(FlxPoint Start,FlxPoint End)
+	{
+		return findPath(Start, End, true, false);
 	}
 	
 	/**
@@ -688,9 +750,9 @@ public class FlxTilemap extends FlxObject
 		while(i < mapSize)
 		{
 			if((_tileObjects.get(_data.get(i))).allowCollisions != NONE)
-				distances.set(i, -2);
+				distances.add(-2);
 			else
-				distances.set(i, -1);
+				distances.add(-1);
 			i++;
 		}
 		distances.set(StartIndex,  0);
@@ -809,7 +871,6 @@ public class FlxTilemap extends FlxObject
 		return distances;
 	}
 	
-	
 	/**
 	 * Pathfinding helper function, recursively walks the grid and finds a shortest path back to the start.
 	 * 
@@ -905,19 +966,30 @@ public class FlxTilemap extends FlxObject
 		}
 	}
 	
-	
-	@Override
-	public boolean overlaps(FlxBasic ObjectOrGroup, boolean InScreenSpace, FlxCamera Camera)
+	/**
+	 * Checks to see if some <code>FlxObject</code> overlaps this <code>FlxObject</code> object in world space.
+	 * If the group has a LOT of things in it, it might be faster to use <code>FlxG.overlaps()</code>.
+	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
+	 * 
+	 * @param	Object			The object being tested.
+	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * 
+	 * @return	Whether or not the two objects overlap.
+	 */
+	@Override 
+	public boolean overlaps(FlxBasic ObjectOrGroup,boolean InScreenSpace,FlxCamera Camera)
 	{
 		if(ObjectOrGroup instanceof FlxGroup)
 		{
 			boolean results = false;
 			FlxBasic basic;
-			int i = 0;
+			int i  = 0;
 			Array<FlxBasic> members = ((FlxGroup)ObjectOrGroup).members;
-			while(i < members.size)
+			int length = members.size;
+			while(i < length)
 			{
-				basic = members.get(i);
+				basic = members.get(i++);
 				if(basic instanceof FlxObject)
 				{
 					if(overlapsWithCallback((FlxObject)basic))
@@ -935,7 +1007,6 @@ public class FlxTilemap extends FlxObject
 			return overlapsWithCallback((FlxObject)ObjectOrGroup);
 		return false;
 	}
-	
 	
 	/**
 	 * Checks to see if this <code>FlxObject</code> were located at the given position, would it overlap the <code>FlxObject</code> or <code>FlxGroup</code>?
@@ -987,7 +1058,7 @@ public class FlxTilemap extends FlxObject
 		return false;
 	}
 	
-	
+
 	/**
 	 * Checks if the Object overlaps any tiles with any collision flags set,
 	 * and calls the specified callback function (if there is one).
@@ -1042,10 +1113,7 @@ public class FlxTilemap extends FlxObject
 			while(column < selectionWidth)
 			{
 				overlapFound = false;
-				int dataIndex = _data.get(rowStart+column);
-				if(dataIndex > 0) // All tiles will be come one digit lower, 16 to 15. Except 1 and 0 are ignored. TODO: place this into arrayToCSV?
-					dataIndex--;
-				tile = _tileObjects.get(dataIndex);
+				tile = _tileObjects.get(_data.get(rowStart+column));
 				if(tile.allowCollisions != NONE)
 				{
 					tile.x = X+column*_tileWidth;
@@ -1055,9 +1123,9 @@ public class FlxTilemap extends FlxObject
 					if(Callback != null)
 					{
 						if(FlipCallbackParams)
-							overlapFound = Callback.onOverlapsWith(Object,tile);
+							overlapFound = Callback.onProcessCallback(Object,tile);
 						else
-							overlapFound = Callback.onOverlapsWith(tile,Object);
+							overlapFound = Callback.onProcessCallback(tile,Object);
 					}
 					else
 						overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
@@ -1083,8 +1151,8 @@ public class FlxTilemap extends FlxObject
 		}
 	
 		return results;
-	}	
-
+	}
+	
 	/**
 	 * Checks if the Object overlaps any tiles with any collision flags set,
 	 * and calls the specified callback function (if there is one).
@@ -1100,7 +1168,7 @@ public class FlxTilemap extends FlxObject
 	{
 		return overlapsWithCallback(Object, Callback, FlipCallbackParams, null);
 	}
-	
+
 	/**
 	 * Checks if the Object overlaps any tiles with any collision flags set,
 	 * and calls the specified callback function (if there is one).
@@ -1115,21 +1183,20 @@ public class FlxTilemap extends FlxObject
 	{
 		return overlapsWithCallback(Object, Callback, false, null);
 	}
-
+	
 	/**
 	 * Checks if the Object overlaps any tiles with any collision flags set,
 	 * and calls the specified callback function (if there is one).
 	 * Also calls the tile's registered callback if the filter matches.
 	 * 
 	 * @param	Object				The <code>FlxObject</code> you are checking for overlaps against.
-	 *  
+	 * 
 	 * @return	Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
 	public boolean overlapsWithCallback(FlxObject Object)
 	{
 		return overlapsWithCallback(Object, null, false, null);
 	}
-	
 	
 	/**
 	 * Checks to see if a point in 2D world space overlaps this <code>FlxObject</code> object.
@@ -1141,10 +1208,10 @@ public class FlxTilemap extends FlxObject
 	 * @return	Whether or not the point overlaps this object.
 	 */
 	@Override
-	public boolean overlapsPoint(FlxPoint Point, boolean InScreenSpace, FlxCamera Camera)
+	public boolean overlapsPoint(FlxPoint Point,boolean InScreenSpace,FlxCamera Camera)
 	{
-			if(!InScreenSpace)
-				return (_tileObjects.get(_data.get((int)((int)((Point.y-y)/_tileHeight)*widthInTiles + (Point.x-x)/_tileWidth)))).allowCollisions > 0;
+		if(!InScreenSpace)
+			return (_tileObjects.get(_data.get((int)((int)((Point.y-y)/_tileHeight)*widthInTiles + (Point.x-x)/_tileWidth)))).allowCollisions > 0;
 		
 		if(Camera == null)
 			Camera = FlxG.camera;
@@ -1155,42 +1222,19 @@ public class FlxTilemap extends FlxObject
 	}
 	
 	/**
-	 * Checks to see if a point in 2D world space overlaps this <code>FlxObject</code> object.
-	 * 
-	 * @param	Point			The point in world space you want to check.
-	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-	 * 
-	 * @return	Whether or not the point overlaps this object.
-	 */
-	public boolean overlapsPoint(FlxPoint Point, boolean InScreenSpace)
-	{
-		return overlapsPoint(Point, InScreenSpace, null);
-	}
-	
-	/**
-	 * Checks to see if a point in 2D world space overlaps this <code>FlxObject</code> object.
-	 * 
-	 * @param	Point			The point in world space you want to check.
-	 *
-	 * @return	Whether or not the point overlaps this object.
-	 */
-	public boolean overlapsPoint(FlxPoint Point)
-	{
-		return overlapsPoint(Point, false, null);
-	}
-
-
-	/**
 	 * Check the value of a particular tile.
 	 * 
 	 * @param	X		The X coordinate of the tile (in tiles, not pixels).
 	 * @param	Y		The Y coordinate of the tile (in tiles, not pixels).
 	 * 
-	 * @return	A uint containing the value of the tile at this spot in the array.
+	 * @return	An int containing the value of the tile at this spot in the array.
 	 */
-	public int getTile(int X, int Y)
+	public int getTile(int X,int Y)
 	{
-		return _data.get(Y * widthInTiles + X);
+		int index = Y * widthInTiles + X;
+		if (index < 0 || index >= _data.size)
+			return 0;
+		return _data.get(index);
 	}
 	
 	/**
@@ -1198,7 +1242,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Index	The slot in the data array (Y * widthInTiles + X) where this tile is stored.
 	 * 
-	 * @return	A uint containing the value of the tile at this spot in the array.
+	 * @return	An int containing the value of the tile at this spot in the array.
 	 */
 	public int getTileByIndex(int Index)
 	{
@@ -1231,7 +1275,6 @@ public class FlxTilemap extends FlxObject
 		return array;
 	}
 	
-	
 	/**
 	 * Returns a new Flash <code>Array</code> full of every coordinate of the requested tile type.
 	 * 
@@ -1240,7 +1283,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	An <code>Array</code> with a list of all the coordinates of that tile type.
 	 */
-	public Array<FlxPoint> getTileCoords(int Index, boolean Midpoint)
+	public Array<FlxPoint> getTileCoords(int Index,boolean Midpoint)
 	{
 		Array<FlxPoint> array = null;
 		
@@ -1251,7 +1294,7 @@ public class FlxTilemap extends FlxObject
 		{
 			if(_data.get(i) == Index)
 			{
-				point = new FlxPoint(x + ((int)(i%widthInTiles))*_tileWidth,y + ((int)(i/widthInTiles))*_tileHeight);
+				point = new FlxPoint(x + ((int)i%widthInTiles)*_tileWidth,y + ((int)i/widthInTiles)*_tileHeight);
 				if(Midpoint)
 				{
 					point.x += _tileWidth*0.5;
@@ -1267,10 +1310,16 @@ public class FlxTilemap extends FlxObject
 		return array;
 	}
 	
-	
+	/**
+	 * Returns a new Flash <code>Array</code> full of every coordinate of the requested tile type.
+	 * 
+	 * @param	Index		The requested tile type.
+	 * 
+	 * @return	An <code>Array</code> with a list of all the coordinates of that tile type.
+	 */
 	public Array<FlxPoint> getTileCoords(int Index)
 	{
-		return getTileCoords(Index, false);
+		return getTileCoords(Index, true);
 	}
 	
 	/**
@@ -1283,16 +1332,25 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	Whether or not the tile was actually changed.
 	 */ 
-	public boolean setTile(int X, int Y, int Tile, boolean UpdateGraphics)
+	public boolean setTile(int X,int Y,int Tile,boolean UpdateGraphics)
 	{
 		if((X >= widthInTiles) || (Y >= heightInTiles))
 			return false;
 		return setTileByIndex(Y * widthInTiles + X,Tile,UpdateGraphics);
 	}
 	
-	public boolean setTile(int X, int Y, int Tile)
+	/**
+	 * Change the data and graphic of a tile in the tilemap.
+	 * 
+	 * @param	X				The X coordinate of the tile (in tiles, not pixels).
+	 * @param	Y				The Y coordinate of the tile (in tiles, not pixels).
+	 * @param	Tile			The new integer data you wish to inject.
+	 * 
+	 * @return	Whether or not the tile was actually changed.
+	 */ 
+	public boolean setTile(int X,int Y,int Tile)
 	{
-		return setTile(X, Y, Tile, true);
+		return setTile(X,Y,Tile,true);
 	}
 	
 	/**
@@ -1304,7 +1362,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	Whether or not the tile was actually changed.
 	 */
-	public boolean setTileByIndex(int Index, int Tile, boolean UpdateGraphics)
+	public boolean setTileByIndex(int Index,int Tile,boolean UpdateGraphics)
 	{
 		if(Index >= _data.size)
 			return false;
@@ -1315,8 +1373,6 @@ public class FlxTilemap extends FlxObject
 		if(!UpdateGraphics)
 			return ok;
 		
-		setDirty();
-		
 		if(auto == OFF)
 		{
 			updateTile(Index);
@@ -1325,7 +1381,7 @@ public class FlxTilemap extends FlxObject
 		
 		//If this map is autotiled and it changes, locally update the arrangement
 		int i;
-		int row = ((int)(Index/widthInTiles)) - 1;
+		int row = (int)(Index/widthInTiles) - 1;
 		int rowLength = row + 3;
 		int column = Index%widthInTiles - 1;
 		int columnHeight = column + 3;
@@ -1338,7 +1394,7 @@ public class FlxTilemap extends FlxObject
 				{
 					i = row*widthInTiles+column;
 					autoTile(i);
-					updateTile(i);
+					updateTile(Index);
 				}
 				column++;
 			}
@@ -1356,12 +1412,12 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	Whether or not the tile was actually changed.
 	 */
-	public boolean setTileByIndex(int Index, int Tile)
+	public boolean setTileByIndex(int Index,int Tile)
 	{
-		return setTileByIndex(Index, Tile, true);
+		return setTileByIndex(Index,Tile,true);
 	}
 	
-	
+
 	/**
 	 * Adjust collision settings and/or bind a callback function to a range of tiles.
 	 * This callback function, if present, is triggered by calls to overlap() or overlapsWithCallback().
@@ -1386,7 +1442,7 @@ public class FlxTilemap extends FlxObject
 			tile.callback = Callback;
 			tile.filter = CallbackFilter;
 		}
-	}	
+	}
 	
 	/**
 	 * Adjust collision settings and/or bind a callback function to a range of tiles.
@@ -1438,7 +1494,6 @@ public class FlxTilemap extends FlxObject
 		setTileProperties(Tile, ANY, null, null, 1);
 	}
 	
-	
 	/**
 	 * Call this function to lock the automatic camera to the map's edges.
 	 * 
@@ -1446,7 +1501,7 @@ public class FlxTilemap extends FlxObject
 	 * @param	Border			Adjusts the camera follow boundary by whatever number of tiles you specify here.  Handy for blocking off deadends that are offscreen, etc.  Use a negative number to add padding instead of hiding the edges.
 	 * @param	UpdateWorld		Whether to update the collision system's world size, default value is true.
 	 */
-	public void follow(FlxCamera Camera,int Border, boolean UpdateWorld)
+	public void follow(FlxCamera Camera,int Border,boolean UpdateWorld)
 	{
 		if(Camera == null)
 			Camera = FlxG.camera;
@@ -1475,14 +1530,6 @@ public class FlxTilemap extends FlxObject
 	}
 	
 	/**
-	 * Call this function to lock the automatic camera to the map's edges.
-	 */
-	public void follow()
-	{
-		follow(null, 0, true);
-	}
-	
-	/**
 	 * Get the world coordinates and size of the entire tilemap as a <code>FlxRect</code>.
 	 * 
 	 * @param	Bounds		Optional, pass in a pre-existing <code>FlxRect</code> to prevent instantiation of a new object.
@@ -1505,7 +1552,6 @@ public class FlxTilemap extends FlxObject
 	{
 		return getBounds(null);
 	}
-	
 	
 	/**
 	 * Shoots a ray from the start point to the end point.
@@ -1621,29 +1667,28 @@ public class FlxTilemap extends FlxObject
 		return ray(Start, End, null, 1);
 	}
 	
-	
 	/**
 	 * Converts a one-dimensional array of tile data to a comma-separated string.
 	 * 
-	 * @param	Data		An array full of integer tile references.
+	 * @param	tilemap		An array full of integer tile references.
 	 * @param	Width		The number of tiles in each row.
 	 * @param	Invert		Recommended only for 1-bit arrays - changes 0s to 1s and vice versa.
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String arrayToCSV(int[] Data, int Width, boolean Invert)
+	static public String arrayToCSV(int[] tilemap,int Width,boolean Invert)
 	{
 		int row = 0;
 		int column;
-		StringBuilder csv = new StringBuilder();
-		int Height = Data.length / Width;
+		String csv = "";
+		int Height = tilemap.length / Width;
 		int index;
 		while(row < Height)
 		{
 			column = 0;
 			while(column < Width)
 			{
-				index = Data[row*Width+column];
+				index = tilemap[row*Width+column];
 				if(Invert)
 				{
 					if(index == 0)
@@ -1655,93 +1700,187 @@ public class FlxTilemap extends FlxObject
 				if(column == 0)
 				{
 					if(row == 0)
-						csv.append(index);
+						csv += index;
 					else
-						csv.append("\n"+index);
+						csv += "\n"+index;
 				}
 				else
-					csv.append(","+index);
+					csv += ", "+index;
 				column++;
 			}
 			row++;
 		}
-		return csv.toString();
+		return csv;
 	}
 	
 	/**
 	 * Converts a one-dimensional array of tile data to a comma-separated string.
 	 * 
-	 * @param	Data		An array full of integer tile references.
+	 * @param	tilemap		An array full of integer tile references.
 	 * @param	Width		The number of tiles in each row.
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String arrayToCSV(int[] Data, int Width)
+	static public String arrayToCSV(int[] tilemap,int Width)
 	{
-		return arrayToCSV(Data, Width, false);
+		return arrayToCSV(tilemap,Width,false);
 	}
 	
 	static public String array2DToCSV(int[][] Data)
+    {
+        int row = 0;
+        int column;
+        StringBuilder csv = new StringBuilder();
+        int Height = Data.length;
+        int Width = Data[0].length;
+        int index;
+        while(row < Height)
+        {
+        	column = 0;
+            while(column < Width)
+            {                               
+            	index = Data[row][column];
+                            
+                if(column == 0)
+                {
+                	if(row == 0)
+                		csv.append(index);
+                    else
+                    	csv.append("\n"+index);
+                }
+                else
+                	csv.append(","+index);
+                column++;
+            }
+            row++;
+        }
+        return csv.toString();
+    }
+    
+    static public String tilemapToCSV(TiledMap Map, int Layer)
+    {
+    	int row = 0;
+        int column;
+        StringBuilder csv = new StringBuilder();                
+        int Height = Map.layers.get(Layer).getHeight();
+        int Width = Map.layers.get(Layer).getWidth();
+        int[][] Data = Map.layers.get(Layer).tiles;
+        int index;
+        while(row < Height)
+        {
+        	column = 0;
+            while(column < Width)
+            {                               
+            	index = Data[row][column];
+                            
+                if(column == 0)
+                {
+                	if(row == 0)
+                		csv.append(index);
+                    else
+                    	csv.append("\n"+index);
+                }
+                else
+                	csv.append(","+index);
+                column++;
+            }
+            row++;
+        }
+        return csv.toString();
+    }
+
+	/**
+	 * Converts a <code>BitmapData</code> object to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
+	 * @param	Invert		Load white pixels as solid instead.
+	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+	static public String bitmapToCSV(TextureRegion textureRegion,boolean Invert,int Scale)
 	{
-		int row = 0;
-		int column;
-		StringBuilder csv = new StringBuilder();
-		int Height = Data.length;
-		int Width = Data[0].length;
-		int index;
-		while(row < Height)
+		/*
+		//Import and scale image if necessary
+		if(Scale > 1)
+		{
+			var bd:BitmapData = bitmapData;
+			bitmapData = new BitmapData(bitmapData.width*Scale,bitmapData.height*Scale);
+			var mtx:Matrix = new Matrix();
+			mtx.scale(Scale,Scale);
+			bitmapData.draw(bd,mtx);
+		}
+		
+		//Walk image and export pixel values
+		var row:uint = 0;
+		var column:uint;
+		var pixel:uint;
+		var csv:String = "";
+		var bitmapWidth:uint = bitmapData.width;
+		var bitmapHeight:uint = bitmapData.height;
+		while(row < bitmapHeight)
 		{
 			column = 0;
-			while(column < Width)
-			{				
-				index = Data[row][column];
+			while(column < bitmapWidth)
+			{
+				//Decide if this pixel/tile is solid (1) or not (0)
+				pixel = bitmapData.getPixel(column,row);
+				if((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
+					pixel = 1;
+				else
+					pixel = 0;
 				
+				//Write the result to the string
 				if(column == 0)
 				{
 					if(row == 0)
-						csv.append(index);
+						csv += pixel;
 					else
-						csv.append("\n"+index);
+						csv += "\n"+pixel;
 				}
 				else
-					csv.append(","+index);
+					csv += ", "+pixel;
 				column++;
 			}
 			row++;
 		}
-		return csv.toString();
+		return csv;
+		*/
+		return "";
 	}
 	
-	static public String tilemapToCSV(TiledMap Map, int Layer)
+	/**
+	 * Converts a <code>BitmapData</code> object to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
+	 * @param	Invert		Load white pixels as solid instead.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+	static public String bitmapToCSV(TextureRegion textureRegion,boolean Invert)
 	{
-		int row = 0;
-		int column;
-		StringBuilder csv = new StringBuilder();		
-		int Height = Map.layers.get(Layer).getHeight();
-		int Width = Map.layers.get(Layer).getWidth();
-		int[][] Data = Map.layers.get(Layer).tiles;
-		int index;
-		while(row < Height)
-		{
-			column = 0;
-			while(column < Width)
-			{				
-				index = Data[row][column];
-				
-				if(column == 0)
-				{
-					if(row == 0)
-						csv.append(index);
-					else
-						csv.append("\n"+index);
-				}
-				else
-					csv.append(","+index);
-				column++;
-			}
-			row++;
-		}
-		return csv.toString();
+		return bitmapToCSV(textureRegion, Invert, 1);
+	}
+	
+	/**
+	 * Converts a <code>BitmapData</code> object to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+	static public String bitmapToCSV(TextureRegion textureRegion)
+	{
+		return bitmapToCSV(textureRegion, false, 1);
 	}
 	
 	/**
@@ -1754,7 +1893,7 @@ public class FlxTilemap extends FlxObject
 		if(_data.get(Index) == 0)
 			return;
 		
-		_data.set(Index,0);
+		_data.set(Index, 0);
 		if((Index-widthInTiles < 0) || (_data.get(Index-widthInTiles) > 0)) 		//UP
 			_data.set(Index, _data.get(Index)+1);
 		if((Index%widthInTiles >= widthInTiles-1) || (_data.get(Index+1) > 0)) 		//RIGHT
@@ -1766,17 +1905,16 @@ public class FlxTilemap extends FlxObject
 		if((auto == ALT) && (_data.get(Index) == 15))	//The alternate algo checks for interior corners
 		{
 			if((Index%widthInTiles > 0) && (Index+widthInTiles < totalTiles) && (_data.get(Index+widthInTiles-1) <= 0))
-				_data.set(Index, 1);	//BOTTOM LEFT OPEN
-			if((Index%widthInTiles > 0) && (Index-widthInTiles >= 0) && (_data.get(Index+widthInTiles-1) <= 0))
-				_data.set(Index, 2);	//TOP LEFT OPEN
-			if((Index%widthInTiles < widthInTiles-1) && (Index-widthInTiles >= 0) && (_data.get(Index+widthInTiles+1) <= 0))
-				_data.set(Index, 4);	//TOP RIGHT OPEN
+				_data.set(Index, 1);		//BOTTOM LEFT OPEN
+			if((Index%widthInTiles > 0) && (Index-widthInTiles >= 0) && (_data.get(Index-widthInTiles-1) <= 0))
+				_data.set(Index, 2);		//TOP LEFT OPEN
+			if((Index%widthInTiles < widthInTiles-1) && (Index-widthInTiles >= 0) && (_data.get(Index-widthInTiles+1) <= 0))
+				_data.set(Index, 4);		//TOP RIGHT OPEN
 			if((Index%widthInTiles < widthInTiles-1) && (Index+widthInTiles < totalTiles) && (_data.get(Index+widthInTiles+1) <= 0))
-				_data.set(Index, 8); 	//BOTTOM RIGHT OPEN
+				_data.set(Index, 8); 		//BOTTOM RIGHT OPEN
 		}
 		_data.set(Index, _data.get(Index)+1);
 	}
-	
 	
 	/**
 	 * Internal function used in setTileByIndex() and the constructor to update the map.
@@ -1784,21 +1922,30 @@ public class FlxTilemap extends FlxObject
 	 * @param	Index		The index of the tile you want to update.
 	 */
 	protected void updateTile(int Index)
-	{			
-		/*FlxTile tile = _tileObjects.get(_data.get(Index));
+	{
+		FlxTile tile = _tileObjects.get(_data.get(Index));
 		if((tile == null) || !tile.visible)
 		{
-//			_rects[Index] = null;
+			_regions.set(Index, null);
 			return;
 		}
-		int rx = (_data.get(Index)-_startingIndex)*_tileWidth;
+		int rx = (_data.get(Index)-_startingIndex) * _tileWidth;
 		int ry = 0;
+		
+		if (rx < 0)
+			rx = 0;
+		
 		if(rx >= _tiles.getRegionWidth())
 		{
-			ry = (rx/_tiles.getRegionWidth())*_tileHeight;
+			ry = (int) ((rx/_tiles.getRegionWidth())*_tileHeight);
 			rx %= _tiles.getRegionWidth();
-		}*/
-		//TODO: update the _data file. Not needed anymore
-		//_rects[Index] = (new Rectangle(rx,ry,_tileWidth,_tileHeight));
+		}
+		
+		if (ry < 0)
+			ry = 0;
+		
+		_textureRegion = new TextureRegion(_tiles, rx, ry, _tileWidth, _tileHeight);
+		_textureRegion.flip(false, true);
+		_regions.set(Index, _textureRegion);
 	}
 }

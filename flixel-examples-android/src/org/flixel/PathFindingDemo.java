@@ -5,13 +5,13 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-public class TiledMapDemo extends AndroidApplication
+public class PathFindingDemo extends AndroidApplication
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{		
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		initialize(new org.examples.tilemap.Tilemap(), false);
+		initialize(new org.examples.pathfinding.PathFindingDemo(), false);
 	}
 }

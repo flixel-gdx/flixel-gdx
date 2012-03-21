@@ -71,5 +71,6 @@
 				  android:name=".TiledMap2Demo"
 				  android:screenOrientation="landscape"
 				  android:configChanges="keyboard|keyboardHidden|orientation"/>
+		<activity android:name="PathFindingDemo" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation" android:label="PathFinding Demo"></activity>
     </application>
 </manifest>

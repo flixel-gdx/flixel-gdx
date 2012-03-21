@@ -1,4 +1,4 @@
-package org.examples.tiledmap;
+package org.examples.tilemap;
 
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;

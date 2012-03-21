@@ -632,8 +632,8 @@ public class FlxG
 			cam = cams.get(i++);
 			if((cam != null) && cam.exists)
 			{
-				if(cam.active)
-					cam.draw();
+				//if(cam.active)
+					//cam.draw();
 			}
 		}
 	}

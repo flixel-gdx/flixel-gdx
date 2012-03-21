@@ -2,9 +2,10 @@ package org.flixel.system;
 
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
+import org.flixel.FlxPoint;
 import org.flixel.FlxU;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -15,7 +16,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class FlxTilemapBuffer
 {
-
 	/**
 	 * The current X position of the buffer.
 	 */
@@ -27,11 +27,11 @@ public class FlxTilemapBuffer
 	/**
 	 * The width of the buffer (usually just a few tiles wider than the camera).
 	 */
-	public int width;
+	public float width;
 	/**
 	 * The height of the buffer (usually just a few tiles taller than the camera).
 	 */
-	public int height;
+	public float height;
 	/**
 	 * Whether the buffer needs to be redrawn.
 	 */
@@ -45,12 +45,9 @@ public class FlxTilemapBuffer
 	 */
 	public int columns;
 
-	private Sprite _pixels;
-	
-	public int indexX;
-	public int indexY;
-	
-	
+	protected SpriteCache _cache;
+	protected int _cacheId;
+
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
 	 *  
@@ -60,22 +57,22 @@ public class FlxTilemapBuffer
 	 * @param HeightInTiles	How many tiles tall the tilemap is.
 	 * @param Camera		Which camera this buffer relates to.
 	 */
-	public FlxTilemapBuffer(TextureRegion TileGraphic, int TileWidth, int TileHeight, int WidthInTiles, int HeightInTiles, FlxCamera Camera)
+	public FlxTilemapBuffer(float TileWidth,float TileHeight,int WidthInTiles,int HeightInTiles,FlxCamera Camera)
 	{
 		if(Camera == null)
 			Camera = FlxG.camera;
-		
+
 		columns = (int) (FlxU.ceil(Camera.width/TileWidth)+1);
 		if(columns > WidthInTiles)
 			columns = WidthInTiles;
 		rows = (int) (FlxU.ceil(Camera.height/TileHeight)+1);
 		if(rows > HeightInTiles)
 			rows = HeightInTiles;
-		_pixels = new Sprite(TileGraphic, 0, 0, TileWidth, TileHeight);
-		width = TileWidth;
-		height = TileHeight;
 		
+		width = columns*TileWidth;
+		height = rows*TileHeight;			
 		dirty = true;
+		//_cache = new SpriteCache(columns * rows, true);
 	}
 	
 	/**
@@ -86,29 +83,66 @@ public class FlxTilemapBuffer
 	 * @param WidthInTiles	How many tiles wide the tilemap is.
 	 * @param HeightInTiles	How many tiles tall the tilemap is.
 	 */
-	public FlxTilemapBuffer(TextureRegion TileGraphic, int TileWidth, int TileHeight, int WidthInTiles, int HeightInTiles)
+	public FlxTilemapBuffer(float TileWidth,float TileHeight,int WidthInTiles,int HeightInTiles)
 	{
-		this(TileGraphic, TileWidth, TileHeight, WidthInTiles, HeightInTiles, null);
+		this(TileWidth, TileHeight, WidthInTiles, HeightInTiles, null);
 	}
-	
-	
+		
+	/**
+	 * Clean up memory.
+	 */
 	public void destroy()
 	{
-		_pixels = null;
+		//_cache.dispose();
 	}
-
-	public Sprite getPixels()
+	
+	/**
+	 * Gets the buffer ready. Must be called before <code>addTile</code>.
+	 */
+	public void begin()
 	{
-		return _pixels;
+		//_cache.clear();
+		//_cache.beginCache();
 	}
 	
-	
-	public void draw()
+	/**
+	 * Add a tile to the buffer.
+	 * 
+	 * @param	Tile	The <code>TextureRegion</code> for this tile.
+	 * @param	X		The X position of the tile.
+	 * @param	Y		The Y position of the tile.
+	 */
+	public void addTile(TextureRegion Tile, float X, float Y)
 	{
-		_pixels.setRegion(indexX*width,0,width,height); //TODO: there is no support for multiple row spritesheet.
-		_pixels.setPosition(x, y);
-		_pixels.flip(false, true);
-		_pixels.draw(FlxG.batch);
+		//_cache.add(Tile, X, Y);
 	}
 	
+	/**
+	 * Ends adding tiles to the buffer. Must be called after <code>begin</code>.
+	 */
+	public void end()
+	{
+		//_cacheId = _cache.endCache();
+	}
+	
+	/**
+	 * Just stamps this buffer onto the specified camera at the specified location.
+	 * 
+	 * @param	Camera		Which camera to draw the buffer onto.
+	 * @param	FlashPoint	Where to draw the buffer at in camera coordinates.
+	 */
+	public void draw(FlxCamera Camera,FlxPoint FlashPoint)
+	{
+		/*
+		FlxG.batch.end();
+		
+		_cache.setProjectionMatrix(Camera.buffer.combined);
+		
+		_cache.begin();
+		_cache.draw(_cacheId);
+		_cache.end();
+		
+		FlxG.batch.begin();
+		*/
+	}
 }

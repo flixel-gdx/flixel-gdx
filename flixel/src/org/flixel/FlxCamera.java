@@ -99,7 +99,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The actual bitmap data of the camera display itself.
 	 */
-	public OrthographicCamera buffer;
+	public OrthographicCamera glCamera;
 	/**
 	 * The natural background color of the camera. Defaults to FlxG.bgColor.
 	 * NOTE: can be transparent for crazy FX!
@@ -268,7 +268,7 @@ public class FlxCamera extends FlxBasic
 		scroll = null;
 		deadzone = null;
 		bounds = null;
-		buffer = null;
+		glCamera = null;
 		_fxFlashComplete = null;
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
@@ -351,9 +351,9 @@ public class FlxCamera extends FlxBasic
 			{
 				_fxShakeOffset.make();
 				// Putting the camera back to its original place.
-				buffer.position.x = (FlxG.width/2f-x);
-				buffer.position.y = (FlxG.height/2f-y);
-				buffer.update();
+				glCamera.position.x = (FlxG.width/2f-x);
+				glCamera.position.y = (FlxG.height/2f-y);
+				glCamera.update();
 				if(_fxShakeComplete != null)
 					_fxShakeComplete.onShakeComplete();
 			}
@@ -371,11 +371,11 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Draw the background of the camera.
 	 */
-	@Override
-	public void draw()
-	{
-		_flashSprite.draw(FlxG.batch);
-	}
+	//@Override
+	//public void draw()
+	//{
+		//_flashSprite.draw(FlxG.batch);
+	//}
 	
 	/**
 	 * Draw the front of the camera. Use for fade and flash.
@@ -724,9 +724,9 @@ public class FlxCamera extends FlxBasic
 		_fxFadeAlpha = 0.0f;
 		_fxShakeDuration = 0;
 		// Putting the camera back to its original place.
-		buffer.position.x = (FlxG.width/2f-x);
-		buffer.position.y = (FlxG.height/2f-y);
-		buffer.update();
+		glCamera.position.x = (FlxG.width/2f-x);
+		glCamera.position.y = (FlxG.height/2f-y);
+		glCamera.update();
 	}
 	
 	
@@ -818,8 +818,8 @@ public class FlxCamera extends FlxBasic
 	public void setAngle(float Angle)
 	{
 		_angle = Angle;
-		buffer.rotate(Angle, 0, 0, 1);
-		buffer.update();
+		glCamera.rotate(Angle, 0, 0, 1);
+		glCamera.update();
 	}
 	
 	/**
@@ -854,18 +854,12 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void setScale(float X, float Y)
 	{
-		if(buffer == null)
+		if(glCamera == null)
 		{
-			buffer = new OrthographicCamera();
-			buffer.up.set(0, -1, 0); //It will mirror horizontally
-			buffer.direction.set(0, 0, 1); // It will mirror vertically.
-			buffer.position.set((FlxG.width/(2f*X)), (FlxG.height/(2f*Y)), 0);
-//			buffer.translate(-x*0.25f*X, -y*4*Y, 0);			
-			buffer.translate(-x * 1/X, -y * 1/Y, 0);						
+			glCamera = new OrthographicCamera();						
 		}
-		buffer.viewportWidth = FlxG.width/X;
-		buffer.viewportHeight = FlxG.height/Y;
-		buffer.update();
+		glCamera.setToOrtho(true, FlxG.width/X, FlxG.height/Y);
+		glCamera.update();
 	}
 	
 	
@@ -893,9 +887,9 @@ public class FlxCamera extends FlxBasic
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
-			buffer.position.x = FlxG.width/2f-y + _fxShakeOffset.x;
-			buffer.position.y = FlxG.height/2f-x + _fxShakeOffset.y;
-			buffer.update();
+			glCamera.position.x = FlxG.width/2f-y + _fxShakeOffset.x;
+			glCamera.position.y = FlxG.height/2f-x + _fxShakeOffset.y;
+			glCamera.update();
 		}
 	}
 	
