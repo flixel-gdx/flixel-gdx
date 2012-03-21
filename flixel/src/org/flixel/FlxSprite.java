@@ -600,6 +600,7 @@ public class FlxSprite extends FlxObject
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
 		{ 	// Simple render
 			framePixels.setPosition(_point.x, _point.y);
+			framePixels.setScale(scale.x, scale.y);
 			framePixels.setRotation(angle);
 			framePixels.draw(FlxG.batch);
 		}

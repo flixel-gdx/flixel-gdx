@@ -1,9 +1,9 @@
 package org.flixel;
 
-
 import org.flixel.event.AFlxCamera;
 import org.flixel.event.AFlxG;
 import org.flixel.event.AFlxObject;
+import org.flixel.event.AFlxReplay;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
@@ -20,13 +20,21 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 
+/**
+ * This is a global helper class full of useful functions for audio,
+ * input, basic info, and the camera system among other things.
+ * Utilities for maths and color and things can be found in <code>FlxU</code>.
+ * <code>FlxG</code> is specifically for Flixel-specific properties.
+ * 
+ * @author	Ka Wing Chin
+ */
 public class FlxG
 {
 	/**
 	 * If you build and maintain your own version of flixel,
 	 * you can give it your own name here.
 	 */
-	static public String LIBRARY_NAME = "flixel";
+	static public String LIBRARY_NAME = "flixel-android";
 	/**
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
@@ -105,11 +113,6 @@ public class FlxG
 	static public boolean debug;
 	
 	/**
-	 * A reference to a <code>Mouse</code> object.  Important for input!
-	 */
-	static public Mouse mouse;
-	
-	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
 	static public float elapsed;
@@ -128,6 +131,7 @@ public class FlxG
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 */
+	static public FlxRect worldBounds;
 	/**
 	 * The width in pixels of the display surface.
 	 */
@@ -138,7 +142,6 @@ public class FlxG
 	static public int resHeight;
 	static public float difWidth;
 	static public float difHeight;
-	static public FlxRect worldBounds;
 	/**
 	 * How many times the quad tree should divide the world on each axis.
 	 * Generally, sparse collisions can have fewer divisons,
@@ -154,26 +157,26 @@ public class FlxG
 	/**
 	 * The global random number generator seed (for deterministic behavior in recordings and saves).
 	 */
-	static public double globalSeed;
+	static public float globalSeed;
 	/**
 	 * <code>FlxG.levels</code> and <code>FlxG.scores</code> are generic
 	 * global variables that can be used for various cross-state stuff.
 	 */
-//	static public var levels:Array;
+	static public Array<Object> levels;
 	static public int level;
-//	static public var scores:Array;
+	static public Array<Object> scores;
 	static public int score;
 	/**
 	 * <code>FlxG.saves</code> is a generic bucket for storing
 	 * FlxSaves so you can access them whenever you want.
 	 */
-	//static public var saves:Array; 
+	static public Array<FlxSave> saves; 
 	static public int save;
 
 	/**
 	 * A reference to a <code>FlxMouse</code> object.  Important for input!
 	 */
-	//static public var mouse:Mouse;
+	static public Mouse mouse;
 	/**
 	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
 	 */
@@ -215,14 +218,14 @@ public class FlxG
 	/**
 	 * Internal helper variable for clearing the cameras each frame.
 	 */
-//	static protected var _cameraRect:Rectangle;
+	static protected FlxRect _cameraRect;
 	
 	/**
 	 * An array container for plugins.
 	 * By default flixel uses a couple of plugins:
 	 * DebugPathDisplay, and TimerManager.
 	 */
-//	 static public var plugins:Array;
+	 static public Array<FlxBasic> plugins;
 	 
 	/**
 	 * Set this hook to get a callback whenever the volume changes.
@@ -236,27 +239,21 @@ public class FlxG
 	 */
 	//static public Sprite flashGfxSprite;
 	static public ShapeRenderer flashGfx;
-	static public Texture t;
+
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
 	static protected IntMap<TextureRegion> _cache;
 	
+	/**
+	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
+	 */
 	static public SpriteBatch batch;
-	
-//	public static volumeHandler:Function;
-	
-	
-	
-	
 	
 	static public String getLibraryName()
 	{
 		return FlxG.LIBRARY_NAME + " v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION;
 	}
-	
-	
-	
 	
 	/**
 	 * Log data to the debugger.
@@ -267,7 +264,7 @@ public class FlxG
 	public static void log(String tag, Object data)
 	{
 		String message;
-		if(data instanceof Boolean)
+		/*if(data instanceof Boolean)
 			message = "" + ((Boolean) data).booleanValue();
 		else if(data instanceof Character)
 			message = "" + ((Character) data).charValue();
@@ -284,7 +281,8 @@ public class FlxG
 		else if(data instanceof Double)
 			message = "" + ((Double) data).doubleValue();
 		else
-			message = "" + data;
+			message = "" + data;*/
+		message = data.toString();
 		if((_game != null)) // && (_game._debugger != null))			
 			Gdx.app.log(tag, message);
 	}
@@ -299,6 +297,55 @@ public class FlxG
 		log("flixel", data);
 	}
 	
+	/**
+	 * Add a variable to the watch list in the debugger.
+	 * This lets you see the value of the variable all the time.
+	 * 
+	 * @param	AnyObject		A reference to any object in your game, e.g. Player or Robot or this.
+	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
+	 * @param	DisplayName		Optional, display your own string instead of the class name + variable name: e.g. "enemy count".
+	 */
+	static public void watch(Object AnyObject,String VariableName,String DisplayName)
+	{
+		//if((_game != null) && (_game._debugger != null))
+			//_game._debugger.watch.add(AnyObject,VariableName,DisplayName);
+	}
+	
+	/**
+	 * Add a variable to the watch list in the debugger.
+	 * This lets you see the value of the variable all the time.
+	 * 
+	 * @param	AnyObject		A reference to any object in your game, e.g. Player or Robot or this.
+	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
+	 */
+	static public void watch(Object AnyObject,String VariableName)
+	{
+		watch(AnyObject, VariableName, null);
+	}
+	
+	/**
+	 * Remove a variable from the watch list in the debugger.
+	 * Don't pass a Variable Name to remove all watched variables for the specified object.
+	 * 
+	 * @param	AnyObject		A reference to any object in your game, e.g. Player or Robot or this.
+	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
+	 */
+	static public void unwatch(Object AnyObject,String VariableName)
+	{
+		//if((_game != null) && (_game._debugger != null))
+			//_game._debugger.watch.remove(AnyObject,VariableName);
+	}
+	
+	/**
+	 * Remove a variable from the watch list in the debugger.
+	 * Don't pass a Variable Name to remove all watched variables for the specified object.
+	 * 
+	 * @param	AnyObject		A reference to any object in your game, e.g. Player or Robot or this.
+	 */
+	static public void unwatch(Object AnyObject)
+	{
+		unwatch(AnyObject, null);
+	}
 	
 	/**
 	 * How many times you want your game to update each second.
@@ -321,6 +368,18 @@ public class FlxG
 				_game._maxAccumulation = (int) _game._step;
 	}
 	
+	/**
+	 * How many times you want your game to update each second.
+	 * More updates usually means better collisions and smoother motion.
+	 * NOTE: This is NOT the same thing as the Flash Player framerate!
+	 */
+	static public float getFlashFramerate()
+	{
+		//if(_game.root != null)
+			//return _game.stage.frameRate;
+		//else
+			return 0;
+	}
 	
 	/**
 	 * @private
@@ -340,11 +399,235 @@ public class FlxG
 	 * 
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	static public double random()
+	static public float random()
 	{
 		return globalSeed = FlxU.srand(globalSeed);
 	}
 	
+	/**
+	 * Shuffles the entries in an array into a new random order.
+	 * <code>FlxG.shuffle()</code> is deterministic and safe for use with replays/recordings.
+	 * HOWEVER, <code>FlxU.shuffle()</code> is NOT deterministic and unsafe for use with replays/recordings.
+	 * @param <T>
+	 * 
+	 * @param	A				A Flash <code>Array</code> object containing...stuff.
+	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
+	 * 
+	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
+	 */
+	static public <T> Array<T> shuffle(Array<T> Objects,int HowManyTimes)
+	{
+		int i = 0;
+		int index1;
+		int index2;
+		T object;
+		while(i < HowManyTimes)
+		{
+			index1 = (int) (FlxG.random()*Objects.size);
+			index2 = (int) (FlxG.random()*Objects.size);
+			object = Objects.get(index2);
+			Objects.set(index2, Objects.get(index1));
+			Objects.set(index1, object);
+			i++;
+		}
+		return Objects;
+	}
+	
+	/**
+	 * Fetch a random entry from the given array.
+	 * Will return null if random selection is missing, or array has no entries.
+	 * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
+	 * HOWEVER, <code>FlxU.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
+	 * 
+	 * @param	Objects		A Flash array of objects.
+	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
+	 * 
+	 * @return	The random object that was selected.
+	 */
+	static public <T> T getRandom(Array<T> Objects,int StartIndex,int Length)
+	{
+		if(Objects != null)
+		{
+			int l = Length;
+			if((l == 0) || (l > Objects.size - StartIndex))
+				l = Objects.size - StartIndex;
+			if(l > 0)
+				return Objects.get(StartIndex + (int)(FlxG.random()*l));
+		}
+		return null;
+	}
+	
+	/**
+	 * Fetch a random entry from the given array.
+	 * Will return null if random selection is missing, or array has no entries.
+	 * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
+	 * HOWEVER, <code>FlxU.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
+	 * 
+	 * @param	Objects		A Flash array of objects.
+	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+	 * 
+	 * @return	The random object that was selected.
+	 */
+	static public <T> T getRandom(Array<T> Objects,int StartIndex)
+	{
+		return getRandom(Objects, StartIndex, 0);
+	}
+	
+	/**
+	 * Fetch a random entry from the given array.
+	 * Will return null if random selection is missing, or array has no entries.
+	 * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
+	 * HOWEVER, <code>FlxU.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
+	 * 
+	 * @param	Objects		A Flash array of objects.
+	 * 
+	 * @return	The random object that was selected.
+	 */
+	static public <T> T getRandom(Array<T> Objects)
+	{
+		return getRandom(Objects, 0, 0);
+	}
+	
+
+	/**
+	 * Load replay data from a string and play it back.
+	 * 
+	 * @param	Data		The replay that you want to load.
+	 * @param	State		Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
+	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
+	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
+	 * @param	Callback	Optional parameter: if set, called when the replay finishes.  Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
+	 */
+	static public void loadReplay(String Data,FlxState State,String[] CancelKeys,float Timeout,AFlxReplay Callback)
+	{
+		_game._replay.load(Data);
+		if(State == null)
+			FlxG.resetGame();
+		else
+			FlxG.switchState(State);
+		_game._replayCancelKeys = CancelKeys;
+		_game._replayTimer = (int) (Timeout*1000);
+		_game._replayCallback = Callback;
+		_game._replayRequested = true;
+	}
+	
+	/**
+	 * Load replay data from a string and play it back.
+	 * 
+	 * @param	Data		The replay that you want to load.
+	 * @param	State		Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
+	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
+	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
+	 */
+	static public void loadReplay(String Data,FlxState State,String[] CancelKeys,float Timeout)
+	{
+		loadReplay(Data, State, CancelKeys, Timeout, null);
+	}
+	
+	/**
+	 * Load replay data from a string and play it back.
+	 * 
+	 * @param	Data		The replay that you want to load.
+	 * @param	State		Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
+	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
+	 */
+	static public void loadReplay(String Data,FlxState State,String[] CancelKeys)
+	{
+		loadReplay(Data, State, CancelKeys, 0, null);
+	}
+	
+	/**
+	 * Load replay data from a string and play it back.
+	 * 
+	 * @param	Data		The replay that you want to load.
+	 * @param	State		Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
+	 */
+	static public void loadReplay(String Data,FlxState State)
+	{
+		loadReplay(Data, State, null, 0, null);
+	}
+	
+	/**
+	 * Load replay data from a string and play it back.
+	 * 
+	 * @param	Data		The replay that you want to load.
+	 */
+	static public void loadReplay(String Data)
+	{
+		loadReplay(Data, null, null, 0, null);
+	}
+	
+	/**
+	 * Resets the game or state and replay requested flag.
+	 * 
+	 * @param	StandardMode	If true, reload entire game, else just reload current game state.
+	 */
+	static public void reloadReplay(boolean StandardMode)
+	{
+		if(StandardMode)
+			FlxG.resetGame();
+		else
+			FlxG.resetState();
+		if(_game._replay.frameCount > 0)
+			_game._replayRequested = true;
+	}
+	
+	/**
+	 * Resets the game or state and replay requested flag. 
+	 */
+	static public void reloadReplay()
+	{
+		reloadReplay(true);
+	}
+	
+	/**
+	 * Stops the current replay.
+	 */
+	static public void stopReplay()
+	{
+		_game._replaying = false;
+		//if(_game._debugger != null)
+			//_game._debugger.vcr.stopped();
+		resetInput();
+	}
+	
+	/**
+	 * Resets the game or state and requests a new recording.
+	 * 
+	 * @param	StandardMode	If true, reset the entire game, else just reset the current state.
+	 */
+	static public void recordReplay(boolean StandardMode)
+	{
+		if(StandardMode)
+			FlxG.resetGame();
+		else
+			FlxG.resetState();
+		_game._recordingRequested = true;
+	}
+	
+	/**
+	 * Resets the game or state and requests a new recording.
+	 * 
+	 * @param	StandardMode	If true, reset the entire game, else just reset the current state.
+	 */
+	static public void recordReplay()
+	{
+		recordReplay(true);
+	}
+	
+	/**
+	 * Stop recording the current replay and return the replay data.
+	 * 
+	 * @return	The replay data in simple ASCII format (see <code>FlxReplay.save()</code>).
+	 */
+	static public String stopRecording()
+	{
+		_game._recording = false;
+		//if(_game._debugger != null)
+			//_game._debugger.vcr.stopped();
+		return _game._replay.save();
+	}
 	
 	/**
 	 * Request a reset of the current game state.
@@ -370,14 +653,14 @@ public class FlxG
 		_game._requestedReset = true;
 	}
 	
-	
+	/**
+	 * Reset the input helper objects (useful when changing screens or states)
+	 */
 	static public void resetInput()
 	{
 		keys.reset();
 		mouse.reset();
-		//touches = null;
 	}
-	
 	
 	/**
 	 * Set up and play a looping background soundtrack.

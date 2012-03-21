@@ -113,7 +113,7 @@ public class FlxU
 	 * 
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	static public double srand(double Seed)
+	static public float srand(float Seed)
 	{
 		return ((69621 * (Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
 	}
