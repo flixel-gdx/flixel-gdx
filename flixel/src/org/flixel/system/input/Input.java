@@ -1,5 +1,7 @@
 package org.flixel.system.input;
 
+import org.flixel.FlxG;
+
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectIntMap;
 
@@ -53,13 +55,20 @@ public class Input
 	 */
 	public void reset()
 	{
-		for(KeyState data : _map)
+		for(KeyState o : _map)
 		{
-			data.current = 0;
-			data.last = 0;
+			if (o.name.isEmpty())
+				continue;
+			
+			try {
+				Keyboard.class.getField(o.name).setBoolean(this, false);
+			} catch (Exception e) {
+				FlxG.log("Keyboard", e.getMessage());
+			}
+			o.current = 0;
+			o.last = 0;
 		}
 	}
-	
 	
 	/**
 	 * Check to see if this key is pressed.
@@ -177,8 +186,12 @@ public class Input
 			o = Record.get(i++);
 			o2 = _map.get(o.code);
 			o2.current = o.value;
-			//if(o.value > 0)
-				//this[o2.name] = true;
+			if(o.value > 0)
+				try {
+					Keyboard.class.getField(o2.name).setBoolean(this, true);
+				} catch (Exception e) {
+					FlxG.log("Input", e.getMessage());
+				}
 		}
 	}
 	
@@ -238,7 +251,7 @@ public class Input
 		public int last;
 	}
 	
-	public class KeyData
+	static public class KeyData
 	{
 		public KeyData(int Code, int Value){code = Code; value = Value;}
 		public int code;

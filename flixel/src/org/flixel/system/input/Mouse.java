@@ -6,6 +6,7 @@ import org.flixel.FlxPoint;
 import org.flixel.system.replay.MouseRecord;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -61,6 +62,167 @@ public class Mouse extends FlxPoint
 		_point = null;
 		_pointers.clear();
 		_pointers = null;
+	}
+	
+	/**
+	 * Either show an existing cursor or load a new one.
+	 * 
+	 * @param	Graphic		The image you want to use for the cursor.
+	 * @param	Scale		Change the size of the cursor.  Default = 1, or native size.  2 = 2x as big, 0.5 = half size, etc.
+	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
+	 */
+	public void show(TextureRegion Graphic,float Scale,int XOffset,int YOffset)
+	{
+		//_cursorContainer.visible = true;
+		//if(Graphic != null)
+			//load(Graphic,Scale,XOffset,YOffset);
+		//else if(_cursor == null)
+			//load();
+	}
+	
+	/**
+	 * Either show an existing cursor or load a new one.
+	 * 
+	 * @param	Graphic		The image you want to use for the cursor.
+	 * @param	Scale		Change the size of the cursor.  Default = 1, or native size.  2 = 2x as big, 0.5 = half size, etc.
+	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 */
+	public void show(TextureRegion Graphic,float Scale,int XOffset)
+	{
+		show(Graphic, Scale, XOffset, 0);
+	}
+	
+	/**
+	 * Either show an existing cursor or load a new one.
+	 * 
+	 * @param	Graphic		The image you want to use for the cursor.
+	 * @param	Scale		Change the size of the cursor.  Default = 1, or native size.  2 = 2x as big, 0.5 = half size, etc.
+	 */
+	public void show(TextureRegion Graphic,float Scale)
+	{
+		show(Graphic, Scale, 0, 0);
+	}
+	
+	/**
+	 * Either show an existing cursor or load a new one.
+	 * 
+	 * @param	Graphic		The image you want to use for the cursor.
+	 */
+	public void show(TextureRegion Graphic)
+	{
+		show(Graphic, 1, 0, 0);
+	}
+	
+	/**
+	 * Show the cursor.
+	 */
+	public void show()
+	{
+		show(null, 1, 0, 0);
+	}
+	
+	/**
+	 * Hides the mouse cursor
+	 */
+	public void hide()
+	{
+		//_cursorContainer.visible = false;
+	}
+	
+	/**
+	 * Read only, check visibility of mouse cursor.
+	 */
+	public boolean getVisible()
+	{
+		return false;//_cursorContainer.visible;
+	}
+	
+	/**
+	 * Load a new mouse cursor graphic
+	 * 
+	 * @param	Graphic		The image you want to use for the cursor.
+	 * @param	Scale		Change the size of the cursor.
+	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
+	 */
+	public void load(TextureRegion Graphic,float Scale,int XOffset,int YOffset)
+	{
+		/*
+		if(_cursor != null)
+			_cursorContainer.removeChild(_cursor);
+
+		if(Graphic == null)
+			Graphic = ImgDefaultCursor;
+		_cursor = new Graphic();
+		_cursor.x = XOffset;
+		_cursor.y = YOffset;
+		_cursor.scaleX = Scale;
+		_cursor.scaleY = Scale;
+		
+		_cursorContainer.addChild(_cursor);
+		*/
+	}
+	
+	/**
+	 * Load a new mouse cursor graphic
+	 * 
+	 * @param	Graphic		The image you want to use for the cursor.
+	 * @param	Scale		Change the size of the cursor.
+	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 */
+	public void load(TextureRegion Graphic,float Scale,int XOffset)
+	{
+		load(Graphic, Scale, XOffset, 0);
+	}
+	
+	/**
+	 * Load a new mouse cursor graphic
+	 * 
+	 * @param	Graphic		The image you want to use for the cursor.
+	 * @param	Scale		Change the size of the cursor.
+	 */
+	public void load(TextureRegion Graphic,float Scale)
+	{
+		load(Graphic, Scale, 0, 0);
+	}
+	
+	/**
+	 * Load a new mouse cursor graphic
+	 * 
+	 * @param	Graphic		The image you want to use for the cursor.
+	 */
+	public void load(TextureRegion Graphic)
+	{
+		load(Graphic, 1, 0, 0);
+	}
+	
+	/**
+	 * Load a new mouse cursor graphic 
+	 */
+	public void load()
+	{
+		load(null, 1, 0, 0);
+	}
+	
+	/**
+	 * Unload the current cursor graphic.  If the current cursor is visible,
+	 * then the default system cursor is loaded up to replace the old one.
+	 */
+	public void unload()
+	{
+		/*
+		if(_cursor != null)
+		{
+			if(_cursorContainer.visible)
+				load();
+			else
+			{
+				_cursorContainer.removeChild(_cursor)
+				_cursor = null;
+			}
+		}
+		*/
 	}
 	
 	/**
