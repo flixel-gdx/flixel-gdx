@@ -113,9 +113,9 @@ public class FlxU
 	 * 
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	static public float srand(float Seed)
+	static public float srand(double Seed)
 	{
-		return ((69621 * (Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
+		return (float) (((69621 * (Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF);
 	}
 	
 	/**
