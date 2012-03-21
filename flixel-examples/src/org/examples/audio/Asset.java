@@ -12,7 +12,7 @@ public class Asset
 	public static void create()
 	{
 		SndMode = Gdx.audio.newMusic(Gdx.files.internal("examples/audio/mode.ogg"));
-		Sndflixel = Gdx.audio.newSound(Gdx.files.internal("flixel/data/flixel.ogg"));
+		Sndflixel = Gdx.audio.newSound(Gdx.files.classpath("org/flixel/data/flixel.ogg"));
 	}
 
 }
