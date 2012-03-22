@@ -263,28 +263,8 @@ public class FlxG
 	 */
 	public static void log(String tag, Object data)
 	{
-		String message;
-		/*if(data instanceof Boolean)
-			message = "" + ((Boolean) data).booleanValue();
-		else if(data instanceof Character)
-			message = "" + ((Character) data).charValue();
-		else if(data instanceof Byte)
-			message = "" + ((Byte) data).byteValue();
-		else if(data instanceof Short)
-			message = "" + ((Short) data).shortValue();
-		else if(data instanceof Integer)
-			message = "" + ((Integer) data).intValue();
-		else if(data instanceof Long)
-			message = "" + ((Long) data).doubleValue();
-		else if(data instanceof Float)
-			message = "" + ((Float) data).floatValue();
-		else if(data instanceof Double)
-			message = "" + ((Double) data).doubleValue();
-		else
-			message = "" + data;*/
-		message = data.toString();
 		if((_game != null)) // && (_game._debugger != null))			
-			Gdx.app.log(tag, message);
+			Gdx.app.log(tag, data.toString());
 	}
 	
 	/**
@@ -859,7 +839,7 @@ public class FlxG
 		
 		clearBitmapCache();
 		
-		FlxCamera.defaultZoom = Zoom;
+		FlxCamera.defaultZoom = 1;//Zoom;
 //		FlxG._cameraRect = new Rectangle();
 		FlxG.cameras = new Array<FlxCamera>();
 		FlxG.visualDebug = false;
@@ -872,10 +852,6 @@ public class FlxG
 		FlxG.mouse = new Mouse();
 		FlxG.keys = new Keyboard();
 	}
-	
-	
-	
-
 	
 	public static void reset()
 	{
@@ -899,7 +875,6 @@ public class FlxG
 		FlxG.keys.update();		
 		FlxG.mouse.update();
 	}
-	
 	
 	/**
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.  
@@ -1409,7 +1384,6 @@ public class FlxG
 			return FlxG.camera.bgColor;
 	}
 	
-	
 	static public void setBgColor(int Color)
 	{
 		int i = 0;
@@ -1417,6 +1391,7 @@ public class FlxG
 		while(i < l)
 			(FlxG.cameras.get(i++)).setColor(Color);
 	}
+	
 	
 	
 	/**

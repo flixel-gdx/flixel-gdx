@@ -93,9 +93,8 @@ public class FlxButton extends FlxSprite
 		super(X,Y);
 		if(Label != null)
 		{
-			label = new FlxText(20,0,80,Label);
-			//label.setFormat(null,0,0x333333,"center");
-			label.setAlignment("center");
+			label = new FlxText(0,0,80,Label);
+			label.setFormat(null,8,0x333333,"center");
 			labelOffset = new FlxPoint(-1,3);
 		}
 		loadGraphic(SystemAsset.ImgButton,false,80,20);
