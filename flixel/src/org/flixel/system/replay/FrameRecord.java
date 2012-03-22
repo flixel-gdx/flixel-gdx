@@ -1,6 +1,5 @@
 package org.flixel.system.replay;
 
-import org.flixel.FlxG;
 import org.flixel.system.input.Input;
 import org.flixel.system.input.Input.KeyData;
 
@@ -130,7 +129,7 @@ public class FrameRecord
 	{
 		int i;
 		int l;
-		FlxG.log(Data);
+
 		//get frame number
 		String[] array = Data.split("k");
 		frame = Integer.parseInt(array[0]);

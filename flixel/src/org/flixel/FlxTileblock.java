@@ -1,10 +1,5 @@
 package org.flixel;
 
-
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -15,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class FlxTileblock extends FlxSprite
 {		
-	
 	/**
 	 * Creates a new <code>FlxBlock</code> object with the specified position and size.
 	 * 
@@ -27,7 +21,7 @@ public class FlxTileblock extends FlxSprite
 	public FlxTileblock(float X, float Y, int Width, int Height)
 	{
 		super(X, Y);
-		makeGraphic(Width,Height,0,true);		
+		makeGraphic(Width,Height,0,true);
 		active = false;
 		immovable = true;
 	}
@@ -39,32 +33,43 @@ public class FlxTileblock extends FlxSprite
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
 	 * @param	TileWidth		The width of a single tile in the graphic.
 	 * @param	TileHeight		The height of a single tile in the graphic.
-	 * @param	RegionWidth		The width of the region.
-	 * @param	RegionHeight	The height of the region.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
-	public FlxTileblock loadTiles(FileHandle TileGraphic, int TileWidth, int TileHeight, int RegionWidth, int RegionHeight, int Empties)
+	public FlxTileblock loadTiles(TextureRegion TileGraphic, int TileWidth, int TileHeight, int Empties)
 	{
 		if(TileGraphic == null)
 			return this;
 
 		//First create a tile brush
-		FlxSprite sprite = new FlxSprite().loadGraphic(new TextureRegion(new Texture(TileGraphic), RegionWidth, RegionHeight),true,TileWidth,TileHeight);		
+		FlxSprite sprite = new FlxSprite().loadGraphic(TileGraphic,true,false,TileWidth,TileHeight);		
 		int spriteWidth = sprite.width;
 		int spriteHeight = sprite.height;
 		int total = sprite.frames + Empties;
 					
+		//Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
+		boolean regen = false;
+		if(width % sprite.width != 0)
+		{
+			width = (int)(width/spriteWidth+1)*spriteWidth;
+			regen = true;
+		}
+		if(height % sprite.height != 0)
+		{
+			height = (int)(height/spriteHeight+1)*spriteHeight;
+			regen = true;
+		}
+		if(regen)
+			makeGraphic(width,height,0,true);
+		else
+			this.fill(0);
+		
 		//Stamp random tiles onto the canvas
 		int row = 0;
-		int column = 0;
+		int column;
 		int destinationX;
 		int destinationY = 0;
 		int widthInTiles = width/spriteWidth;
-		int heightInTiles = height/spriteHeight;		
-		FlxG.log(widthInTiles);
-		FlxG.log(heightInTiles);
-		Pixmap pix = new Pixmap(TileGraphic);
-		Pixmap pixD = new Pixmap(FlxU.ceilPowerOfTwo(width), FlxU.ceilPowerOfTwo(height), Pixmap.Format.RGBA8888);
+		int heightInTiles = height/spriteHeight;
 		while(row < heightInTiles)
 		{
 			destinationX = 0;
@@ -74,7 +79,8 @@ public class FlxTileblock extends FlxSprite
 				if(FlxG.random()*total > Empties)
 				{
 					sprite.randomFrame();
-					pixD.drawPixmap(pix, destinationX, destinationY, sprite._curIndex*TileWidth, 0, TileWidth, TileHeight);					
+					sprite.drawFrame();
+					stamp(sprite,destinationX,destinationY);
 				}
 				destinationX += spriteWidth;
 				column++;
@@ -82,12 +88,6 @@ public class FlxTileblock extends FlxSprite
 			destinationY += spriteHeight;
 			row++;
 		}
-		
-		framePixels = new Sprite(new Texture(pixD));
-		framePixels.flip(false, true);		
-		
-		pix.dispose();
-		pixD.dispose();
 		
 		return this;
 	}
@@ -98,11 +98,30 @@ public class FlxTileblock extends FlxSprite
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
 	 * @param	TileWidth		The width of a single tile in the graphic.
 	 * @param	TileHeight		The height of a single tile in the graphic.
-	 * @param	RegionWidth		The width of the region.
-	 * @param	RegionHeight	The height of the region.
 	 */
-	public FlxTileblock loadTiles(FileHandle TileGraphic, int TileWidth, int TileHeight, int RegionWidth, int RegionHeight)
+	public FlxTileblock loadTiles(TextureRegion TileGraphic, int TileWidth, int TileHeight)
 	{
-		return loadTiles(TileGraphic, TileWidth, TileHeight, RegionWidth, RegionHeight, 0);
+		return loadTiles(TileGraphic, TileWidth, TileHeight, 0);
+	}
+	
+	/**
+	 * Fills the block with a randomly arranged selection of graphics from the image provided.
+	 * 
+	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
+	 * @param	TileWidth		The width of a single tile in the graphic.
+	 */
+	public FlxTileblock loadTiles(TextureRegion TileGraphic, int TileWidth)
+	{
+		return loadTiles(TileGraphic, TileWidth, 0, 0);
+	}
+	
+	/**
+	 * Fills the block with a randomly arranged selection of graphics from the image provided.
+	 * 
+	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
+	 */
+	public FlxTileblock loadTiles(TextureRegion TileGraphic)
+	{
+		return loadTiles(TileGraphic, 0, 0, 0);
 	}
 }

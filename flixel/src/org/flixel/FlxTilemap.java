@@ -1810,9 +1810,9 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String bitmapToCSV(TextureRegion textureRegion,boolean Invert,int Scale)
+	static public String bitmapToCSV(TextureRegion Graphic,boolean Invert,int Scale)
 	{
-		TextureData textureData = textureRegion.getTexture().getTextureData();
+		TextureData textureData = Graphic.getTexture().getTextureData();
 		textureData.prepare();
 		Pixmap bitmapData = textureData.consumePixmap();
 		
@@ -1828,14 +1828,14 @@ public class FlxTilemap extends FlxObject
 		}
 		
 		//Walk image and export pixel values
-		int regionX = textureRegion.getRegionX() * Scale;
-		int regionY = textureRegion.getRegionY() * Scale;
+		int regionX = Graphic.getRegionX() * Scale;
+		int regionY = Graphic.getRegionY() * Scale;
 		int row = regionY;
 		int column;
 		int pixel;
 		String csv = "";
-		int endColumn = regionX + (textureRegion.getRegionWidth() * Scale);
-		int endRow = regionY + (textureRegion.getRegionHeight() * Scale);
+		int endColumn = regionX + (Graphic.getRegionWidth() * Scale);
+		int endRow = regionY + (Graphic.getRegionHeight() * Scale);
 
 		while(row < endRow)
 		{

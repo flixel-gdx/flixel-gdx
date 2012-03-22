@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.flixel.data.SystemAsset;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
@@ -62,7 +63,7 @@ public class FlxText extends FlxSprite
 		_textField = new BitmapFontCache(_bitmapFont);
 		width = Width;
 		_text = Text;
-		setColor(0xFFFFFFFF);
+		setColor(0xFFFFFF);
 		_alignment = HAlignment.LEFT;
 		_shadow = 0;
 		allowCollisions = NONE;
@@ -243,8 +244,13 @@ public class FlxText extends FlxSprite
 	@Override
 	public void setColor(long Color)
 	{
+		Color &= 0x00FFFFFFL;
+		
 		_color = Color;
-		_textField.setColor(FlxU.colorFromHex(Color));
+	
+		Color c = FlxU.colorFromHex(Color);
+		c.a = getAlpha();
+		_textField.setColor((_color>>16)*0.00392f,(_color>>8&0xff)*0.00392f,(_color&0xff)*0.00392f,_alpha);
 	}
 	
 	/**
@@ -298,15 +304,17 @@ public class FlxText extends FlxSprite
 	}
 	
 	@Override
-	public float getAlpha()
-	{
-		return _textField.getColor().a;
-	}
-	
-	@Override
 	public void setAlpha(float Alpha)
 	{
+		if(Alpha > 1)
+			Alpha = 1;
+		if(Alpha < 0)
+			Alpha = 0;
+		if(Alpha == _alpha)
+			return;
+
 		_textField.setColor(_textField.getColor().r, _textField.getColor().g, _textField.getColor().b, Alpha);
+		_alpha = Alpha;
 	}	
 	
 	@Override
@@ -314,7 +322,7 @@ public class FlxText extends FlxSprite
 	{
 		TextBounds bounds = _textField.setWrappedText(_text, 0, 0, width, _alignment);
 		height = (int) FlxU.ceil(bounds.height);		
-		_textField.setColor(FlxU.colorFromHex(_color));
+		setColor(_color);
 	}
 	
 	@Override
@@ -342,7 +350,7 @@ public class FlxText extends FlxSprite
 			_textField.translate(1f, 1f);
 			_textField.draw(FlxG.batch);
 			_textField.translate(-1f, -1f);
-			_textField.setColor(FlxU.colorFromHex(_color));
+			setColor(_color);
 		}
 		if(FlxG.visualDebug && !ignoreDrawDebug)
 			drawDebug(camera);

@@ -97,7 +97,7 @@ public class FlxButton extends FlxSprite
 			label.setFormat(null,8,0x333333,"center");
 			labelOffset = new FlxPoint(-1,3);
 		}
-		loadGraphic(SystemAsset.ImgButton,false,80,20);
+		loadGraphic(SystemAsset.ImgButton,true,false,80,20);
 		buttonEvent = ButtonEvent;
 		
 		soundOver = null;
