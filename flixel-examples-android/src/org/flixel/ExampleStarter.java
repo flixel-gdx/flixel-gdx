@@ -10,8 +10,8 @@ import android.widget.ListView;
 public class ExampleStarter extends ListActivity
 {
 	String examples[] = { "Animation", "Collision", "Particles", "ThousandParticles", "Blur", 
-						  "Scrolling", "Bitmapfont", "MultiTouch", "DragAndDrop", "CameraEffects", 
-						  "Audio", "Tile", "TiledMap", "TiledMap2", "PathFinding"};
+						  "Bitmapfont", "MultiTouch", "DragAndDrop", "CameraEffects", 
+						  "Audio", "Tile", "TiledMap", "TiledMap2", "PathFinding", "FlxCollisions"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

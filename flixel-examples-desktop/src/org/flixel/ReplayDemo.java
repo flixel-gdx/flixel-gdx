@@ -6,6 +6,6 @@ public class ReplayDemo
 {
 	public static void main(String[] args)
 	{
-		new LwjglApplication(new org.examples.replay.ReplayDemo(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.replay.ReplayDemo(), "", 400, 300, false);
 	}
 }

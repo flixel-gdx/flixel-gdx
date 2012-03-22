@@ -6,6 +6,6 @@ public class ThousandParticlesDemo
 {
 	public static void main(String[] args)
 	{
-		new LwjglApplication(new org.examples.thousandparticles.ThousandParticlesDemo(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.thousandparticles.ThousandParticlesDemo(), "", 480, 320, false);
 	}
 }

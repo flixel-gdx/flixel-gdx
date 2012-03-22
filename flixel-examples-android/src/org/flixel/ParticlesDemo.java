@@ -12,6 +12,6 @@ public class ParticlesDemo extends AndroidApplication
 	{
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		initialize(new org.examples.particles.ParticleDemo(), false);
+		initialize(new org.flixel.examples.particles.ParticleDemo(), false);
 	}
 }

@@ -6,6 +6,6 @@ public class TilemapDemo
 {
 	public static void main(String[] args)
 	{
-		new LwjglApplication(new org.examples.tilemap.Tilemap(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.tilemap.Tilemap(), "", 480, 320, false);
 	}
 }

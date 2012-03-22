@@ -6,6 +6,6 @@ public class BlurDemo
 {
 	public static void main(String[] args)
 	{
-		new LwjglApplication(new org.examples.blur.BlurDemo(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.blur.BlurDemo(), "", 480, 320, false);
 	}
 }

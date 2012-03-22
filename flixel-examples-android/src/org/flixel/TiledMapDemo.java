@@ -12,6 +12,6 @@ public class TiledMapDemo extends AndroidApplication
 	{		
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		initialize(new org.examples.tilemap.Tilemap(), false);
+		initialize(new org.flixel.examples.tilemap.Tilemap(), false);
 	}
 }

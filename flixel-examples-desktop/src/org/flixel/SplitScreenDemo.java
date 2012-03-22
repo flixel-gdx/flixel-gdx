@@ -6,6 +6,6 @@ public class SplitScreenDemo
 {
 	public static void main(String[] args)
 	{
-		new LwjglApplication(new org.examples.splitscreen.SplitScreen(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.splitscreen.SplitScreen(), "", 400, 300, false);
 	}
 }

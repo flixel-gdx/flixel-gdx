@@ -12,6 +12,6 @@ public class AnimationDemo extends AndroidApplication
 	{
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		initialize(new org.examples.animation.AnimationDemo(), false);
+		initialize(new org.flixel.examples.animation.AnimationDemo(), false);
 	}
 }

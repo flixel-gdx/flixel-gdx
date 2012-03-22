@@ -1044,6 +1044,7 @@ public class FlxSprite extends FlxObject
 	public void setColor(long Color)
 	{
 		_color = Color;
+		
 		framePixels.setColor(FlxU.colorFromHex(Color));
 //		dirty = true;
 	}

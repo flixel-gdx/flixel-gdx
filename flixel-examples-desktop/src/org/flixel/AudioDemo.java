@@ -6,6 +6,6 @@ public class AudioDemo
 {
 	static public void main(String[] args)
 	{
-		new LwjglApplication(new org.examples.audio.AudioDemo(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.audio.AudioDemo(), "", 480, 320, false);
 	}
 }

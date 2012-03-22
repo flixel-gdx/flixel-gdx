@@ -19,7 +19,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  */
 public class FlxCamera extends FlxBasic
 {
-
 	/**
 	 * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
 	 */

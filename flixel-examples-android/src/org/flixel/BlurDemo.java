@@ -12,6 +12,6 @@ public class BlurDemo extends AndroidApplication
 	{
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		initialize(new org.examples.blur.BlurDemo(), false);
+		initialize(new org.flixel.examples.blur.BlurDemo(), false);
 	};
 }

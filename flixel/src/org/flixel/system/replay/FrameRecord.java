@@ -1,5 +1,6 @@
 package org.flixel.system.replay;
 
+import org.flixel.FlxG;
 import org.flixel.system.input.Input;
 import org.flixel.system.input.Input.KeyData;
 
@@ -129,7 +130,7 @@ public class FrameRecord
 	{
 		int i;
 		int l;
-		
+		FlxG.log(Data);
 		//get frame number
 		String[] array = Data.split("k");
 		frame = Integer.parseInt(array[0]);
@@ -138,7 +139,10 @@ public class FrameRecord
 		array = array[1].split("m");
 		
 		String keyData = array[0];
-		String mouseData = array[1];
+		String mouseData = "";
+		if (array.length > 1)
+			mouseData = array[1];
+		
 		//parse keyboard data
 		if(keyData.length() > 0)
 		{

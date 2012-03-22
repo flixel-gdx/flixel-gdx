@@ -12,7 +12,7 @@ public class MultiTouchDemo extends AndroidApplication
 	{
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		initialize(new org.examples.multitouch.MultiTouchDemo(), false);
+		initialize(new org.flixel.examples.multitouch.MultiTouchDemo(), false);
 		
 	}
 }

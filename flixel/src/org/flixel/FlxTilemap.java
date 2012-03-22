@@ -8,6 +8,7 @@ import org.flixel.system.FlxTilemapBuffer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
 import com.badlogic.gdx.utils.Array;
@@ -1530,6 +1531,14 @@ public class FlxTilemap extends FlxObject
 	}
 	
 	/**
+	 * Call this function to lock the automatic camera to the map's edges. 
+	 */
+	public void follow()
+	{
+		follow(null, 0, true);
+	}
+	
+	/**
 	 * Get the world coordinates and size of the entire tilemap as a <code>FlxRect</code>.
 	 * 
 	 * @param	Bounds		Optional, pass in a pre-existing <code>FlxRect</code> to prevent instantiation of a new object.
@@ -1803,40 +1812,48 @@ public class FlxTilemap extends FlxObject
 	 */
 	static public String bitmapToCSV(TextureRegion textureRegion,boolean Invert,int Scale)
 	{
-		/*
+		TextureData textureData = textureRegion.getTexture().getTextureData();
+		textureData.prepare();
+		Pixmap bitmapData = textureData.consumePixmap();
+		
+		// TODO: Currently creates a scaled copy of the entire TextureAtlas, not optimal, could cause memory problems?
 		//Import and scale image if necessary
 		if(Scale > 1)
 		{
-			var bd:BitmapData = bitmapData;
-			bitmapData = new BitmapData(bitmapData.width*Scale,bitmapData.height*Scale);
-			var mtx:Matrix = new Matrix();
-			mtx.scale(Scale,Scale);
-			bitmapData.draw(bd,mtx);
+			Pixmap p = bitmapData;
+			Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
+			bitmapData = new Pixmap(FlxU.ceilPowerOfTwo(bitmapData.getWidth()*Scale),FlxU.ceilPowerOfTwo(bitmapData.getHeight()*Scale),Pixmap.Format.RGBA8888);
+			bitmapData.drawPixmap(p, 0, 0, p.getWidth(), p.getHeight(), 0, 0, p.getWidth() * Scale, p.getHeight() * Scale);
+			p.dispose();
 		}
 		
 		//Walk image and export pixel values
-		var row:uint = 0;
-		var column:uint;
-		var pixel:uint;
-		var csv:String = "";
-		var bitmapWidth:uint = bitmapData.width;
-		var bitmapHeight:uint = bitmapData.height;
-		while(row < bitmapHeight)
+		int regionX = textureRegion.getRegionX() * Scale;
+		int regionY = textureRegion.getRegionY() * Scale;
+		int row = regionY;
+		int column;
+		int pixel;
+		String csv = "";
+		int endColumn = regionX + (textureRegion.getRegionWidth() * Scale);
+		int endRow = regionY + (textureRegion.getRegionHeight() * Scale);
+
+		while(row < endRow)
 		{
-			column = 0;
-			while(column < bitmapWidth)
+			column = regionX;
+			while(column < endColumn)
 			{
 				//Decide if this pixel/tile is solid (1) or not (0)
 				pixel = bitmapData.getPixel(column,row);
-				if((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
+				
+				if((Invert && (pixel < 0)) || (!Invert && (pixel > 0)))
 					pixel = 1;
 				else
 					pixel = 0;
 				
 				//Write the result to the string
-				if(column == 0)
+				if(column == regionX)
 				{
-					if(row == 0)
+					if(row == regionY)
 						csv += pixel;
 					else
 						csv += "\n"+pixel;
@@ -1847,9 +1864,8 @@ public class FlxTilemap extends FlxObject
 			}
 			row++;
 		}
+		bitmapData.dispose();
 		return csv;
-		*/
-		return "";
 	}
 	
 	/**
@@ -1881,6 +1897,54 @@ public class FlxTilemap extends FlxObject
 	static public String bitmapToCSV(TextureRegion textureRegion)
 	{
 		return bitmapToCSV(textureRegion, false, 1);
+	}
+	
+	/**
+	 * Converts a resource image file to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	ImageFile	An embedded graphic, preferably black and white.
+	 * @param	Invert		Load white pixels as solid instead.
+	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+	static public String imageToCSV(TextureRegion ImageFile,boolean Invert,int Scale)
+	{
+		return bitmapToCSV(ImageFile,Invert,Scale);
+	}
+	
+	/**
+	 * Converts a resource image file to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	ImageFile	An embedded graphic, preferably black and white.
+	 * @param	Invert		Load white pixels as solid instead.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+	static public String imageToCSV(TextureRegion ImageFile,boolean Invert)
+	{
+		return imageToCSV(ImageFile, Invert, 1);
+	}
+	
+	/**
+	 * Converts a resource image file to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	ImageFile	An embedded graphic, preferably black and white.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+	static public String imageToCSV(TextureRegion ImageFile)
+	{
+		return imageToCSV(ImageFile, false, 1);
 	}
 	
 	/**

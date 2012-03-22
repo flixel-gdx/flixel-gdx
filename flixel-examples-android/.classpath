@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="libs/gdx-audio.jar" sourcepath="libs/gdx-audio-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/flixel"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/flixel-examples"/>
+	<classpathentry kind="lib" path="/flixel/libs/gdx-freetype.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

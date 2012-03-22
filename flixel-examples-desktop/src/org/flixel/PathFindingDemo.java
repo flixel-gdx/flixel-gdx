@@ -6,6 +6,6 @@ public class PathFindingDemo
 {
 	public static void main(String[] args)
 	{
-		new LwjglApplication(new org.examples.pathfinding.PathFindingDemo(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.pathfinding.PathFindingDemo(), "", 400, 300, false);
 	}
 }

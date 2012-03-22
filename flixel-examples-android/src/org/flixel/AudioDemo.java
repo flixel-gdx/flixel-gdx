@@ -12,6 +12,6 @@ public class AudioDemo extends AndroidApplication
 	{
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		initialize(new org.examples.audio.AudioDemo(), false);
+		initialize(new org.flixel.examples.audio.AudioDemo(), false);
 	}
 }

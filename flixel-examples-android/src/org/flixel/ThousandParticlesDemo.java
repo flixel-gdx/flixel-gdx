@@ -12,6 +12,6 @@ public class ThousandParticlesDemo extends AndroidApplication
 	{
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		initialize(new org.examples.thousandparticles.ThousandParticlesDemo(), false);
+		initialize(new org.flixel.examples.thousandparticles.ThousandParticlesDemo(), false);
 	}
 }

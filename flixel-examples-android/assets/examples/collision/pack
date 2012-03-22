@@ -1,19 +1,25 @@
-
-collision1.png
+pack.png
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
-platform
+crate
   rotate: false
-  xy: 0, 0
-  size: 64, 16
-  orig: 64, 16
+  xy: 2, 2
+  size: 20, 10
+  orig: 20, 10
   offset: 0, 0
   index: -1
-gibs
+flixelLogo
   rotate: false
-  xy: 64, 0
-  size: 24, 6
-  orig: 32, 8
-  offset: 0, 2
+  xy: 226, 2
+  size: 26, 46
+  orig: 26, 46
+  offset: 0, 0
+  index: -1
+elevator
+  rotate: false
+  xy: 24, 2
+  size: 200, 12
+  orig: 200, 12
+  offset: 0, 0
   index: -1

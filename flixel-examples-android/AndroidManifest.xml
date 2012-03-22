@@ -35,10 +35,6 @@
 				  android:name=".ThousandParticlesDemo"
 				  android:screenOrientation="landscape"
 				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="Scrolling Demo"
-				  android:name=".ScrollingDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
 		<activity android:label="Bitmapfont Demo"
 				  android:name=".BitmapfontDemo"
 				  android:screenOrientation="landscape"
@@ -71,6 +67,7 @@
 				  android:name=".TiledMap2Demo"
 				  android:screenOrientation="landscape"
 				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:name="PathFindingDemo" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation" android:label="PathFinding Demo"></activity>
+		<activity android:name=".PathFindingDemo" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation" android:label="PathFinding Demo"></activity>
+		<activity android:label="FlxCollisions" android:name=".FlxCollisionsDemo" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation"></activity>
     </application>
 </manifest>

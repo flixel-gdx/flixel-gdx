@@ -190,7 +190,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat(BitmapFont Font)
 	{
-		return setFormat(Font, 0, 0xFFFFFFFF, "left", 0);
+		return setFormat(Font, 8, 0xFFFFFFFF, "left", 0);
 	}
 	
 	/**
@@ -234,7 +234,7 @@ public class FlxText extends FlxSprite
 	 */
 	public void setSize(float Size)
 	{
-		_bitmapFont.scale(Size);
+		//_bitmapFont.scale(Size);
 	}
 	
 	/**
@@ -334,7 +334,7 @@ public class FlxText extends FlxSprite
 		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
 		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
 		
-		_textField.setPosition(_point.x, _point.y);
+		_textField.setPosition(_point.x - offset.x, _point.y - offset.y);
 		//Render a single pixel shadow beneath the text
 		if (_shadow != 0)
 		{

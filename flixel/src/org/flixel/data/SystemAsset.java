@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+
 /**
  * This class is only for internal use for flixel self.
  * 
@@ -29,5 +30,8 @@ public class SystemAsset
 		FlxTilemap.ImgAuto = atlas.findRegion("autotiles");
 		FlxTilemap.ImgAutoAlt = atlas.findRegion("autotiles_alt");
 		system = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
+		//FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.classpath("org/flixel/data/font/nokiafc22.ttf"));
+		//system = generator.generateFont(8, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*", true);
+		//generator.dispose();
 	}
 }

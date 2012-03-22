@@ -6,6 +6,6 @@ public class CameraEffectsDemo
 {
 	static public void main(String[] args)
 	{
-		new LwjglApplication(new org.examples.cameraeffects.CameraEffectsDemo(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.cameraeffects.CameraEffectsDemo(), "", 480, 320, false);
 	}
 }

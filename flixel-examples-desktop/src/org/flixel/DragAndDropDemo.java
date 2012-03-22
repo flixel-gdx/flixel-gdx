@@ -6,6 +6,6 @@ public class DragAndDropDemo
 {
 	static public void main(String[] args)
 	{
-		new LwjglApplication(new org.examples.draganddrop.DragAndDropDemo(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.draganddrop.DragAndDropDemo(), "", 480, 320, false);
 	}
 }

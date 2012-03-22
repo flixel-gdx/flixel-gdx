@@ -13,6 +13,6 @@ public class BitmapfontDemo extends AndroidApplication
 	{
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		initialize(new org.examples.bitmapfont.BitmapfontDemo(), false);
+		initialize(new org.flixel.examples.bitmapfont.BitmapfontDemo(), false);
 	};
 }

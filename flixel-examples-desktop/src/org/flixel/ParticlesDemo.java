@@ -57,6 +57,6 @@ public class ParticlesDemo
 
 	public static void launch(int width, int height)
 	{
-		new LwjglApplication(new org.examples.particles.ParticleDemo(), "", width, height, false);
+		new LwjglApplication(new org.flixel.examples.particles.ParticleDemo(), "", width, height, false);
 	}
 }
