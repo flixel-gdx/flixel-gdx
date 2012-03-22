@@ -82,7 +82,7 @@ public class PlayState extends FlxState
         //Add button move to goal to PlayState
         _btnFindPath = new FlxButton(320, 10, "Move To Goal", new AFlxButton(){@Override public void onDown(){moveToGoal();}});
         add(_btnFindPath);
-                        
+
         //Add button stop unit to PlayState
         _btnStopUnit = new FlxButton(320, 30, "Stop Unit", new AFlxButton(){@Override public void onDown(){stopUnit();}});
         add(_btnStopUnit);

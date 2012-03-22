@@ -6,14 +6,13 @@ import org.flixel.event.AFlxSprite;
 import org.flixel.system.FlxAnim;
 
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 public class FlxSprite extends FlxObject
 {
-
 	/**
 	 * WARNING: The origin of the sprite will default to its center.
 	 * If you change this, the visuals and the collisions will likely be
@@ -227,13 +226,14 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
+	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
 	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Height		Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, int Width, int Height, boolean Unique)
+	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated,boolean Reverse,int Width,int Height,boolean Unique)
 	{
 		if((Graphic == null))
 		{
@@ -269,14 +269,15 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
+	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
 	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Height		Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, int Width, int Height)
+	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated,boolean Reverse,int Width,int Height)
 	{
-		return loadGraphic(Graphic, Animated, Width, Height, false);
+		return loadGraphic(Graphic, Animated, Reverse, Width, Height, false);
 	}
 	
 	/**
@@ -284,13 +285,14 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
+	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
 	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, boolean Reverse, int Width)
+	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated,boolean Reverse,int Width)
 	{
-		return loadGraphic(Graphic, Animated, Width, 0, false);
+		return loadGraphic(Graphic, Animated, Reverse, Width, 0, false);
 	}
 		
 	/**
@@ -298,12 +300,13 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
+	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated, boolean Reverse)
+	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated,boolean Reverse)
 	{
-		return loadGraphic(Graphic, Animated, 0, 0, false);
+		return loadGraphic(Graphic, Animated, Reverse, 0, 0, false);
 	}
 	
 	/**
@@ -314,9 +317,9 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic, boolean Animated)
+	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated)
 	{
-		return loadGraphic(Graphic, Animated, 0, 0, false);
+		return loadGraphic(Graphic, Animated, false, 0, 0, false);
 	}
 		
 	/**
@@ -328,7 +331,7 @@ public class FlxSprite extends FlxObject
 	 */
 	public FlxSprite loadGraphic(TextureRegion Graphic)
 	{
-		return loadGraphic(Graphic, false, 0, 0, false);
+		return loadGraphic(Graphic, false, false, 0, 0, false);
 	}
 	
 	
@@ -492,12 +495,12 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite makeGraphic(int Width, int Height, int Color, boolean Unique, String Key)
+	public FlxSprite makeGraphic(int Width, int Height, long Color, boolean Unique, String Key)
 	{
 		_bakedRotation = 0;
 		_pixels = FlxG.createBitmap(FlxU.ceilPowerOfTwo(Width),FlxU.ceilPowerOfTwo(Height),Color,Unique,Key);
-		framePixels = new Sprite(_pixels, 0, 0, Width, Height);
-		framePixels.setColor(FlxU.colorFromHex(Color));
+		//framePixels = new Sprite(_pixels, 0, 0, Width, Height);
+		//framePixels.setColor(FlxU.colorFromHex(Color));
 		width = frameWidth = Width;
 		height = frameHeight = Height;
 		resetHelpers();
@@ -627,50 +630,45 @@ public class FlxSprite extends FlxObject
 	 * @param	X			The X coordinate of the brush's top left corner on this sprite.
 	 * @param	Y			They Y coordinate of the brush's top left corner on this sprite.
 	 */
-	public void stamp(Pixmap Brush, int X, int Y, int frame)
+	public void stamp(FlxSprite Brush, int X, int Y)
 	{		
-		Pixmap pixS1 = Brush;
-		Pixmap pixD = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
-		pixD.drawPixmap(pixS1, 0, 0, 0, 0, 128, 64);
-//		pixD.drawPixmap(pixS2, 0, 0, 0, 0, 38, 76);
-//	
-//		_pixels.setRegion(bitmapData, 0, 0, bitmapData.getRegionWidth(), bitmapData.getRegionHeight());
-//		_pixels.setRegion(bitmapData);
-		framePixels = new Sprite(new Texture(pixD));
-		framePixels.flip(false, true);
-//		//framePixels.getTexture().draw(pixS1, 10, 0);
-//		
-////		calcFrame();
-////		resetHelpers();
-////		framePixels.setPosition(X, Y);
-//		pixS1.dispose();
-		pixD.dispose();
-		return;
+		if (_pixels.getTexture().isManaged())
+			return;
 		
-		// Simple draw
-//		if(((Brush.angle == 0) || (Brush._bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
-//		{
-//			_pixels.setRegion(bitmapData, 0, 0, bitmapData.getRegionWidth(), bitmapData.getRegionHeight());
-//			calcFrame();
-//			resetHelpers();
-//			framePixels.setPosition(X, Y);
-//			return;
-//		}
-//		
-//		
-//		//Advanced draw		
-//		framePixels.setPosition(-Brush.origin.x,-Brush.origin.y);
-//		framePixels.setScale(Brush.scale.x,Brush.scale.y);
-//		if(Brush.angle != 0)
-//			framePixels.rotate(Brush.angle * 0.017453293f);
-//		framePixels.translate(X+Brush.origin.x,Y+Brush.origin.y);
-//		calcFrame();
-//		resetHelpers();
+		Brush.drawFrame();
+		TextureData td = Brush.framePixels.getTexture().getTextureData();
+		td.prepare();
+
+		Pixmap bitmapData = new Pixmap(FlxU.ceilPowerOfTwo(Brush.frameWidth), FlxU.ceilPowerOfTwo(Brush.frameHeight), Pixmap.Format.RGBA8888);
+		bitmapData.drawPixmap(td.consumePixmap(), Brush._pixels.getRegionX() + (Brush.getFrame() * Brush.frameWidth), Brush._pixels.getRegionY(), Brush.frameWidth, Brush.frameHeight, 0, 0, Brush.frameWidth, Brush.frameHeight);
+		
+		_pixels.getTexture().draw(bitmapData, X, Y);
+		calcFrame();
+		
+		bitmapData.dispose();
 	}
 	
-	public void stamp(Pixmap Brush, int X, int Y)
-	{
-		stamp(Brush, X, Y, 0);
+	/**
+	 * This function draws or stamps one <code>FlxSprite</code> onto another.
+	 * This function is NOT intended to replace <code>draw()</code>!
+	 * 
+	 * @param	Brush		The image you want to use as a brush or stamp or pen or whatever.
+	 * @param	X			The X coordinate of the brush's top left corner on this sprite.
+	 */
+	public void stamp(FlxSprite Brush, int X)
+	{		
+		stamp(Brush, X, 0);
+	}
+	
+	/**
+	 * This function draws or stamps one <code>FlxSprite</code> onto another.
+	 * This function is NOT intended to replace <code>draw()</code>!
+	 * 
+	 * @param	Brush		The image you want to use as a brush or stamp or pen or whatever.
+	 */
+	public void stamp(FlxSprite Brush)
+	{		
+		stamp(Brush, 0, 0);
 	}
 	
 	/**
@@ -711,19 +709,21 @@ public class FlxSprite extends FlxObject
 	 * Fills this sprite's graphic with a specific color.
 	 *
 	 * @param	Color		The color with which to fill the graphic, format 0xAARRGGBB.
-	 */ //TODO: This is not effecient and is not working. Use setColor!
-	/*public void fill(int Color)
+	 */
+	public void fill(long Color)
 	{
-		float[] rgba = FlxU.getRGBA(Color);
-		Pixmap p = new Pixmap(width, height, Format.RGBA8888);
-		p.setColor(1, 1, 1, 1);
-		p.fillRectangle(0, 0, width, height);
-		framePixels = new Sprite(_pixels, (int)x, (int)y, width, height);
-		framePixels.setColor(1,1,1,1);
+		if (_pixels.getTexture().isManaged())
+			return;
+		
+		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(_pixels.getRegionWidth()), FlxU.ceilPowerOfTwo(_pixels.getRegionHeight()), Pixmap.Format.RGBA8888);
+		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
+		p.setColor(FlxU.colorFromHex(Color));
+		p.fillRectangle(0, 0, _pixels.getRegionWidth(), _pixels.getRegionHeight());
+		_pixels.getTexture().draw(p, _pixels.getRegionX(), _pixels.getRegionY());
 		p.dispose();
 //		if(_pixels != framePixels)
-//			dirty = true;	
-	}*/
+		//	dirty = true;
+	}
 	
 	
 	/**
@@ -1043,9 +1043,10 @@ public class FlxSprite extends FlxObject
 	 */
 	public void setColor(long Color)
 	{
+		Color &= 0x00FFFFFFL;
 		_color = Color;
 		
-		framePixels.setColor(FlxU.colorFromHex(Color));
+		framePixels.setColor((_color>>16)*0.00392f,(_color>>8&0xff)*0.00392f,(_color&0xff)*0.00392f,_alpha);
 //		dirty = true;
 	}
 	

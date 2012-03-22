@@ -969,13 +969,13 @@ public class FlxG
 	 * 
 	 * @param Width 	How wide the square should be.
 	 * @param Height 	How high the square should be.
-	 * @param Color 	What color the square should be (0xAARRGGBB)
+	 * @param color 	What color the square should be (0xAARRGGBB)
 	 * @param Unique	Ensures that the bitmap data uses a new slot in the cache.
 	 * @param Key		Force the cache to use a specific Key to index the bitmap.
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 *///TODO: Bug: using this will hit the performance. The Texture won't be dupilcated, so how come?
-	static public TextureRegion createBitmap(int Width, int Height, int Color, boolean Unique, String Key)
+	static public TextureRegion createBitmap(int Width, int Height, long Color, boolean Unique, String Key)
 	{		
 		if(Key == null)
 		{
@@ -996,7 +996,7 @@ public class FlxG
 		if(!checkBitmapCache(Key))
 		{
 			Pixmap p = new Pixmap(Width, Height, Format.RGBA8888);			
-			p.setColor(1, 1, 1, 1);
+			p.setColor(FlxU.colorFromHex(Color));
 			p.fillRectangle(0, 0, Width, Height);
 			_cache.put(Key.hashCode(), new TextureRegion(new Texture(p)));
 			p.dispose();
