@@ -16,9 +16,9 @@ import org.flixel.FlxGame;
  * 
  * @author Thomas Weston
  */
-public class PathFindingDemo extends FlxGame
+public class PathFinding extends FlxGame
 {
-	public PathFindingDemo()
+	public PathFinding()
 	{
 		super(400, 300, PlayState.class, 1, 20, 20);
 	}

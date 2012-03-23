@@ -2,12 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/flixel"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/flixel-examples"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="libs/gdx-backend-android.jar" sourcepath="libs/gdx-backend-android-sources.jar"/>
-	<classpathentry kind="lib" path="/flixel/libs/gdx.jar" sourcepath="/flixel/libs/gdx-sources.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-audio.jar" sourcepath="libs/gdx-audio-sources.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/flixel"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/flixel-examples"/>
-	<classpathentry kind="lib" path="/flixel/libs/gdx-freetype.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

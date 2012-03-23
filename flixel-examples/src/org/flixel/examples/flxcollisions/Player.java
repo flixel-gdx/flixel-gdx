@@ -30,15 +30,15 @@ public class Player extends FlxSprite
 	{
 		//Smooth slidey walking controls
 		acceleration.x = 0;
-		if(FlxG.keys.LEFT || (FlxG.mouse.pressed() && FlxG.mouse.x < (FlxG.width / 2) && FlxG.mouse.y > (FlxG.height / 2)))
+		if(FlxG.keys.LEFT || isTouched(new FlxObject(0, FlxG.height / 2, FlxG.width / 2, FlxG.height / 2)))
 			acceleration.x -= drag.x;
-		if(FlxG.keys.RIGHT || (FlxG.mouse.pressed() && FlxG.mouse.x > (FlxG.width / 2) && FlxG.mouse.y > (FlxG.height / 2)))
+		if(FlxG.keys.RIGHT || isTouched(new FlxObject(FlxG.width / 2, FlxG.height / 2, FlxG.width / 2, FlxG.height / 2)))
 			acceleration.x += drag.x;
 
 		if(isTouching(FLOOR))
 		{
 			//Jump controls
-			if(FlxG.keys.justPressed("SPACE") || (FlxG.mouse.justPressed() && FlxG.mouse.y < (FlxG.height / 2)))
+			if(FlxG.keys.justPressed("SPACE") || justTouched(new FlxObject(0, 0, FlxG.width, FlxG.height / 2)))
 			{
 				velocity.y = -acceleration.y*0.51f;
 				play("jump");
@@ -55,5 +55,21 @@ public class Player extends FlxSprite
 		else
 			play("flail");
 		
+	}
+	
+	protected boolean isTouched(FlxObject touchArea)
+	{
+		for (int i = 0; i < 2; ++i)
+			if (FlxG.mouse.pressed(i) && touchArea.overlapsPoint(FlxG.mouse.getScreenPosition(i), true))
+				return true;
+		return false;
+	}
+	
+	protected boolean justTouched(FlxObject touchArea)
+	{
+		for (int i = 0; i < 2; ++i)
+			if (FlxG.mouse.justPressed(i) && touchArea.overlapsPoint(FlxG.mouse.getScreenPosition(i), true))
+				return true;
+		return false;
 	}
 }

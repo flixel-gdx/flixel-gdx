@@ -1,4 +1,4 @@
-package org.flixel.examples.tilemap;
+package org.flixel.examples.ezplatformer;
 
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -9,24 +9,20 @@ import org.flixel.FlxText;
 import org.flixel.FlxTilemap;
 import org.flixel.event.AFlxG;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-
 public class PlayState extends FlxState
 {
-	private FlxTilemap _level;
-	private FlxSprite _player;
-	private FlxSprite _exit;
-	private FlxGroup _coins;
-	private FlxText _score;
-	private FlxText _status;
-	private static int _finished;
+	public FlxTilemap level;
+	public FlxSprite exit;
+	public FlxGroup coins;
+	public FlxSprite player;
+	public FlxText score;
+	public FlxText status;
 	
 	@Override
 	public void create()
 	{
 		// Background color
-		FlxG.setBgColor(0xFFFFAAAA);
+		FlxG.setBgColor(0xFFAAAAAA);
 		
 		//Design your platformer level with 1s and 0s (at 40x30 to fill 320x240 screen)		
 		int[] data = {
@@ -62,18 +58,18 @@ public class PlayState extends FlxState
 			1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 		
 		//Create a new tilemap using our level data
-		_level = new FlxTilemap();
-		_level.loadMap(FlxTilemap.arrayToCSV(data, 40), Asset.tiles, 8, 8, FlxTilemap.AUTO);
-		add(_level);
+		level = new FlxTilemap();
+		level.loadMap(FlxTilemap.arrayToCSV(data, 40), Asset.ImgAuto, 0, 0, FlxTilemap.AUTO);
+		add(level);
 		
 		//Create the level exit, a dark gray box that is hidden at first
-		_exit = new FlxSprite(35*8+1,25*8);
-		_exit.makeGraphic(14,16,0xff3f3f3f);
-		_exit.exists = false;
-		add(_exit);
+		exit = new FlxSprite(35*8+1,25*8);
+		exit.makeGraphic(14,16,0xff3f3f3f);
+		exit.exists = false;
+		add(exit);
 		
 		//Create coins to collect (see createCoin() function below for more info)
-		_coins = new FlxGroup(40);
+		coins = new FlxGroup();
 		//Top left coins
 		createCoin(18,4);
 		createCoin(12,4);
@@ -122,32 +118,32 @@ public class PlayState extends FlxState
 		createCoin(26,26);
 		createCoin(30,26);
 
-		add(_coins);
+		add(coins);
 		
 		//Create player (a red box)
-		_player = new FlxSprite(160 - 5);
-		_player.makeGraphic(7,8,0xff0000FF);
-		_player.setAlpha(0.3f);
-		_player.maxVelocity.x = 80;
-		_player.maxVelocity.y = 200;
-		_player.acceleration.y = 200;
-		_player.drag.x = _player.maxVelocity.x*4;
-		add(_player);		
+		player = new FlxSprite(FlxG.width / 2 - 5);
+		player.makeGraphic(10,12,0xffaa1111);
+		player.maxVelocity.x = 80;
+		player.maxVelocity.y = 200;
+		player.acceleration.y = 200;
+		player.drag.x = player.maxVelocity.x*4;
+		add(player);		
 		
-//		FlxG.camera.follow(_player);
-		
-		_score = new FlxText(2,2,100, "SCORE: ");
-		_score.setText("SCORE: "+(_coins.countDead()*100));
-		add(_score);
+		score = new FlxText(2,2,100, "SCORE: ");
+		score.setShadow(0xff000000);
+		score.setText("SCORE: "+(coins.countDead()*100));
+		add(score);
 	
 		
-		_status = new FlxText(FlxG.width-160-2,2,160, "");
-		switch(_finished)
+		status = new FlxText(FlxG.width-160-2,2,160);
+		status.setShadow(0xff000000);
+		status.setAlignment("right");
+		switch(FlxG.score)
 		{
-			case 0: _status.setText("Collect coins."); break;
-			case 1: _status.setText("Aww, you died!"); break;
+			case 0: status.setText("Collect coins."); break;
+			case 1: status.setText("Aww, you died!"); break;
 		}
-		add(_status);
+		add(status);
 	}
 	
 	//creates a new coin located on the specified tile
@@ -155,52 +151,52 @@ public class PlayState extends FlxState
 	{
 		FlxSprite coin = new FlxSprite(X*8+3,Y*8+2);
 		coin.makeGraphic(2,4,0xffffff00);
-		_coins.add(coin);
+		coins.add(coin);
 	}
 	
 	@Override
 	public void update()
 	{
 		//Player movement and controls
-		_player.acceleration.x = 0;
-		if(Gdx.input.isKeyPressed(Keys.LEFT))
-			_player.acceleration.x = -_player.maxVelocity.x*4;
-		if(Gdx.input.isKeyPressed(Keys.RIGHT))
-			_player.acceleration.x = _player.maxVelocity.x*4;
-		if(Gdx.input.isKeyPressed(Keys.SPACE) && _player.isTouching(FlxObject.FLOOR))
-			_player.velocity.y = -_player.maxVelocity.y/2;
+		player.acceleration.x = 0;
+		if(FlxG.keys.LEFT)
+			player.acceleration.x = -player.maxVelocity.x*4;
+		if(FlxG.keys.RIGHT)
+			player.acceleration.x = player.maxVelocity.x*4;
+		if(FlxG.keys.justPressed("SPACE") && player.isTouching(FlxObject.FLOOR))
+			player.velocity.y = -player.maxVelocity.y/2;
 		
 		//Updates all the objects appropriately
 		super.update();
 		
 		//Check if player collected a coin or coins this frame
-		FlxG.overlap(_coins,_player,getCoin);
+		FlxG.overlap(coins,player,getCoin);
 		
 		//Check to see if the player touched the exit door this frame
-		FlxG.overlap(_exit,_player,win);
+		FlxG.overlap(exit,player,win);
 
-		FlxG.collide(_level, _player);
+		FlxG.collide(level,player);
 		
 		//Check for player lose conditions
-		if(_player.y > FlxG.height)
+		if(player.y > FlxG.height)
 		{
-			_finished = 1; //sets status.text to "Aww, you died!"
+			FlxG.score = 1; //sets status.text to "Aww, you died!"
 			FlxG.resetState();
 		}
 	}
 	
-	
+	//Called whenever the player touches a coin
 	AFlxG getCoin = new AFlxG()
 	{
 		@Override
 		public void onNotifyCallback(FlxObject Coin, FlxObject Player)
 		{						
 			Coin.kill();
-			_score.setText("SCORE: "+(_coins.countDead()*100));
-			if(_coins.countLiving() == 0)
+			score.setText("SCORE: "+(coins.countDead()*100));
+			if(coins.countLiving() == 0)
 			{
-				_status.setText("Find the exit.");
-				_exit.exists = true;
+				status.setText("Find the exit.");
+				exit.exists = true;
 			}
 		}
 	};
@@ -212,8 +208,8 @@ public class PlayState extends FlxState
 		@Override
 		public void onNotifyCallback(FlxObject Exit, FlxObject Player)
 		{
-			_status.setText("Yay, you won!");
-			_score.setText("SCORE: 5000");
+			status.setText("Yay, you won!");
+			score.setText("SCORE: 5000");
 			Player.kill();
 		}
 	};

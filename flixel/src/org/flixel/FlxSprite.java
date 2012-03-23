@@ -499,8 +499,9 @@ public class FlxSprite extends FlxObject
 	{
 		_bakedRotation = 0;
 		_pixels = FlxG.createBitmap(FlxU.ceilPowerOfTwo(Width),FlxU.ceilPowerOfTwo(Height),Color,Unique,Key);
-		//framePixels = new Sprite(_pixels, 0, 0, Width, Height);
+		framePixels = new Sprite(_pixels, 0, 0, Width, Height);
 		//framePixels.setColor(FlxU.colorFromHex(Color));
+		
 		width = frameWidth = Width;
 		height = frameHeight = Height;
 		resetHelpers();
@@ -561,6 +562,7 @@ public class FlxSprite extends FlxObject
 		framePixels.flip(false, true);
 		origin.make(frameWidth*0.5f,frameHeight*0.5f);
 		frames = (int) ((_pixels.getRegionWidth() / width) * (_pixels.getRegionHeight() / height));
+		framePixels.setColor((_color>>16)*0.00392f,(_color>>8&0xff)*0.00392f,(_color&0xff)*0.00392f,_alpha);
 		_curIndex = 0;
 	}
 	
@@ -635,17 +637,21 @@ public class FlxSprite extends FlxObject
 		if (_pixels.getTexture().isManaged())
 			return;
 		
-		Brush.drawFrame();
-		TextureData td = Brush.framePixels.getTexture().getTextureData();
-		td.prepare();
-
-		Pixmap bitmapData = new Pixmap(FlxU.ceilPowerOfTwo(Brush.frameWidth), FlxU.ceilPowerOfTwo(Brush.frameHeight), Pixmap.Format.RGBA8888);
-		bitmapData.drawPixmap(td.consumePixmap(), Brush._pixels.getRegionX() + (Brush.getFrame() * Brush.frameWidth), Brush._pixels.getRegionY(), Brush.frameWidth, Brush.frameHeight, 0, 0, Brush.frameWidth, Brush.frameHeight);
+		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
-		_pixels.getTexture().draw(bitmapData, X, Y);
+		Brush.drawFrame();
+		TextureData textureData = Brush.framePixels.getTexture().getTextureData();
+		textureData.prepare();
+
+		Pixmap temp = new Pixmap(FlxU.ceilPowerOfTwo(Brush.frameWidth), FlxU.ceilPowerOfTwo(Brush.frameHeight), Pixmap.Format.RGBA8888);
+		Pixmap bitmapData = textureData.consumePixmap();
+		temp.drawPixmap(bitmapData, Brush._pixels.getRegionX() + (Brush.getFrame() * Brush.frameWidth), Brush._pixels.getRegionY(), Brush.frameWidth, Brush.frameHeight, 0, 0, Brush.frameWidth, Brush.frameHeight);
+		
+		_pixels.getTexture().draw(temp, X, Y);
 		calcFrame();
 		
 		bitmapData.dispose();
+		temp.dispose();
 	}
 	
 	/**
@@ -715,13 +721,14 @@ public class FlxSprite extends FlxObject
 		if (_pixels.getTexture().isManaged())
 			return;
 		
-		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(_pixels.getRegionWidth()), FlxU.ceilPowerOfTwo(_pixels.getRegionHeight()), Pixmap.Format.RGBA8888);
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
+		
+		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(_pixels.getRegionWidth()), FlxU.ceilPowerOfTwo(_pixels.getRegionHeight()), Pixmap.Format.RGBA8888);
 		p.setColor(FlxU.colorFromHex(Color));
 		p.fillRectangle(0, 0, _pixels.getRegionWidth(), _pixels.getRegionHeight());
 		_pixels.getTexture().draw(p, _pixels.getRegionX(), _pixels.getRegionY());
 		p.dispose();
-//		if(_pixels != framePixels)
+		//if(_pixels != framePixels)
 		//	dirty = true;
 	}
 	
@@ -1023,7 +1030,7 @@ public class FlxSprite extends FlxObject
 		if(Alpha == _alpha)
 			return;
 		_alpha = Alpha;
-		framePixels.setColor(framePixels.getColor().r, framePixels.getColor().g, framePixels.getColor().b, Alpha);
+		framePixels.setColor((_color>>16)*0.00392f,(_color>>8&0xff)*0.00392f,(_color&0xff)*0.00392f,_alpha);
 //		dirty = true;
 	}
 	

@@ -9,9 +9,9 @@ import android.widget.ListView;
 
 public class ExampleStarter extends ListActivity
 {
-	String examples[] = { "Animation", "Collision", "Particles", "ThousandParticles", "Blur", 
-						  "Bitmapfont", "MultiTouch", "DragAndDrop", "CameraEffects", 
-						  "Audio", "Tile", "TiledMap", "TiledMap2", "PathFinding", "FlxCollisions"};
+	String examples[] = { "PathFinding", "FlxCollisions", "FlxTilemapDemo", "Particles", "AnimationDemo", "CollisionDemo", "ThousandParticlesDemo", "BlurDemo", 
+						  "BitmapfontDemo", "MultiTouchDemo", "DragAndDropDemo", "CameraEffectsDemo", 
+						  "AudioDemo", "TileDemo", "EZPlatformer", "TiledMap2Demo" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -27,7 +27,7 @@ public class ExampleStarter extends ListActivity
 		String exampleName = examples[position];
 		try
 		{
-			Class<?> c = Class.forName("org.flixel." + exampleName + "Demo");
+			Class<?> c = Class.forName("org.flixel." + exampleName);
 			Intent intent = new Intent(this, c);
 			startActivity(intent);
 		}

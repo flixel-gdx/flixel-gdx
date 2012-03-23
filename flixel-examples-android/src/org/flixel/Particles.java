@@ -5,7 +5,7 @@ import android.view.WindowManager;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 
-public class ParticlesDemo extends AndroidApplication
+public class Particles extends AndroidApplication
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
