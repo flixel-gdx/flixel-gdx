@@ -5,6 +5,7 @@ import org.flixel.event.AFlxTile;
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -1872,9 +1873,9 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String bitmapToCSV(TextureRegion textureRegion,boolean Invert)
+	static public String bitmapToCSV(TextureRegion Bitmap,boolean Invert)
 	{
-		return bitmapToCSV(textureRegion, Invert, 1);
+		return bitmapToCSV(Bitmap, Invert, 1);
 	}
 	
 	/**
@@ -1887,9 +1888,9 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String bitmapToCSV(TextureRegion textureRegion)
+	static public String bitmapToCSV(TextureRegion Bitmap)
 	{
-		return bitmapToCSV(textureRegion, false, 1);
+		return bitmapToCSV(Bitmap, false, 1);
 	}
 	
 	/**
@@ -1897,6 +1898,7 @@ public class FlxTilemap extends FlxObject
 	 * Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
+	 * NOTE: The width and height of the image MUST be powers of two.
 	 * 
 	 * @param	ImageFile	An embedded graphic, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
@@ -1904,9 +1906,9 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String imageToCSV(TextureRegion ImageFile,boolean Invert,int Scale)
+	static public String imageToCSV(FileHandle ImageFile,boolean Invert,int Scale)
 	{
-		return bitmapToCSV(ImageFile,Invert,Scale);
+		return bitmapToCSV(new TextureRegion(new Texture(ImageFile)),Invert,Scale);
 	}
 	
 	/**
@@ -1914,13 +1916,14 @@ public class FlxTilemap extends FlxObject
 	 * Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
+	 * NOTE: The width and height of the image MUST be powers of two.
 	 * 
 	 * @param	ImageFile	An embedded graphic, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String imageToCSV(TextureRegion ImageFile,boolean Invert)
+	static public String imageToCSV(FileHandle ImageFile,boolean Invert)
 	{
 		return imageToCSV(ImageFile, Invert, 1);
 	}
@@ -1930,12 +1933,13 @@ public class FlxTilemap extends FlxObject
 	 * Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
+	 * NOTE: The width and height of the image MUST be powers of two.
 	 * 
 	 * @param	ImageFile	An embedded graphic, preferably black and white.
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String imageToCSV(TextureRegion ImageFile)
+	static public String imageToCSV(FileHandle ImageFile)
 	{
 		return imageToCSV(ImageFile, false, 1);
 	}

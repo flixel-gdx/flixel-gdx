@@ -298,7 +298,9 @@ public class FlxButton extends FlxSprite
 			setFrame(status);
 	}
 	
-	
+	/**
+	 * Just draws the button graphic and text label to the screen.
+	 */
 	@Override
 	public void draw()
 	{
@@ -311,6 +313,16 @@ public class FlxButton extends FlxSprite
 		}
 	}
 	
+	/**
+	 * Updates the size of the text field to match the button.
+	 */
+	@Override
+	protected void resetHelpers()
+	{
+		super.resetHelpers();
+		if(label != null)
+			label.width = width;
+	}
 	
 	/**
 	 * Use this to toggle checkbox-style behavior.

@@ -556,12 +556,13 @@ public class FlxSprite extends FlxObject
 	 */
 	protected void resetHelpers()
 	{		
+		
 		if((framePixels == null) || (framePixels.getWidth() != width) || (framePixels.getHeight() != height))
 			framePixels = new Sprite(_pixels, 0, 0, width, height);
 		framePixels.setRegion(_pixels, 0, 0, frameWidth, frameHeight);
 		framePixels.flip(false, true);
 		origin.make(frameWidth*0.5f,frameHeight*0.5f);
-		frames = (int) ((_pixels.getRegionWidth() / width) * (_pixels.getRegionHeight() / height));
+		frames = (int) ((_pixels.getRegionWidth() / frameWidth) * (_pixels.getRegionHeight() / frameHeight));
 		framePixels.setColor((_color>>16)*0.00392f,(_color>>8&0xff)*0.00392f,(_color&0xff)*0.00392f,_alpha);
 		_curIndex = 0;
 	}

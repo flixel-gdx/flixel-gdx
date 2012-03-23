@@ -264,7 +264,7 @@ public class FlxG
 	public static void log(String tag, Object data)
 	{
 		if((_game != null)) // && (_game._debugger != null))			
-			Gdx.app.log(tag, data.toString());
+			Gdx.app.log(tag, (String) data);
 	}
 	
 	/**
