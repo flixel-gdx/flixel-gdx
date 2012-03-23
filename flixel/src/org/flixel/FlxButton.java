@@ -218,6 +218,8 @@ public class FlxButton extends FlxSprite
 	 */
 	protected void updateButton()
 	{
+		//Figure out if the button is highlighted or pressed or what
+		// (ignore checkbox behavior for now).
 		if(cameras == null)
 			cameras = FlxG.cameras;
 		FlxCamera camera;
@@ -248,7 +250,7 @@ public class FlxButton extends FlxSprite
 						if(buttonEvent != null)
 							buttonEvent.onPressed();
 					}
-					else if(FlxG.mouse.justReleased(pointerId))
+					else if(FlxG.mouse.justReleased(pointerId) && visible)
 					{
 						if(buttonEvent != null)
 							buttonEvent.onUp();
