@@ -69,6 +69,7 @@
 				  android:configChanges="keyboard|keyboardHidden|orientation"/>
 		<activity android:name=".PathFinding" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation" android:label="PathFinding Demo"></activity>
 		<activity android:label="FlxCollisions" android:name=".FlxCollisions" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation"></activity>
-   		<activity android:label="FlxTilemapDemo" android:name=".FlxTilemapDemo" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation"></activity>
+   		<activity android:label="SaveDemo" android:name=".SaveDemo" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation"></activity>
+		<activity android:label="FlxTilemapDemo" android:name=".FlxTilemapDemo" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation"></activity>
 	</application>
 </manifest>
