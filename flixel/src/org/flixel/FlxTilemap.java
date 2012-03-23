@@ -542,17 +542,17 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	An array the size of the tilemap full of integers indicating tile placement.
 	 */
-	public IntArray getData(boolean Simple)
+	public int[] getData(boolean Simple)
 	{
 		if(!Simple)
-			return _data;
+			return _data.items;
 		
 		int i = 0;
 		int l = _data.size;
-		IntArray data = new IntArray(l);
+		int[] data = new int[l];
 		while(i < l)
 		{
-			data.set(i, ((_tileObjects.get(_data.get(i))).allowCollisions > 0)?1:0);
+			data[i] = ((_tileObjects.get(_data.get(i))).allowCollisions > 0)?1:0;
 			i++;
 		}
 		return data;
@@ -563,7 +563,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	An array the size of the tilemap full of integers indicating tile placement.
 	 */
-	public IntArray getData()
+	public int[] getData()
 	{
 		return getData(false);
 	}
@@ -1379,7 +1379,7 @@ public class FlxTilemap extends FlxObject
 			updateTile(Index);
 			return ok;
 		}
-		
+
 		//If this map is autotiled and it changes, locally update the arrangement
 		int i;
 		int row = (int)(Index/widthInTiles) - 1;
@@ -1395,7 +1395,7 @@ public class FlxTilemap extends FlxObject
 				{
 					i = row*widthInTiles+column;
 					autoTile(i);
-					updateTile(Index);
+					updateTile(i);
 				}
 				column++;
 			}
@@ -1810,36 +1810,29 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String bitmapToCSV(TextureRegion Graphic,boolean Invert,int Scale)
+	static public String bitmapToCSV(TextureRegion Bitmap,boolean Invert,int Scale)
 	{
-		TextureData textureData = Graphic.getTexture().getTextureData();
-		textureData.prepare();
-		Pixmap bitmapData = textureData.consumePixmap();
+		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
-		// TODO: Currently creates a scaled copy of the entire TextureAtlas, not optimal, could cause memory problems?
-		//Import and scale image if necessary
-		if(Scale > 1)
-		{
-			Pixmap p = bitmapData;
-			Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
-			bitmapData = new Pixmap(FlxU.ceilPowerOfTwo(bitmapData.getWidth()*Scale),FlxU.ceilPowerOfTwo(bitmapData.getHeight()*Scale),Pixmap.Format.RGBA8888);
-			bitmapData.drawPixmap(p, 0, 0, p.getWidth(), p.getHeight(), 0, 0, p.getWidth() * Scale, p.getHeight() * Scale);
-			p.dispose();
-		}
+		TextureData textureData = Bitmap.getTexture().getTextureData();
+		textureData.prepare();
+		
+		Pixmap bitmapData = new Pixmap(FlxU.ceilPowerOfTwo(Bitmap.getRegionWidth() * Scale), FlxU.ceilPowerOfTwo(Bitmap.getRegionHeight() * Scale), Pixmap.Format.RGBA8888);
+		Pixmap p = textureData.consumePixmap();
+		bitmapData.drawPixmap(p, Bitmap.getRegionX(), Bitmap.getRegionY(), Bitmap.getRegionWidth(), Bitmap.getRegionHeight(), 0, 0, Bitmap.getRegionWidth() * Scale, Bitmap.getRegionHeight() * Scale);
+		p.dispose();
 		
 		//Walk image and export pixel values
-		int regionX = Graphic.getRegionX() * Scale;
-		int regionY = Graphic.getRegionY() * Scale;
-		int row = regionY;
+		int row = 0;
 		int column;
 		int pixel;
 		String csv = "";
-		int endColumn = regionX + (Graphic.getRegionWidth() * Scale);
-		int endRow = regionY + (Graphic.getRegionHeight() * Scale);
+		int endColumn = Bitmap.getRegionWidth() * Scale;
+		int endRow = Bitmap.getRegionHeight() * Scale;
 
 		while(row < endRow)
 		{
-			column = regionX;
+			column = 0;
 			while(column < endColumn)
 			{
 				//Decide if this pixel/tile is solid (1) or not (0)
@@ -1851,9 +1844,9 @@ public class FlxTilemap extends FlxObject
 					pixel = 0;
 				
 				//Write the result to the string
-				if(column == regionX)
+				if(column == 0)
 				{
-					if(row == regionY)
+					if(row == 0)
 						csv += pixel;
 					else
 						csv += "\n"+pixel;
@@ -1956,7 +1949,7 @@ public class FlxTilemap extends FlxObject
 	{
 		if(_data.get(Index) == 0)
 			return;
-		
+
 		_data.set(Index, 0);
 		if((Index-widthInTiles < 0) || (_data.get(Index-widthInTiles) > 0)) 		//UP
 			_data.set(Index, _data.get(Index)+1);
