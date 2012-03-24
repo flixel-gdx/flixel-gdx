@@ -176,7 +176,7 @@ public class PlayState extends FlxState
     	//Reset _unit position
     	_unit.x = 0;
     	_unit.y = 0;
-                        
+    	
     	//Stop unit
     	if (_action == ACTION_GO)
     	{
