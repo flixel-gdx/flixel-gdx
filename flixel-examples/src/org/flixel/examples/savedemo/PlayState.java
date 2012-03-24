@@ -57,7 +57,7 @@ public class PlayState extends FlxState
 		//And let's make some boxes!
 		
 		FlxButton box;
-		FlxPoint[] boxPositions = gameSave.get(FlxPoint[].class, "boxPositions");
+		FlxPoint[] boxPositions = gameSave.get( "boxPositions", FlxPoint[].class);
 		for (int i = 0; i < numBoxes; i++) {
 			//If we already have some save data to work with, then let's go ahead and put it to use	
 			if (boxPositions != null){
@@ -144,7 +144,7 @@ public class PlayState extends FlxState
 			topText.setAlpha(1);
 		}else {
 			//So we already have some save data? lets overwrite the data WITHOUT ASKING! oooh so bad :P
-			boxPositions = new Array<FlxPoint>(gameSave.get(FlxPoint[].class, "boxPositions"));
+			boxPositions = new Array<FlxPoint>(gameSave.get("boxPositions", FlxPoint[].class));
 			//Now we're not doing a real for-loop here, because i REALLY like for each, so we'll need our own index count
 			int tempCount = 0;
 			//For each button in the group boxGroup - I'm sure you see why I like this already
@@ -163,7 +163,7 @@ public class PlayState extends FlxState
 	//Called when the user clicks the 'Load Locations' button
 	private void onLoad() {
 		//Loading what? There's no save data!
-		FlxPoint[] boxPositions = gameSave.get(FlxPoint[].class, "boxPositions");
+		FlxPoint[] boxPositions = gameSave.get("boxPositions", FlxPoint[].class);
 		if (boxPositions == null){
 			topText.setText("Failed to load - There's no save");
 			topText.setAlpha(1);

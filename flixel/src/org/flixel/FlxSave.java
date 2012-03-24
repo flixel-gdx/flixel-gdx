@@ -184,6 +184,7 @@ public class FlxSave
 		if(!checkBinding())
 			return false;
 		_sharedObject.clear();
+		_sharedObject.flush();
 		return true;
 	}
 		
@@ -202,16 +203,16 @@ public class FlxSave
 	 * Get a value from the shared object. Returns null if
 	 * the key doesn't exist.
 	 * 
-	 * @param Type	The class of the object you are retrieving.
 	 * @param Key	The object's key.
+	 * @param Type	The class of the object you are retrieving.
 	 * 
 	 * @return	The object.
 	 */
-	public <T> T get(Class<T> Type, String Key)
+	public <T> T get(String Key, Class<T> Type)
 	{
 		if (!contains(Key))
 			return null;
-
+		
 		return _json.fromJson(Type, _sharedObject.getString(Key));
 	}
 	

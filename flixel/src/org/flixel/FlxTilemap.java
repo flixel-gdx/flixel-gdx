@@ -236,7 +236,7 @@ public class FlxTilemap extends FlxObject
 		}
 		
 		//Figure out the size of the tiles
-		_tiles = FlxG.addBitmap(TileGraphic);
+		_tiles = TileGraphic;//new TextureRegion(FlxG.addBitmap(TileGraphic));
 		
 		_tileWidth = TileWidth;
 		if(_tileWidth == 0)

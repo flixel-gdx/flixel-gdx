@@ -1,9 +1,9 @@
 package org.flixel;
 
-
 import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxSprite;
 import org.flixel.system.FlxAnim;
+import org.flixel.system.FlxTextureData;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
@@ -241,7 +241,7 @@ public class FlxSprite extends FlxObject
 			return this;
 		}
 		_bakedRotation = 0;
-		_pixels = FlxG.addBitmap(Graphic, Unique);
+		_pixels = Graphic;//new TextureRegion(FlxG.addBitmap(Graphic, Unique), Graphic.getRegionWidth(), Graphic.getRegionHeight());
 		
 		if(Width == 0)
 		{
@@ -351,7 +351,7 @@ public class FlxSprite extends FlxObject
 	{
 		//Create the brush and canvas
 		int rows = (int) Math.sqrt(Rotations);
-		TextureRegion brush = FlxG.addBitmap(Graphic);
+		TextureRegion brush = Graphic;//new TextureRegion(FlxG.addBitmap(Graphic));
 		if(Frame >= 0)
 		{
 			//Using just a segment of the graphic - find the right bit here
@@ -382,8 +382,8 @@ public class FlxSprite extends FlxObject
 		width = max*cols;
 		height = max*rows;		
 		String key = Graphic + ":" + Frame + ":" + width + "x" + height;
-		boolean skipGen = FlxG.checkBitmapCache(key);
-		_pixels = FlxG.createBitmap(FlxU.ceilPowerOfTwo(width),FlxU.ceilPowerOfTwo(height), 0, true, key);
+		boolean skipGen = false;//FlxG.checkBitmapCache(key);
+		_pixels = new TextureRegion(FlxG.createBitmap(width, height, 0, true, key));
 		width = frameWidth = Graphic.getRegionWidth();//_pixels.getRegionWidth();
 		height = frameHeight = Graphic.getRegionHeight();//_pixels.getRegionHeight();
 		
@@ -498,10 +498,7 @@ public class FlxSprite extends FlxObject
 	public FlxSprite makeGraphic(int Width, int Height, long Color, boolean Unique, String Key)
 	{
 		_bakedRotation = 0;
-		_pixels = FlxG.createBitmap(FlxU.ceilPowerOfTwo(Width),FlxU.ceilPowerOfTwo(Height),Color,Unique,Key);
-		framePixels = new Sprite(_pixels, 0, 0, Width, Height);
-		//framePixels.setColor(FlxU.colorFromHex(Color));
-		
+		_pixels = new TextureRegion(FlxG.createBitmap(Width,Height,Color,Unique,Key));
 		width = frameWidth = Width;
 		height = frameHeight = Height;
 		resetHelpers();
@@ -634,25 +631,31 @@ public class FlxSprite extends FlxObject
 	 * @param	Y			They Y coordinate of the brush's top left corner on this sprite.
 	 */
 	public void stamp(FlxSprite Brush, int X, int Y)
-	{		
-		if (_pixels.getTexture().isManaged())
-			return;
-		
+	{	
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
-		Brush.drawFrame();
-		TextureData textureData = Brush.framePixels.getTexture().getTextureData();
-		textureData.prepare();
-
-		Pixmap temp = new Pixmap(FlxU.ceilPowerOfTwo(Brush.frameWidth), FlxU.ceilPowerOfTwo(Brush.frameHeight), Pixmap.Format.RGBA8888);
-		Pixmap bitmapData = textureData.consumePixmap();
-		temp.drawPixmap(bitmapData, Brush._pixels.getRegionX() + (Brush.getFrame() * Brush.frameWidth), Brush._pixels.getRegionY(), Brush.frameWidth, Brush.frameHeight, 0, 0, Brush.frameWidth, Brush.frameHeight);
+		TextureData textureData = _pixels.getTexture().getTextureData();
 		
-		_pixels.getTexture().draw(temp, X, Y);
+		if(!textureData.isPrepared())
+			textureData.prepare();
+		
+		Pixmap pixmap = textureData.consumePixmap();
+		
+		TextureData brushTextureData = Brush.framePixels.getTexture().getTextureData();
+		
+		if(!brushTextureData.isPrepared())
+			brushTextureData.prepare();
+		
+		Brush.drawFrame();
+		Pixmap brushPixmap = brushTextureData.consumePixmap();
+
+		pixmap.drawPixmap(brushPixmap, Brush._pixels.getRegionX() + (Brush.getFrame() * Brush.frameWidth), Brush._pixels.getRegionY(), Brush.frameWidth, Brush.frameHeight, X, Y, Brush.frameWidth, Brush.frameHeight);
+		
+		_pixels.getTexture().load(new FlxTextureData(pixmap));
 		calcFrame();
 		
-		bitmapData.dispose();
-		temp.dispose();
+		if (brushTextureData.disposePixmap())
+			brushPixmap.dispose();
 	}
 	
 	/**
@@ -718,19 +721,22 @@ public class FlxSprite extends FlxObject
 	 * @param	Color		The color with which to fill the graphic, format 0xAARRGGBB.
 	 */
 	public void fill(long Color)
-	{
-		if (_pixels.getTexture().isManaged())
-			return;
-		
+	{		
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
-		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(_pixels.getRegionWidth()), FlxU.ceilPowerOfTwo(_pixels.getRegionHeight()), Pixmap.Format.RGBA8888);
-		p.setColor(FlxU.colorFromHex(Color));
-		p.fillRectangle(0, 0, _pixels.getRegionWidth(), _pixels.getRegionHeight());
-		_pixels.getTexture().draw(p, _pixels.getRegionX(), _pixels.getRegionY());
-		p.dispose();
-		//if(_pixels != framePixels)
-		//	dirty = true;
+		TextureData textureData = _pixels.getTexture().getTextureData();
+		
+		if(!textureData.isPrepared())
+			textureData.prepare();
+		
+		Pixmap pixmap = textureData.consumePixmap();
+		pixmap.setColor(FlxU.colorFromHex(Color));
+		pixmap.fillRectangle(0, 0, _pixels.getRegionWidth(), _pixels.getRegionHeight());
+		
+		_pixels.getTexture().load(new FlxTextureData(pixmap));
+		
+		if(_pixels != framePixels)
+			dirty = true;
 	}
 	
 	
