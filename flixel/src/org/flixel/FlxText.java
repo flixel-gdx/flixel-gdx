@@ -335,6 +335,9 @@ public class FlxText extends FlxSprite
 				return;
 		}
 		
+		if (_textField.getBounds().width != width)
+			calcFrame();
+		
 		FlxCamera camera = FlxG.camera;
 		
 		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;

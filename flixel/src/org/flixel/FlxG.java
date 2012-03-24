@@ -269,9 +269,9 @@ public class FlxG
 		if((_game != null)) // && (_game._debugger != null))
 		{
 			if(data != null)
-				Gdx.app.log(tag, (String) data);
+				Gdx.app.log(tag, data.toString());
 			else
-				Gdx.app.log(tag, null);
+				Gdx.app.log(tag, "null");
 		}
 	}
 	

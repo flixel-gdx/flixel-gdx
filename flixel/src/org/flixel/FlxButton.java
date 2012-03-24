@@ -249,7 +249,7 @@ public class FlxButton extends FlxSprite
 						if(buttonEvent != null)
 							buttonEvent.onPressed();
 					}
-					else if(FlxG.mouse.justReleased(pointerId) && visible)
+					else if(FlxG.mouse.justReleased(pointerId) && visible && status == PRESSED)
 					{
 						if(buttonEvent != null)
 							buttonEvent.onUp();
