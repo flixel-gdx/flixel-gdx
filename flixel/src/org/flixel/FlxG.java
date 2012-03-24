@@ -4,6 +4,7 @@ import org.flixel.event.AFlxCamera;
 import org.flixel.event.AFlxG;
 import org.flixel.event.AFlxObject;
 import org.flixel.event.AFlxReplay;
+import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.FlxTextureData;
 import org.flixel.system.input.Keyboard;
@@ -265,8 +266,13 @@ public class FlxG
 	 */
 	public static void log(String tag, Object data)
 	{
-		if((_game != null)) // && (_game._debugger != null))			
-			Gdx.app.log(tag, (String) data);
+		if((_game != null)) // && (_game._debugger != null))
+		{
+			if(data != null)
+				Gdx.app.log(tag, (String) data);
+			else
+				Gdx.app.log(tag, null);
+		}
 	}
 	
 	/**
@@ -847,9 +853,9 @@ public class FlxG
 		FlxG.visualDebug = false;
 //		useBufferLocking = false;
 //		
-//		plugins = new Array();
+		plugins = new Array<FlxBasic>();
 //		addPlugin(new DebugPathDisplay());
-//		addPlugin(new TimerManager());
+		addPlugin(new TimerManager());
 //		
 		FlxG.mouse = new Mouse();
 		FlxG.keys = new Keyboard();
@@ -1617,8 +1623,99 @@ public class FlxG
 	}
 	
 	
+	/**
+	 * Adds a new plugin to the global plugin array.
+	 * 
+	 * @param	Plugin	Any object that extends FlxBasic. Useful for managers and other things.  See org.flixel.plugin for some examples!
+	 * 
+	 * @return	The same <code>FlxBasic</code>-based plugin you passed in.
+	 */
+	static public FlxBasic addPlugin(FlxBasic Plugin)
+	{
+		//Don't add repeats
+		Array<FlxBasic> pluginList = FlxG.plugins;
+		int i = 0;
+		int l = pluginList.size;
+		while(i < l)
+		{
+			if(pluginList.get(i++).toString().equals(Plugin.toString()))
+				return Plugin;
+		}
+		
+		//no repeats! safe to add a new instance of this plugin
+		pluginList.add(Plugin);
+		return Plugin;
+	}
 
 	
+	/**
+	 * Retrieves a plugin based on its class name from the global plugin array.
+	 * 
+	 * @param	ClassType	The class name of the plugin you want to retrieve. See the <code>FlxPath</code> or <code>FlxTimer</code> constructors for example usage.
+	 * 
+	 * @return	The plugin object, or null if no matching plugin was found.
+	 */
+	static public FlxBasic getPlugin(Class<?> ClassType)
+	{
+		Array<FlxBasic> pluginList = FlxG.plugins;
+		int i = 0;
+		int l = pluginList.size;
+		while(i < l)
+		{
+			if(pluginList.get(i).getClass().equals(ClassType))
+				return plugins.get(i);
+			i++;
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * Removes an instance of a plugin from the global plugin array.
+	 * 
+	 * @param	Plugin	The plugin instance you want to remove.
+	 * 
+	 * @return	The same <code>FlxBasic</code>-based plugin you passed in.
+	 */
+	static public FlxBasic removePlugin(FlxBasic Plugin)
+	{
+		//Don't add repeats
+		Array<FlxBasic> pluginList = FlxG.plugins;
+		int i = pluginList.size-1;
+		while(i >= 0)
+		{
+			if(pluginList.get(i).equals(Plugin))
+				pluginList.removeIndex(i);
+			i--;
+		}
+		return Plugin;
+	}
+	
+	
+	/**
+	 * Removes an instance of a plugin from the global plugin array.
+	 * 
+	 * @param	ClassType	The class name of the plugin type you want removed from the array.
+	 * 
+	 * @return	Whether or not at least one instance of this plugin type was removed.
+	 */
+	static public boolean removePluginType(Class<?> ClassType)
+	{
+		//Don't add repeats
+		boolean results = false;
+		Array<FlxBasic> pluginList = FlxG.plugins;
+		int i = pluginList.size-1;
+		while(i >= 0)
+		{
+			if(pluginList.get(i).getClass().equals(ClassType))
+			{
+				pluginList.removeIndex(i);
+				results = true;
+			}
+			i--;
+		}
+		return results;
+	}
 	
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
@@ -1669,17 +1766,40 @@ public class FlxG
 		}
 	}
 
+	
+	/**
+	 * Used by the game object to call <code>update()</code> on all the plugins.
+	 */
 	public static void updatePlugins()
 	{
-		// TODO Auto-generated method stub
-		
+		FlxBasic plugin;
+		Array<FlxBasic> pluginList = FlxG.plugins;
+		int i = 0;
+		int l = pluginList.size;
+		while(i < l)
+		{
+			plugin = pluginList.get(i++);
+			if(plugin.exists && plugin.active)
+				plugin.update();
+		}
 	}
 
 
+	/**
+	 * Used by the game object to call <code>draw()</code> on all the plugins.
+	 */
 	public static void drawPlugins()
 	{
-		// TODO Auto-generated method stub
-		
+		FlxBasic plugin;
+		Array<FlxBasic> pluginList = FlxG.plugins;
+		int i = 0;
+		int l = pluginList.size;
+		while(i < l)
+		{
+			plugin = pluginList.get(i++);
+			if(plugin.exists && plugin.visible)
+				plugin.draw();
+		}
 	}
 
 	/**
