@@ -1,75 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.flixel"
-      android:versionCode="1" android:versionName="0.2"
-      android:installLocation="preferExternal">
-    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="15" />
-	
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".ExampleStarter"
-                  android:label="@string/app_name"
-                  android:configChanges="keyboard|keyboardHidden|orientation">                  
+    package="org.flixel"
+    android:installLocation="preferExternal"
+    android:versionCode="1"
+    android:versionName="0.3" >
+
+    <uses-sdk
+        android:minSdkVersion="3"
+        android:targetSdkVersion="15" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".ExampleStarter"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		
-            <activity android:label="Animation Demo"
-				  android:name=".AnimationDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="Collision Demo"
-				  android:name=".CollisionDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="Particles Demo"
-				  android:name=".Particles"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="Blur Demo"
-				  android:name=".BlurDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="1000 Particles Demo"
-				  android:name=".ThousandParticlesDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="Bitmapfont Demo"
-				  android:name=".BitmapfontDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="MultiTouch Demo"
-				  android:name=".MultiTouchDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="Drag and Drop Demo"
-				  android:name=".DragAndDropDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="Camera Effects Demo"
-				  android:name=".CameraEffectsDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="Audio Demo"
-				  android:name=".AudioDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="Tile Demo"
-				  android:name=".TileDemo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="TiledMap Demo"
-				  android:name=".EZPlatformer"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:label="TiledMap2 Demo"
-				  android:name=".TiledMap2Demo"
-				  android:screenOrientation="landscape"
-				  android:configChanges="keyboard|keyboardHidden|orientation"/>
-		<activity android:name=".PathFinding" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation" android:label="PathFinding Demo"></activity>
-		<activity android:label="FlxCollisions" android:name=".FlxCollisions" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation"></activity>
-   		<activity android:label="SaveDemo" android:name=".SaveDemo" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation"></activity>
-		<activity android:label="FlxTilemapDemo" android:name=".FlxTilemapDemo" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation"></activity>
-	</application>
+        <activity
+            android:name=".AnimationDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Animation Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".CollisionDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Collision Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Particles"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Particles Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".BlurDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Blur Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ThousandParticlesDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="1000 Particles Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".BitmapfontDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Bitmapfont Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".MultiTouchDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="MultiTouch Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".DragAndDropDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Drag and Drop Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".CameraEffectsDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Camera Effects Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".AudioDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Audio Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".TileDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Tile Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".EZPlatformer"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="TiledMap Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".TiledMap2Demo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="TiledMap2 Demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".PathFinding"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="PathFinding Demo"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".FlxCollisions"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="FlxCollisions"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".SaveDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="SaveDemo"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".FlxTilemapDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="FlxTilemapDemo"
+            android:screenOrientation="landscape" >
+        </activity>
+         <activity
+            android:name=".AnalogDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="AnalogDemo"
+            android:screenOrientation="landscape" >
+        </activity>
+    </application>
+
 </manifest>
