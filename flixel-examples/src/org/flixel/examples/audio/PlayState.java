@@ -30,7 +30,9 @@ public class PlayState extends FlxState
 		// Add a play/pause button for the music.
 		add(_btnPlayMusic = new FlxButton(10, 10, "play music", playMusic));
 		// Add a stop button for the music.
-		add(new FlxButton(100, 10, "stop music", stopMusic));
+		FlxButton button;
+		add(button = new FlxButton(100, 10, "stop music", stopMusic));
+		button.setSounds(Asset.SndButtonHover, 1.0f, null, 1.0f, Asset.SndButtonDown);
 		
 		// Add a play button for the sound.
 		add(new FlxButton(10, 100, "play sound", playSound));	
