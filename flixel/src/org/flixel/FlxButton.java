@@ -3,6 +3,8 @@ package org.flixel;
 import org.flixel.event.AFlxButton;
 import org.flixel.data.SystemAsset;
 
+import com.badlogic.gdx.audio.Sound;
+
 
 
 /**
@@ -243,6 +245,8 @@ public class FlxButton extends FlxSprite
 						status = PRESSED;
 						if(buttonEvent != null)
 							buttonEvent.onDown();
+						if(soundDown != null)
+							soundDown.play(true);
 					}
 					else if(FlxG.mouse.pressed(pointerId))
 					{					
@@ -251,17 +255,19 @@ public class FlxButton extends FlxSprite
 					}
 					else if(FlxG.mouse.justReleased(pointerId) && visible && status == PRESSED)
 					{
+						status = NORMAL;
 						if(buttonEvent != null)
 							buttonEvent.onUp();
-						status = NORMAL;
+						if(soundUp != null)
+							soundUp.play(true);
 					}
 					if(status == NORMAL)
 					{
 						status = HIGHLIGHT;
 						if(buttonEvent != null)
 							buttonEvent.onOver();
-						//if(soundOver != null)
-							//soundOver.play(true);
+						if(soundOver != null)
+							soundOver.play(true);
 					}
 				}
 				++pointerId;
@@ -273,6 +279,8 @@ public class FlxButton extends FlxSprite
 			{
 				if(buttonEvent != null)
 					buttonEvent.onOut();
+				if(soundOut != null)
+					soundOut.play(true);
 			}
 			status = NORMAL;
 		}
@@ -321,6 +329,156 @@ public class FlxButton extends FlxSprite
 		super.resetHelpers();
 		if(label != null)
 			label.width = width;
+	}
+	
+	/**
+	 * Set sounds to play during mouse-button interactions.
+	 * These operations can be done manually as well, and the public
+	 * sound variables can be used after this for more fine-tuning,
+	 * such as positional audio, etc.
+	 * 
+	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param SoundOverVolume	How load the that sound should be.
+	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param SoundOutVolume	How load the that sound should be.
+	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
+	 * @param SoundDownVolume	How load the that sound should be.
+	 * @param SoundUp			What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.
+	 * @param SoundUpVolume		How load the that sound should be.
+	 */
+	public void setSounds(Sound SoundOver, float SoundOverVolume, Sound SoundOut, float SoundOutVolume, Sound SoundDown, float SoundDownVolume, Sound SoundUp, float SoundUpVolume)
+	{
+		if(SoundOver != null)
+			soundOver = FlxG.loadSound(SoundOver, SoundOverVolume);
+		if(SoundOut != null)
+			soundOut = FlxG.loadSound(SoundOut, SoundOutVolume);
+		if(SoundDown != null)
+			soundDown = FlxG.loadSound(SoundDown, SoundDownVolume);
+		if(SoundUp != null)
+			soundUp = FlxG.loadSound(SoundUp, SoundUpVolume);
+	}
+	
+	/**
+	 * Set sounds to play during mouse-button interactions.
+	 * These operations can be done manually as well, and the public
+	 * sound variables can be used after this for more fine-tuning,
+	 * such as positional audio, etc.
+	 * 
+	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param SoundOverVolume	How load the that sound should be.
+	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param SoundOutVolume	How load the that sound should be.
+	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
+	 * @param SoundDownVolume	How load the that sound should be.
+	 * @param SoundUp			What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.	 
+	 */
+	public void setSounds(Sound SoundOver, float SoundOverVolume, Sound SoundOut, float SoundOutVolume, Sound SoundDown, float SoundDownVolume, Sound SoundUp)
+	{
+		setSounds(SoundOver, SoundOverVolume, SoundOut, SoundOutVolume, SoundDown, SoundDownVolume, SoundUp, 1.0f);
+	}
+	
+	/**
+	 * Set sounds to play during mouse-button interactions.
+	 * These operations can be done manually as well, and the public
+	 * sound variables can be used after this for more fine-tuning,
+	 * such as positional audio, etc.
+	 * 
+	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param SoundOverVolume	How load the that sound should be.
+	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param SoundOutVolume	How load the that sound should be.
+	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
+	 * @param SoundDownVolume	How load the that sound should be.	 
+	 */
+	public void setSounds(Sound SoundOver, float SoundOverVolume, Sound SoundOut, float SoundOutVolume, Sound SoundDown, float SoundDownVolume)
+	{
+		setSounds(SoundOver, SoundOverVolume, SoundOut, SoundOutVolume, SoundDown, SoundDownVolume, null, 1.0f);
+	}
+	
+	/**
+	 * Set sounds to play during mouse-button interactions.
+	 * These operations can be done manually as well, and the public
+	 * sound variables can be used after this for more fine-tuning,
+	 * such as positional audio, etc.
+	 * 
+	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param SoundOverVolume	How load the that sound should be.
+	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param SoundOutVolume	How load the that sound should be.
+	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.	 
+	 */
+	public void setSounds(Sound SoundOver, float SoundOverVolume, Sound SoundOut, float SoundOutVolume, Sound SoundDown)
+	{
+		setSounds(SoundOver, SoundOverVolume, SoundOut, SoundOutVolume, SoundDown, 1.0f, null, 1.0f);
+	}
+
+	/**
+	 * Set sounds to play during mouse-button interactions.
+	 * These operations can be done manually as well, and the public
+	 * sound variables can be used after this for more fine-tuning,
+	 * such as positional audio, etc.
+	 * 
+	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param SoundOverVolume	How load the that sound should be.
+	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param SoundOutVolume	How load the that sound should be.	 
+	 */
+	public void setSounds(Sound SoundOver, float SoundOverVolume, Sound SoundOut, float SoundOutVolume)
+	{
+		setSounds(SoundOver, SoundOverVolume, SoundOut, SoundOutVolume, null, 1.0f, null, 1.0f);
+	}
+		
+	/**
+	 * Set sounds to play during mouse-button interactions.
+	 * These operations can be done manually as well, and the public
+	 * sound variables can be used after this for more fine-tuning,
+	 * such as positional audio, etc.
+	 * 
+	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param SoundOverVolume	How load the that sound should be.
+	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 */
+	public void setSounds(Sound SoundOver, float SoundOverVolume, Sound SoundOut)
+	{
+		setSounds(SoundOver, SoundOverVolume, SoundOut, 1.0f, null, 1.0f, null, 1.0f);
+	}
+	
+	/**
+	 * Set sounds to play during mouse-button interactions.
+	 * These operations can be done manually as well, and the public
+	 * sound variables can be used after this for more fine-tuning,
+	 * such as positional audio, etc.
+	 * 
+	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param SoundOverVolume	How load the that sound should be.
+	 */
+	public void setSounds(Sound SoundOver, float SoundOverVolume)
+	{
+		setSounds(SoundOver, SoundOverVolume, null, 1.0f, null, 1.0f, null, 1.0f);
+	}
+	
+	/**
+	 * Set sounds to play during mouse-button interactions.
+	 * These operations can be done manually as well, and the public
+	 * sound variables can be used after this for more fine-tuning,
+	 * such as positional audio, etc.
+	 * 
+	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.	 
+	 */
+	public void setSounds(Sound SoundOver)
+	{
+		setSounds(SoundOver, 1.0f, null, 1.0f, null, 1.0f, null, 1.0f);
+	}
+	
+	/**
+	 * Set sounds to play during mouse-button interactions.
+	 * These operations can be done manually as well, and the public
+	 * sound variables can be used after this for more fine-tuning,
+	 * such as positional audio, etc.
+	 */
+	public void setSounds()
+	{
+		setSounds(null, 1.0f, null, 1.0f, null, 1.0f, null, 1.0f);
 	}
 	
 	/**
