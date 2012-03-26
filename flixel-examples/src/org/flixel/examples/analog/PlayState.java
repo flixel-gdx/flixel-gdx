@@ -19,7 +19,6 @@ public class PlayState extends FlxState
 		_player = new FlxSprite(10, 10, SystemAsset.ImgDefault);
 		add(_player);
 		
-		add(_analog = new FlxAnalog(10, FlxG.height - 130));
 		// Add some wall around the edges.
 		FlxSprite s;
 		add(s = new FlxSprite(0, 0).makeGraphic(FlxG.width, 2));
@@ -30,6 +29,8 @@ public class PlayState extends FlxState
 		s.immovable = true;
 		add(s = new FlxSprite(FlxG.width-2, 0).makeGraphic(2, FlxG.height));
 		s.immovable = true;
+		
+		add(_analog = new FlxAnalog(0,0));
 	}
 	
 	

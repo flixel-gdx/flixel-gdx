@@ -6,6 +6,6 @@ public class AnalogDemo extends FlxGame
 {
 	public AnalogDemo()
 	{
-		super(400, 240, PlayState.class);
+		super(480, 320, PlayState.class);
 	}
 }
