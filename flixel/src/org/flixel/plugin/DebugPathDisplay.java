@@ -16,6 +16,9 @@ public class DebugPathDisplay extends FlxBasic
 {
 	protected Array<FlxPath> _paths;
 	
+	/**
+	 * Instantiates a new debug path display manager.
+	 */
 	public DebugPathDisplay()
 	{
 		_paths = new Array<FlxPath>();

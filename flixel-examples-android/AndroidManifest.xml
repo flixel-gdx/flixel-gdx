@@ -4,7 +4,10 @@
     android:installLocation="preferExternal"
     android:versionCode="1"
     android:versionName="0.3" >
-
+	
+    <uses-permission 
+        android:name="android.permission.VIBRATE"/>
+    
     <uses-sdk
         android:minSdkVersion="3"
         android:targetSdkVersion="15" />
@@ -111,10 +114,16 @@
             android:label="FlxTilemapDemo"
             android:screenOrientation="landscape" >
         </activity>
-         <activity
+        <activity
             android:name=".AnalogDemo"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:label="AnalogDemo"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".VibrationDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="VibrationDemo"
             android:screenOrientation="landscape" >
         </activity>
     </application>
