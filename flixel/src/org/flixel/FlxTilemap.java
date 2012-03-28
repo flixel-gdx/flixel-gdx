@@ -392,7 +392,7 @@ public class FlxTilemap extends FlxObject
 		p.drawRectangle(0, 0, _tileWidth, _tileHeight);
 		
 		DebugTile.setRegion(new Texture(p));
-		
+		DebugTile.flip(false, true);
 		p.dispose();
 		
 		return DebugTile;
