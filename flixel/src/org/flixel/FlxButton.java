@@ -168,14 +168,14 @@ public class FlxButton extends FlxSprite
 		}
 		buttonEvent = null;
 
-//		if(soundOver != null)
-//			soundOver.destroy();
-//		if(soundOut != null)
-//			soundOut.destroy();
-//		if(soundDown != null)
-//			soundDown.destroy();
-//		if(soundUp != null)
-//			soundUp.destroy();
+		if(soundOver != null)
+			soundOver.destroy();
+		if(soundOut != null)
+			soundOut.destroy();
+		if(soundDown != null)
+			soundDown.destroy();
+		if(soundUp != null)
+			soundUp.destroy();
 		super.destroy();
 	}
 	
