@@ -1799,8 +1799,129 @@ public class FlxTilemap extends FlxObject
         return csv.toString();
     }
 
+    /**
+	 * Converts a <code>Pixmap</code> object to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	Graphic			A libgdx <code>Pixmap</code> object, preferably black and white.
+	 * @param	Invert			Load white pixels as solid instead.
+	 * @param	Scale			Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param	RegionX			The X coordinate of the top left of the region to convert.
+	 * @param	RegionY			The Y coordinate of the top left of the region to convert.
+	 * @param	RegionWidth		The width of the region to convert.
+	 * @param	RegionHeight	The height of the region to convert.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+    static public String pixmapToCSV(Pixmap Graphic,boolean Invert,int Scale,int RegionX,int RegionY,int RegionWidth, int RegionHeight)
+    {
+    	Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
+
+    	//Walk image and export pixel values
+		int row = RegionY;
+		int column;
+		int pixel;
+		StringBuilder csv = new StringBuilder(RegionWidth * RegionHeight * 3 * Scale);
+		int bitmapWidth = RegionWidth + RegionX;
+		int bitmapHeight = RegionHeight + RegionY;
+		int scaleY;
+		int scaleX;
+
+		//Unhealthy amount of nested while loops ahead
+		while(row < bitmapHeight)
+		{
+			scaleY = 0;
+			while(scaleY < Scale)
+			{
+				column = RegionX;
+				while(column < bitmapWidth)
+				{
+					//Decide if this pixel/tile is solid (1) or not (0)
+					pixel = Graphic.getPixel(column,row);
+				
+					if((Invert && (pixel < 0)) || (!Invert && (pixel > 0)))
+						pixel = 1;
+					else
+						pixel = 0;
+					scaleX = 0;
+					
+					while(scaleX < Scale)
+					{				
+						//Write the result to the string
+						if(column == RegionX)
+						{
+							if(scaleX != 0)
+								csv.append(", "+pixel);
+							else if(row == RegionY && scaleY != 1)
+								csv.append(pixel);
+							else
+								csv.append("\n"+pixel);
+						}
+						else
+							csv.append(", "+pixel);
+						scaleX++;
+					}
+					column++;
+				}
+				scaleY++;
+			}
+			row++;
+		}
+		return csv.toString();
+    }
+    
+    /**
+	 * Converts a <code>Pixmap</code> object to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	Graphic		A libgdx <code>Pixmap</code> object, preferably black and white.
+	 * @param	Invert		Load white pixels as solid instead.
+	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+    static public String pixmapToCSV(Pixmap Graphic,boolean Invert,int Scale)
+    {
+    	return pixmapToCSV(Graphic,Invert,Scale,0,0,Graphic.getWidth(),Graphic.getHeight());
+    }
+    
+    /**
+	 * Converts a <code>Pixmap</code> object to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	Graphic		A libgdx <code>Pixmap</code> object, preferably black and white.
+	 * @param	Invert		Load white pixels as solid instead.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+    static public String pixmapToCSV(Pixmap Graphic,boolean Invert)
+    {
+    	return pixmapToCSV(Graphic,Invert,1,0,0,Graphic.getWidth(),Graphic.getHeight());
+    }
+    
+    /**
+	 * Converts a <code>Pixmap</code> object to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	Graphic		A libgdx <code>Pixmap</code> object, preferably black and white.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+    static public String pixmapToCSV(Pixmap Graphic)
+    {
+    	return pixmapToCSV(Graphic,false,1,0,0,Graphic.getWidth(),Graphic.getHeight());
+    }
+    
 	/**
-	 * Converts a <code>BitmapData</code> object to a comma-separated string.
+	 * Converts a <code>TextureRegion</code> object to a comma-separated string.
 	 * Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
@@ -1813,57 +1934,23 @@ public class FlxTilemap extends FlxObject
 	 */
 	static public String bitmapToCSV(TextureRegion Bitmap,boolean Invert,int Scale)
 	{
-		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
-		
 		TextureData textureData = Bitmap.getTexture().getTextureData();
-		textureData.prepare();
 		
-		Pixmap bitmapData = new Pixmap(FlxU.ceilPowerOfTwo(Bitmap.getRegionWidth() * Scale), FlxU.ceilPowerOfTwo(Bitmap.getRegionHeight() * Scale), Pixmap.Format.RGBA8888);
-		Pixmap p = textureData.consumePixmap();
-		bitmapData.drawPixmap(p, Bitmap.getRegionX(), Bitmap.getRegionY(), Bitmap.getRegionWidth(), Bitmap.getRegionHeight(), 0, 0, Bitmap.getRegionWidth() * Scale, Bitmap.getRegionHeight() * Scale);
-		p.dispose();
+		if(!textureData.isPrepared())
+			textureData.prepare();
 		
-		//Walk image and export pixel values
-		int row = 0;
-		int column;
-		int pixel;
-		String csv = "";
-		int endColumn = Bitmap.getRegionWidth() * Scale;
-		int endRow = Bitmap.getRegionHeight() * Scale;
-
-		while(row < endRow)
-		{
-			column = 0;
-			while(column < endColumn)
-			{
-				//Decide if this pixel/tile is solid (1) or not (0)
-				pixel = bitmapData.getPixel(column,row);
-				
-				if((Invert && (pixel < 0)) || (!Invert && (pixel > 0)))
-					pixel = 1;
-				else
-					pixel = 0;
-				
-				//Write the result to the string
-				if(column == 0)
-				{
-					if(row == 0)
-						csv += pixel;
-					else
-						csv += "\n"+pixel;
-				}
-				else
-					csv += ", "+pixel;
-				column++;
-			}
-			row++;
-		}
-		bitmapData.dispose();
+		Pixmap pixmap = textureData.consumePixmap();
+		
+		String csv = pixmapToCSV(pixmap, Invert, Scale, Bitmap.getRegionX(), Bitmap.getRegionY(), Bitmap.getRegionWidth(), Bitmap.getRegionHeight());
+	
+		if(textureData.disposePixmap())
+			pixmap.dispose();
+		
 		return csv;
 	}
 	
 	/**
-	 * Converts a <code>BitmapData</code> object to a comma-separated string.
+	 * Converts a <code>TextureRegion</code> object to a comma-separated string.
 	 * Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
@@ -1879,7 +1966,7 @@ public class FlxTilemap extends FlxObject
 	}
 	
 	/**
-	 * Converts a <code>BitmapData</code> object to a comma-separated string.
+	 * Converts a <code>TextureRegion</code> object to a comma-separated string.
 	 * Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
@@ -1898,7 +1985,6 @@ public class FlxTilemap extends FlxObject
 	 * Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
-	 * NOTE: The width and height of the image MUST be powers of two.
 	 * 
 	 * @param	ImageFile	An embedded graphic, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
@@ -1908,7 +1994,13 @@ public class FlxTilemap extends FlxObject
 	 */
 	static public String imageToCSV(FileHandle ImageFile,boolean Invert,int Scale)
 	{
-		return bitmapToCSV(new TextureRegion(new Texture(ImageFile)),Invert,Scale);
+		Pixmap pixmap = new Pixmap(ImageFile);
+		
+		String csv = pixmapToCSV(pixmap, Invert, Scale);
+		
+		pixmap.dispose();
+		
+		return csv;
 	}
 	
 	/**
@@ -1916,7 +2008,6 @@ public class FlxTilemap extends FlxObject
 	 * Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
-	 * NOTE: The width and height of the image MUST be powers of two.
 	 * 
 	 * @param	ImageFile	An embedded graphic, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
@@ -1933,7 +2024,6 @@ public class FlxTilemap extends FlxObject
 	 * Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
-	 * NOTE: The width and height of the image MUST be powers of two.
 	 * 
 	 * @param	ImageFile	An embedded graphic, preferably black and white.
 	 * 

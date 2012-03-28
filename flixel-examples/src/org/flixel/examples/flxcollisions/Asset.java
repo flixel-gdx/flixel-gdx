@@ -1,12 +1,13 @@
 package org.flixel.examples.flxcollisions;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Asset
 {
-	public static TextureRegion ImgMap;
+	public static FileHandle ImgMap;
 	public static TextureRegion ImgPlayer;
 	public static TextureRegion ImgPusher;
 	public static TextureRegion ImgElevator;
@@ -18,7 +19,7 @@ public class Asset
 	public static void create()
 	{							
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("examples/flxcollisions/pack"));
-		ImgMap = atlas.findRegion("map");
+		ImgMap = Gdx.files.internal("examples/flxcollisions/map.png");
 		ImgPlayer = atlas.findRegion("player");
 		ImgPusher = atlas.findRegion("pusher");
 		ImgElevator = atlas.findRegion("elevator");
