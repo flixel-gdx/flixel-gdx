@@ -40,7 +40,7 @@ public class FlxButton extends FlxSprite
 	 * We recommend assigning your main button behavior to this function
 	 * via the <code>FlxButton</code> constructor.
 	 */
-	public AFlxButton buttonEvent;
+	public AFlxButton callback;
 	/**
 	 * Shows the current state of the button.
 	 */
@@ -74,12 +74,7 @@ public class FlxButton extends FlxSprite
 	/**
 	 * Tracks whether or not the button is currently pressed.
 	 */
-	protected boolean _pressed;
-	/**
-	 * Whether or not the button has initialized itself yet.
-	 */
-	protected boolean _initialized;
-	
+	protected boolean _pressed;	
 	
 	/**
 	 * Creates a new <code>FlxButton</code> object with a gray background
@@ -90,7 +85,7 @@ public class FlxButton extends FlxSprite
 	 * @param	Label		The text that you want to appear on the button.
 	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public FlxButton(float X, float Y, String Label, AFlxButton ButtonEvent)
+	public FlxButton(float X, float Y, String Label, AFlxButton Callback)
 	{
 		super(X,Y);
 		if(Label != null)
@@ -100,7 +95,7 @@ public class FlxButton extends FlxSprite
 			labelOffset = new FlxPoint(-1,3);
 		}
 		loadGraphic(SystemAsset.ImgButton,true,false,80,20);
-		buttonEvent = ButtonEvent;
+		callback = Callback;
 		
 		soundOver = null;
 		soundOut = null;
@@ -110,7 +105,6 @@ public class FlxButton extends FlxSprite
 		status = NORMAL;
 		_onToggle = false;
 		_pressed = false;
-		_initialized = false;
 	}
 	
 	/**
@@ -166,7 +160,7 @@ public class FlxButton extends FlxSprite
 			label.destroy();
 			label = null;
 		}
-		buttonEvent = null;
+		callback = null;
 
 		if(soundOver != null)
 			soundOver.destroy();
@@ -177,17 +171,6 @@ public class FlxButton extends FlxSprite
 		if(soundUp != null)
 			soundUp.destroy();
 		super.destroy();
-	}
-	
-	
-	@Override
-	public void preUpdate()
-	{
-		if(!_initialized)
-		{			
-			_initialized = true;			
-		}
-		super.preUpdate();
 	}
 	
 	@Override
@@ -201,7 +184,7 @@ public class FlxButton extends FlxSprite
 			return;
 		switch(getFrame())
 		{
-			case HIGHLIGHT:	//Extra behavior to accomodate checkbox logic.
+			case HIGHLIGHT:	//Extra behavior to accommodate checkbox logic.
 				label.setAlpha(1.0f);
 				break;
 			case PRESSED:
@@ -243,29 +226,29 @@ public class FlxButton extends FlxSprite
 					if(FlxG.mouse.justPressed(pointerId))
 					{
 						status = PRESSED;
-						if(buttonEvent != null)
-							buttonEvent.onDown();
+						if(callback != null)
+							callback.onDown();
 						if(soundDown != null)
 							soundDown.play(true);
 					}
 					else if(FlxG.mouse.pressed(pointerId))
 					{					
-						if(buttonEvent != null)
-							buttonEvent.onPressed();
+						if(callback != null)
+							callback.onPressed();
 					}
-					else if(FlxG.mouse.justReleased(pointerId) && visible && status == PRESSED)
+					if(FlxG.mouse.justReleased(pointerId) && visible && status == PRESSED)
 					{
-						status = NORMAL;
-						if(buttonEvent != null)
-							buttonEvent.onUp();
+						//status = NORMAL;
+						if(callback != null)
+							callback.onUp();
 						if(soundUp != null)
 							soundUp.play(true);
 					}
 					if(status == NORMAL)
 					{
 						status = HIGHLIGHT;
-						if(buttonEvent != null)
-							buttonEvent.onOver();
+						if(callback != null)
+							callback.onOver();
 						if(soundOver != null)
 							soundOver.play(true);
 					}
@@ -277,8 +260,8 @@ public class FlxButton extends FlxSprite
 		{
 			if(status != NORMAL)
 			{
-				if(buttonEvent != null)
-					buttonEvent.onOut();
+				if(callback != null)
+					callback.onOut();
 				if(soundOut != null)
 					soundOut.play(true);
 			}
