@@ -241,7 +241,7 @@ public class FlxSprite extends FlxObject
 			return this;
 		}
 		_bakedRotation = 0;
-		_pixels = Graphic;//new TextureRegion(FlxG.addBitmap(Graphic, Unique), Graphic.getRegionWidth(), Graphic.getRegionHeight());
+		_pixels = FlxG.addBitmap(Graphic, Unique);
 		
 		if(Width == 0)
 		{
@@ -731,7 +731,7 @@ public class FlxSprite extends FlxObject
 		
 		Pixmap pixmap = textureData.consumePixmap();
 		pixmap.setColor(FlxU.colorFromHex(Color));
-		pixmap.fillRectangle(0, 0, _pixels.getRegionWidth(), _pixels.getRegionHeight());
+		pixmap.fillRectangle(_pixels.getRegionX(), _pixels.getRegionY(), _pixels.getRegionWidth(), _pixels.getRegionHeight());
 		
 		_pixels.getTexture().load(new FlxTextureData(pixmap));
 		

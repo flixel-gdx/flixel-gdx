@@ -37,9 +37,10 @@ public class PlayState extends FlxState
 		
 		
 		// Zombie with more frames added to slow down an animation.
-		s = new FlxSprite(100, 60).loadGraphic(Asset.ImgZombie, true, false, 36, 41);
+		s = new FlxSprite(100, 60).loadGraphic(Asset.ImgZombie, true, false, 36, 41, true);
 		s.addAnimation("head bounce", new int[]{7, 7, 8, 9, 10, 11, 11, 11, 10, 10, 10, 9, 9, 8, 8, 7, 7, 7}, 10);
 		s.play("head bounce");
+		s.fill(0x55ff00ff);
 		add(s);
 		
 		
