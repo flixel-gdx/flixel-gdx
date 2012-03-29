@@ -16,6 +16,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -246,7 +247,7 @@ public class FlxG
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
-	static protected ObjectMap<String, Texture> _cache;
+	static protected ObjectMap<String, TextureRegion> _cache;
 	
 	/**
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
@@ -835,7 +836,7 @@ public class FlxG
 	static public void init(FlxGame Game, int Width, int Height, float Zoom)
 	{
 		_game = Game;
-		_cache = new ObjectMap<String, Texture>();
+		_cache = new ObjectMap<String, TextureRegion>();
 		width = Width;
 		height = Height;
 		
@@ -983,7 +984,7 @@ public class FlxG
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 *///TODO: Bug: using this will hit the performance. The Texture won't be dupilcated, so how come?
-	static public Texture createBitmap(int Width, int Height, long Color, boolean Unique, String Key)
+	static public TextureRegion createBitmap(int Width, int Height, long Color, boolean Unique, String Key)
 	{		
 		if(Key == null)
 		{
@@ -1003,11 +1004,10 @@ public class FlxG
 		}
 		if(!checkBitmapCache(Key))
 		{
-			int width = FlxU.ceilPowerOfTwo(Width), height = FlxU.ceilPowerOfTwo(Height);
-			Pixmap p = new Pixmap(width, height, Format.RGBA8888);			
+			Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(Width), FlxU.ceilPowerOfTwo(Height), Format.RGBA8888);			
 			p.setColor(FlxU.colorFromHex(Color));
 			p.fillRectangle(0, 0, Width, Height);
-			_cache.put(Key, new Texture(new FlxTextureData(p)));
+			_cache.put(Key, new TextureRegion(new Texture(new FlxTextureData(p))));
 		}
 		return _cache.get(Key);
 	}
@@ -1023,7 +1023,7 @@ public class FlxG
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 */
-	static public Texture createBitmap(int Width, int Height, int Color)
+	static public TextureRegion createBitmap(int Width, int Height, int Color)
 	{
 		return createBitmap(Width, Height, Color, false, null);
 	}
@@ -1039,7 +1039,7 @@ public class FlxG
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 */
-	static public Texture createBitmap(int Width, int Height, int Color, boolean Unique)
+	static public TextureRegion createBitmap(int Width, int Height, int Color, boolean Unique)
 	{
 		return createBitmap(Width, Height, Color, Unique, null);
 	}
@@ -1054,12 +1054,12 @@ public class FlxG
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 */
-	static public Texture addBitmap(TextureRegion Graphic, boolean Unique, String Key)
+	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Unique, String Key)
 	{
 		if(Key == null)
 		{	
-			Key = Graphic.toString();
-			if(Unique && (!_cache.get(Key).equals(null)))
+			Key = String.valueOf(Graphic.hashCode());
+			if(Unique && (_cache.get(Key) != null))
 			{
 				// Generate a unique key
 				int inc = 0;
@@ -1074,8 +1074,27 @@ public class FlxG
 		}
 		// If there is no data for this key, generate the requested graphic
 		if(!checkBitmapCache(Key))
-			_cache.put(Key, Graphic.getTexture());
-		return _cache.get(Key);
+		{
+			if (!Unique)
+				_cache.put(Key, Graphic);
+			else
+			{
+				TextureData textureData = Graphic.getTexture().getTextureData();
+			
+				if(!textureData.isPrepared())
+					textureData.prepare();
+			
+				Pixmap newPixmap = new Pixmap(FlxU.ceilPowerOfTwo(Graphic.getRegionWidth()), FlxU.ceilPowerOfTwo(Graphic.getRegionHeight()), Pixmap.Format.RGBA8888);
+				Pixmap graphicPixmap = textureData.consumePixmap();
+				newPixmap.drawPixmap(graphicPixmap, 0, 0, Graphic.getRegionX(), Graphic.getRegionY(), Graphic.getRegionWidth(), Graphic.getRegionHeight());
+			
+				if (textureData.disposePixmap())
+					graphicPixmap.dispose();
+				
+				_cache.put(Key, new TextureRegion(new Texture(new FlxTextureData(newPixmap))));
+			}
+		}
+		return new TextureRegion(_cache.get(Key));
 	}
 	
 	
@@ -1089,7 +1108,7 @@ public class FlxG
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 */
-	static public Texture addBitmap(TextureRegion Graphic, boolean Unique)
+	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Unique)
 	{
 		return addBitmap(Graphic, Unique, null);
 	}
@@ -1103,7 +1122,7 @@ public class FlxG
 	 * 
 	 * @return The <code>BitmapData</code> we just created.
 	 */
-	static public Texture addBitmap(TextureRegion Graphic)
+	static public TextureRegion addBitmap(TextureRegion Graphic)
 	{
 		return addBitmap(Graphic, false, null);
 	}
@@ -1113,10 +1132,10 @@ public class FlxG
 	 */
 	static public void clearBitmapCache()
 	{
-		Entries<String, Texture> iter = _cache.entries();
+		Entries<String, TextureRegion> iter = _cache.entries();
 		while(iter.hasNext())
 		{
-			Texture texture = iter.next().value;
+			Texture texture = iter.next().value.getTexture();
 			Pixmap pixmap = null;
 			if (!texture.getTextureData().disposePixmap())
 				pixmap = texture.getTextureData().consumePixmap();
