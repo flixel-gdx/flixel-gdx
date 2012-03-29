@@ -14,9 +14,9 @@ public class Asset
 	public static void create()
 	{
 		SndMode = Gdx.audio.newMusic(Gdx.files.internal("examples/audio/mode.ogg"));
-		Sndflixel = Gdx.audio.newSound(Gdx.files.classpath("org/flixel/data/flixel.ogg"));
-		SndButtonHover = Gdx.audio.newSound(Gdx.files.classpath("examples/audio/ButtonHover.ogg"));
-		SndButtonDown = Gdx.audio.newSound(Gdx.files.classpath("examples/audio/ButtonDown.ogg"));
+		Sndflixel = Gdx.audio.newSound(Gdx.files.internal("examples/audio/flixel.ogg"));
+		SndButtonHover = Gdx.audio.newSound(Gdx.files.internal("examples/audio/ButtonHover.ogg"));
+		SndButtonDown = Gdx.audio.newSound(Gdx.files.internal("examples/audio/ButtonDown.ogg"));
 	}
 
 }

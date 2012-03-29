@@ -1864,8 +1864,8 @@ public class FlxG
 	/**
 	 * Vibrates for the given amount of time. Note that you'll need the permission
 	 * <code> <uses-permission android:name="android.permission.VIBRATE" /></code> in your manifest file in order for this to work.
-	 * Or call directly Gdx.input.vibrate(int);
-	 * @param Milliseconds
+
+	 * @param Milliseconds	The amount of time to vibrate for.
 	 */
 	public static void vibrate(int Milliseconds)
 	{
@@ -1875,7 +1875,6 @@ public class FlxG
 	/**
 	 * Vibrates for the given amount of time. Note that you'll need the permission
 	 * <code> <uses-permission android:name="android.permission.VIBRATE" /></code> in your manifest file in order for this to work.
-	 * Or call directly Gdx.input.vibrate(int);
 	 */
 	public static void vibrate()
 	{
@@ -1887,8 +1886,8 @@ public class FlxG
 	 * one is how long to wait before turning it on, and then after that it alternates. If you want to repeat, pass the index into
 	 * the pattern at which to start the repeat.
 	 * 
-	 * @param pattern an array of longs of times to turn the vibrator on or off.
-	 * @param repeat the index into pattern at which to repeat, or -1 if you don't want to repeat. 
+	 * @param Pattern	An array of longs of times to turn the vibrator on or off.
+	 * @param Repeat	The index into pattern at which to repeat, or -1 if you don't want to repeat. 
 	 * */
 	public static void vibrate(long[] Pattern, int Repeat)
 	{

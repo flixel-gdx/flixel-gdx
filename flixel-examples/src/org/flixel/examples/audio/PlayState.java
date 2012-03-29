@@ -6,8 +6,6 @@ import org.flixel.FlxSound;
 import org.flixel.FlxState;
 import org.flixel.event.AFlxButton;
 
-import com.badlogic.gdx.Input.Keys;
-
 
 /**
  * Just a simple demo to play music and sound.
@@ -39,24 +37,7 @@ public class PlayState extends FlxState
 		
 		// Load the sound in the memory, it will be recycled when needed.
 		flixel = FlxG.loadSound(Asset.Sndflixel, 1f);
-	}
-
-	@Override
-	public void update()
-	{
-		if(FlxG.mouse.justPressed(Keys.A))
-		{
-			FlxG.log("switch state");
-			if(FlxG.music != null)
-			{
-				FlxG.music.stop();
-				FlxG.music.destroy();				
-			}
-			FlxG.switchState(new EmptyState());
-		}		
-		super.update();
-	}
-	
+	}	
 	
 	@Override
 	public void destroy() 
