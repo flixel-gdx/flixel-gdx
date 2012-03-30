@@ -37,10 +37,11 @@ public class PlayState extends FlxState
 	@Override
 	public void update()
 	{
+		_player.velocity.x = _player.velocity.y = 0;
 		if(_analog.pressed)
 		{
-			_player.x = _player.x + (_analog.accel.x);
-			_player.y = _player.y + (_analog.accel.y);
+			_player.velocity.x = 40*(_analog.accel.x);
+			_player.velocity.y = 40*(_analog.accel.y);
 		}
 		FlxG.collide();
 		super.update();

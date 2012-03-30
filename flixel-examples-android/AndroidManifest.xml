@@ -126,6 +126,12 @@
             android:label="VibrationDemo"
             android:screenOrientation="landscape" >
         </activity>
+        <activity
+            android:name=".SensorDemo"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="SensorDemo"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

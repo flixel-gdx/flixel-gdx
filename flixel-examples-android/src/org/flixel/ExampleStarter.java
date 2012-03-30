@@ -9,9 +9,11 @@ import android.widget.ListView;
 
 public class ExampleStarter extends ListActivity
 {
-	String examples[] = { "PathFinding", "FlxCollisions", "FlxTilemapDemo", "Particles", "SaveDemo", "AnimationDemo", "CollisionDemo", "ThousandParticlesDemo", "BlurDemo", 
-						  "BitmapfontDemo", "MultiTouchDemo", "DragAndDropDemo", "CameraEffectsDemo", 
-						  "AudioDemo", "TileDemo", "EZPlatformer", "TiledMap2Demo", "AnalogDemo" };
+	String examples[] = { 	"PathFinding", "FlxCollisions", "FlxTilemapDemo", "Particles", "SaveDemo", 
+							"AnimationDemo", "CollisionDemo", "ThousandParticlesDemo", "BlurDemo", 
+							"BitmapfontDemo", "MultiTouchDemo", "DragAndDropDemo", "CameraEffectsDemo", 
+							"AudioDemo", "TileDemo", "EZPlatformer", "TiledMap2Demo", "AnalogDemo", 
+							"SensorDemo" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

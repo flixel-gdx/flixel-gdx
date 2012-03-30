@@ -12,7 +12,7 @@ public class AnalogDemo
 {
 	public static void main(String[] args)
 	{
-		new LwjglApplication(new org.flixel.examples.analog.AnalogDemo(), "", 480, 320, false);
+		new LwjglApplication(new org.flixel.examples.analog.AnalogDemo(), "", 800, 480, false);
 		/*SwingUtilities.invokeLater(new Runnable()
 		{
 			@Override

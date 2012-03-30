@@ -9,6 +9,7 @@ import org.flixel.system.FlxQuadTree;
 import org.flixel.system.FlxTextureData;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
+import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -185,6 +186,8 @@ public class FlxG
 	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
 	 */
 	static public Keyboard keys;
+	
+	static public Sensor sensor;
 	
 	/**
 	 * A handy container for a background music object.
@@ -860,6 +863,7 @@ public class FlxG
 //		
 		FlxG.mouse = new Mouse();
 		FlxG.keys = new Keyboard();
+		FlxG.sensor = new Sensor();
 	}
 	
 	public static void reset()
@@ -883,6 +887,7 @@ public class FlxG
 	{
 		FlxG.keys.update();		
 		FlxG.mouse.update();
+		FlxG.sensor.update();
 	}
 	
 	/**
