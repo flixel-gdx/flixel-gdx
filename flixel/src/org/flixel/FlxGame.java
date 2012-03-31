@@ -2,10 +2,12 @@ package org.flixel;
 
 import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxReplay;
+import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxPause;
 import org.flixel.system.FlxReplay;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -23,6 +25,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
  * after that FlxG and FlxState have all the useful stuff you actually need.
  * 
  * @author	Ka Wing Chin
+ * @author	Thomas Weston
  */
 public class FlxGame implements ApplicationListener, InputProcessor
 {
@@ -235,22 +238,23 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	{
 		if(KeyCode == Keys.F2)
 			FlxG.visualDebug = !FlxG.visualDebug;
-		/*
-		if(_debuggerUp && _debugger.watch.editing)
-			return;
 		
-		if((_debugger != null) && ((FlashEvent.keyCode == 192) || (FlashEvent.keyCode == 220)))
+		/*if(_debuggerUp && _debugger.watch.editing)
+			return false;*/
+		
+		if((_debugger != null) && (/*(KeyCode == 0) ||*/ (KeyCode == 73)))
 		{
 			_debugger.visible = !_debugger.visible;
 			_debuggerUp = _debugger.visible;
-			if(_debugger.visible)
+			
+			/*if(_debugger.visible)
 				flash.ui.Mouse.show();
 			else if(!useSystemCursor)
-				flash.ui.Mouse.hide();
+				flash.ui.Mouse.hide();*/
 			//_console.toggle();
-			return;
+			return true;
 		}
-		*/
+		
 		if(_replaying)
 			return true;
 		
@@ -396,15 +400,15 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		long elapsedMS = mark - _total;
 		_total = mark;
 		
-		if((_debugger != null) /*&& _debugger.vcr.paused*/)
+		/*if((_debugger != null) && _debugger.vcr.paused)
 		{
 			//if(_debugger.vcr.stepRequested)
 			//{
 				//_debugger.vcr.stepRequested = false;
-				//step();
+				step(); //TODO: ahw bugger, needs VCR to get the correct frames for debug :(. Disabled and use the normal steps.
 			//}
 		}
-		else
+		else*/
 		{
 			_accumulator += elapsedMS;
 			if(_accumulator > _maxAccumulation)
@@ -421,9 +425,9 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			
 		if(_debuggerUp)
 		{
-			//_debugger.perf.flash(elapsedMS);
-			//_debugger.perf.visibleObjects(FlxBasic._VISIBLECOUNT);
-			//_debugger.perf.update();
+			_debugger.perf.flash((int) elapsedMS);
+			_debugger.perf.visibleObjects(FlxBasic._VISIBLECOUNT);
+			_debugger.perf.update();
 			//_debugger.watch.update();
 		}
 	}
@@ -446,9 +450,9 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			//_debugger.watch.removeAll();
 		
 		// Clear any timers left in the timer manager
-		//TimerManager timerManager = FlxTimer.manager;
-		//if(timerManager != null)
-			//timerManager.clear();
+		TimerManager timerManager = FlxTimer.getManager();
+		if(timerManager != null)
+			timerManager.clear();
 		
 		//Destroy the old state (if there is an old state)
 		if(_state != null)
@@ -556,8 +560,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		
 		update();
 		FlxG.mouse.wheel = 0;
-		//if(_debuggerUp)
-			//_debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);
+		if(_debuggerUp)
+			_debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);
 	}
 	
 	/**
@@ -566,8 +570,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	protected void update()
 	{
-		//long mark = System.currentTimeMillis();
-		
+		long mark = System.currentTimeMillis();
 		FlxG.elapsed = FlxG.timeScale*(_step/1000.f);
 				
 		if(FlxG.paused)
@@ -581,8 +584,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_state.update();
 		FlxG.updateCameras();
 		
-		//if(_debuggerUp)
-			//_debugger.perf.flixelUpdate(System.currentTimeMillis()-mark);
+		if(_debuggerUp)
+			_debugger.perf.flixelUpdate((int)(System.currentTimeMillis()-mark));
 	}
 	
 	/**
@@ -590,7 +593,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	private void draw()
 	{
-		//long mark = System.currentTimeMillis();
+		long mark = System.currentTimeMillis();
 		
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT); // Clear the screen. It's not needed because of FlxG.lockCameras().	
 		float[] rgba = FlxU.getRGBA(FlxG.getBgColor());
@@ -602,14 +605,16 @@ public class FlxGame implements ApplicationListener, InputProcessor
 					
 		_state.draw();
 			
-		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);		
-	
+		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);	
+		if(_debugger != null && _debuggerUp)
+			_debugger.perf.draw();
+		
 		FlxG.camera.drawFX();
 		
 		FlxG.batch.end();
 		
-		//if(_debuggerUp)
-			//_debugger.perf.flixelDraw(System.currentTimeMillis()-mark);
+		if(_debuggerUp)
+			_debugger.perf.flixelDraw((int) (System.currentTimeMillis()-mark));
 	}
 	
 	/**
@@ -638,12 +643,14 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.batch = new SpriteBatch();
 		font = SystemAsset.system;
 		
-		//Debugger overlay
-		//if(FlxG.debug || forceDebugger)
-		//{
-			//_debugger = new FlxDebugger(FlxG.width*FlxCamera.defaultZoom,FlxG.height*FlxCamera.defaultZoom);
-			//addChild(_debugger);
-		//}
+		if(Gdx.app.getType() != ApplicationType.Android)
+		{
+			//Debugger overlay
+			if(FlxG.debug || forceDebugger)
+			{
+				_debugger = new FlxDebugger();
+			}			
+		}
 	}
 
 	@Override
