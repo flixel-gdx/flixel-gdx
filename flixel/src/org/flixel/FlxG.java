@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.ObjectMap;
  * <code>FlxG</code> is specifically for Flixel-specific properties.
  * 
  * @author	Ka Wing Chin
+ * @author	Thomas Weston
  */
 public class FlxG
 {

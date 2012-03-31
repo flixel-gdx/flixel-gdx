@@ -8,6 +8,7 @@ public class TiledMap2Demo extends FlxGame
 	public TiledMap2Demo()
 	{
 		super(320, 240, PlayState.class);
+		forceDebugger = true;
 	}
 	
 	@Override
