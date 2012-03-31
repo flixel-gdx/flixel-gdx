@@ -173,12 +173,7 @@ public class FlxSound extends FlxBasic
 	{
 		kill();
 
-		if(_sound != null)		
-			_sound.dispose();
 		_sound = null;
-		
-		if(_music != null)
-			_music.dispose();
 		_music = null;
 		
 		_soundId = -1;
