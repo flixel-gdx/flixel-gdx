@@ -289,7 +289,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				{
 					if(_replayCallback != null)
 					{
-						_replayCallback.onFinished();
+						_replayCallback.onComplete();
 						_replayCallback = null;
 					}
 					else
@@ -335,7 +335,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				{
 					if(_replayCallback != null)
 					{
-						_replayCallback.onFinished();
+						_replayCallback.onComplete();
 						_replayCallback = null;
 					}
 					else
@@ -526,7 +526,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				{
 					if(_replayCallback != null)
 					{
-						_replayCallback.onFinished();
+						_replayCallback.onComplete();
 						_replayCallback = null;
 					}
 					else
@@ -538,7 +538,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				FlxG.stopReplay();
 				if(_replayCallback != null)
 				{
-					_replayCallback.onFinished();
+					_replayCallback.onComplete();
 					_replayCallback = null;
 				}
 			}

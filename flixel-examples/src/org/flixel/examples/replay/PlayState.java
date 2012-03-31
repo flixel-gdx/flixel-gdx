@@ -163,7 +163,7 @@ public class PlayState extends FlxState
 		/**
 		 * NOTE "ANY" or other key wont work under debug mode!
 		 */
-		FlxG.loadReplay(save, new PlayState(), new String[]{"ANY", "MOUSE"}, 0, new AFlxReplay(){@Override public void onFinished(){start_record();}});
+		FlxG.loadReplay(save, new PlayState(), new String[]{"ANY", "MOUSE"}, 0, new AFlxReplay(){@Override public void onComplete(){start_record();}});
 
 	}
 }

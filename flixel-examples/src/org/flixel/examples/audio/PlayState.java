@@ -24,7 +24,7 @@ public class PlayState extends FlxState
 	{
 		// Background
 		FlxG.setBgColor(0xFF000000);
-		
+
 		// Add a play/pause button for the music.
 		add(_btnPlayMusic = new FlxButton(10, 10, "play music", playMusic));
 		// Add a stop button for the music.

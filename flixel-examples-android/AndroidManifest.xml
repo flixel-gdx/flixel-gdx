@@ -132,6 +132,12 @@
             android:label="SensorDemo"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".Mode"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="Mode"
+            android:screenOrientation="landscape" >
+        </activity>
     </application>
 
 </manifest>

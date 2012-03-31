@@ -33,7 +33,8 @@ public class FlxPause extends FlxGroup
 		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(w), FlxU.ceilPowerOfTwo(h), Pixmap.Format.RGBA8888);
 		p.setColor(FlxU.colorFromHex(0xFF000000));
 		p.fillRectangle(0, 0, w, h);
-		s = new FlxSprite(x-w/2, y-h/2, new TextureRegion(new Texture(new FlxTextureData(p))));
+		s = new FlxSprite(x-w/2, y-h/2);//, new TextureRegion(new Texture(new FlxTextureData(p))));
+		s.setPixels(new TextureRegion(new Texture(new FlxTextureData(p)),w, h));
 		s.setAlpha(0.85f);
 		s.setSolid(false);
 		s.scrollFactor.x = s.scrollFactor.y = 0;
