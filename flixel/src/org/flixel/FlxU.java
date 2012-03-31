@@ -1,12 +1,51 @@
 package org.flixel;
 
+import java.awt.Desktop;
 import java.util.ArrayList;
 
+import android.app.Activity;
+import android.content.Intent;
+
+import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 
 public class FlxU
 {
+	/**
+	 * Opens a web page in a new tab or window.
+	 * MUST be called from the UI thread or else badness.
+	 * 
+	 * @param	URL		The address of the web page.
+	 */
+	static public void openURL(String URL)
+	{
+		if (Gdx.app.getType() == ApplicationType.Android)
+		{
+			Activity app = (Activity) Gdx.app;
+			app.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(URL)));
+		}
+		else if(Gdx.app.getType() == ApplicationType.Desktop)
+		{
+			if (Desktop.isDesktopSupported()) 
+			{
+				try 
+				{
+					Desktop.getDesktop().browse(java.net.URI.create(URL));
+			    }
+				catch (Exception e) 
+				{ 
+					FlxG.log("FlxU: ", e.getMessage()); 
+				}
+			}
+			else
+			{
+				FlxG.log("FlxU: ", "Desktop is not supported.");
+			}
+		}
+	}
+	
 	/**
 	 * Calculate the absolute value of a number.
 	 * 
@@ -18,7 +57,6 @@ public class FlxU
 	{
 		return (Value > 0) ? Value : -Value;
 	}
-	
 	
 	/**
 	 * Round down to the next whole number. E.g. floor(1.7) == 1, and floor(-2.7) == -2.
