@@ -4,11 +4,11 @@ import java.util.Locale;
 
 import org.flixel.data.SystemAsset;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.math.Matrix4;
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -20,14 +20,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
  * @author	Ka Wing Chin
  */
 public class FlxText extends FlxSprite
-{
+{	
 	/**
-	 *
-	 */
-	protected BitmapFont _bitmapFont;
-	
-	/**
-	 * Internal reference to a libgdx <code>BitmapFont</code> object.
+	 * Internal reference to a libgdx <code>BitmapFontCache</code> object.
 	 */
 	protected BitmapFontCache _textField;
 	/**
@@ -42,7 +37,10 @@ public class FlxText extends FlxSprite
 	 * Internal reference to the text to be drawn.
 	 */
 	protected String _text;
-	
+	/**
+	 * Internal helper for rotation.
+	 */
+	protected Matrix4 _matrix;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -59,8 +57,8 @@ public class FlxText extends FlxSprite
 		
 		if(Text == null)
 			Text = "";
-		_bitmapFont = SystemAsset.system;
-		_textField = new BitmapFontCache(_bitmapFont);
+		
+		_textField = new BitmapFontCache(SystemAsset.system);
 		width = Width;
 		_text = Text;
 		setColor(0xFFFFFF);
@@ -124,7 +122,7 @@ public class FlxText extends FlxSprite
 		if(Font == null)
 			Font = SystemAsset.system;
 						
-		_textField = new BitmapFontCache(_bitmapFont = Font);
+		_textField = new BitmapFontCache(Font);
 		setSize(Size);
 		
 		setColor(Color);
@@ -227,7 +225,7 @@ public class FlxText extends FlxSprite
 	 */
 	public float getSize()
 	{
-		return _bitmapFont.getScaleX();
+		return _textField.getFont().getScaleX();
 	}
 	
 	/**
@@ -235,7 +233,7 @@ public class FlxText extends FlxSprite
 	 */
 	public void setSize(float Size)
 	{
-		//_bitmapFont.scale(Size);
+		//_textField.getFont.scale(Size);
 	}
 	
 	/**
@@ -248,8 +246,6 @@ public class FlxText extends FlxSprite
 		
 		_color = Color;
 	
-		Color c = FlxU.colorFromHex(Color);
-		c.a = getAlpha();
 		_textField.setColor((_color>>16)*0.00392f,(_color>>8&0xff)*0.00392f,(_color&0xff)*0.00392f,_alpha);
 	}
 	
@@ -345,7 +341,21 @@ public class FlxText extends FlxSprite
 		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
 		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
 		
-		_textField.setPosition(_point.x - offset.x, _point.y - offset.y);
+		_textField.setPosition(_point.x, _point.y);
+		
+		if (angle != 0)
+		{
+			FlxG.log("out");
+			_matrix = FlxG.batch.getTransformMatrix().cpy();
+		
+			Matrix4 rotationMatrix = FlxG.batch.getTransformMatrix();
+			rotationMatrix.translate(_textField.getX() + (width / 2), _textField.getY() + (height / 2), 0);
+			rotationMatrix.rotate(0, 0, 1, angle);
+			rotationMatrix.translate(-(_textField.getX() + (width / 2)), -(_textField.getY() + (height / 2)), 0);
+		
+			FlxG.batch.setTransformMatrix(rotationMatrix);
+		}
+		
 		//Render a single pixel shadow beneath the text
 		if (_shadow != 0)
 		{
@@ -355,10 +365,15 @@ public class FlxText extends FlxSprite
 			_textField.translate(-1f, -1f);
 			setColor(_color);
 		}
-		if(FlxG.visualDebug && !ignoreDrawDebug)
-			drawDebug(camera);
+		
 		_textField.draw(FlxG.batch);
 		
+		if (angle != 0)
+			FlxG.batch.setTransformMatrix(_matrix);
+		
 		_VISIBLECOUNT++;
+		
+		if(FlxG.visualDebug && !ignoreDrawDebug)
+			drawDebug(camera);
 	}
 }
