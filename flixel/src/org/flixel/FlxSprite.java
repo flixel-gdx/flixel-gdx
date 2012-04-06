@@ -349,6 +349,10 @@ public class FlxSprite extends FlxObject
 	 */
 	public FlxSprite loadRotatedGraphic(TextureRegion Graphic, int Rotations, int Frame, boolean AntiAliasing, boolean AutoBuffer)
 	{
+		loadGraphic(Graphic, true, false, Graphic.getRegionHeight(), Graphic.getRegionHeight(), false);
+		setFrame(Frame);
+		return this;
+		/*
 		//Create the brush and canvas
 		int rows = (int) Math.sqrt(Rotations);
 		TextureRegion brush = Graphic;//new TextureRegion(FlxG.addBitmap(Graphic));
@@ -422,7 +426,7 @@ public class FlxSprite extends FlxObject
 			width = brush.getRegionWidth();
 			height = brush.getRegionHeight();				
 		}		
-		return this;
+		return this;*/
 	}
 		
 	/**

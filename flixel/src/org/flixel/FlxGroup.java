@@ -243,10 +243,8 @@ public class FlxGroup extends FlxBasic
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
 	 * 
 	 * @return A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
 	 */
-	public FlxBasic recycle(Class<? extends FlxBasic> ObjectClass) throws InstantiationException, IllegalAccessException
+	public FlxBasic recycle(Class<? extends FlxBasic> ObjectClass)
 	{
 		FlxBasic basic;
 		if(_maxSize > 0)
@@ -256,7 +254,12 @@ public class FlxGroup extends FlxBasic
 				if(ObjectClass == null)
 					return null;
 				
-				return add(ObjectClass.newInstance());
+				try {
+					return add(ObjectClass.newInstance());
+				} catch (Exception e) {
+					FlxG.log(e.getMessage());
+					return null;
+				}
 			}
 			else
 			{
@@ -273,9 +276,13 @@ public class FlxGroup extends FlxBasic
 				return basic;
 			if(ObjectClass == null)
 				return null;
-//			if(length >= 16) //TODO: libgdx standard size is 16. It will throw an error if the max exceeds.
-//				members.setMaxSize(members.size++);
-			return add(ObjectClass.newInstance());
+			
+			try {
+				return add(ObjectClass.newInstance());
+			} catch (Exception e) {
+				FlxG.log(e.getMessage());
+				return null;
+			}
 		}
 	}
 	

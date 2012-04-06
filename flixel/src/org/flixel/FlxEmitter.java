@@ -433,18 +433,9 @@ public class FlxEmitter extends FlxGroup
 	public void emitParticle()
 	{			
 		FlxParticle particle = null;
-		try
-		{
-			particle = (FlxParticle) recycle(FlxParticle.class);
-		}
-		catch (InstantiationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
+		
+		particle = (FlxParticle) recycle(FlxParticle.class);
+		
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
 		particle.reset((float) (x - (particle.width>>1) + FlxG.random()*width), (float) (y - (particle.height>>1) + FlxG.random()*height));
