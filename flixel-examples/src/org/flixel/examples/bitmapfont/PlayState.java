@@ -3,9 +3,6 @@ package org.flixel.examples.bitmapfont;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-
 public class PlayState extends FlxState
 {
 
@@ -32,7 +29,7 @@ public class PlayState extends FlxState
 		
 		
 		FlxText text4 = new FlxText(10, 160, 200, "Warning");
-		text4.setFormat(new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true), 2f);
+		text4.setFormat(null, 32);
 		text4.setColor(0xFFFF0000);
 		text4.setShadow(0xFFFFFFFF);
 		add(text4);

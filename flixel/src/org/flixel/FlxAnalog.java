@@ -38,7 +38,7 @@ public class FlxAnalog extends FlxGroup
 	public FlxAnalog(float X, float Y)
 	{
 		accel  = new FlxPoint();
-		float radius = Gdx.graphics.getWidth()/32;
+		//float radius = Gdx.graphics.getWidth()/32;
 		float resWidth = Gdx.graphics.getWidth();
 		float resHeight = Gdx.graphics.getHeight();
 		float difWidth = FlxG.width/resWidth;
