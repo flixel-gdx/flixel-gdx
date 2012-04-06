@@ -7,7 +7,7 @@ public class BitmapfontDemo extends FlxGame
 
 	public BitmapfontDemo()
 	{
-		super(320, 240, PlayState.class);
+		super(480, 320, PlayState.class);
 	}
 
 }

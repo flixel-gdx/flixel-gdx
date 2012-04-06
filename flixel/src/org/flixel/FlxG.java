@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
@@ -174,7 +175,7 @@ public class FlxG
 	 */
 	static public Array<Object> levels;
 	static public int level;
-	static public Array<Object> scores;
+	static public IntArray scores;
 	static public int score;
 	/**
 	 * <code>FlxG.saves</code> is a generic bucket for storing
@@ -876,6 +877,10 @@ public class FlxG
 		FlxG.mouse = new Mouse();
 		FlxG.keys = new Keyboard();
 		FlxG.sensor = new Sensor();
+		
+		FlxG.levels = new Array<Object>();
+		FlxG.scores = new IntArray();
+		FlxG.visualDebug = false;
 	}
 	
 	public static void reset()
@@ -1270,10 +1275,10 @@ public class FlxG
 		FlxCamera cam;
 		int i = 0;
 		int l = cameras.size;
+
 		while(i < l)
 		{
 			cam = FlxG.cameras.get(i++);
-			cameras.removeValue(cam, false);
 			cam.destroy();
 		}
 		FlxG.cameras.clear();

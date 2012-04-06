@@ -40,7 +40,7 @@ public class MenuState extends FlxState
 		gibs.setYSpeed(-200,-20);
 		gibs.setRotation(-720,720);
 		gibs.gravity = 100;
-		gibs.makeParticles(Asset.ImgGibs,650,32,true,0);
+		gibs.makeParticles(Asset.ImgSpawnerGibs,650,32,true,0);
 		add(gibs);
 
 		//the letters "mo"

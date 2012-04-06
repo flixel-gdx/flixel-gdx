@@ -27,9 +27,9 @@ public class PlayState extends FlxState
 		text3.setShadow(0xFFFFFFFF);
 		add(text3);
 		
+		FlxText text4 = new FlxText(10, 160, 200);
 		
-		FlxText text4 = new FlxText(10, 160, 200, "Warning");
-		text4.setFormat(null, 32);
+		text4.setFormat(null, 32);text4.setText("012345");
 		text4.setColor(0xFFFF0000);
 		text4.setShadow(0xFFFFFFFF);
 		add(text4);
