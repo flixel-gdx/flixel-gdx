@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import org.flixel.data.SystemAsset;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
@@ -41,6 +41,14 @@ public class FlxText extends FlxSprite
 	 * Internal helper for rotation.
 	 */
 	protected Matrix4 _matrix;
+	/**
+	 * Internal reference to the font.
+	 */
+	protected FileHandle _font;
+	/**
+	 * Internal tracker for the size of the text.
+	 */
+	protected int _size;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -59,9 +67,11 @@ public class FlxText extends FlxSprite
 			Text = "";
 		
 		_textField = new BitmapFontCache(SystemAsset.system);
+		_font = SystemAsset.systemFileHandle;
 		width = Width;
 		_text = Text;
 		setColor(0xFFFFFF);
+		_size = 8;
 		_alignment = HAlignment.LEFT;
 		_shadow = 0;
 		allowCollisions = NONE;
@@ -109,21 +119,23 @@ public class FlxText extends FlxSprite
 	 * to set instead of the individual properties.
 	 * 
 	 * @param	Font		The name of the font face for the text display.
-	 * @param	Size		The size of the font (in scale essentially). If there is no BitmapFont 
-	 * 						given, it uses the default font and the scale will affect all FlxText's!
+	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
 	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(BitmapFont Font, float Size, int Color, String Alignment, int ShadowColor)
+	public FlxText setFormat(FileHandle Font, float Size, int Color, String Alignment, int ShadowColor)
 	{
 		if(Font == null)
-			Font = SystemAsset.system;
-						
-		_textField = new BitmapFontCache(Font);
-		setSize(Size);
+			Font = SystemAsset.systemFileHandle;
+	
+		if (!Font.equals(_font) || Size != _size)
+			_textField = new BitmapFontCache(FlxG.addFont(Font, Size));
+		
+		_font = Font;
+		_size = (int) Size;
 		
 		setColor(Color);
 		_alignment = HAlignment.valueOf(Alignment.toUpperCase(Locale.ENGLISH));		
@@ -145,7 +157,7 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(BitmapFont Font, float Size, int Color, String Alignment)
+	public FlxText setFormat(FileHandle Font, float Size, int Color, String Alignment)
 	{
 		return setFormat(Font, Size, Color, Alignment, 0);
 	}
@@ -160,7 +172,7 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(BitmapFont Font, float Size, int Color)
+	public FlxText setFormat(FileHandle Font, float Size, int Color)
 	{
 		return setFormat(Font, Size, Color, "left", 0);
 	}
@@ -174,7 +186,7 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(BitmapFont Font, float Size)
+	public FlxText setFormat(FileHandle Font, float Size)
 	{
 		return setFormat(Font, Size, 0xFFFFFFFF, "left", 0);
 	}
@@ -187,7 +199,7 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(BitmapFont Font)
+	public FlxText setFormat(FileHandle Font)
 	{
 		return setFormat(Font, 8, 0xFFFFFFFF, "left", 0);
 	}
@@ -225,7 +237,7 @@ public class FlxText extends FlxSprite
 	 */
 	public float getSize()
 	{
-		return _textField.getFont().getScaleX();
+		return _size;
 	}
 	
 	/**
@@ -233,7 +245,12 @@ public class FlxText extends FlxSprite
 	 */
 	public void setSize(float Size)
 	{
-		//_textField.getFont.scale(Size);
+		if (Size == _size)
+			return;
+		
+		_size = (int) Size;
+		_textField = new BitmapFontCache(FlxG.addFont(_font, Size));
+		calcFrame();
 	}
 	
 	/**
@@ -252,17 +269,20 @@ public class FlxText extends FlxSprite
 	/**
 	 * The font used for this text.
 	 */
-	public BitmapFont getFont()
+	public FileHandle getFont()
 	{
-		return _textField.getFont();
+		return _font;
 	}
 	
 	/**
 	 * @private
 	 */
-	public void setFont(BitmapFont Font)
+	public void setFont(FileHandle Font)
 	{
-		_textField = new BitmapFontCache(Font);
+		if (_font.equals(Font))
+			return;
+		
+		_textField = new BitmapFontCache(FlxG.addFont(Font, _size));
 		calcFrame();
 	}
 	
@@ -345,7 +365,6 @@ public class FlxText extends FlxSprite
 		
 		if (angle != 0)
 		{
-			FlxG.log("out");
 			_matrix = FlxG.batch.getTransformMatrix().cpy();
 		
 			Matrix4 rotationMatrix = FlxG.batch.getTransformMatrix();

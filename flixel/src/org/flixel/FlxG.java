@@ -14,16 +14,20 @@ import org.flixel.system.input.Sensor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap.Entries;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -252,6 +256,11 @@ public class FlxG
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
 	static protected ObjectMap<String, TextureRegion> _cache;
+	
+	/**
+	 * Internal storage system to prevent fonts from being used repeatedly in memory.
+	 */
+	static protected ObjectMap<String, BitmapFont> _fontCache;
 	
 	/**
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
@@ -841,6 +850,7 @@ public class FlxG
 	{
 		_game = Game;
 		_cache = new ObjectMap<String, TextureRegion>();
+		_fontCache = new ObjectMap<String, BitmapFont>();
 		width = Width;
 		height = Height;
 		
@@ -851,6 +861,7 @@ public class FlxG
 //		volumeHandler = null;
 		
 		clearBitmapCache();
+		clearFontCache();
 		
 		FlxCamera.defaultZoom = 1;//Zoom;
 //		FlxG._cameraRect = new Rectangle();
@@ -870,6 +881,7 @@ public class FlxG
 	public static void reset()
 	{
 		FlxG.clearBitmapCache();
+		FlxG.clearFontCache();
 		resetInput();
 		destroySounds(true);
 		paused = false;
@@ -961,10 +973,6 @@ public class FlxG
 		}
 	}
 	
-	
-
-	
-	
 	/**
 	 * Check the local bitmap cache to see if a bitmap with this key has been
 	 * loaded already.
@@ -976,6 +984,19 @@ public class FlxG
 	static public boolean checkBitmapCache(String Key)
 	{
 		return (_cache.get(Key) != null);
+	}
+	
+	/**
+	 * Check the local font cache to see if a bitmap with this key has been
+	 * loaded already.
+	 * 
+	 * @param Key The string key identifying the bitmap.
+	 * 
+	 * @return Whether or not this file can be found in the cache.
+	 */
+	static public boolean checkFontCache(String Key)
+	{
+		return (_fontCache.get(Key) != null);
 	}
 
 	/**
@@ -1062,45 +1083,23 @@ public class FlxG
 	 */
 	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Unique, String Key)
 	{
-		if(Key == null)
-		{	
-			Key = String.valueOf(Graphic.hashCode());
-			if(Unique && (_cache.get(Key) != null))
-			{
-				// Generate a unique key
-				int inc = 0;
-				String ukey;
-				do
-				{
-					ukey = Key + inc++;
-				}
-				while((_cache.get(ukey) != null));
-				Key = ukey;
-			}
-		}
-		// If there is no data for this key, generate the requested graphic
-		if(!checkBitmapCache(Key))
+		if (Unique)
 		{
-			if (!Unique)
-				_cache.put(Key, Graphic);
-			else
-			{
-				TextureData textureData = Graphic.getTexture().getTextureData();
+			TextureData textureData = Graphic.getTexture().getTextureData();
+		
+			if(!textureData.isPrepared())
+				textureData.prepare();
 			
-				if(!textureData.isPrepared())
-					textureData.prepare();
+			Pixmap newPixmap = new Pixmap(MathUtils.nextPowerOfTwo(Graphic.getRegionWidth()), MathUtils.nextPowerOfTwo(Graphic.getRegionHeight()), Pixmap.Format.RGBA8888);
+			Pixmap graphicPixmap = textureData.consumePixmap();
+			newPixmap.drawPixmap(graphicPixmap, 0, 0, Graphic.getRegionX(), Graphic.getRegionY(), Graphic.getRegionWidth(), Graphic.getRegionHeight());
 			
-				Pixmap newPixmap = new Pixmap(FlxU.ceilPowerOfTwo(Graphic.getRegionWidth()), FlxU.ceilPowerOfTwo(Graphic.getRegionHeight()), Pixmap.Format.RGBA8888);
-				Pixmap graphicPixmap = textureData.consumePixmap();
-				newPixmap.drawPixmap(graphicPixmap, 0, 0, Graphic.getRegionX(), Graphic.getRegionY(), Graphic.getRegionWidth(), Graphic.getRegionHeight());
-			
-				if (textureData.disposePixmap())
-					graphicPixmap.dispose();
+			if (textureData.disposePixmap())
+				graphicPixmap.dispose();
 				
-				_cache.put(Key, new TextureRegion(new Texture(new FlxTextureData(newPixmap))));
-			}
+			Graphic = new TextureRegion(new Texture(new FlxTextureData(newPixmap)));
 		}
-		return new TextureRegion(_cache.get(Key));
+		return Graphic;
 	}
 	
 	
@@ -1134,14 +1133,53 @@ public class FlxG
 	}
 	
 	/**
+	 * Loads a bitmap from a file, caches it, and generates a horizontally
+	 * flipped version if necessary.
+	 * 
+	 * @param Graphic The image file that you want to load.
+	 * @param Unique Make the bitmap unique, no duplicate allowed.
+	 * @param Key
+	 * 
+	 * @return The <code>BitmapData</code> we just created.
+	 */
+	static public BitmapFont addFont(FileHandle Font, float Size, String Key)
+	{
+		if(Key == null)
+		{
+			Key = Font.nameWithoutExtension()+":"+String.valueOf(Size);
+		}
+		if(!checkFontCache(Key))
+		{
+			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Font);
+			_fontCache.put(Key, generator.generateFont((int) Size, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*", true));
+			generator.dispose();
+		}
+		return _fontCache.get(Key);
+	}
+	
+	/**
+	 * Loads a bitmap from a file, caches it, and generates a horizontally
+	 * flipped version if necessary.
+	 * 
+	 * @param Graphic The image file that you want to load.
+	 * @param Unique Make the bitmap unique, no duplicate allowed.
+	 * @param Key
+	 * 
+	 * @return The <code>BitmapData</code> we just created.
+	 */
+	static public BitmapFont addFont(FileHandle Font, float Size)
+	{
+		return addFont(Font, Size, null);
+	}
+	
+	/**
 	 * Dumps the cache's image references.
 	 */
 	static public void clearBitmapCache()
 	{
-		Entries<String, TextureRegion> iter = _cache.entries();
-		while(iter.hasNext())
+		for (Entry<String, TextureRegion> entry : _cache.entries())
 		{
-			Texture texture = iter.next().value.getTexture();
+			Texture texture = entry.value.getTexture();
 			Pixmap pixmap = null;
 			if (!texture.getTextureData().disposePixmap())
 				pixmap = texture.getTextureData().consumePixmap();
@@ -1154,6 +1192,25 @@ public class FlxG
 		_cache.clear();
 	}
 	
+	/**
+	 * Dumps the cache's font references.
+	 */
+	static public void clearFontCache()
+	{
+		for (Entry<String, BitmapFont> entry : _fontCache.entries())
+		{
+			Texture texture = entry.value.getRegion().getTexture();
+			Pixmap pixmap = null;
+			if (!texture.getTextureData().disposePixmap())
+				pixmap = texture.getTextureData().consumePixmap();
+			if (pixmap != null)
+			{
+				pixmap.dispose();
+				texture.dispose();
+			}
+		}
+		_fontCache.clear();
+	}
 	
 	/**
 	 * Read-only: access the current game state from anywhere.
