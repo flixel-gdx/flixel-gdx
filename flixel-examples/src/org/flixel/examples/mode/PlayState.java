@@ -4,6 +4,8 @@ import org.flixel.*;
 import org.flixel.event.AFlxCamera;
 import org.flixel.event.AFlxG;
 
+import com.badlogic.gdx.utils.Array;
+
 public class PlayState extends FlxState
 {
 
@@ -161,7 +163,7 @@ public class PlayState extends FlxState
 		//the scroll factors to zero, to make sure the HUD doesn't
 		//wiggle around while we play.
 		_hud.setAll("scrollFactor",new FlxPoint(0,0));
-		//_hud.setAll("cameras",[FlxG.camera]);
+		_hud.setAll("cameras",new Array<FlxCamera>(new FlxCamera[]{FlxG.camera}));
 
 		FlxG.playMusic(Asset.SndMode);
 		FlxG.flash(0xff131c1b);

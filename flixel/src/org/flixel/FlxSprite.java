@@ -585,7 +585,7 @@ public class FlxSprite extends FlxObject
 	 * Called by game loop, updates then blits or renders current frame of animation to the screen
 	 */
 	@Override
-	public void draw()
+	public void draw(FlxCamera Camera)
 	{
 		if(_flickerTimer != 0)
 		{
@@ -597,11 +597,10 @@ public class FlxSprite extends FlxObject
 		if(dirty)	//rarely 
 			calcFrame();
 		
-		FlxCamera camera = FlxG.camera;
-		if (!onScreen(camera))
+		if (!onScreen(Camera))
 			return;
-		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
-		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
+		_point.x = x - (Camera.scroll.x * scrollFactor.x) - offset.x;
+		_point.y = y - (Camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
 		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
@@ -623,7 +622,7 @@ public class FlxSprite extends FlxObject
 		}
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-				drawDebug(camera);		
+				drawDebug(Camera);		
 	}
 	
 	/**
@@ -1105,6 +1104,10 @@ public class FlxSprite extends FlxObject
 	{
 		if(Camera == null)
 			Camera = FlxG.camera;
+		
+		if (cameras != null && !cameras.contains(Camera, true))
+			return false;
+		
 		getScreenXY(_point,Camera);
 		_point.x = _point.x - offset.x;
 		_point.y = _point.y - offset.y;
@@ -1188,6 +1191,4 @@ public class FlxSprite extends FlxObject
 			_callback.onAnimate(((_curAnim != null)?(_curAnim.name):null),_curFrame,_curIndex);
 		dirty = false;
 	}
-
-
 }

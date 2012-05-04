@@ -18,6 +18,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import flash.display.Stage;
+
 /**
  * FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.
  * It is a long and sloppy file that you shouldn't have to worry about too much!
@@ -133,24 +135,38 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		
 	private GL10 gl;
 	private FlxPause _pauseState;
+	
+	public Stage stage;
 		
 	/**
 	 * Instantiate a new game object.
 	 * 
 	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
 	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	StageSizeX		The width of your game in actual pixels. In AS3, this would be in the SWF meta tag.
+	 * @param	StageSizeY		The height of your game in actual pixels. In AS3, this would be in the SWF meta tag.
 	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
 	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
 	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
-	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor)
+	public FlxGame(int GameSizeX, int GameSizeY, int StageSizeX, int StageSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor)
 	{
 		// basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		FlxG.setFramerate(GameFramerate);
 		FlxG.setFlashFramerate(FlashFramerate);
+		
+		// if no stage size has been specified, set it to the game size
+		if (StageSizeX == 0 && StageSizeY == 0)
+		{
+			StageSizeX = GameSizeX;
+			StageSizeY = GameSizeY;
+		}
+			
+		stage = new Stage(StageSizeX, StageSizeY);
+		
 		_accumulator = (int) _step;
 		_total = 0;
 		_state = null;
@@ -183,10 +199,59 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
 	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
+	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
+	 */
+	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor)
+	{
+		this(GameSizeX, GameSizeY, 0, 0, InitialState, Zoom, GameFramerate, FlashFramerate, UseSystemCursor);
+	}
+	
+	/**
+	 * Instantiate a new game object.
+	 * 
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	StageSizeX		The width of your game in actual pixels. In AS3, this would be in the SWF meta tag.
+	 * @param	StageSizeY		The height of your game in actual pixels. In AS3, this would be in the SWF meta tag.
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
+	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
+	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
+	 */
+	public FlxGame(int GameSizeX, int GameSizeY, int StageSizeX, int StageSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate)
+	{
+		this(GameSizeX, GameSizeY, StageSizeX, StageSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false);
+	}
+	
+	/**
+	 * Instantiate a new game object.
+	 * 
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
+	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
+	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false);
+		this(GameSizeX, GameSizeY, 0, 0, InitialState, Zoom, GameFramerate, FlashFramerate, false);
+	}
+	
+	/**
+	 * Instantiate a new game object.
+	 * 
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	StageSizeX		The width of your game in actual pixels. In AS3, this would be in the SWF meta tag.
+	 * @param	StageSizeY		The height of your game in actual pixels. In AS3, this would be in the SWF meta tag.
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
+	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
+	 */
+	public FlxGame(int GameSizeX, int GameSizeY, int StageSizeX, int StageSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate)
+	{
+		this(GameSizeX, GameSizeY, StageSizeX, StageSizeY, InitialState, Zoom, GameFramerate, 30, false);
 	}
 	
 	/**
@@ -200,7 +265,22 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, 30, false);
+		this(GameSizeX, GameSizeY, 0, 0, InitialState, Zoom, GameFramerate, 30, false);
+	}
+	
+	/**
+	 * Instantiate a new game object.
+	 * 
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	StageSizeX		The width of your game in actual pixels. In AS3, this would be in the SWF meta tag.
+	 * @param	StageSizeY		The height of your game in actual pixels. In AS3, this would be in the SWF meta tag.
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
+	 */
+	public FlxGame(int GameSizeX, int GameSizeY, int StageSizeX, int StageSizeY, Class<? extends FlxState> InitialState, float Zoom)
+	{
+		this(GameSizeX, GameSizeY, StageSizeX, StageSizeY, InitialState, Zoom, 30, 30, false);
 	}
 	
 	/**
@@ -213,7 +293,21 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, 30, 30, false);
+		this(GameSizeX, GameSizeY, 0, 0, InitialState, Zoom, 30, 30, false);
+	}
+	
+	/**
+	 * Instantiate a new game object.
+	 * 
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	StageSizeX		The width of your game in actual pixels. In AS3, this would be in the SWF meta tag.
+	 * @param	StageSizeY		The height of your game in actual pixels. In AS3, this would be in the SWF meta tag.
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 */
+	public FlxGame(int GameSizeX, int GameSizeY, int StageSizeX, int StageSizeY, Class<? extends FlxState> InitialState)
+	{
+		this(GameSizeX, GameSizeY, StageSizeX, StageSizeY, InitialState, 1, 30, 30, false);
 	}
 	
 	/**
@@ -225,13 +319,13 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState)
 	{
-		this(GameSizeX, GameSizeY, InitialState, 1, 30, 30, false);
+		this(GameSizeX, GameSizeY, 0, 0, InitialState, 1, 30, 30, false);
 	}
 	
 	/**
 	 * Internal event handler for input and focus.
 	 * 
-	 * @param	KeyCode	libgdx key code.
+	 * @param	KeyCode		A libgdx key code.
 	 */
 	@Override
 	public boolean keyUp(int KeyCode)
@@ -596,22 +690,36 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	{
 		long mark = System.currentTimeMillis();
 		
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT); // Clear the screen. It's not needed because of FlxG.lockCameras().	
-		float[] rgba = FlxU.getRGBA(FlxG.getBgColor());
-		gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+		//Clear the background to solid white
+		gl.glClearColor(1, 1, 1, 1);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		FlxG.camera.glCamera.update(false);
-		FlxG.batch.setProjectionMatrix(FlxG.camera.glCamera.combined);
-		FlxG.batch.begin();
-					
-		_state.draw();
+		for (FlxCamera camera : FlxG.cameras)
+		{
+			FlxG.batch.begin();
 			
-		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);	
-		if(_debugger != null && _debuggerUp)
-			_debugger.perf.draw();
+			//Set the drawing area to the area of the camera
+			//TODO: Only calculate this when needed. 
+			gl.glScissor((int) (camera.x * FlxG.difWidth), Gdx.graphics.getHeight() - ((int) (camera.y * FlxG.difHeight) + (int) (camera.height * FlxG.difHeight * camera.getZoom())), (int) FlxU.ceil(camera.width * FlxG.difWidth * camera.getZoom()), (int) FlxU.ceil(camera.height * FlxG.difHeight * camera.getZoom()));
+			
+			//Clear the camera
+			float[] rgba = FlxU.getRGBA(camera.bgColor);
+			gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			
+			FlxG.batch.setProjectionMatrix(camera.glCamera.combined);
+			
+			_state.draw(camera);
+			
+			FlxG.batch.end();
+			
+			camera.drawFX();
+		}
 		
-		FlxG.camera.drawFX();
-		
+		//Draw fps display
+		FlxG.batch.begin();
+		FlxG.batch.setProjectionMatrix(FlxG.camera.glCamera.combined);
+		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);
 		FlxG.batch.end();
 		
 		if(_debuggerUp)
@@ -627,21 +735,24 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_total = System.currentTimeMillis();
 		
 		SystemAsset.createSystemAsset();
-		Gdx.input.setInputProcessor(this);
 		
 		FlxG.resWidth = Gdx.graphics.getWidth();
 		FlxG.resHeight = Gdx.graphics.getHeight();
-		FlxG.difWidth = ((float)FlxG.resWidth / FlxG.width);
-		FlxG.difHeight = ((float)FlxG.resHeight / FlxG.height);
-		if(FlxG.flashGfx == null)
-			FlxG.flashGfx = new ShapeRenderer();
+		FlxG.difWidth = ((float)FlxG.resWidth / stage.stageWidth);
+		FlxG.difHeight = ((float)FlxG.resHeight / stage.stageHeight);
+		
+		Gdx.input.setInputProcessor(this);
+		
 		_pauseState = new FlxPause();
 		
 		gl = Gdx.gl10;
-		gl.glEnable(GL10.GL_CULL_FACE);
-		gl.glCullFace(GL10.GL_BACK);
+		//gl.glEnable(GL10.GL_CULL_FACE);
+		//gl.glCullFace(GL10.GL_BACK);
+		gl.glEnable(GL10.GL_SCISSOR_TEST);
 		
 		FlxG.batch = new SpriteBatch();
+		FlxG.flashGfx = new ShapeRenderer();
+		
 		font = SystemAsset.system;
 		
 		if(Gdx.app.getType() != ApplicationType.Android)
@@ -657,11 +768,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	@Override
 	public void resize(int width, int height)
 	{
-//		float aspectRatio = (float) width / (float) height;
-//		camera = new OrthographicCamera(2f * aspectRatio, 2f);
-//		camera = new OrthographicCamera(480, 320);
-//		camera.translate(480/2, 320/2, 1);		
-//		camera.update();
+		FlxG.resWidth = width;
+		FlxG.resHeight = height;
+		FlxG.difWidth = ((float)FlxG.resWidth / stage.stageWidth);
+		FlxG.difHeight = ((float)FlxG.resHeight / stage.stageHeight);
 	}	
 	
 	protected void onFocusLost()

@@ -292,14 +292,14 @@ public class FlxButton extends FlxSprite
 	 * Just draws the button graphic and text label to the screen.
 	 */
 	@Override
-	public void draw()
+	public void draw(FlxCamera Camera)
 	{
-		super.draw();
+		super.draw(Camera);
 		if(label != null)
 		{
 			label.scrollFactor =  scrollFactor;
 			label.cameras = cameras;
-			label.draw();
+			label.draw(Camera);
 		}
 	}
 	

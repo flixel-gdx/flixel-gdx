@@ -96,12 +96,13 @@ public class FlxBasic
 	/**
 	 * Override this function to control how the object is drawn.
 	 * Overriding <code>draw()</code> is rarely necessary, but can be very useful.
+	 * @param camera 
 	 */
-	public void draw()
+	public void draw(FlxCamera Camera)
 	{
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-			drawDebug(FlxG.camera);
+			drawDebug(Camera);
 	}
 	
 	/**

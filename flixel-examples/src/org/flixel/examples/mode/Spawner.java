@@ -84,7 +84,7 @@ public class Spawner extends FlxSprite
 	@Override
 	public void hurt(float Damage)
 	{
-		FlxG.play(Asset.SndHit);
+		FlxG.play(Asset.SndBotHit);
 		flicker(0.2f);
 		FlxG.score += 50;
 		super.hurt(Damage);

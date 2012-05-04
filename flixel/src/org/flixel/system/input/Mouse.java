@@ -239,10 +239,8 @@ public class Mouse extends FlxPoint
 		{
 			o = _pointers.get(i);
 			
-			o.screenPosition.x = Gdx.input.getX(i);
-			o.screenPosition.y = Gdx.input.getY(i);
-			
-			unproject(o.screenPosition);
+			o.screenPosition.x = Gdx.input.getX(i) / FlxG.difWidth;
+			o.screenPosition.y = Gdx.input.getY(i) / FlxG.difHeight;
 			
 			if((o.last == -1) && (o.current == -1))
 				o.current = 0;
@@ -252,7 +250,7 @@ public class Mouse extends FlxPoint
 			
 			++i;
 		}
-		
+
 		updateCursor();
 	}
 	
@@ -629,22 +627,6 @@ public class Mouse extends FlxPoint
 		o.screenPosition.x = Record.x;
 		o.screenPosition.y = Record.y;
 		updateCursor();
-	}
-	
-	/**
-	 * Translate a point in window space to game space.
-	 * 
-	 * @param	Point	The point to unproject.
-	 * 
-	 * @return	Point	The unprojected point.
-	 */
-	//TODO: Consider moving this to either FlxG or FlxCamera?
-	protected FlxPoint unproject(FlxPoint Point)
-	{
-		Point.x *= (FlxG.width / (float) Gdx.graphics.getWidth());
-		Point.y *= (FlxG.height / (float) Gdx.graphics.getHeight());
-		
-		return Point;
 	}
 	
 	/**

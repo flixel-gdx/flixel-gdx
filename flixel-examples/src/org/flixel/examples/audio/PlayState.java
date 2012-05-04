@@ -4,7 +4,6 @@ import org.flixel.FlxButton;
 import org.flixel.FlxG;
 import org.flixel.FlxSound;
 import org.flixel.FlxState;
-import org.flixel.FlxText;
 import org.flixel.event.AFlxButton;
 
 

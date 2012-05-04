@@ -138,10 +138,10 @@ public class PlayState extends FlxState
 	}
 
 	@Override
-	public void draw()
+	public void draw(FlxCamera Camera)
 	{
-		super.draw();
-		highlightBox.drawDebug();
+		super.draw(Camera);
+		highlightBox.drawDebug(Camera);
 	}
 
 	private void setupPlayer()
