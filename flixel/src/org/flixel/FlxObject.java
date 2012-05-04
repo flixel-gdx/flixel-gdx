@@ -462,13 +462,13 @@ public class FlxObject extends FlxBasic
 	 * Rarely called, and in this case just increments the visible objects count and calls <code>drawDebug()</code> if necessary.
 	 */
 	@Override
-	public void draw()
+	public void draw(FlxCamera Camera)
 	{
-		if(!onScreen(FlxG.camera))
+		if(!onScreen(Camera))
 			return;
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-			drawDebug(FlxG.camera);
+			drawDebug(Camera);
 	}
 	
 	

@@ -43,7 +43,7 @@ public class DebugPathDisplay extends FlxBasic
 	 * Cycles through cameras and calls <code>drawDebug()</code> on each one.
 	 */
 	@Override
-	public void draw()
+	public void draw(FlxCamera Camera)
 	{
 		if(!FlxG.visualDebug || ignoreDrawDebug)
 			return;	

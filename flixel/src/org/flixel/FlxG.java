@@ -30,6 +30,8 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
+import flash.display.Stage;
+
 /**
  * This is a global helper class full of useful functions for audio,
  * input, basic info, and the camera system among other things.
@@ -228,10 +230,6 @@ public class FlxG
 	 * @default false
 	 */
 	static public boolean useBufferLocking;
-	/**
-	 * Internal helper variable for clearing the cameras each frame.
-	 */
-	static protected FlxRect _cameraRect;
 	
 	/**
 	 * An array container for plugins.
@@ -241,16 +239,9 @@ public class FlxG
 	 static public Array<FlxBasic> plugins;
 	 
 	/**
-	 * Set this hook to get a callback whenever the volume changes.
-	 * Function should take the form <code>myVolumeHandler(Volume:Number)</code>.
-	 */
-//	static public var volumeHandler:Function; TODO: volumeHandler interface is not needed. There will be a display by the phone itself.
-	
-	/**
 	 * Useful helper objects for doing Flash-specific rendering.
 	 * Primarily used for "debug visuals" like drawing bounding boxes directly to the screen buffer.
 	 */
-	//static public Sprite flashGfxSprite;
 	static public ShapeRenderer flashGfx;
 
 	/**
@@ -847,33 +838,33 @@ public class FlxG
 		destroySounds(false);
 	}
 	
-	static public void init(FlxGame Game, int Width, int Height, float Zoom)
+	/**
+	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
+	 */
+	static void init(FlxGame Game, int Width, int Height, float Zoom)
 	{
-		_game = Game;
-		_cache = new ObjectMap<String, TextureRegion>();
-		_fontCache = new ObjectMap<String, BitmapFont>();
-		width = Width;
-		height = Height;
+		FlxG._game = Game;
+		FlxG.width = Width;
+		FlxG.height = Height;
 		
+		FlxG._cache = new ObjectMap<String, TextureRegion>();
+		FlxG._fontCache = new ObjectMap<String, BitmapFont>();
 		
-		mute = false;
-		_volume = 0.5f;
-		sounds = new FlxGroup();
-//		volumeHandler = null;
+		FlxG.mute = false;
+		FlxG._volume = 0.5f;
+		FlxG.sounds = new FlxGroup();
 		
-		clearBitmapCache();
-		clearFontCache();
+		FlxG.clearBitmapCache();
+		FlxG.clearFontCache();
 		
-		FlxCamera.defaultZoom = 1;//Zoom;
-//		FlxG._cameraRect = new Rectangle();
+		FlxCamera.defaultZoom = Zoom;
 		FlxG.cameras = new Array<FlxCamera>();
-		FlxG.visualDebug = false;
-//		useBufferLocking = false;
-//		
+		useBufferLocking = false;
+		
 		plugins = new Array<FlxBasic>();
 //		addPlugin(new DebugPathDisplay());
 		addPlugin(new TimerManager());
-//		
+		
 		FlxG.mouse = new Mouse();
 		FlxG.keys = new Keyboard();
 		FlxG.sensor = new Sensor();
@@ -966,14 +957,8 @@ public class FlxG
 			{
 				if(cam.active)
 					cam.update();
-//				cam.buffer.translate(cam.x + cam._flashOffsetX, cam.y + cam._flashOffsetY, 1);
-//				cam._flashSprite.x = cam.x + cam._flashOffsetX;
-//				cam._flashSprite.y = cam.y + cam._flashOffsetY;
-//				cam._flashSprite.visible = cam.visible;
-				// This is working, it updates to fast?
-//				cam.buffer.position.x = (FlxG.width/2-cam.x);
-//				cam.buffer.position.y = (FlxG.height/2-cam.y);		
-//				cam.buffer.update();
+				cam.glCamera.position.x = -cam.x + cam._flashOffsetX;
+				cam.glCamera.position.y = -cam.y + cam._flashOffsetY;
 			}
 		}
 	}
@@ -1215,6 +1200,17 @@ public class FlxG
 			}
 		}
 		_fontCache.clear();
+	}
+	
+	/**
+	 * Read-only: retrieves the Flash stage object (required for event listeners)
+	 * Will be null if it's not safe/useful yet.
+	 */
+	static public Stage getStage()
+	{
+		//if(_game.root != null)
+			return _game.stage;
+		//return null;
 	}
 	
 	/**
@@ -1877,15 +1873,15 @@ public class FlxG
 	 */
 	public static void drawPlugins()
 	{
-		FlxBasic plugin;
+		//FlxBasic plugin;
 		Array<FlxBasic> pluginList = FlxG.plugins;
 		int i = 0;
 		int l = pluginList.size;
 		while(i < l)
 		{
-			plugin = pluginList.get(i++);
-			if(plugin.exists && plugin.visible)
-				plugin.draw();
+			//plugin = pluginList.get(i++);
+			//if(plugin.exists && plugin.visible)
+				//plugin.draw();
 		}
 	}
 

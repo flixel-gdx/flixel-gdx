@@ -342,7 +342,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	@Override
-	public void draw()
+	public void draw(FlxCamera Camera)
 	{			
 		if(_flickerTimer != 0)
 		{
@@ -354,14 +354,15 @@ public class FlxText extends FlxSprite
 		if (_textField.getBounds().width != width)
 			calcFrame();
 		
-		FlxCamera camera = FlxG.camera;
+		if(!onScreen(Camera))
+			return;
 		
-		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
-		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
+		_point.x = x - (Camera.scroll.x * scrollFactor.x) - offset.x;
+		_point.y = y - (Camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
 		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
 		
-		_textField.setPosition(_point.x, _point.y);
+		_textField.setPosition(_point.x, _point.y + 2);
 		
 		if (angle != 0)
 		{
@@ -393,6 +394,6 @@ public class FlxText extends FlxSprite
 		_VISIBLECOUNT++;
 		
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-			drawDebug(camera);
+			drawDebug(Camera);
 	}
 }

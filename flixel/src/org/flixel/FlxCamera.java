@@ -2,12 +2,12 @@ package org.flixel;
 
 import org.flixel.event.AFlxCamera;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import flash.display.Stage;
 
 
 /**
@@ -120,11 +120,11 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
-	Sprite _flashBitmap;
+	float _flashOffsetX;
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
-	Sprite _flashSprite;
+	float _flashOffsetY;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -203,32 +203,21 @@ public class FlxCamera extends FlxBasic
 		scroll = new FlxPoint();
 		_point = new FlxPoint();
 		bounds = null;
-
+	
+		glCamera = new OrthographicCamera();						
+		
+		bgColor = FlxG.getBgColor();
+		_color = 0xFFFFFF;
+		
+		//setColor(bgColor);
 		
 		setZoom(Zoom); //sets the scale of flash sprite, which in turn loads flashoffset values
+		_flashOffsetX = glCamera.position.x;
+		_flashOffsetY = glCamera.position.y;
 		
-				
-		bgColor = FlxG.getBgColor();
-		_color = 0xFFFFFFFF;
+		glCamera.position.x = -x + _flashOffsetX;
+		glCamera.position.y = -y + _flashOffsetY;	
 		
-		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo((int) (Width*getZoom())), FlxU.ceilPowerOfTwo((int) (Height*getZoom())), Format.RGBA8888);
-		p.setColor(1, 1, 1, 1);
-		p.fillRectangle(0, 0, Width, Height);
-		_flashBitmap = new Sprite(new Texture(p), width, height);
-		_flashBitmap.setPosition(x, y);
-		_flashBitmap.setColor(0,0,0,0);
-		p.dispose();
-		
-		//TODO: this is the background of the camera, but it is replaced by FlxGame.draw() --> gl.glClearColor().
-//		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo((int) (Width*getZoom())), FlxU.ceilPowerOfTwo((int) (Height*getZoom())), Format.RGBA8888);
-//		p.setColor(1, 1, 1, 1);
-//		p.fillRectangle(-x, -y, ((int)(Width*2)), ((int)(Height*2)));
-//		_flashSprite = new Sprite(new Texture(p), ((int)(width)), ((int)(height)));
-//		_flashSprite.setPosition(0, 0);
-//		_flashSprite.flip(false, true);
-//		p.dispose();
-		setColor(bgColor);
-				
 		_fxFlashColor = 0;
 		_fxFlashDuration = 0.0f;
 		_fxFlashComplete = null;
@@ -323,7 +312,7 @@ public class FlxCamera extends FlxBasic
 		}
 		
 		//Update the "flash" special effect
-		if(_fxFlashAlpha > 0.0)
+		if(_fxFlashAlpha > 0.0f)
 		{
 			_fxFlashAlpha -= FlxG.elapsed/_fxFlashDuration;
 			if((_fxFlashAlpha <= 0) && (_fxFlashComplete != null))
@@ -331,10 +320,10 @@ public class FlxCamera extends FlxBasic
 		}
 		
 		//Update the "fade" special effect
-		if((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
+		if((_fxFadeAlpha > 0.0f) && (_fxFadeAlpha < 1.0f))
 		{
 			_fxFadeAlpha += FlxG.elapsed/_fxFadeDuration;
-			if(_fxFadeAlpha >= 1.0)
+			if(_fxFadeAlpha >= 1.0f)
 			{
 				_fxFadeAlpha = 1.0f;
 				if(_fxFadeComplete != null)
@@ -352,7 +341,6 @@ public class FlxCamera extends FlxBasic
 				// Putting the camera back to its original place.
 				glCamera.position.x = (FlxG.width/2f-x);
 				glCamera.position.y = (FlxG.height/2f-y);
-				glCamera.update();
 				if(_fxShakeComplete != null)
 					_fxShakeComplete.onShakeComplete();
 			}
@@ -364,26 +352,9 @@ public class FlxCamera extends FlxBasic
 					_fxShakeOffset.y = (float) ((FlxG.random()*_fxShakeIntensity*height*2-_fxShakeIntensity*height)*_zoom);
 			}
 		}
+		
+		glCamera.update(false);
 	}
-	
-	
-	/**
-	 * Draw the background of the camera.
-	 */
-	//@Override
-	//public void draw()
-	//{
-		//_flashSprite.draw(FlxG.batch);
-	//}
-	
-	/**
-	 * Draw the front of the camera. Use for fade and flash.
-	 */
-	public void drawFront()
-	{
-		_flashBitmap.draw(FlxG.batch);
-	}
-
 	
 	/**
 	 * Tells this camera object what <code>FlxObject</code> to track.
@@ -722,10 +693,8 @@ public class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0f;
 		_fxFadeAlpha = 0.0f;
 		_fxShakeDuration = 0;
-		// Putting the camera back to its original place.
-		glCamera.position.x = (FlxG.width/2f-x);
-		glCamera.position.y = (FlxG.height/2f-y);
-		glCamera.update();
+		glCamera.position.x = -x + _flashOffsetX;
+		glCamera.position.y = -y + _flashOffsetY;
 	}
 	
 	
@@ -786,7 +755,7 @@ public class FlxCamera extends FlxBasic
 	 */
 	public float getAlpha()
 	{
-		return _flashBitmap.getColor().a;
+		return 1;//_flashBitmap.getColor().a;
 	}
 	
 	
@@ -795,9 +764,9 @@ public class FlxCamera extends FlxBasic
 	 */ 
 	public void setAlpha(float Alpha)
 	{		
-		Color color = _flashBitmap.getColor();
-		_flashBitmap.setColor(color.r, color.g, color.b, Alpha);
-		_flashBitmap.setColor(0,0,0,0);
+		//Color color = _flashBitmap.getColor();
+		//_flashBitmap.setColor(color.r, color.g, color.b, Alpha);
+		//_flashBitmap.setColor(0,0,0,0);
 	}
 	
 	
@@ -818,7 +787,6 @@ public class FlxCamera extends FlxBasic
 	{
 		_angle = Angle;
 		glCamera.rotate(Angle, 0, 0, 1);
-		glCamera.update();
 	}
 	
 	/**
@@ -853,42 +821,70 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void setScale(float X, float Y)
 	{
-		if(glCamera == null)
-		{
-			glCamera = new OrthographicCamera();						
-		}
-		glCamera.setToOrtho(true, FlxG.width/X, FlxG.height/Y);
-		glCamera.update();
+		Stage stage = FlxG.getStage();
+		glCamera.setToOrtho(true, stage.stageWidth/X, stage.stageHeight/Y);
 	}
 	
+	/**
+	 * Fill the camera with the specified color.
+	 * 
+	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
+	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
+	 */
+	public void fill(long Color, boolean BlendAlpha)
+	{
+		if (BlendAlpha)
+		{
+			Gdx.gl.glEnable(GL10.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		}
+		
+		ShapeRenderer flashGfx = FlxG.flashGfx;
+		flashGfx.setProjectionMatrix(glCamera.combined);
+		flashGfx.begin(ShapeType.FilledRectangle);
+		flashGfx.setColor(FlxU.colorFromHex(Color));
+		flashGfx.filledRect(x, y, width * _zoom, height * _zoom);
+		flashGfx.end();
+		
+		if (BlendAlpha)
+			Gdx.gl.glDisable(GL10.GL_BLEND);
+	}
+	
+	/**
+	 * Fill the camera with the specified color.
+	 * 
+	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
+	 */
+	public void fill(long Color)
+	{
+		fill(Color, true);
+	}
 	
 	/**
 	 * Internal helper function, handles the actual drawing of all the special effects.
 	 */
 	void drawFX()
 	{
-		float[] rgba;
+		float alphaComponent;
+		
 		//Draw the "flash" special effect onto the buffer
-		if(_fxFlashAlpha > 0.0)
+		if(_fxFlashAlpha > 0.0f)
 		{
-			rgba =  FlxU.getRGBA(_fxFlashColor);
-			_flashBitmap.setColor(rgba[0],rgba[1],rgba[2],_fxFlashAlpha);
-			drawFront();
+			alphaComponent = _fxFlashColor>>24;
+			fill(((long)(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFlashAlpha)<<24)+(_fxFlashColor&0x00ffffff));
 		}
 		
 		//Draw the "fade" special effect onto the buffer
-		if(_fxFadeAlpha > 0.0)
+		if(_fxFadeAlpha > 0.0f)
 		{
-			rgba =  FlxU.getRGBA(_fxFadeColor);
-			_flashBitmap.setColor(rgba[0],rgba[1],rgba[2],_fxFadeAlpha);
-			drawFront();
+			alphaComponent = _fxFadeColor>>24;
+			fill(((long)(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFadeAlpha)<<24)+(_fxFadeColor&0x00ffffff));
 		}
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
-			glCamera.position.x = FlxG.width/2f-y + _fxShakeOffset.x;
-			glCamera.position.y = FlxG.height/2f-x + _fxShakeOffset.y;
-			glCamera.update();
+			glCamera.position.x = x + _flashOffsetX + _fxShakeOffset.x;
+			glCamera.position.y = y + _flashOffsetY + _fxShakeOffset.y;
 		}
 	}
 	
