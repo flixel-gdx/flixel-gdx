@@ -106,7 +106,7 @@ public class PlayState extends FlxState
         //To draw path
         if (_unit.path != null)
         {
-            //_unit.path.drawDebug();
+            _unit.path.drawDebug();
         }
     }
                 
