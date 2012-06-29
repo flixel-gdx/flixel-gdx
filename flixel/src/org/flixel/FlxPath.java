@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -16,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
  * or by creating your own array of points.
  * 
  * @author	Thomas Weston
+ * @author	Ka Wing Chin
  */
 public class FlxPath
 {
@@ -43,7 +45,7 @@ public class FlxPath
 	 */
 	protected FlxPoint _point;
 	private TextureRegion _debug;
-	
+	private Pixmap _pixmap;
 	
 	/**
 	 * Instantiate a new path object.
@@ -64,6 +66,10 @@ public class FlxPath
 //		DebugPathDisplay debugPathDisplay = manager;
 //		if(debugPathDisplay != null)
 //			debugPathDisplay.add(this);
+		
+		_pixmap = new Pixmap(FlxU.ceilPowerOfTwo(FlxG.width), FlxU.ceilPowerOfTwo(FlxG.height), Format.RGBA8888);	
+		_debug = new TextureRegion(new Texture(_pixmap));
+		_pixmap.dispose();
 	}
 	
 	/**
@@ -252,44 +258,20 @@ public class FlxPath
 		if(Camera == null)
 			Camera = FlxG.camera;
 		
-		/*Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(FlxG.width), FlxU.ceilPowerOfTwo(FlxG.height), Format.RGBA8888);
-		_debug = new TextureRegion(new Texture(p));
-		
-		ShapeRenderer gfx = FlxG.flashGfx;
-		gfx.begin(ShapeType.FilledRectangle);
-		gfx.setColor(Color.WHITE);
-		gfx.filledRect(0, 0, 20, 20);
-		gfx.end();*/
-		
-		
-		
-		
-		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
-		Pixmap p;
-		if(_debug != null)
-		{
-			TextureData textureData = _debug.getTexture().getTextureData();
-			if(!textureData.isPrepared())
-				textureData.prepare();
-			p = textureData.consumePixmap();
-//			p.dispose();
-		}			
-		//else
-		{
-			p = new Pixmap(FlxU.ceilPowerOfTwo(FlxG.width), FlxU.ceilPowerOfTwo(FlxG.height), Format.RGBA8888);
-		}
-		
-		
+		FlxG.batch.draw(_debug, 0, 0);
 		
 		//Set up our global flash graphics object to draw out the path
-//		ShapeRenderer gfx = FlxG.flashGfx;
-//		gfx.clear();
+		ShapeRenderer gfx = FlxG.flashGfx;
+		gfx.setProjectionMatrix(Camera.glCamera.combined);
+//		gfx.dispose();
 		
 		//Then fill up the object with node and path graphics
 		FlxPoint node;
 		FlxPoint nextNode;
 		int i = 0;
 		int l = nodes.size;
+		
+		i = 0;
 		while(i < l)
 		{
 			//get a reference to the current node
@@ -317,10 +299,13 @@ public class FlxPath
 			//draw a box for the node
 			Color c = FlxU.colorFromHex(nodeColor);
 			c.a = 0.75f;
-			p.setColor(c);
-			//gfx.lineStyle();
-			p.fillRectangle((int)(_point.x-nodeSize*(int)0.5f),(int)(_point.y-nodeSize*(int)0.5f),nodeSize,nodeSize);
-//			gfx.endFill();
+			
+			//then stamp the path down onto the game buffer						
+			
+			gfx.begin(ShapeType.FilledRectangle);
+			gfx.setColor(c);
+			gfx.filledRect((_point.x-nodeSize*(int)0.5f), (_point.y-nodeSize*(int)0.5f), nodeSize, nodeSize);
+			gfx.end();
 
 			//then find the next node in the path
 			float linealpha = 0.55f;
@@ -335,28 +320,20 @@ public class FlxPath
 			//then draw a line to the next node
 			int firstX = (int) _point.x;
 			int firstY = (int) _point.y;
-//			gfx.moveTo(_point.x,_point.y);
 			c = FlxU.colorFromHex(debugColor);
 			c.a = linealpha;
-			p.setColor(c);
-//			gfx.lineStyle(1,debugColor,linealpha);
 			_point.x = nextNode.x - (int)(Camera.scroll.x*debugScrollFactor.x); //copied from getScreenXY()
 			_point.y = nextNode.y - (int)(Camera.scroll.y*debugScrollFactor.y);
 			_point.x = (int)(_point.x + ((_point.x > 0)?0.0000001:-0.0000001));
 			_point.y = (int)(_point.y + ((_point.y > 0)?0.0000001:-0.0000001));
-			p.drawLine(firstX, firstY, (int)_point.x,(int)_point.y);
+			
+			gfx.begin(ShapeType.Line);
+			gfx.setColor(c);
+			gfx.line(firstX, firstY, _point.x, _point.y);
+			gfx.end();
 
 			i++;
 		}
-		
-		_debug = new TextureRegion(new Texture(p));
-		_debug.flip(false, true);
-		FlxG.batch.draw(_debug, 0, 0);
-		p.dispose();
-		//then stamp the path down onto the game buffer
-		
-//		Camera.buffer.draw(FlxG.flashGfxSprite);
-		
 	}
 	
 	/**
