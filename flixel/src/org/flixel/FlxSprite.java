@@ -11,6 +11,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * The main "game object" class, the sprite is a <code>FlxObject</code>
+ * with a bunch of graphics options and abilities, like animation and stamping.
+ * 
+ * @author	Ka Wing Chin
+ * @author	Thomas Weston
+ */
 public class FlxSprite extends FlxObject
 {
 	/**

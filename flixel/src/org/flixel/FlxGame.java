@@ -6,6 +6,7 @@ import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxPause;
 import org.flixel.system.FlxReplay;
+import org.flixel.system.input.Mouse;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
@@ -336,7 +337,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		/*if(_debuggerUp && _debugger.watch.editing)
 			return false;*/
 		
-		if((_debugger != null) && (/*(KeyCode == 0) ||*/ (KeyCode == 73)))
+		if((_debugger != null) && ((KeyCode == Keys.F3) || (KeyCode == Keys.BACKSLASH)))
 		{
 			_debugger.visible = !_debugger.visible;
 			_debuggerUp = _debugger.visible;
@@ -443,8 +444,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			}
 			return true;
 		}
-		
 		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
+		Mouse.activePointers++;
 		return true;
 	}
 
@@ -457,6 +458,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		if(/*(_debuggerUp && _debugger.hasMouse) ||*/ _replaying)
 			return true;
 		FlxG.mouse.handleMouseUp(X, Y, Pointer, Button);
+		Mouse.activePointers--;
 		return true;
 	}
 
@@ -716,14 +718,17 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			camera.drawFX();
 		}
 		
-		//Draw fps display
+		//Draw fps display TODO: needs to be deleted some day.
 		FlxG.batch.begin();
 		FlxG.batch.setProjectionMatrix(FlxG.camera.glCamera.combined);
 		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);
 		FlxG.batch.end();
 		
 		if(_debuggerUp)
+		{
 			_debugger.perf.flixelDraw((int) (System.currentTimeMillis()-mark));
+			_debugger.perf.draw();
+		}
 	}
 	
 	/**

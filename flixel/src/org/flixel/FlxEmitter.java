@@ -207,7 +207,7 @@ public class FlxEmitter extends FlxGroup
 		if(Multiple)
 		{ 
 			FlxSprite sprite = new FlxSprite();
-			sprite.loadGraphic(Graphics,true); //TODO: doesn't work in TextureAtlas! Needs to be fixed soon.
+			sprite.loadGraphic(Graphics,true);
 			totalFrames = sprite.frames;
 			sprite.destroy();
 		}

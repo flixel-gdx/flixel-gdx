@@ -1,5 +1,7 @@
 package org.flixel;
 
+import org.flixel.plugin.DebugPathDisplay;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -45,7 +47,6 @@ public class FlxPath
 	 */
 	protected FlxPoint _point;
 	private TextureRegion _debug;
-	private Pixmap _pixmap;
 	
 	/**
 	 * Instantiate a new path object.
@@ -63,13 +64,14 @@ public class FlxPath
 		debugColor = 0xffffff;
 		ignoreDrawDebug = false;
 		
-//		DebugPathDisplay debugPathDisplay = manager;
-//		if(debugPathDisplay != null)
-//			debugPathDisplay.add(this);
+		Pixmap pixmap = new Pixmap(FlxU.ceilPowerOfTwo(FlxG.width), FlxU.ceilPowerOfTwo(FlxG.height), Format.RGBA8888);	
+		_debug = new TextureRegion(new Texture(pixmap));
+		pixmap.dispose();
 		
-		_pixmap = new Pixmap(FlxU.ceilPowerOfTwo(FlxG.width), FlxU.ceilPowerOfTwo(FlxG.height), Format.RGBA8888);	
-		_debug = new TextureRegion(new Texture(_pixmap));
-		_pixmap.dispose();
+		DebugPathDisplay debugPathDisplay = getManager();
+		if(debugPathDisplay != null)
+			debugPathDisplay.add(this);
+		
 	}
 	
 	/**
@@ -85,13 +87,16 @@ public class FlxPath
 	 */
 	public void destroy()
 	{
-		//DebugPathDisplay debugPathDisplay = manager;
-		//if(debugPathDisplay != null)
-		//debugPathDisplay.remove(this);
+		DebugPathDisplay debugPathDisplay = getManager();
+		if(debugPathDisplay != null)
+		debugPathDisplay.remove(this);
 	
 		debugScrollFactor = null;
 		_point = null;
-		nodes = null;		
+		nodes = null;
+		if(_debug != null)
+			_debug.getTexture().dispose();
+		_debug = null;
 	}
 
 	/**
@@ -304,7 +309,7 @@ public class FlxPath
 			
 			gfx.begin(ShapeType.FilledRectangle);
 			gfx.setColor(c);
-			gfx.filledRect((_point.x-nodeSize*(int)0.5f), (_point.y-nodeSize*(int)0.5f), nodeSize, nodeSize);
+			gfx.filledRect((_point.x-nodeSize*.5f), (_point.y-nodeSize*.5f), nodeSize, nodeSize);
 			gfx.end();
 
 			//then find the next node in the path
@@ -345,13 +350,10 @@ public class FlxPath
 	public void drawDebug()
 	{
 		drawDebug(null);
-	}
+	}	
 	
-	
-	/*
 	static public DebugPathDisplay getManager()
 	{
-		return FlxG.getPlugin(DebugPathDisplay);
+		return (DebugPathDisplay) FlxG.getPlugin(DebugPathDisplay.class);
 	}
-	*/
 }
