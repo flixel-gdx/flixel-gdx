@@ -13,7 +13,7 @@ public class ExampleStarter extends ListActivity
 							"AnimationDemo", "CollisionDemo", "ThousandParticlesDemo", "BlurDemo", 
 							"BitmapfontDemo", "MultiTouchDemo", "DragAndDropDemo", "CameraEffectsDemo", 
 							"AudioDemo", "TileDemo", "EZPlatformer", "TiledMap2Demo", "AnalogDemo", 
-							"SensorDemo", "Mode" };
+							"SensorDemo", "Mode", "FlxInvaders" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

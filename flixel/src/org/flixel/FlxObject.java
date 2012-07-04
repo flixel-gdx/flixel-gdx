@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
  * basic state information, sizes, scrolling, and basic physics and motion.
  * 
  * @author Ka Wing Chin
+ * @author Thomas Weston
  */
 public class FlxObject extends FlxBasic
 {
@@ -481,6 +482,9 @@ public class FlxObject extends FlxBasic
 	@Override
 	public void drawDebug(FlxCamera Camera)
 	{
+		if(width < 0 || height < 0)
+			return;
+		
 		if(Camera == null)
 			Camera = FlxG.camera;
 		
@@ -504,7 +508,7 @@ public class FlxObject extends FlxBasic
 			boundingBoxColor = FlxG.BLUE;
 		
 		if(_debug == null)
-		{	
+		{
 			Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(width), FlxU.ceilPowerOfTwo(height),Pixmap.Format.RGBA8888);
 			p.setColor(FlxU.colorFromHex(boundingBoxColor));			
 			p.drawRectangle(0, 0, width, height);
@@ -1278,7 +1282,7 @@ public class FlxObject extends FlxBasic
 				{
 					overlap = Object1.x + Object1.width - Object2.x;
 					
-					if((overlap > maxOverlap) || (Object1.allowCollisions & RIGHT) == 0 || (Object2.allowCollisions & LEFT) == 0) // TODO: recheck this BITWISE AND
+					if((overlap > maxOverlap) || (Object1.allowCollisions & RIGHT) == 0 || (Object2.allowCollisions & LEFT) == 0)
 						overlap = 0;
 					else
 					{
@@ -1289,7 +1293,7 @@ public class FlxObject extends FlxBasic
 				else if(obj1delta < obj2delta)
 				{
 					overlap = Object1.x - Object2.width - Object2.x;
-					if((-overlap > maxOverlap) || (Object1.allowCollisions & LEFT) == 0 || (Object2.allowCollisions & RIGHT) == 0) // TODO: recheck this BITWISE AND
+					if((-overlap > maxOverlap) || (Object1.allowCollisions & LEFT) == 0 || (Object2.allowCollisions & RIGHT) == 0)
 						overlap = 0;
 					else
 					{

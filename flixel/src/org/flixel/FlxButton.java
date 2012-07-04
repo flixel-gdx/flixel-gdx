@@ -1,8 +1,11 @@
 package org.flixel;
 
 import org.flixel.event.AFlxButton;
+import org.flixel.system.input.Mouse;
 import org.flixel.data.SystemAsset;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.audio.Sound;
 
 
@@ -211,9 +214,12 @@ public class FlxButton extends FlxSprite
 		int i = 0;
 		int l = cameras.size;
 		int pointerId = 0;
-		//TODO: Use FlxG.mouse.activePointers instead?
-		final int totalPointers = 8;
+		
+		int totalPointers = 8;
+		if(Gdx.app.getType() == ApplicationType.Android)
+			totalPointers = Mouse.activePointers;
 		boolean offAll = true;
+		
 		while(i < l)
 		{
 			camera = cameras.get(i++);
@@ -232,19 +238,22 @@ public class FlxButton extends FlxSprite
 							soundDown.play(true);
 					}
 					else if(FlxG.mouse.pressed(pointerId))
-					{					
+					{
+						status = PRESSED;
 						if(callback != null)
 							callback.onPressed();
 					}
 					if(FlxG.mouse.justReleased(pointerId) && visible && status == PRESSED)
 					{
-						//status = NORMAL;
+						status = HIGHLIGHT;
+						if(Gdx.app.getType() == ApplicationType.Android)
+							status = NORMAL;
 						if(callback != null)
 							callback.onUp();
 						if(soundUp != null)
 							soundUp.play(true);
 					}
-					if(status == NORMAL)
+					else if(status == NORMAL)
 					{
 						status = HIGHLIGHT;
 						if(callback != null)

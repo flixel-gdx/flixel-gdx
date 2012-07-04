@@ -138,6 +138,12 @@
             android:label="Mode"
             android:screenOrientation="landscape" >
         </activity>
+        <activity
+            android:name=".FlxInvaders"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="FlxInvaders"
+            android:screenOrientation="landscape" >
+        </activity>
     </application>
 
 </manifest>

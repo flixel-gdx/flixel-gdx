@@ -3,10 +3,13 @@ package org.flixel.system.debug;
 import java.text.DecimalFormat;
 
 import org.flixel.FlxG;
+import org.flixel.FlxU;
 import org.flixel.data.SystemAsset;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.IntArray;
 
 
@@ -85,7 +88,7 @@ public class Perf
 	 * Takes all the data in the accumulators and parses it into useful performance data.
 	 */
 	public void update()
-	{
+	{	
 		int time = (int) (System.currentTimeMillis() - _startTime);
 		int elapsed = time - _lastTime;
 		int updateEvery = 500;
@@ -140,7 +143,7 @@ public class Perf
 			visibleCount /= _visibleObjectMarker;
 	
 			output.append("D:" + visibleCount + " " + (drawTime/_flixelDrawMarker) + "ms");
-	
+			
 			//_text.text = output; can't draw here now.
 			this.output = output.toString();
 			_flixelUpdateMarker = 0;
@@ -221,6 +224,16 @@ public class Perf
 	public void draw()
 	{
 		if(output != null)
-			_text.drawMultiLine(FlxG.batch, output, 0, 0);		
+		{
+			ShapeRenderer flashGfx = FlxG.flashGfx;
+			flashGfx.setProjectionMatrix(FlxG.camera.glCamera.combined);
+			flashGfx.begin(ShapeType.FilledRectangle);
+			flashGfx.setColor(FlxU.colorFromHex(0x22222222));
+			flashGfx.filledRect(FlxG.width-60, 0, 60, 50);
+			flashGfx.end();
+			FlxG.batch.begin();
+			_text.drawMultiLine(FlxG.batch, output, FlxG.width-55, 5);
+			FlxG.batch.end();
+		}
 	}
 }

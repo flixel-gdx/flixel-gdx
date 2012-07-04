@@ -1,0 +1,19 @@
+
+pack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+alien
+  rotate: false
+  xy: 2, 2
+  size: 48, 16
+  orig: 48, 16
+  offset: 0, 0
+  index: -1
+ship
+  rotate: false
+  xy: 52, 2
+  size: 12, 8
+  orig: 12, 8
+  offset: 0, 0
+  index: -1

@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
  * properties refer to the first pointer.
  * 
  * @author Ka Wing Chin
+ * @author Thomas Weston
  */
 public class Mouse extends FlxPoint
 {
@@ -39,6 +40,11 @@ public class Mouse extends FlxPoint
 	protected FlxPoint _point;
 	
 	protected Array<Pointer> _pointers;
+	
+	/**
+	 * The current active pointers.
+	 */
+	public static int activePointers;
 	
 	/**
 	 * Constructor
@@ -543,10 +549,7 @@ public class Mouse extends FlxPoint
 		Pointer o;
 		
 		if (Pointer >= _pointers.size)
-		{
-			o = new Pointer();
-			_pointers.add(o);
-		}
+			_pointers.add(o = new Pointer());
 		else
 			o = _pointers.get(Pointer);
 		
@@ -570,10 +573,7 @@ public class Mouse extends FlxPoint
 		Pointer o;
 		
 		if (Pointer >= _pointers.size)
-		{
-			o = new Pointer();
-			_pointers.add(o);
-		}
+			_pointers.add(o = new Pointer());
 		else
 			o = _pointers.get(Pointer);
 		
