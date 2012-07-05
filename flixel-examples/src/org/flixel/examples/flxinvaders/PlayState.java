@@ -29,8 +29,6 @@ public class PlayState extends FlxState
 	private static String score;
 	// Gamepad
 	private FlxGamePad _pad;
-	// Front layer
-	private FlxGroup _frontLayer;
 	
 	//This is where we create the main game state!
 	//Inside this function we will create and orient all the important game objects.
@@ -39,19 +37,7 @@ public class PlayState extends FlxState
 	{
 		// Set background color.
 		FlxG.setBgColor(0x000000);
-		
-		// Gamepad for the phone.
-		if(Gdx.app.getType() == ApplicationType.Android)
-		{	
-			// Layers
-			_frontLayer = new FlxGroup();
-			
-			// Crucial part, the gamepad is added first and will be the first updated.
-			add(_pad = new FlxGamePad(FlxGamePad.LEFT_RIGHT, FlxGamePad.A));
-			_pad.setAlpha(0.5f);
-			_frontLayer.add(_pad);
-		}
-		
+				
 		int i;	
 		//We're using the global score to store a basic, state-independent status string.
 		//If there is no status string (the score is empty) then make a new welcome message.
@@ -140,10 +126,13 @@ public class PlayState extends FlxState
 		// Show the gamepad when you're on a phone.
 		if(Gdx.app.getType() == ApplicationType.Android)
 		{
+			// The gamepad is added as last and will be in the front.
+			add(_pad = new FlxGamePad(FlxGamePad.LEFT_RIGHT, FlxGamePad.A));
+			_pad.setAlpha(0.5f);
 			_pad.buttonA.callback = player.fire;
 			_pad.buttonLeft.callback = player.left;
 			_pad.buttonRight.callback = player.right;
-			add(_frontLayer);
+			
 		}
 	}
 	

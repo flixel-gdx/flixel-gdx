@@ -3,7 +3,6 @@ package org.flixel.examples.tiledmap2;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGamePad;
-import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
@@ -17,7 +16,6 @@ public class PlayState extends FlxState
 	private Player _player;
 	private FlxTilemap _level;
 	private FlxGamePad _pad;
-	private FlxGroup _frontLayer;
 
 	@Override
 	public void create()
@@ -26,15 +24,6 @@ public class PlayState extends FlxState
 		FlxG.setBgColor(0xffacbcd7);
 		
 		// Objects that are placed in the very front.
-		_frontLayer = new FlxGroup();
-		
-		// Crucial part, the gamepad is added first and will be the first updated.
-		add(_pad = new FlxGamePad(FlxGamePad.LEFT_RIGHT, FlxGamePad.A));
-		_pad.setAlpha(0.5f);
-		_frontLayer.add(_pad);
-		
-		
-		
 		FlxSprite decoration = new FlxSprite(256,159,Asset.ImgBG);
 		decoration.moves = false;
 		decoration.setSolid(false);
@@ -118,13 +107,11 @@ public class PlayState extends FlxState
 		_level.loadMap(FlxTilemap.tilemapToCSV(Asset.map, 0), Asset.ImgTiles, 8, 8, FlxTilemap.OFF, 1);
 		
 		add(_level);
-		
+		add(_pad = new FlxGamePad(FlxGamePad.LEFT_RIGHT, FlxGamePad.A));
+		_pad.setAlpha(0.5f);
 		_pad.buttonA.callback = _player.jump;
 		_pad.buttonLeft.callback = _player.left;
 		_pad.buttonRight.callback = _player.right;		
-		
-		// Add the front layer at the end so we are ensured that it it always at the front.
-		add(_frontLayer);
 	}
 	
 	@Override

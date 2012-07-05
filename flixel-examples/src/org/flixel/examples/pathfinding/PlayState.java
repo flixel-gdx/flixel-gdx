@@ -77,7 +77,7 @@ public class PlayState extends FlxState
         //Set unit smaller than tile so when following path not collide with map and add unit to PlayState
         _unit  = new FlxSprite(0, 0).makeGraphic(TILE_WIDTH - 2, TILE_HEIGHT - 2, 0xffff0000);
         _action = ACTION_IDLE;
-        //add(_unit);
+        add(_unit);
                         
         //Add button move to goal to PlayState
         _btnFindPath = new FlxButton(320, 10, "Move To Goal", new AFlxButton(){@Override public void onDown(){moveToGoal();}});
@@ -95,7 +95,7 @@ public class PlayState extends FlxState
         _legends = new FlxText(320, 90, 100, "Click in map to\nplace or\nremove tile\n\nLegends:\nRed:Unit\nYellow:Goal\nBlue:Wall\nWhite:Path");
         add(_legends);
         
-        add(_unit);
+       // add(_unit);
     }
                 
     @Override

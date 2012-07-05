@@ -2,6 +2,8 @@ package org.flixel;
 
 import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxReplay;
+import org.flixel.event.IMouseSubject;
+import org.flixel.event.IMouseObserver;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxPause;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 
 import flash.display.Stage;
 
@@ -30,7 +33,7 @@ import flash.display.Stage;
  * @author	Ka Wing Chin
  * @author	Thomas Weston
  */
-public class FlxGame implements ApplicationListener, InputProcessor
+public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubject
 {
 	/**
 	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
@@ -139,6 +142,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	
 	public Stage stage;
 		
+	private Array<IMouseObserver> observers;
 	/**
 	 * Instantiate a new game object.
 	 * 
@@ -158,7 +162,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		FlxG.setFramerate(GameFramerate);
 		FlxG.setFlashFramerate(FlashFramerate);
-		
+		observers = new Array<IMouseObserver>();
 		// if no stage size has been specified, set it to the game size
 		if (StageSizeX == 0 && StageSizeY == 0)
 		{
@@ -444,8 +448,9 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			}
 			return true;
 		}
-		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
 		Mouse.activePointers++;
+		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
+		notifyObserver();
 		return true;
 	}
 
@@ -457,20 +462,23 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	{
 		if(/*(_debuggerUp && _debugger.hasMouse) ||*/ _replaying)
 			return true;
-		FlxG.mouse.handleMouseUp(X, Y, Pointer, Button);
 		Mouse.activePointers--;
+		FlxG.mouse.handleMouseUp(X, Y, Pointer, Button);
+		notifyObserver();
 		return true;
 	}
 
 	@Override
 	public boolean touchDragged(int X, int Y, int Pointer)
 	{
+		notifyObserver();
 		return false;
 	}
 
 	@Override
 	public boolean touchMoved(int X, int Y)
 	{
+		notifyObserver();
 		return false;
 	}
 
@@ -811,5 +819,28 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	public void dispose()
 	{
 		FlxG.log("dispose");
+	}
+
+	@Override
+	public void addObserver(IMouseObserver o)
+	{
+		observers.add(o);
+	}
+
+	@Override
+	public void removeObserver(IMouseObserver o)
+	{
+		observers.removeValue(o, false);
+	}
+
+	@Override
+	public void notifyObserver()
+	{
+		int l = observers.size;
+		for(int i = 0; i < l; i++)
+		{
+			observers.get(i).updateListener();
+		}
+		
 	}
 }
