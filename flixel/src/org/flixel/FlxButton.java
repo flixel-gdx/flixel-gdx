@@ -1,11 +1,12 @@
 package org.flixel;
 
-import org.flixel.event.AFlxButton;
-import org.flixel.system.input.Mouse;
 import org.flixel.data.SystemAsset;
+import org.flixel.event.AFlxButton;
+import org.flixel.event.IMouseObserver;
+import org.flixel.system.input.Mouse;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
 
@@ -15,7 +16,7 @@ import com.badlogic.gdx.audio.Sound;
  * 
  * @author	Ka Wing Chin
  */
-public class FlxButton extends FlxSprite
+public class FlxButton extends FlxSprite implements IMouseObserver
 {
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
@@ -77,7 +78,11 @@ public class FlxButton extends FlxSprite
 	/**
 	 * Tracks whether or not the button is currently pressed.
 	 */
-	protected boolean _pressed;	
+	protected boolean _pressed;
+	/**
+	 * Whether or not the button has initialized itself yet.
+	 */
+	private boolean _initialized;	
 	
 	/**
 	 * Creates a new <code>FlxButton</code> object with a gray background
@@ -108,6 +113,8 @@ public class FlxButton extends FlxSprite
 		status = NORMAL;
 		_onToggle = false;
 		_pressed = false;
+		_initialized = false;
+		updateButton();
 	}
 	
 	/**
@@ -158,6 +165,8 @@ public class FlxButton extends FlxSprite
 	@Override
 	public void destroy()
 	{		
+		if(FlxG._game != null)
+			FlxG._game.removeObserver(this);
 		if(label != null)
 		{
 			label.destroy();
@@ -176,10 +185,25 @@ public class FlxButton extends FlxSprite
 		super.destroy();
 	}
 	
+	
+	@Override
+	public void preUpdate()
+	{		
+		super.preUpdate();		
+		if(!_initialized)
+		{
+			if(FlxG._game != null)
+			{
+				FlxG._game.addObserver(this);
+				_initialized = true;
+			}
+		}
+	}
+	
 	@Override
 	public void update()
 	{
-		updateButton(); //Basic button logic
+		//updateButton(); //Basic button logic
 
 		//Default button appearance is to simply update
 		// the label appearance based on animation frame.
@@ -192,7 +216,7 @@ public class FlxButton extends FlxSprite
 				break;
 			case PRESSED:
 				label.setAlpha(0.5f);
-				label.y++;
+				label.y = y+labelOffset.y+1;
 				break;
 			case NORMAL:
 			default:
@@ -200,6 +224,7 @@ public class FlxButton extends FlxSprite
 				break;
 		}
 	}
+	
 	
 	/**
 	 * Basic button update logic
@@ -223,7 +248,7 @@ public class FlxButton extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras.get(i++);
-			while(pointerId < totalPointers)
+			while(pointerId <= totalPointers)
 			{
 				FlxG.mouse.getWorldPosition(pointerId, camera, _point);
 				if(overlapsPoint(_point, true, camera))
@@ -237,7 +262,7 @@ public class FlxButton extends FlxSprite
 						if(soundDown != null)
 							soundDown.play(true);
 					}
-					else if(FlxG.mouse.pressed(pointerId))
+					if(FlxG.mouse.pressed(pointerId))
 					{
 						status = PRESSED;
 						if(callback != null)
@@ -248,7 +273,7 @@ public class FlxButton extends FlxSprite
 						status = HIGHLIGHT;
 						if(Gdx.app.getType() == ApplicationType.Android)
 							status = NORMAL;
-						if(callback != null)
+						if(callback != null)		
 							callback.onUp();
 						if(soundUp != null)
 							soundUp.play(true);
@@ -488,4 +513,10 @@ public class FlxButton extends FlxSprite
 	{
 		_onToggle = On;
 	}
+
+	@Override
+	public void updateListener()
+	{
+		updateButton();
+	}	
 }
