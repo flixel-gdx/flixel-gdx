@@ -2,13 +2,12 @@ package org.flixel;
 
 import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxReplay;
-import org.flixel.event.IMouseSubject;
 import org.flixel.event.IMouseObserver;
+import org.flixel.event.IMouseSubject;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxPause;
 import org.flixel.system.FlxReplay;
-import org.flixel.system.input.Mouse;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
@@ -448,8 +447,8 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 			}
 			return true;
 		}
-		Mouse.activePointers++;
 		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
+		FlxG.mouse.activePointers++;
 		notifyObserver();
 		return true;
 	}
@@ -462,24 +461,30 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	{
 		if(/*(_debuggerUp && _debugger.hasMouse) ||*/ _replaying)
 			return true;
-		Mouse.activePointers--;
 		FlxG.mouse.handleMouseUp(X, Y, Pointer, Button);
+		notifyObserver();
+		FlxG.mouse.activePointers--;
+		return true;
+	}
+
+	/**
+	 * Internal event handler for input and focus.
+	 */
+	@Override
+	public boolean touchDragged(int X, int Y, int Pointer)
+	{
+		FlxG.mouse.handleMouseDrag(X, Y, Pointer);
 		notifyObserver();
 		return true;
 	}
 
-	@Override
-	public boolean touchDragged(int X, int Y, int Pointer)
-	{
-		notifyObserver();
-		return false;
-	}
-
+	
 	@Override
 	public boolean touchMoved(int X, int Y)
 	{
+		FlxG.mouse.handleMouseMove(X, Y);
 		notifyObserver();
-		return false;
+		return true;
 	}
 
 	/**

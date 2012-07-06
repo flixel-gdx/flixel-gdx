@@ -3,7 +3,6 @@ package org.flixel;
 import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxButton;
 import org.flixel.event.IMouseObserver;
-import org.flixel.system.input.Mouse;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -101,6 +100,8 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 			label = new FlxText(0,0,80,Label);
 			label.setFormat(null,8,0x333333,"center");
 			labelOffset = new FlxPoint(-1,3);
+			label.x = x + labelOffset.x; // add this.
+			label.y = y + labelOffset.y; // add this.
 		}
 		loadGraphic(SystemAsset.ImgButton,true,false,80,20);
 		callback = Callback;
@@ -219,6 +220,8 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 				label.y = y+labelOffset.y+1;
 				break;
 			case NORMAL:
+				label.x = x + labelOffset.x;
+				label.y = y + labelOffset.y;
 			default:
 				label.setAlpha(0.8f);
 				break;
@@ -242,13 +245,13 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		
 		int totalPointers = 8;
 		if(Gdx.app.getType() == ApplicationType.Android)
-			totalPointers = Mouse.activePointers;
+			totalPointers = FlxG.mouse.activePointers;
 		boolean offAll = true;
 		
 		while(i < l)
 		{
 			camera = cameras.get(i++);
-			while(pointerId <= totalPointers)
+			while(pointerId < totalPointers)
 			{
 				FlxG.mouse.getWorldPosition(pointerId, camera, _point);
 				if(overlapsPoint(_point, true, camera))
