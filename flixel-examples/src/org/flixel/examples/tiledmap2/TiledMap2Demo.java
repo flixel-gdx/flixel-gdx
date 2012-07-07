@@ -2,6 +2,13 @@ package org.flixel.examples.tiledmap2;
 
 import org.flixel.FlxGame;
 
+/**
+ * It's the playstate3 from the collision demo. This demo loads the tiles from
+ * a TMX file created by Lithander.
+ * 
+ * @author Adam Atomic
+ * @author Ka Wing Chin
+ */
 public class TiledMap2Demo extends FlxGame
 {
 

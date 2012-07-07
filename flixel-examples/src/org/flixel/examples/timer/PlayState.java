@@ -1,5 +1,6 @@
 package org.flixel.examples.timer;
 
+import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxTimer;
@@ -22,6 +23,8 @@ public class PlayState extends FlxState
 	@Override
 	public void create()
 	{
+		FlxG.setBgColor(0xFF000000);
+		
 		// The timer class.
 		_timer = new FlxTimer();
 		_timer.start(3, 1, stop);

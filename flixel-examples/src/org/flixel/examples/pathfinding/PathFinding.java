@@ -14,6 +14,7 @@ import org.flixel.FlxGame;
  * These flags mean that you can use paths for more than just character AI - they're also useful
  * for elevators, moving platforms, and looping background animations.
  * 
+ * @author Bengsiswanto Hendrawan
  * @author Thomas Weston
  */
 public class PathFinding extends FlxGame

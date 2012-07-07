@@ -12,6 +12,8 @@ public class PlayState extends FlxState
 	@Override
 	public void create()
 	{		
+		FlxG.setBgColor(0xff131c1b);
+		
 		add(new FlxButton(10, 10, "fade", onFade));
 		add(new FlxButton(100, 10, "flash", onFlash));
 		add(new FlxButton(190, 10, "shake", onShake));

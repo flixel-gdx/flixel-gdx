@@ -16,6 +16,7 @@ public class PlayState extends FlxState
 	@Override
 	public void create()
 	{
+		FlxG.setBgColor(0xFF000000);
 		add(new FlxButton(20, 20, "vibrate 1 sec", vibrate));
 		add(new FlxButton(20, 60, "1,2,3 repeat", repeat));
 		add(new FlxButton(120, 20, "stop vibrate", stop));

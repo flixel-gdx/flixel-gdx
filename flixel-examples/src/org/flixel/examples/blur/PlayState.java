@@ -9,11 +9,6 @@ import org.flixel.FlxText;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-
-/**
- * A demo that shows colored squares. The squares leave a trail.
- * This demo is from flixel's FlxBlur created by Adam Atomic.
- */
 public class PlayState extends FlxState
 {
 

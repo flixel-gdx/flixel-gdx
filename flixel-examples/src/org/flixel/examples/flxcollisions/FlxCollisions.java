@@ -5,7 +5,9 @@ import org.flixel.FlxGame;
 /**
  * A test bed for Flixel's collision systems.
  * 
+ * @author Adam Atomic
  * @author Thomas Weston
+ * @author Ka Wing Chin
  */
 public class FlxCollisions extends FlxGame
 {

@@ -27,6 +27,8 @@ public class PlayState extends FlxState
 	@Override
 	public void create()
 	{
+		FlxG.setBgColor(0xff131c1b);
+		
 		FlxG.setFramerate(50);
 		FlxG.setFlashFramerate(50);
 

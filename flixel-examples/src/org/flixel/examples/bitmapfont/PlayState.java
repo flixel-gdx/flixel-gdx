@@ -1,5 +1,6 @@
 package org.flixel.examples.bitmapfont;
 
+import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 
@@ -11,6 +12,8 @@ public class PlayState extends FlxState
 	@Override
 	public void create()
 	{
+		FlxG.setBgColor(0xff131c1b);
+		
 		text = new FlxText(10, 10, 200, "flixel-android");
 //		text.setSize(2);
 		add(text);

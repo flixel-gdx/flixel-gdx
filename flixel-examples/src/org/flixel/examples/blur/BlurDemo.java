@@ -2,6 +2,12 @@ package org.flixel.examples.blur;
 
 import org.flixel.FlxGame;
 
+/**
+ * A demo that shows colored squares. The squares leave a trail.
+ * 
+ * @author Adam Atomic
+ * @author Ka Wing Chin
+ */
 public class BlurDemo extends FlxGame
 {
 	public BlurDemo()

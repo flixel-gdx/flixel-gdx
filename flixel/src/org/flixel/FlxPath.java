@@ -258,7 +258,6 @@ public class FlxPath
 	 * 
 	 * @param	Camera		The camera object the path will draw to.
 	 */
-	//TODO: debug drawing. look into the ShapeRender class maybe.
 	public void drawDebug(FlxCamera Camera)
 	{
 		if(nodes.size <= 0)

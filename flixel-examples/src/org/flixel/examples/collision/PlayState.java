@@ -43,6 +43,8 @@ public  class PlayState extends FlxState
 	@Override
 	public void create()
 	{
+		FlxG.setBgColor(0xff000000);
+		
 		//Kick the framerate back up
 		FlxG.setFramerate(60);
 		FlxG.setFlashFramerate(60);

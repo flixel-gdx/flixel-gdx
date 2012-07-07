@@ -12,10 +12,6 @@ import org.flixel.FlxText;
 import org.flixel.event.AFlxButton;
 
 
-/**
- * This demo is from the feature page of flixel.org 
- * and it is created by Zachary Tarvit.
- */
 public class PlayState extends FlxState
 {
 	// Our emmiter
