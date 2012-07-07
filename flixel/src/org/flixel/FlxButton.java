@@ -241,11 +241,8 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		FlxCamera camera;
 		int i = 0;
 		int l = cameras.size;
-		int pointerId = 0;
-		
-		int totalPointers = 8;
-		if(Gdx.app.getType() == ApplicationType.Android)
-			totalPointers = FlxG.mouse.activePointers;
+		int pointerId = 0;		
+		int	totalPointers = FlxG.mouse.activePointers;
 		boolean offAll = true;
 		
 		while(i < l)
