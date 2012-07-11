@@ -488,7 +488,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	}
 
 	/**
-	 * Internal event handler for input and focus..
+	 * Internal event handler for input and focus.
 	 */
 	@Override
 	public boolean scrolled(int Amount)
@@ -824,6 +824,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	public void dispose()
 	{
 		FlxG.log("dispose");
+		FlxG.assetManager.dispose();
 	}
 
 	@Override

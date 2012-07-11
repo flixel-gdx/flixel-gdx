@@ -34,7 +34,7 @@ public class FlxTilemap extends FlxObject
 	 */
 	static public final int OFF = 0;
 	/**
-	 * Good for levels with thin walls that don'tile need interior corner art.
+	 * Good for levels with thin walls that don't need interior corner art.
 	 */
 	static public final int AUTO = 1;
 	/**
