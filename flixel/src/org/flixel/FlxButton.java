@@ -97,10 +97,11 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 			label = new FlxText(0,0,80,Label);
 			label.setFormat(null,8,0x333333,"center");
 			labelOffset = new FlxPoint(-1,3);
-			label.x = x + labelOffset.x; // add this.
-			label.y = y + labelOffset.y; // add this.
+			//label.x = x + labelOffset.x; // add this.
+			//label.y = y + labelOffset.y; // add this.
 		}
 		loadGraphic(SystemAsset.ImgButton,true,false,80,20);
+		
 		callback = Callback;
 		
 		soundOver = null;
@@ -112,7 +113,7 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		_onToggle = false;
 		_pressed = false;
 		_initialized = false;
-		updateButton();
+		//updateButton();
 	}
 	
 	/**
@@ -201,7 +202,7 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 	@Override
 	public void update()
 	{
-		//updateButton(); //Basic button logic
+		updateButton(); //Basic button logic
 
 		//Default button appearance is to simply update
 		// the label appearance based on animation frame.
@@ -214,11 +215,11 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 				break;
 			case PRESSED:
 				label.setAlpha(0.5f);
-				label.y = y+labelOffset.y+1;
+				label.y++;//y+labelOffset.y+1;
 				break;
 			case NORMAL:
-				label.x = x + labelOffset.x;
-				label.y = y + labelOffset.y;
+				//label.x = x + labelOffset.x;
+				//label.y = y + labelOffset.y;
 			default:
 				label.setAlpha(0.8f);
 				break;
@@ -241,7 +242,6 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		int pointerId = 0;		
 		int	totalPointers = FlxG.mouse.activePointers;
 		boolean offAll = true;
-		
 		while(i < l)
 		{
 			camera = cameras.get(i++);
@@ -255,10 +255,12 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 					{
 						status = PRESSED;
 						if(callback != null)
+						{
 							callback.onDown();
+						}
 						if(soundDown != null)
 							soundDown.play(true);
-					}
+					}/*
 					if(FlxG.mouse.pressed(pointerId))
 					{
 						status = PRESSED;
@@ -275,7 +277,7 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 						if(soundUp != null)
 							soundUp.play(true);
 					}
-					else if(status == NORMAL)
+					else*/ if(status == NORMAL)
 					{
 						status = HIGHLIGHT;
 						if(callback != null)
@@ -328,7 +330,7 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		super.draw(Camera);
 		if(label != null)
 		{
-			label.scrollFactor =  scrollFactor;
+			label.scrollFactor = scrollFactor;
 			label.cameras = cameras;
 			label.draw(Camera);
 		}
@@ -514,6 +516,12 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 	@Override
 	public void updateListener()
 	{
-		updateButton();
+		//updateButton();
+		if(!exists || !visible || !active || (status != PRESSED))
+			return;
+		if(callback != null)
+			callback.onUp();
+		if(soundUp != null)
+			soundUp.play(true);
 	}	
 }
