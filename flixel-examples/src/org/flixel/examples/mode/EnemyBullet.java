@@ -4,11 +4,9 @@ import org.flixel.*;
 
 public class EnemyBullet extends FlxSprite
 {
-	/*
-	[Embed(source="data/bot_bullet.png")] private var ImgBullet:Class;
-	[Embed(source="data/jump.mp3")] private var SndHit:Class;
-	[Embed(source="data/enemy.mp3")] private var SndShoot:Class;
-	*/
+	//private String ImgBullet = "examples/mode/bot_bullet.png";
+	private String SndHit = "examples/mode/jump.mp3";
+	private String SndShoot = "examples/mode/enemy.mp3";
 	
 	public float speed;
 
@@ -41,7 +39,7 @@ public class EnemyBullet extends FlxSprite
 		velocity.x = 0;
 		velocity.y = 0;
 		if(onScreen())
-			FlxG.play(Asset.SndJump);
+			FlxG.play(SndHit);
 		alive = false;
 		setSolid(false);
 		play("poof");
@@ -49,7 +47,7 @@ public class EnemyBullet extends FlxSprite
 
 	public void shoot(FlxPoint Location, float Angle)
 	{
-		FlxG.play(Asset.SndBotShoot,0.5f);
+		FlxG.play(SndShoot,0.5f);
 		super.reset(Location.x-width/2,Location.y-height/2);
 		FlxU.rotatePoint(0,(int) speed,0,0,Angle,_point);
 		velocity.x = _point.x;

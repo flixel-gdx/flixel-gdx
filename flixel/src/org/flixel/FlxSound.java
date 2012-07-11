@@ -1,7 +1,9 @@
 package org.flixel;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 	
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
@@ -10,6 +12,14 @@ import com.badlogic.gdx.audio.Sound;
  */
 public class FlxSound extends FlxBasic
 {
+	/**
+	 * A short audio clip.
+	 */
+	static public final int SFX = 0;
+	/**
+	 * A large music file.
+	 */
+	static public final int MUSIC = 1;
 	/**
 	 * The X position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
@@ -172,10 +182,15 @@ public class FlxSound extends FlxBasic
 	public void destroy()
 	{
 		kill();
-
+		
+		if (_sound != null)
+			FlxG.assetManager.unload(FlxG.assetManager.getAssetFileName(_sound));
+		
+		if (_music != null)
+			FlxG.assetManager.unload(FlxG.assetManager.getAssetFileName(_music));
+		
 		_sound = null;
 		_music = null;
-		
 		_soundId = -1;
 		_target = null;
 		name = null;
@@ -250,23 +265,45 @@ public class FlxSound extends FlxBasic
 	public void kill()
 	{
 		super.kill();
-		stop();
+		if (_sound != null && _soundId != -1 || _music != null && _music.isPlaying())
+			stop();
 	}
+	
+	/**
+	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
+	 * 
+	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
+	 * @param	Looped			Whether or not this sound should loop endlessly.
+	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
+	 * @param	Type			Whether this sound is a sound effect or a music track.
+	 * 
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
+	 */
+	public FlxSound loadEmbedded(String EmbeddedSound, boolean Looped, boolean AutoDestroy, int Type)
+	{
+		//If the type is not specified, make a guess based on the file size.
+		if (Type == -1)
+		{
+			FileHandle file = Gdx.files.internal(EmbeddedSound);
+			Type = MUSIC;//file.length() < 24576 ? SFX : MUSIC;
+		}
 		
-	/**
-	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
-	 * 
-	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
-	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
-	 * 
-	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
-	 */
-	public FlxSound loadEmbedded(Sound EmbeddedSound, boolean Looped, boolean AutoDestroy)
-	{
+		Class<?> classType = Type == SFX ? Sound.class : Music.class;
+		
+		if (!FlxG.assetManager.isLoaded(EmbeddedSound, classType))
+		{
+			FlxG.assetManager.load(EmbeddedSound, classType);
+			FlxG.assetManager.finishLoading();
+		}
+		
 		stop();
 		createSound();
-		_sound = EmbeddedSound;
+		
+		if (classType == Sound.class)
+			_sound = FlxG.assetManager.get(EmbeddedSound, Sound.class);
+		else
+			_music = FlxG.assetManager.get(EmbeddedSound, Music.class);
+		
 		//NOTE: can't pull ID3 info from embedded sound currently
 		_looped = Looped;
 		autoDestroy = AutoDestroy;
@@ -280,46 +317,13 @@ public class FlxSound extends FlxBasic
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * 
-	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
-	 */
-	public FlxSound loadEmbedded(Sound EmbeddedSound, boolean Looped)
-	{
-		return loadEmbedded(EmbeddedSound, Looped, false);
-	}
-	
-	/**
-	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
-	 * 
-	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
-	 * 
-	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
-	 */
-	public FlxSound loadEmbedded(Sound EmbeddedSound)
-	{
-		return loadEmbedded(EmbeddedSound, false, false);
-	}
-	
-	/**
-	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
-	 * 
-	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
-	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSound loadEmbedded(Music EmbeddedSound, boolean Looped, boolean AutoDestroy)
+	public FlxSound loadEmbedded(String EmbeddedSound, boolean Looped, boolean AutoDestroy)
 	{
-		stop();
-		createSound();
-		_music = EmbeddedSound;
-		//NOTE: can't pull ID3 info from embedded sound currently
-		_looped = Looped;
-		autoDestroy = AutoDestroy;
-		updateTransform();
-		exists = true;
-		return this;
+		return loadEmbedded(EmbeddedSound, Looped, AutoDestroy, -1);
 	}
 	
 	/**
@@ -330,9 +334,9 @@ public class FlxSound extends FlxBasic
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSound loadEmbedded(Music EmbeddedSound, boolean Looped)
+	public FlxSound loadEmbedded(String EmbeddedSound, boolean Looped)
 	{
-		return loadEmbedded(EmbeddedSound, Looped, false);
+		return loadEmbedded(EmbeddedSound, Looped, false, -1);
 	}
 	
 	/**
@@ -342,9 +346,9 @@ public class FlxSound extends FlxBasic
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSound loadEmbedded(Music EmbeddedSound)
+	public FlxSound loadEmbedded(String EmbeddedSound)
 	{
-		return loadEmbedded(EmbeddedSound, false, false);
+		return loadEmbedded(EmbeddedSound, false, false, -1);
 	}
 	
 	/**
@@ -633,11 +637,16 @@ public class FlxSound extends FlxBasic
 	public void stop()
 	{
 		_position = 0;
-		if (_sound != null)
+		if (_sound != null && _soundId != -1)
+		{
 			_sound.stop(_soundId);
-		if (_music != null)
+			stopped();
+		}
+		if (_music != null && _music.isPlaying())
+		{
 			_music.stop();
-		stopped();
+			stopped();
+		}
 	}
 	
 	/**

@@ -1,0 +1,25 @@
+preloader.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+logo
+  rotate: false
+  xy: 0, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+logo_light
+  rotate: false
+  xy: 0, 64
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+logo_corners
+  rotate: false
+  xy: 6, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

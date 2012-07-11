@@ -7,6 +7,17 @@ import org.flixel.event.AFlxReplay;
 
 public class MenuState extends FlxState
 {
+	//Some graphics and sounds
+	//protected String ImgEnemy = "examples/mode/bot.png";
+	//public String ImgGibs = "examples/mode/spawner_gibs.png";
+	//public String ImgCursor = "examples/mode/cursor.png";
+	public String SndHit = "examples/mode/menu_hit.mp3";
+	public String SndHit2 = "examples/mode/menu_hit_2.mp3";
+
+	//Replay data for the "Attract Mode" gameplay demos
+	//public String Attract1 = "examples/mode/attract1.fgr";
+	//public String Attract2 = "examples/mode/attract2.fgr";
+	
 	public FlxEmitter gibs;
 	public FlxButton playButton;
 	public FlxText title1;
@@ -89,7 +100,7 @@ public class MenuState extends FlxState
 			title2.velocity.x = 0;
 
 			//Then, play a cool sound, change their color, and blow up pieces everywhere
-			FlxG.play(Asset.SndHit);
+			FlxG.play(SndHit);
 			FlxG.flash(0xffd8eba2,0.5f);
 			FlxG.shake(0.035f,0.5f);
 			title1.setColor(0xd8eba2);
@@ -136,7 +147,7 @@ public class MenuState extends FlxState
 		if(!fading && ((FlxG.keys.X && FlxG.keys.C) || attractMode)) 
 		{
 			fading = true;
-			FlxG.play(Asset.SndHit2);
+			FlxG.play(SndHit2);
 			FlxG.flash(0xffd8eba2,0.5f);
 			FlxG.fade(0xff131c1b,1,new AFlxCamera(){@Override public void onFadeComplete(){onFade();}});
 		}
@@ -158,7 +169,7 @@ public class MenuState extends FlxState
 	protected void onPlay()
 	{
 		playButton.exists = false;
-		FlxG.play(Asset.SndHit2);
+		FlxG.play(SndHit2);
 	}
 
 	//This function is passed to FlxG.fade() when we are ready to go to the next game state.

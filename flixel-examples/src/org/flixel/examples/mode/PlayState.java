@@ -8,17 +8,14 @@ import com.badlogic.gdx.utils.Array;
 
 public class PlayState extends FlxState
 {
-
-	/*
-	[Embed(source="data/tech_tiles.png")] protected var ImgTech:Class;
-	[Embed(source="data/dirt_top.png")] protected var ImgDirtTop:Class;
-	[Embed(source="data/dirt.png")] protected var ImgDirt:Class;
-	[Embed(source="data/mode.mp3")] protected var SndMode:Class;
-	[Embed(source="data/countdown.mp3")] protected var SndCount:Class;
-	[Embed(source="data/gibs.png")] private var ImgGibs:Class;
-	[Embed(source="data/spawner_gibs.png")] private var ImgSpawnerGibs:Class;
-	[Embed(source="data/miniframe.png")] private var ImgMiniFrame:Class;
-	*/
+	//protected String ImgTech = "examples/mode/tech_tiles.png";
+	//protected String ImgDirtTop = "examples/mode/dirt_top.png";
+	//protected String ImgDirt = "examples/mode/dirt.png";
+	protected String SndMode = "examples/mode/mode.mp3";
+	protected String SndCount = "examples/mode/countdown.mp3";
+	//private String ImgGibs = "examples/mode/gibs.png";
+	//private String ImgSpawnerGibs = "examples/mode/spawner_gibs.png";
+	//private String ImgMiniFrame = "examples/mode/miniframe.png";
 	
 	//major game object storage
 	protected FlxGroup _blocks;
@@ -165,7 +162,7 @@ public class PlayState extends FlxState
 		_hud.setAll("scrollFactor",new FlxPoint(0,0));
 		_hud.setAll("cameras",new Array<FlxCamera>(new FlxCamera[]{FlxG.camera}));
 
-		FlxG.playMusic(Asset.SndMode);
+		FlxG.playMusic(SndMode);
 		FlxG.flash(0xff131c1b);
 		_fading = false;
 
@@ -255,7 +252,7 @@ public class PlayState extends FlxState
 					float volume = 0.35f;
 					if(FlxG.score < 600)
 						volume = 1.0f;
-					FlxG.play(Asset.SndCount,volume);
+					FlxG.play(SndCount,volume);
 				}
 			}
 

@@ -5,12 +5,10 @@ import org.flixel.event.AFlxCamera;
 
 public class Spawner extends FlxSprite
 {
-	/*
-	[Embed(source="data/spawner.png")] private var ImgSpawner:Class;
-	[Embed(source="data/asplode.mp3")] private var SndExplode:Class;
-	[Embed(source="data/menu_hit_2.mp3")] private var SndExplode2:Class;
-	[Embed(source="data/hit.mp3")] private var SndHit:Class;
-	*/
+	//private String ImgSpawner = "examples/mode/spawner.png";
+	private String SndExplode = "examples/mode/asplode.mp3";
+	private String SndExplode2 = "examples/mode/menu_hit_2.mp3";
+	private String SndHit = "examples/mode/hit.mp3";
 	
 	private float _timer;
 	private FlxGroup _bots;
@@ -84,7 +82,7 @@ public class Spawner extends FlxSprite
 	@Override
 	public void hurt(float Damage)
 	{
-		FlxG.play(Asset.SndBotHit);
+		FlxG.play(SndHit);
 		flicker(0.2f);
 		FlxG.score += 50;
 		super.hurt(Damage);
@@ -95,8 +93,8 @@ public class Spawner extends FlxSprite
 	{
 		if(!alive)
 			return;
-		FlxG.play(Asset.SndExplode);
-		FlxG.play(Asset.SndHit2);
+		FlxG.play(SndExplode);
+		FlxG.play(SndExplode2);
 		super.kill();
 		active = false;
 		exists = true;

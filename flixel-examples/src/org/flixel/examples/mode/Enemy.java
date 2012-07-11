@@ -4,13 +4,11 @@ import org.flixel.*;
 
 public class Enemy extends FlxSprite
 {
-	/*
-	[Embed(source="data/bot.png")] protected var ImgBot:Class;
-	[Embed(source="data/jet.png")] protected var ImgJet:Class;
-	[Embed(source="data/asplode.mp3")] protected var SndExplode:Class;
-	[Embed(source="data/hit.mp3")] protected var SndHit:Class;
-	[Embed(source="data/jet.mp3")] protected var SndJet:Class;
-	*/
+	//protected String ImgBot = "examples/mode/bot.png";
+	//protected String ImgJet = "examples/mode/jet.png";
+	protected String SndExplode = "examples/mode/asplode.mp3";
+	protected String SndHit = "examples/mode/hit.mp3";
+	protected String SndJet = "examples/mode/jet.mp3";
 	
 	//References to other game objects:
 	protected Player _player;		//The player object
@@ -162,7 +160,7 @@ public class Enemy extends FlxSprite
 				//turn em on and play a little sound.
 				_jets.start(false,0.5f,0.01f);
 				if(onScreen())
-					FlxG.play(Asset.SndJet);
+					FlxG.play(SndJet);
 			}
 			//Then, position the jets at the center of the Enemy,
 			//and point the jets the opposite way from where we're moving.
@@ -190,7 +188,7 @@ public class Enemy extends FlxSprite
 	//and damage is dealt to the Enemy.
 	@Override public void hurt(float Damage)
 	{
-		FlxG.play(Asset.SndBotHit);
+		FlxG.play(SndHit);
 		flicker(0.2f);
 		FlxG.score += 10;
 		super.hurt(Damage);
@@ -203,7 +201,7 @@ public class Enemy extends FlxSprite
 	{
 		if(!alive)
 			return;
-		FlxG.play(Asset.SndExplode);
+		FlxG.play(SndExplode);
 		super.kill();
 		flicker(0);
 		_jets.kill();

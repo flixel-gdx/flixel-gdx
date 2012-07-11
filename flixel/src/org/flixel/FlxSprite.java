@@ -242,11 +242,6 @@ public class FlxSprite extends FlxObject
 	 */
 	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated,boolean Reverse,int Width,int Height,boolean Unique)
 	{
-		if((Graphic == null))
-		{
-			FlxG.log("WARNING: Graphic is null. " + toString());
-			return this;
-		}
 		_bakedRotation = 0;
 		_pixels = FlxG.addBitmap(Graphic, Unique);
 		
@@ -350,14 +345,25 @@ public class FlxSprite extends FlxObject
 	 * @param	Rotations		The number of rotation frames the final sprite should have.  For small sprites this can be quite a large number (360 even) without any problems.
 	 * @param	Frame			If the Graphic has a single row of square animation frames on it, you can specify which of the frames you want to use here.  Default is -1, or "use whole graphic."
 	 * @param	AntiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
-	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
+	 * @param	AutoBuffer		Whether to automatically increase the image size to accommodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxSprite loadRotatedGraphic(TextureRegion Graphic, int Rotations, int Frame, boolean AntiAliasing, boolean AutoBuffer)
 	{
-		loadGraphic(Graphic, true, false, Graphic.getRegionHeight(), Graphic.getRegionHeight(), false);
-		setFrame(Frame);
+		_bakedRotation = 0;
+		_pixels = FlxG.addBitmap(Graphic);
+		if(Frame >= 0)
+		{
+			width = frameWidth = _pixels.getRegionHeight();
+			setFrame(Frame);
+		}
+		else
+			width = frameWidth = _pixels.getRegionWidth();
+		
+		height = frameHeight = _pixels.getRegionHeight();
+		resetHelpers();
+		
 		return this;
 		/*
 		//Create the brush and canvas
@@ -509,7 +515,7 @@ public class FlxSprite extends FlxObject
 	public FlxSprite makeGraphic(int Width, int Height, long Color, boolean Unique, String Key)
 	{
 		_bakedRotation = 0;
-		_pixels = new TextureRegion(FlxG.createBitmap(Width,Height,Color,Unique,Key));
+		_pixels = FlxG.createBitmap(Width,Height,Color,Unique,Key);
 		width = frameWidth = Width;
 		height = frameHeight = Height;
 		resetHelpers();
@@ -563,8 +569,7 @@ public class FlxSprite extends FlxObject
 	 * Resets some important variables for sprite optimization and rendering.
 	 */
 	protected void resetHelpers()
-	{		
-		
+	{			
 		if((framePixels == null) || (framePixels.getWidth() != width) || (framePixels.getHeight() != height))
 			framePixels = new Sprite(_pixels, 0, 0, width, height);
 		framePixels.setRegion(_pixels, 0, 0, frameWidth, frameHeight);
@@ -757,15 +762,15 @@ public class FlxSprite extends FlxObject
 	 */
 	protected void updateAnimation()
 	{
-		if(_animations.size == 0) // TODO: This is a fix for preventing to animate using loadRotatedGraphic.  
-			return;
+		//if(_animations.size == 0) // TODO: This is a fix for preventing to animate using loadRotatedGraphic.  
+			//return;
 		if(_bakedRotation > 0)
 		{
 			int oldIndex = _curIndex;
 			int angleHelper = (int) (angle%360);
 			if(angleHelper < 0)
 				angleHelper += 360;
-			_curIndex = (int) (angleHelper/_bakedRotation + 0.5);
+			_curIndex = (int) (angleHelper/_bakedRotation + 0.5f);
 			if(oldIndex != _curIndex)
 				dirty = true;
 		}

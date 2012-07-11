@@ -5,10 +5,8 @@ import org.flixel.event.AFlxCamera;
 
 public class VictoryState extends FlxState
 {
-	/*
-	[Embed(source="data/spawner_gibs.png")] private var ImgGibs:Class;
-	[Embed(source="data/menu_hit_2.mp3")] private var SndMenu:Class;
-	*/
+	//private String ImgGibs = "examples/mode/spawner_gibs.png";
+	private String SndMenu = "examples/mode/menu_hit_2.mp3";
 	
 	private float _timer;
 	private boolean _fading;
@@ -46,7 +44,7 @@ public class VictoryState extends FlxState
 			if((_timer > 0.35) && ((_timer > 10) || FlxG.keys.justPressed("X") || FlxG.keys.justPressed("C")))
 			{
 				_fading = true;
-				FlxG.play(Asset.SndHit2);
+				FlxG.play(SndMenu);
 				FlxG.fade(0xff131c1b,2,new AFlxCamera(){@Override public void onFadeComplete(){ onPlay();}});
 			}
 		}

@@ -40,8 +40,8 @@ public class SystemAsset
 	static public void createSystemAsset()
 	{
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.classpath("org/flixel/data/pack"));
-		ImgDefault = atlas.findRegion("default");
-		ImgButton = atlas.findRegion("button");
+		ImgDefault = /*"org/flixel/data/game.pack/default";*/atlas.findRegion("default");
+		ImgButton = /*"org/flixel/data/game.pack/button";*/atlas.findRegion("button");
 		ImgControlBase = new TextureRegion(new Texture(Gdx.files.classpath("org/flixel/data/control_base.png")));
 		ImgControlKnob = new TextureRegion(new Texture(Gdx.files.classpath("org/flixel/data/control_knob.png")));
 		ImgButtonA = atlas.findRegion("button_a");

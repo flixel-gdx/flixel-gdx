@@ -4,6 +4,7 @@ import org.flixel.event.AFlxCamera;
 import org.flixel.event.AFlxG;
 import org.flixel.event.AFlxObject;
 import org.flixel.event.AFlxReplay;
+import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.FlxTextureData;
@@ -12,8 +13,7 @@ import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -253,6 +253,11 @@ public class FlxG
 	 * Internal storage system to prevent fonts from being used repeatedly in memory.
 	 */
 	static protected ObjectMap<String, BitmapFont> _fontCache;
+	
+	/**
+	 * Global <code>AssetManager</code> for managing assets.
+	 */
+	static public AssetManager assetManager;
 	
 	/**
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
@@ -662,13 +667,13 @@ public class FlxG
 	 * @param Music The sound file you want to loop in the background.
 	 * @param Volume How loud the sound should be, from 0 to 1.
 	 */
-	static public void playMusic(Music sound, float Volume)
+	static public void playMusic(String Music, float Volume)
 	{
 		if(music == null)
 			music = new FlxSound();
 		if(music.active)
 			music.stop();
-		music.loadEmbedded(sound, true);
+		music.loadEmbedded(Music,true);
 		music.setVolume(Volume);
 		music.survive = true;
 		music.play();
@@ -679,12 +684,41 @@ public class FlxG
 	 * 
 	 * @param Music The sound file you want to loop in the background.
 	 */
-	static public void playMusic(Music sound)
+	static public void playMusic(String Music)
 	{
-		playMusic(sound, 1);
+		playMusic(Music, 1.0f);
 	}
 	
-	
+	/**
+	 * Creates a new sound object.
+	 * 
+	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
+	 * @param	Volume			How loud to play it (0 to 1).
+	 * @param	Looped			Whether to loop this sound.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoPlay		Whether to play the sound.
+	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
+	 * 
+	 * @return	A <code>FlxSound</code> object.
+	 */
+	static public FlxSound loadSound(String EmbeddedSound,float Volume,boolean Looped,boolean AutoDestroy,boolean AutoPlay,String URL)
+	{
+		if((EmbeddedSound == null) && (URL == null))
+		{
+			FlxG.log("WARNING: FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
+			return null;
+		}
+		FlxSound sound = new FlxSound();//(FlxSound) sounds.recycle(FlxSound.class);
+		if(EmbeddedSound != null)
+			sound.loadEmbedded(EmbeddedSound,Looped,AutoDestroy);
+		else
+			sound.loadStream(URL,Looped,AutoDestroy);
+		sound.setVolume(Volume);
+		if(AutoPlay)
+			sound.play();
+		return sound;
+	}
+
 	/**
 	 * Creates a new sound object.
 	 * 
@@ -696,30 +730,10 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public FlxSound loadSound(Sound EmbeddedSound, float Volume, boolean Looped, boolean AutoDestroy, boolean AutoPlay)
+	static public FlxSound loadSound(String EmbeddedSound,float Volume,boolean Looped,boolean AutoDestroy,boolean AutoPlay)
 	{
-		if((EmbeddedSound == null))
-		{
-			FlxG.log("WARNING: FlxG.loadSound() requires an embedded sound to work.");
-			return null;
-		}
-		FlxSound sound = null;
-		try
-		{
-			sound = (FlxSound) sounds.recycle(FlxSound.class);
-		}
-		catch (Exception e) 
-		{
-			FlxG.log("FlxG", e.getMessage());
-		}
-		if(EmbeddedSound != null)
-			sound.loadEmbedded(EmbeddedSound,Looped,AutoDestroy);
-		sound.setVolume(Volume);
-		if(AutoPlay)
-			sound.play();
-		return sound;
+		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, AutoPlay, null);
 	}
-
 	
 	/**
 	 * Creates a new sound object.
@@ -731,11 +745,10 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public FlxSound loadSound(Sound EmbeddedSound, float Volume, boolean Looped, boolean AutoDestroy)
+	static public FlxSound loadSound(String EmbeddedSound, float Volume, boolean Looped, boolean AutoDestroy)
 	{
-		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, false);
+		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, false, null);
 	}
-	
 	
 	/**
 	 * Creates a new sound object.
@@ -746,9 +759,9 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public FlxSound loadSound(Sound EmbeddedSound, float Volume, boolean Looped)
+	static public FlxSound loadSound(String EmbeddedSound, float Volume, boolean Looped)
 	{
-		return loadSound(EmbeddedSound, Volume, Looped, false, false);
+		return loadSound(EmbeddedSound, Volume, Looped, false, false, null);
 	}
 	
 	/**
@@ -759,11 +772,10 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public FlxSound loadSound(Sound EmbeddedSound, float Volume)
+	static public FlxSound loadSound(String EmbeddedSound, float Volume)
 	{
-		return loadSound(EmbeddedSound, Volume, false, false, false);
+		return loadSound(EmbeddedSound, Volume, false, false, false, null);
 	}
-	
 	
 	/**
 	 * Creates a new sound object.
@@ -772,11 +784,10 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public FlxSound loadSound(Sound EmbeddedSound)
+	static public FlxSound loadSound(String EmbeddedSound)
 	{
-		return loadSound(EmbeddedSound, 1.0f, false, false, false);
+		return loadSound(EmbeddedSound, 1.0f, false, false, false, null);
 	}
-	
 	
 	/**
 	 * Set <code>volume</code> to a number between 0 and 1 to change the global volume.
@@ -850,15 +861,19 @@ public class FlxG
 		FlxG._cache = new ObjectMap<String, TextureRegion>();
 		FlxG._fontCache = new ObjectMap<String, BitmapFont>();
 		
+		FlxG.assetManager = new AssetManager();
+		
 		FlxG.mute = false;
 		FlxG._volume = 0.5f;
 		FlxG.sounds = new FlxGroup();
+		FlxG.music = null;
 		
 		FlxG.clearBitmapCache();
 		FlxG.clearFontCache();
 		
 		FlxCamera.defaultZoom = Zoom;
 		FlxG.cameras = new Array<FlxCamera>();
+		FlxG.camera = null;
 		useBufferLocking = false;
 		
 		plugins = new Array<FlxBasic>();
@@ -874,18 +889,29 @@ public class FlxG
 		FlxG.visualDebug = false;
 	}
 	
-	public static void reset()
+	/**
+	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
+	 */
+	static void reset()
 	{
 		FlxG.clearBitmapCache();
 		FlxG.clearFontCache();
-		resetInput();
-		destroySounds(true);
-		paused = false;
-		timeScale = 1.0f;
-		elapsed = 0;
-		globalSeed = (float) Math.random();
-		worldBounds = new FlxRect(-10,-10,FlxG.width+20,FlxG.height+20);
-		worldDivisions = 6;
+		FlxG.resetInput();
+		FlxG.destroySounds(true);
+		FlxG.assetManager.clear();
+		FlxG.levels.clear();
+		FlxG.scores.clear();
+		FlxG.level = 0;
+		FlxG.score = 0;
+		FlxG.paused = false;
+		FlxG.timeScale = 1.0f;
+		FlxG.elapsed = 0;
+		FlxG.globalSeed = (float) Math.random();
+		FlxG.worldBounds = new FlxRect(-10,-10,FlxG.width+20,FlxG.height+20);
+		FlxG.worldDivisions = 6;
+		DebugPathDisplay debugPathDisplay = (DebugPathDisplay) FlxG.getPlugin(DebugPathDisplay.class);
+		if(debugPathDisplay != null)
+			debugPathDisplay.clear();
 	}
 	
 	
@@ -990,16 +1016,15 @@ public class FlxG
 	}
 
 	/**
-	 * Generates a new <code>BitmapData</code> object (a colored square) and
-	 * caches it.
+	 * Generates a new <code>TextureRegion</code> object (a colored square) and caches it.
 	 * 
 	 * @param Width 	How wide the square should be.
 	 * @param Height 	How high the square should be.
-	 * @param color 	What color the square should be (0xAARRGGBB)
-	 * @param Unique	Ensures that the bitmap data uses a new slot in the cache.
-	 * @param Key		Force the cache to use a specific Key to index the bitmap.
+	 * @param Color 	What color the square should be (0xAARRGGBB)
+	 * @param Unique	Ensures that the <code>TextureRegion</code> uses a new slot in the cache.
+	 * @param Key		Force the cache to use a specific Key to index the <code>TextureRegion</code>.
 	 * 
-	 * @return The <code>BitmapData</code> we just created.
+	 * @return The <code>TextureRegion</code> we just created.
 	 *///TODO: Bug: using this will hit the performance. The Texture won't be dupilcated, so how come?
 	static public TextureRegion createBitmap(int Width, int Height, long Color, boolean Unique, String Key)
 	{		
@@ -1019,6 +1044,14 @@ public class FlxG
 				Key = ukey;
 			}
 		}
+		/*
+		if(!checkBitmapCache(Key))
+		{
+			assetManager.load(Key, TextureRegion.class);
+			assetManager.finishLoading();
+		}
+		return assetManager.get(Key, TextureRegion.class);
+		*/
 		if(!checkBitmapCache(Key))
 		{
 			Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(Width), FlxU.ceilPowerOfTwo(Height), Format.RGBA8888);			
@@ -1030,31 +1063,14 @@ public class FlxG
 	}
 	
 	/**
-	 * Generates a new <code>BitmapData</code> object (a colored square) and
-	 * caches it.
+	 * Generates a new <code>TextureRegion</code> object (a colored square) and caches it.
 	 * 
 	 * @param Width 	How wide the square should be.
 	 * @param Height 	How high the square should be.
 	 * @param Color 	What color the square should be (0xAARRGGBB)
-	 * @param Unique	Ensures that the bitmap data uses a new slot in the cache.
+	 * @param Unique	Ensures that the <code>TextureRegion</code> uses a new slot in the cache.
 	 * 
-	 * @return The <code>BitmapData</code> we just created.
-	 */
-	static public TextureRegion createBitmap(int Width, int Height, int Color)
-	{
-		return createBitmap(Width, Height, Color, false, null);
-	}
-	
-	/**
-	 * Generates a new <code>BitmapData</code> object (a colored square) and
-	 * caches it.
-	 * 
-	 * @param Width 	How wide the square should be.
-	 * @param Height 	How high the square should be.
-	 * @param Color 	What color the square should be (0xAARRGGBB)
-	 * @param Unique	Ensures that the bitmap data uses a new slot in the cache.
-	 * 
-	 * @return The <code>BitmapData</code> we just created.
+	 * @return The <code>TextureRegion</code> we just created.
 	 */
 	static public TextureRegion createBitmap(int Width, int Height, int Color, boolean Unique)
 	{
@@ -1062,17 +1078,56 @@ public class FlxG
 	}
 
 	/**
-	 * Loads a bitmap from a file, caches it, and generates a horizontally
-	 * flipped version if necessary.
+	 * Generates a new <code>TextureRegion</code> object (a colored square) and caches it.
 	 * 
-	 * @param Graphic The image file that you want to load.
-	 * @param Unique Make the bitmap unique, no duplicate allowed.
-	 * @param Key
+	 * @param Width 	How wide the square should be.
+	 * @param Height 	How high the square should be.
+	 * @param Color 	What color the square should be (0xAARRGGBB)
 	 * 
-	 * @return The <code>BitmapData</code> we just created.
+	 * @return The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Unique, String Key)
+	static public TextureRegion createBitmap(int Width, int Height, int Color)
 	{
+		return createBitmap(Width, Height, Color, false, null);
+	}
+	
+	/**
+	 * Loads a <code>TextureRegion</code> from a file and caches it.
+	 * 
+	 * @param	Graphic		The image file that you want to load.
+	 * @param	Reverse		Whether to generate a flipped version. Not used.
+	 * @param	Unique		Ensures that the <code>TextureRegion</code> uses a new slot in the cache.
+	 * @param	Key			Force the cache to use a specific Key to index the <code>TextureRegion</code>.
+	 * 
+	 * @return	The <code>TextureRegion</code> we just created.
+	 */
+	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Reverse, boolean Unique, String Key)
+	{
+		/*
+		if(Key == null)
+		{
+			Key = Graphic;
+			if(Unique && checkBitmapCache(Key))
+			{
+				int inc = 0;
+				String ukey;
+				do
+				{
+					ukey = Key + inc++;
+				} while(checkBitmapCache(ukey));
+				Key = ukey;
+			}
+		}
+		
+		//If there is no data for this key, generate the requested graphic
+		if(!checkBitmapCache(Key))
+		{
+			assetManager.load(Key, TextureRegion.class);
+			assetManager.finishLoading();
+		}
+		return assetManager.get(Key, TextureRegion.class);
+		
+		*/
 		if (Unique)
 		{
 			TextureData textureData = Graphic.getTexture().getTextureData();
@@ -1094,32 +1149,43 @@ public class FlxG
 	
 	
 	/**
-	 * Loads a bitmap from a file, caches it, and generates a horizontally
-	 * flipped version if necessary.
+	 * Loads a <code>TextureRegion</code> from a file and caches it.
 	 * 
-	 * @param Graphic The image file that you want to load.
-	 * @param Reverse Whether to generate a flipped version.
-	 * @param Unique Make the bitmap unique, no duplicate allowed.
+	 * @param	Graphic		The image file that you want to load.
+	 * @param	Reverse		Whether to generate a flipped version. Not used.
+	 * @param	Unique		Ensures that the <code>TextureRegion</code> uses a new slot in the cache.
 	 * 
-	 * @return The <code>BitmapData</code> we just created.
+	 * @return	The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Unique)
+	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Reverse, boolean Unique)
 	{
-		return addBitmap(Graphic, Unique, null);
+		return addBitmap(Graphic, Reverse, Unique, null);
 	}
 	
 	
 	/**
-	 * Loads a bitmap from a file, caches it, and generates a horizontally
-	 * flipped version if necessary.
+	 * Loads a <code>TextureRegion</code> from a file and caches it.
 	 * 
-	 * @param Graphic The image file that you want to load.
+	 * @param	Graphic		The image file that you want to load.
+	 * @param	Reverse		Whether to generate a flipped version. Not used.
 	 * 
-	 * @return The <code>BitmapData</code> we just created.
+	 * @return	The <code>TextureRegion</code> we just created.
+	 */
+	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Reverse)
+	{
+		return addBitmap(Graphic, Reverse, false, null);
+	}
+	
+	/**
+	 * Loads a <code>TextureRegion</code> from a file and caches it.
+	 * 
+	 * @param	Graphic		The image file that you want to load.
+	 * 
+	 * @return	The <code>TextureRegion</code> we just created.
 	 */
 	static public TextureRegion addBitmap(TextureRegion Graphic)
 	{
-		return addBitmap(Graphic, false, null);
+		return addBitmap(Graphic, false, false, null);
 	}
 	
 	/**
@@ -1896,9 +1962,9 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public FlxSound play(Sound EmbeddedSound, float Volume, boolean Looped, boolean AutoDestroy)
+	static public FlxSound play(String EmbeddedSound, float Volume, boolean Looped, boolean AutoDestroy)
 	{
-		return FlxG.loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, true);
+		return FlxG.loadSound(EmbeddedSound,Volume,Looped,AutoDestroy,true);
 	}
 
 	/**
@@ -1911,9 +1977,9 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	public static FlxSound play(Sound EmbeddedSound, float Volume, boolean Looped)
+	public static FlxSound play(String EmbeddedSound, float Volume, boolean Looped)
 	{
-		return FlxG.loadSound(EmbeddedSound, Volume, Looped, false, true);
+		return FlxG.loadSound(EmbeddedSound,Volume,Looped,false,true);
 	}
 	
 	/**
@@ -1925,9 +1991,9 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	public static FlxSound play(Sound EmbeddedSound, float Volume)
+	public static FlxSound play(String EmbeddedSound, float Volume)
 	{
-		return FlxG.loadSound(EmbeddedSound, Volume, false, false, true);
+		return FlxG.loadSound(EmbeddedSound,Volume,false,false,true);
 	}
 
 	/**
@@ -1938,11 +2004,10 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	public static FlxSound play(Sound EmbeddedSound)
+	public static FlxSound play(String EmbeddedSound)
 	{
-		return FlxG.loadSound(EmbeddedSound, 1.0f, false, false, true);
+		return FlxG.loadSound(EmbeddedSound,1.0f,false,false,true);
 	}
-	
 	
 	/**
 	 * Vibrates for the given amount of time. Note that you'll need the permission

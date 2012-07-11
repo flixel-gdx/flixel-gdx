@@ -4,16 +4,14 @@ import org.flixel.*;
 
 public class Player extends FlxSprite
 {
-	/*
-	[Embed(source="data/spaceman.png")] protected var ImgSpaceman:Class;
+	//protected String ImgSpaceman = "examples/mode/spaceman.png";
 
-	[Embed(source="data/jump.mp3")] protected var SndJump:Class;
-	[Embed(source="data/land.mp3")] protected var SndLand:Class;
-	[Embed(source="data/asplode.mp3")] protected var SndExplode:Class;
-	[Embed(source="data/menu_hit_2.mp3")] protected var SndExplode2:Class;
-	[Embed(source="data/hurt.mp3")] protected var SndHurt:Class;
-	[Embed(source="data/jam.mp3")] protected var SndJam:Class;
-	*/
+	protected String SndJump = "examples/mode/jump.mp3";
+	protected String SndLand = "examples/mode/land.mp3";
+	protected String SndExplode = "examples/mode/asplode.mp3";
+	protected String SndExplode2 = "examples/mode/menu_hit_2.mp3";
+	protected String SndHurt = "examples/mode/hurt.mp3";
+	protected String SndJam = "examples/mode/jam.mp3";
 	
 	protected int _jumpPower;
 	protected FlxGroup _bullets;
@@ -80,7 +78,7 @@ public class Player extends FlxSprite
 
 		//make a little noise if you just touched the floor
 		if(justTouched(FLOOR) && (velocity.y > 50))
-			FlxG.play(Asset.SndLand);
+			FlxG.play(SndLand);
 
 		//MOVEMENT
 		acceleration.x = 0;
@@ -97,7 +95,7 @@ public class Player extends FlxSprite
 		if(FlxG.keys.justPressed("X") && (int) velocity.y == 0)
 		{
 			velocity.y = -_jumpPower;
-			FlxG.play(Asset.SndJump);
+			FlxG.play(SndJump);
 		}
 
 		//AIMING
@@ -130,7 +128,7 @@ public class Player extends FlxSprite
 		if(FlxG.keys.justPressed("C"))
 		{
 			if(getFlickering())
-				FlxG.play(Asset.SndJam);
+				FlxG.play(SndJam);
 			else
 			{
 				getMidpoint(_point);
@@ -147,7 +145,7 @@ public class Player extends FlxSprite
 		Damage = 0;
 		if(getFlickering())
 			return;
-		FlxG.play(Asset.SndHurt);
+		FlxG.play(SndHurt);
 		flicker(1.3f);
 		if(FlxG.score > 1000) FlxG.score -= 1000;
 		if(velocity.x > 0)
@@ -163,8 +161,8 @@ public class Player extends FlxSprite
 		if(!alive)
 			return;
 		setSolid(false);
-		FlxG.play(Asset.SndExplode);
-		FlxG.play(Asset.SndHit2);
+		FlxG.play(SndExplode);
+		FlxG.play(SndExplode2);
 		super.kill();
 		flicker(0);
 		exists = true;

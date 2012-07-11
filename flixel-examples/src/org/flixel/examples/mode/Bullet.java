@@ -4,11 +4,9 @@ import org.flixel.*;
 
 public class Bullet extends FlxSprite
 {
-	/*
-	[Embed(source="data/bullet.png")] private var ImgBullet:Class;
-	[Embed(source="data/jump.mp3")] private var SndHit:Class;
-	[Embed(source="data/shoot.mp3")] private var SndShoot:Class;
-	*/
+	//private String ImgBullet = "examples/mode/bullet.png";
+	private String SndHit = "examples/mode/jump.mp3";
+	private String SndShoot = "examples/mode/shoot.mp3";
 	
 	public float speed;
 
@@ -50,7 +48,7 @@ public class Bullet extends FlxSprite
 		velocity.x = 0;
 		velocity.y = 0;
 		if(onScreen())
-			FlxG.play(Asset.SndJump);
+			FlxG.play(SndHit);
 		alive = false;
 		setSolid(false);
 		play("poof");
@@ -58,7 +56,7 @@ public class Bullet extends FlxSprite
 
 	public void shoot(FlxPoint Location, int Aim)
 	{
-		FlxG.play(Asset.SndShoot);
+		FlxG.play(SndShoot);
 		super.reset(Location.x-width/2,Location.y-height/2);
 		setSolid(true);
 		switch(Aim)
