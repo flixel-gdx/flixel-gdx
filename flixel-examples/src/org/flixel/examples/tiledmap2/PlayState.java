@@ -1,5 +1,6 @@
 package org.flixel.examples.tiledmap2;
 
+import org.flixel.FlxButton;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGamePad;
@@ -22,6 +23,8 @@ public class PlayState extends FlxState
 	{
 		//Background
 		FlxG.setBgColor(0xffacbcd7);
+		
+		_pad = new FlxGamePad(FlxGamePad.LEFT_RIGHT, FlxGamePad.A);
 		
 		// Objects that are placed in the very front.
 		FlxSprite decoration = new FlxSprite(256,159,Asset.ImgBG);
@@ -49,7 +52,7 @@ public class PlayState extends FlxState
 					else if(name.equals("pusher"))
 						add(new Pusher(object.x,object.y,object.width));
 					else if(name.equals("player"))
-						add(_player = new Player(object.x,object.y));
+						add(_player = new Player(object.x,object.y,_pad));
 				}				
 			}
 		}
@@ -107,11 +110,8 @@ public class PlayState extends FlxState
 		_level.loadMap(FlxTilemap.tilemapToCSV(Asset.map, 0), Asset.ImgTiles, 8, 8, FlxTilemap.OFF, 1);
 		
 		add(_level);
-		add(_pad = new FlxGamePad(FlxGamePad.LEFT_RIGHT, FlxGamePad.A));
-		_pad.setAlpha(0.5f);
-		_pad.buttonA.callback = _player.jump;
-		_pad.buttonLeft.callback = _player.left;
-		_pad.buttonRight.callback = _player.right;		
+		add(_pad);
+		_pad.setAlpha(0.5f);	
 	}
 	
 	@Override

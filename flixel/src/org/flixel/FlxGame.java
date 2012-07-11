@@ -449,7 +449,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		}
 		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
 		FlxG.mouse.activePointers++;
-		notifyObserver();
+		//notifyObserver();
 		return true;
 	}
 
@@ -462,8 +462,8 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		if(/*(_debuggerUp && _debugger.hasMouse) ||*/ _replaying)
 			return true;
 		FlxG.mouse.handleMouseUp(X, Y, Pointer, Button);
-		notifyObserver();
 		FlxG.mouse.activePointers--;
+		notifyObserver();
 		return true;
 	}
 
@@ -473,8 +473,8 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	@Override
 	public boolean touchDragged(int X, int Y, int Pointer)
 	{
-		FlxG.mouse.handleMouseDrag(X, Y, Pointer);
-		notifyObserver();
+		//FlxG.mouse.handleMouseDrag(X, Y, Pointer);
+		//notifyObserver();
 		return true;
 	}
 
@@ -482,8 +482,8 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	@Override
 	public boolean touchMoved(int X, int Y)
 	{
-		FlxG.mouse.handleMouseMove(X, Y);
-		notifyObserver();
+		//FlxG.mouse.handleMouseMove(X, Y);
+		//notifyObserver();
 		return true;
 	}
 

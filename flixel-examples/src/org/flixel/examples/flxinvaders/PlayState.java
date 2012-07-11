@@ -61,8 +61,10 @@ public class PlayState extends FlxState
 		// is creating a big pile of bullets that we can recycle, because there are only
 		// ever like 10 bullets or something on screen at once anyways.
 		
+		_pad = new FlxGamePad(FlxGamePad.LEFT_RIGHT, FlxGamePad.A);
+		
 		//Now that we have a list of bullets, we can initialize the player (and give them the bullets)
-		player = new PlayerShip();
+		player = new PlayerShip(_pad);
 		add(player);	//Adds the player to the state
 		
 		//Then we kind of do the same thing for the enemy invaders; first we make their bullets.
@@ -127,12 +129,8 @@ public class PlayState extends FlxState
 		if(Gdx.app.getType() == ApplicationType.Android)
 		{
 			// The gamepad is added as last and will be in the front.
-			add(_pad = new FlxGamePad(FlxGamePad.LEFT_RIGHT, FlxGamePad.A));
-			_pad.setAlpha(0.5f);
-			_pad.buttonA.callback = player.fire;
-			_pad.buttonLeft.callback = player.left;
-			_pad.buttonRight.callback = player.right;
-			
+			add(_pad);
+			_pad.setAlpha(0.5f);			
 		}
 	}
 	

@@ -5,6 +5,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.system.replay.MouseRecord;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
@@ -15,7 +16,6 @@ import com.badlogic.gdx.utils.Array;
  * properties refer to the first pointer.
  * 
  * @author Ka Wing Chin
- * @author Thomas Weston
  */
 public class Mouse extends FlxPoint
 {
@@ -41,9 +41,9 @@ public class Mouse extends FlxPoint
 	protected Array<Pointer> _pointers;
 	
 	/**
-	 * The current active pointers.
-	 */
-	public int activePointers;
+     * The current active pointers.
+     */
+    public int activePointers;
 	
 	/**
 	 * Constructor
@@ -244,8 +244,8 @@ public class Mouse extends FlxPoint
 		{
 			o = _pointers.get(i);
 			
-//			o.screenPosition.x = Gdx.input.getX(i) / FlxG.difWidth;
-//			o.screenPosition.y = Gdx.input.getY(i) / FlxG.difHeight;
+			o.screenPosition.x = Gdx.input.getX(i) / FlxG.difWidth;
+			o.screenPosition.y = Gdx.input.getY(i) / FlxG.difHeight;
 			
 			if((o.last == -1) && (o.current == -1))
 				o.current = 0;
@@ -548,11 +548,13 @@ public class Mouse extends FlxPoint
 		Pointer o;
 		
 		if (Pointer >= _pointers.size)
-			_pointers.add(o = new Pointer());
+		{
+			o = new Pointer();
+			_pointers.add(o);
+		}
 		else
 			o = _pointers.get(Pointer);
-		o.screenPosition.x = X / FlxG.difWidth;
-		o.screenPosition.y = Y / FlxG.difHeight;
+		
 		if(o.current > 0)
 			o.current = -1;
 		else 
@@ -573,47 +575,17 @@ public class Mouse extends FlxPoint
 		Pointer o;
 		
 		if (Pointer >= _pointers.size)
-			_pointers.add(o = new Pointer());
+		{
+			o = new Pointer();
+			_pointers.add(o);
+		}
 		else
 			o = _pointers.get(Pointer);
-		o.screenPosition.x = X / FlxG.difWidth;
-		o.screenPosition.y = Y / FlxG.difHeight;
+		
 		if(o.current > 0) 
 			o.current = 1;
 		else
 			o.current = 2;
-	}
-	
-	/**
-	 * Event handler so FlxGame can update the pointer.
-	 * 
-	 * @param 	X	The x position of the pointer.
-	 * @param 	Y	The y position of the pointer.
-	 * @param 	Pointer	The pointer id.
-	 */
-	public void handleMouseDrag(int X, int Y, int Pointer)
-	{	
-		if(_pointers == null || _pointers.size == 0 || Pointer >= _pointers.size)
-			return;
-		Pointer o;
-		o = _pointers.get(Pointer);
-		o.screenPosition.x = X / FlxG.difWidth;
-		o.screenPosition.y = Y / FlxG.difHeight;
-	}
-	
-	
-	/**
-	 * Event handler so FlxGame can update the pointer.
-	 * Will not be called on Android.
-	 * 
-	 * @param 	X	The x position of the pointer.
-	 * @param 	Y	The y position of the pointer.
-	 */
-	public void handleMouseMove(int X, int Y)
-	{
-		Pointer o = _pointers.get(0);
-		o.screenPosition.x = X / FlxG.difWidth;
-		o.screenPosition.y = Y / FlxG.difHeight;
 	}
 	
 	/**
@@ -698,4 +670,3 @@ public class Mouse extends FlxPoint
 		}
 	}
 }
-

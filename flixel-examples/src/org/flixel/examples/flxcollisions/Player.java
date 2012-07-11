@@ -54,7 +54,6 @@ public class Player extends FlxSprite
 			play("jump");
 		else
 			play("flail");
-		
 	}
 	
 	protected boolean isTouched(FlxObject touchArea)

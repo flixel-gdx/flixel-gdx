@@ -81,22 +81,20 @@ public class PlayState extends FlxState
         add(_unit);
                         
         //Add button move to goal to PlayState
-        _btnFindPath = new FlxButton(320, 10, "Move To Goal", new AFlxButton(){@Override public void onDown(){moveToGoal();}});
+        _btnFindPath = new FlxButton(320, 10, "Move To Goal", new AFlxButton(){@Override public void onUp(){moveToGoal();}});
         add(_btnFindPath);
 
         //Add button stop unit to PlayState
-        _btnStopUnit = new FlxButton(320, 30, "Stop Unit", new AFlxButton(){@Override public void onDown(){stopUnit();}});
+        _btnStopUnit = new FlxButton(320, 30, "Stop Unit", new AFlxButton(){@Override public void onUp(){stopUnit();}});
         add(_btnStopUnit);
                         
         //Add button reset unit to PlayState
-        _btnResetUnit = new FlxButton(320, 50, "Reset Unit", new AFlxButton(){@Override public void onDown(){resetUnit();}});
+        _btnResetUnit = new FlxButton(320, 50, "Reset Unit", new AFlxButton(){@Override public void onUp(){resetUnit();}});
         add(_btnResetUnit);
                         
         //Add label for legend
         _legends = new FlxText(320, 90, 100, "Click in map to\nplace or\nremove tile\n\nLegends:\nRed:Unit\nYellow:Goal\nBlue:Wall\nWhite:Path");
         add(_legends);
-        
-       // add(_unit);
     }
                 
     @Override
