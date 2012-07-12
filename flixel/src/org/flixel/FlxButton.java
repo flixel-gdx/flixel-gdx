@@ -232,6 +232,8 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 	 */
 	protected void updateButton()
 	{
+		status = NORMAL;
+		
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
 		if(cameras == null)
@@ -240,7 +242,7 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		int i = 0;
 		int l = cameras.size;
 		int pointerId = 0;		
-		int	totalPointers = FlxG.mouse.activePointers;
+		int	totalPointers = FlxG.mouse.activePointers + 1;
 		boolean offAll = true;
 		while(i < l)
 		{
@@ -251,33 +253,21 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 				if(overlapsPoint(_point, true, camera))
 				{
 					offAll = false;
-					if(FlxG.mouse.justPressed(pointerId))
-					{
-						status = PRESSED;
-						if(callback != null)
-						{
-							callback.onDown();
-						}
-						if(soundDown != null)
-							soundDown.play(true);
-					}/*
 					if(FlxG.mouse.pressed(pointerId))
 					{
 						status = PRESSED;
-						if(callback != null)
-							callback.onPressed();
+						if(FlxG.mouse.justPressed(pointerId))
+						{
+							if(callback != null)
+							{
+								callback.onDown();
+							}
+							if(soundDown != null)
+								soundDown.play(true);
+						}
 					}
-					if(FlxG.mouse.justReleased(pointerId) && visible && status == PRESSED)
-					{
-						status = HIGHLIGHT;
-						if(Gdx.app.getType() == ApplicationType.Android)
-							status = NORMAL;
-						if(callback != null)		
-							callback.onUp();
-						if(soundUp != null)
-							soundUp.play(true);
-					}
-					else*/ if(status == NORMAL)
+					
+					if(status == NORMAL)
 					{
 						status = HIGHLIGHT;
 						if(callback != null)
@@ -315,7 +305,7 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		}
 
 		//Then pick the appropriate frame of animation
-		if((status == HIGHLIGHT) && _onToggle)
+		if((status == HIGHLIGHT) && (_onToggle || Gdx.app.getType() != ApplicationType.Desktop))
 			setFrame(NORMAL);
 		else
 			setFrame(status);

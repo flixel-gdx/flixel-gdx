@@ -57,6 +57,7 @@ public class Mouse extends FlxPoint
 		_point = new FlxPoint();
 		_pointers = new Array<Pointer>();
 		_pointers.add(new Pointer());
+		activePointers = 0;
 	}
 
 	/**
