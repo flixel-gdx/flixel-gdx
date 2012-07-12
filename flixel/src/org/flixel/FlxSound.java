@@ -1,9 +1,7 @@
 package org.flixel;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 	
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
@@ -284,7 +282,7 @@ public class FlxSound extends FlxBasic
 		//If the type is not specified, make a guess based on the file size.
 		if (Type == -1)
 		{
-			FileHandle file = Gdx.files.internal(EmbeddedSound);
+			//FileHandle file = Gdx.files.internal(EmbeddedSound);
 			Type = MUSIC;//file.length() < 24576 ? SFX : MUSIC;
 		}
 		
