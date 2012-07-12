@@ -356,7 +356,16 @@ public class FlxSprite extends FlxObject
 		if(Frame >= 0)
 		{
 			width = frameWidth = _pixels.getRegionHeight();
-			setFrame(Frame);
+			int rx = Frame*width;
+			int ry = 0;
+			int fw = _pixels.getRegionWidth();
+			
+			if(rx >= fw)
+			{
+				ry = (rx/fw)*width;
+				rx %= fw;
+			}
+			_pixels = new TextureRegion(_pixels, rx, ry, width, width);
 		}
 		else
 			width = frameWidth = _pixels.getRegionWidth();
