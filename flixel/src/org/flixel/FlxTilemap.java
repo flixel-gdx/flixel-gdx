@@ -479,7 +479,7 @@ public class FlxTilemap extends FlxObject
 							else
 								debugTile = _debugTileSolid; //green
 
-							FlxG.batch.draw(debugTile, _flashPoint.x - _point.x, _flashPoint.y - _point.y);
+							FlxG.batch.draw(debugTile, _flashPoint.x + _point.x, _flashPoint.y + _point.y);
 							//Buffer.addTile(debugTile, _flashPoint.x - _point.x, _flashPoint.y - _point.y);
 						}
 					}
