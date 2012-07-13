@@ -1,9 +1,6 @@
 package org.flixel;
 
-import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxButton;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * A gamepad which contains 4 directional buttons and 4 action buttons.
@@ -13,6 +10,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class FlxGamePad extends FlxGroup
 {
+	private String ImgButtonA = "org/flixel/data/pack:button_a";
+	private String ImgButtonB = "org/flixel/data/pack:button_b";
+	private String ImgButtonC = "org/flixel/data/pack:button_c";
+	private String ImgButtonY = "org/flixel/data/pack:button_y";
+	private String ImgButtonX = "org/flixel/data/pack:button_x";
+	private String ImgButtonLeft = "org/flixel/data/pack:button_left";
+	private String ImgButtonUp = "org/flixel/data/pack:button_up";
+	private String ImgButtonRight = "org/flixel/data/pack:button_right";
+	private String ImgButtonDown = "org/flixel/data/pack:button_down";
+	
 	// Button A
 	public FlxButton buttonA;
 	// Button B
@@ -67,23 +74,23 @@ public class FlxGamePad extends FlxGroup
 		switch(DPad)
 		{
 			case FULL:
-				dPad.add(add(buttonUp = createButton(35, FlxG.height-116, 44, 45, SystemAsset.ImgButtonUp)));		
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height-81, 44, 45, SystemAsset.ImgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(69, FlxG.height-81, 44, 45, SystemAsset.ImgButtonRight)));	
-				dPad.add(add(buttonDown = createButton(35, FlxG.height-45, 44, 45, SystemAsset.ImgButtonDown)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height-116, 44, 45, ImgButtonUp)));		
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height-81, 44, 45, ImgButtonLeft)));
+				dPad.add(add(buttonRight = createButton(69, FlxG.height-81, 44, 45, ImgButtonRight)));	
+				dPad.add(add(buttonDown = createButton(35, FlxG.height-45, 44, 45, ImgButtonDown)));
 				break;
 			case UP_DOWN:
-				dPad.add(add(buttonUp = createButton(0, FlxG.height-85, 44, 45, SystemAsset.ImgButtonUp)));
-				dPad.add(add(buttonDown = createButton(0, FlxG.height-45, 44, 45, SystemAsset.ImgButtonDown)));
+				dPad.add(add(buttonUp = createButton(0, FlxG.height-85, 44, 45, ImgButtonUp)));
+				dPad.add(add(buttonDown = createButton(0, FlxG.height-45, 44, 45, ImgButtonDown)));
 				break;
 			case LEFT_RIGHT:
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height-45, 44, 45, SystemAsset.ImgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(42, FlxG.height-45, 44, 45, SystemAsset.ImgButtonRight)));
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height-45, 44, 45, ImgButtonLeft)));
+				dPad.add(add(buttonRight = createButton(42, FlxG.height-45, 44, 45, ImgButtonRight)));
 				break;
 			case UP_LEFT_RIGHT:
-				dPad.add(add(buttonUp = createButton(35, FlxG.height-81, 44, 45, SystemAsset.ImgButtonUp)));
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height-45, 44, 45, SystemAsset.ImgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(69, FlxG.height-45, 44, 45, SystemAsset.ImgButtonRight)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height-81, 44, 45, ImgButtonUp)));
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height-45, 44, 45, ImgButtonLeft)));
+				dPad.add(add(buttonRight = createButton(69, FlxG.height-45, 44, 45, ImgButtonRight)));
 				break;
 			default:
 				break;
@@ -92,22 +99,22 @@ public class FlxGamePad extends FlxGroup
 		switch(Action)
 		{
 			case FULL:
-				actions.add(add(buttonY = createButton(FlxG.width-86, FlxG.height-85, 44, 45, SystemAsset.ImgButtonY)));		
-				actions.add(add(buttonX = createButton(FlxG.width-44, FlxG.height-85, 44, 45, SystemAsset.ImgButtonX)));		
-				actions.add(add(buttonB = createButton(FlxG.width-86, FlxG.height-45, 44, 45, SystemAsset.ImgButtonB)));		
-				actions.add(add(buttonA = createButton(FlxG.width-44, FlxG.height-45, 44, 45, SystemAsset.ImgButtonA)));
+				actions.add(add(buttonY = createButton(FlxG.width-86, FlxG.height-85, 44, 45, ImgButtonY)));		
+				actions.add(add(buttonX = createButton(FlxG.width-44, FlxG.height-85, 44, 45, ImgButtonX)));		
+				actions.add(add(buttonB = createButton(FlxG.width-86, FlxG.height-45, 44, 45, ImgButtonB)));		
+				actions.add(add(buttonA = createButton(FlxG.width-44, FlxG.height-45, 44, 45, ImgButtonA)));
 				break;
 			case A:
-				actions.add(add(buttonA = createButton(FlxG.width-44, FlxG.height-45, 44, 45, SystemAsset.ImgButtonA)));
+				actions.add(add(buttonA = createButton(FlxG.width-44, FlxG.height-45, 44, 45, ImgButtonA)));
 				break;
 			case A_B:
-				actions.add(add(buttonA = createButton(FlxG.width-44, FlxG.height-45, 44, 45, SystemAsset.ImgButtonA)));
-				actions.add(add(buttonB = createButton(FlxG.width-86, FlxG.height-45, 44, 45, SystemAsset.ImgButtonB)));		
+				actions.add(add(buttonA = createButton(FlxG.width-44, FlxG.height-45, 44, 45, ImgButtonA)));
+				actions.add(add(buttonB = createButton(FlxG.width-86, FlxG.height-45, 44, 45, ImgButtonB)));		
 				break;
 			case A_B_C:
-				actions.add(add(buttonA = createButton(FlxG.width-128, FlxG.height-45, 44, 45, SystemAsset.ImgButtonA)));				
-				actions.add(add(buttonB = createButton(FlxG.width-86, FlxG.height-45, 44, 45, SystemAsset.ImgButtonB)));		
-				actions.add(add(buttonC = createButton(FlxG.width-44, FlxG.height-45, 44, 45, SystemAsset.ImgButtonC)));
+				actions.add(add(buttonA = createButton(FlxG.width-128, FlxG.height-45, 44, 45, ImgButtonA)));				
+				actions.add(add(buttonB = createButton(FlxG.width-86, FlxG.height-45, 44, 45, ImgButtonB)));		
+				actions.add(add(buttonC = createButton(FlxG.width-44, FlxG.height-45, 44, 45, ImgButtonC)));
 			default:
 				break;
 		}
@@ -138,7 +145,7 @@ public class FlxGamePad extends FlxGroup
 	 * @param Callback	The callback for the button.
 	 * @return			The button.
 	 */
-	public FlxButton createButton(float X, float Y, int Width, int Height, TextureRegion Image, AFlxButton Callback)
+	public FlxButton createButton(float X, float Y, int Width, int Height, String Image, AFlxButton Callback)
 	{
 		FlxButton button = new FlxButton(X, Y);
 		button.loadGraphic(Image, true, false, Width, Height);
@@ -160,7 +167,7 @@ public class FlxGamePad extends FlxGroup
 	 * @param Image		The image of the button. It must contains 3 frames (NORMAL, HIGHLIGHT, PRESSED).	 
 	 * @return			The button.
 	 */
-	public FlxButton createButton(float X, float Y, int Width, int Height, TextureRegion Image)
+	public FlxButton createButton(float X, float Y, int Width, int Height, String Image)
 	{
 		return createButton(X, Y, Width, Height, Image, null);
 	}

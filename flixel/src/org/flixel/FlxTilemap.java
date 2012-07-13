@@ -2,16 +2,18 @@ package org.flixel;
 
 import org.flixel.event.AFlxObject;
 import org.flixel.event.AFlxTile;
+import org.flixel.system.FlxTextureData;
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 
@@ -26,8 +28,8 @@ import com.badlogic.gdx.utils.IntArray;
  */
 public class FlxTilemap extends FlxObject
 {
-	static public TextureRegion ImgAuto;
-	static public TextureRegion ImgAutoAlt;
+	static public String ImgAuto = "org/flixel/data/pack:autotiles";
+	static public String ImgAutoAlt = "org/flixel/data/pack:autotiles_alt";
 	
 	/**
 	 * No auto-tiling.
@@ -190,7 +192,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public FlxTilemap loadMap(String MapData, TextureRegion TileGraphic, int TileWidth, int TileHeight, int AutoTile, int StartingIndex, int DrawIndex, int CollideIndex)
+	public FlxTilemap loadMap(String MapData, String TileGraphic, int TileWidth, int TileHeight, int AutoTile, int StartingIndex, int DrawIndex, int CollideIndex)
 	{
 		auto = AutoTile;
 		_startingIndex = StartingIndex;
@@ -236,7 +238,7 @@ public class FlxTilemap extends FlxObject
 		}
 		
 		//Figure out the size of the tiles
-		_tiles = TileGraphic;//new TextureRegion(FlxG.addBitmap(TileGraphic));
+		_tiles = FlxG.addBitmap(TileGraphic);
 		
 		_tileWidth = TileWidth;
 		if(_tileWidth == 0)
@@ -293,7 +295,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public FlxTilemap loadMap(String MapData, TextureRegion TileGraphic, int TileWidth, int TileHeight, int AutoTile, int StartingIndex, int DrawIndex)
+	public FlxTilemap loadMap(String MapData, String TileGraphic, int TileWidth, int TileHeight, int AutoTile, int StartingIndex, int DrawIndex)
 	{
 		return loadMap(MapData, TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, 1);
 	}
@@ -310,7 +312,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public FlxTilemap loadMap(String MapData, TextureRegion TileGraphic, int TileWidth, int TileHeight, int AutoTile, int StartingIndex)
+	public FlxTilemap loadMap(String MapData, String TileGraphic, int TileWidth, int TileHeight, int AutoTile, int StartingIndex)
 	{
 		return loadMap(MapData, TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, 1, 1);
 	}
@@ -326,7 +328,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public FlxTilemap loadMap(String MapData, TextureRegion TileGraphic, int TileWidth, int TileHeight, int AutoTile)
+	public FlxTilemap loadMap(String MapData, String TileGraphic, int TileWidth, int TileHeight, int AutoTile)
 	{
 		return loadMap(MapData, TileGraphic, TileWidth, TileHeight, AutoTile, 0, 1, 1);
 	}
@@ -341,7 +343,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public FlxTilemap loadMap(String MapData, TextureRegion TileGraphic, int TileWidth, int TileHeight)
+	public FlxTilemap loadMap(String MapData, String TileGraphic, int TileWidth, int TileHeight)
 	{
 		return loadMap(MapData, TileGraphic, TileWidth, TileHeight, OFF, 0, 1, 1);
 	}
@@ -355,7 +357,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public FlxTilemap loadMap(String MapData, TextureRegion TileGraphic, int TileWidth)
+	public FlxTilemap loadMap(String MapData, String TileGraphic, int TileWidth)
 	{
 		return loadMap(MapData, TileGraphic, TileWidth, 0, OFF, 0, 1, 1);
 	}
@@ -368,7 +370,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public FlxTilemap loadMap(String MapData, TextureRegion TileGraphic)
+	public FlxTilemap loadMap(String MapData, String TileGraphic)
 	{
 		return loadMap(MapData, TileGraphic, 0, 0, OFF, 0, 1, 1);
 	}
@@ -387,13 +389,13 @@ public class FlxTilemap extends FlxObject
 		Color c = FlxU.colorFromHex(Color);
 		c.a = 0.5f;
 		
-		Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(_tileWidth),FlxU.ceilPowerOfTwo(_tileHeight),Pixmap.Format.RGBA8888);
+		Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(_tileWidth),MathUtils.nextPowerOfTwo(_tileHeight),Pixmap.Format.RGBA8888);
 		p.setColor(c);
 		p.drawRectangle(0, 0, _tileWidth, _tileHeight);
 		
-		DebugTile.setRegion(new Texture(p));
+		DebugTile.setRegion(new Texture(new FlxTextureData(p)));
 		DebugTile.flip(false, true);
-		p.dispose();
+		//p.dispose();
 		
 		return DebugTile;
 	}
@@ -1998,13 +2000,21 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String imageToCSV(FileHandle ImageFile,boolean Invert,int Scale)
+	static public String imageToCSV(String ImageFile,boolean Invert,int Scale)
 	{
-		Pixmap pixmap = new Pixmap(ImageFile);
+		String csv = null;
 		
-		String csv = pixmapToCSV(pixmap, Invert, Scale);
-		
-		pixmap.dispose();
+		//Check whether the file is part of a TextureAtlas or not.
+		if (ImageFile.contains(":"))
+		{
+			csv = bitmapToCSV(FlxG.addBitmap(ImageFile), Invert, Scale);
+		}
+		else
+		{
+			Pixmap pixmap = new Pixmap(Gdx.files.internal(ImageFile));
+			csv = pixmapToCSV(pixmap, Invert, Scale);
+			pixmap.dispose();
+		}
 		
 		return csv;
 	}
@@ -2020,7 +2030,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String imageToCSV(FileHandle ImageFile,boolean Invert)
+	static public String imageToCSV(String ImageFile,boolean Invert)
 	{
 		return imageToCSV(ImageFile, Invert, 1);
 	}
@@ -2035,7 +2045,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String imageToCSV(FileHandle ImageFile)
+	static public String imageToCSV(String ImageFile)
 	{
 		return imageToCSV(ImageFile, false, 1);
 	}

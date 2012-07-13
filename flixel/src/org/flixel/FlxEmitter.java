@@ -1,8 +1,5 @@
 package org.flixel;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-
 /**
  * <code>FlxEmitter</code> is a lightweight particle emitter.
  * It can be used for one-time explosions or for
@@ -84,7 +81,7 @@ public class FlxEmitter extends FlxGroup
 	 * Set your own particle class type here.
 	 * Default is <code>FlxParticle</code>.
 	 */
-	public FlxParticle particleClass;
+	public Class<FlxParticle> particleClass;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
@@ -199,7 +196,7 @@ public class FlxEmitter extends FlxGroup
 	 * 
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxEmitter makeParticles(TextureRegion Graphics, int Quantity, int BakedRotations, boolean Multiple, float Collide)
+	public FlxEmitter makeParticles(String Graphics, int Quantity, int BakedRotations, boolean Multiple, float Collide)
 	{
 		setMaxSize(Quantity);
 		
@@ -213,15 +210,22 @@ public class FlxEmitter extends FlxGroup
 		}
 
 		int randomFrame;
-		FlxParticle particle;
+		FlxParticle particle = null;
 		int i = 0;
 		while(i < Quantity)
-		{	//TODO: custom particle class
-			//if(particleClass == null)
-				//particle = new FlxParticle();
-//			else 
-//				particle = new particleClass();
-			particle = new FlxParticle();
+		{	
+			if(particleClass == null)
+			{
+				particle = new FlxParticle();
+			}
+			else
+			{
+				try {
+					particle = particleClass.newInstance();
+				} catch (Exception e) {
+					FlxG.log(e.getMessage());
+				}
+			}
 			if(Multiple)
 			{
 				randomFrame = (int) (FlxG.random()*totalFrames);
@@ -265,7 +269,7 @@ public class FlxEmitter extends FlxGroup
 	 * 
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxEmitter makeParticles(TextureRegion Graphics, int Quantity, int BakedRotations, boolean Multiple)
+	public FlxEmitter makeParticles(String Graphics, int Quantity, int BakedRotations, boolean Multiple)
 	{
 		return makeParticles(Graphics, Quantity, BakedRotations, Multiple, 0.8f);
 	}
@@ -279,7 +283,7 @@ public class FlxEmitter extends FlxGroup
 	 * 
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxEmitter makeParticles(TextureRegion Graphics, int Quantity, int BakedRotations)
+	public FlxEmitter makeParticles(String Graphics, int Quantity, int BakedRotations)
 	{
 		return makeParticles(Graphics, Quantity, BakedRotations, false, 0.8f);
 	}
@@ -292,7 +296,7 @@ public class FlxEmitter extends FlxGroup
 	 * 
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxEmitter makeParticles(TextureRegion Graphics, int Quantity)
+	public FlxEmitter makeParticles(String Graphics, int Quantity)
 	{
 		return makeParticles(Graphics, Quantity, 16, false, 0.8f);
 	}
@@ -304,7 +308,7 @@ public class FlxEmitter extends FlxGroup
 	 * 
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxEmitter makeParticles(TextureRegion Graphics)
+	public FlxEmitter makeParticles(String Graphics)
 	{
 		return makeParticles(Graphics, 50, 16, false, 0.8f);
 	}

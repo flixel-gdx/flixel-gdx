@@ -76,9 +76,10 @@ public class FlxPreloader extends FlxState
 		
 	@Override
 	public void update()
-    {		
-		FlxG.assetManager.update();
-		float percent = FlxG.assetManager.getProgress();
+    {	
+		/*
+		FlxG._assetManager.update();
+		float percent = FlxG._assetManager.getProgress();
 		long time = System.currentTimeMillis() - _time;
         if((percent >= 1.0f) && (time > _min))
         {
@@ -90,6 +91,7 @@ public class FlxPreloader extends FlxState
 				percent = time/_min;
             update(percent);
 		}
+		*/
     }
 		
 	/**

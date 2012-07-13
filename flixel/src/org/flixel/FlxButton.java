@@ -1,6 +1,5 @@
 package org.flixel;
 
-import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxButton;
 import org.flixel.event.IMouseObserver;
 
@@ -14,6 +13,8 @@ import com.badlogic.gdx.Gdx;
  */
 public class FlxButton extends FlxSprite implements IMouseObserver
 {
+	 protected String ImgDefaultButton = "org/flixel/data/pack:button";
+	
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */
@@ -97,10 +98,8 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 			label = new FlxText(0,0,80,Label);
 			label.setFormat(null,8,0x333333,"center");
 			labelOffset = new FlxPoint(-1,3);
-			//label.x = x + labelOffset.x; // add this.
-			//label.y = y + labelOffset.y; // add this.
 		}
-		loadGraphic(SystemAsset.ImgButton,true,false,80,20);
+		loadGraphic(ImgDefaultButton,true,false,80,20);
 		
 		callback = Callback;
 		
@@ -113,7 +112,6 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		_onToggle = false;
 		_pressed = false;
 		_initialized = false;
-		//updateButton();
 	}
 	
 	/**
@@ -215,11 +213,9 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 				break;
 			case PRESSED:
 				label.setAlpha(0.5f);
-				label.y++;//y+labelOffset.y+1;
+				label.y++;
 				break;
 			case NORMAL:
-				//label.x = x + labelOffset.x;
-				//label.y = y + labelOffset.y;
 			default:
 				label.setAlpha(0.8f);
 				break;
@@ -506,7 +502,6 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 	@Override
 	public void updateListener()
 	{
-		//updateButton();
 		if(!exists || !visible || !active || (status != PRESSED))
 			return;
 		if(callback != null)

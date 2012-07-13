@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -267,7 +268,7 @@ public class FlxPath
 						
 		if(_debug == null)
 		{
-			_pixmap = new Pixmap(FlxU.ceilPowerOfTwo(FlxG.width), FlxU.ceilPowerOfTwo(FlxG.height), Format.RGBA8888);
+			_pixmap = new Pixmap(MathUtils.nextPowerOfTwo(FlxG.width), MathUtils.nextPowerOfTwo(FlxG.height), Format.RGBA8888);
 			_pixmap.drawRectangle(0, 0, FlxG.width, FlxG.height);			
 				
 			//Then fill up the object with node and path graphics

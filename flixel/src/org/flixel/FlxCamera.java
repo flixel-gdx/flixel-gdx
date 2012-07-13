@@ -209,8 +209,6 @@ public class FlxCamera extends FlxBasic
 		bgColor = FlxG.getBgColor();
 		_color = 0xFFFFFF;
 		
-		//setColor(bgColor);
-		
 		setZoom(Zoom); //sets the scale of flash sprite, which in turn loads flashoffset values
 		_flashOffsetX = glCamera.position.x;
 		_flashOffsetY = glCamera.position.y;

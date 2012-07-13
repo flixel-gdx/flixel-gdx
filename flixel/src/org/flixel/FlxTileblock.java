@@ -1,7 +1,5 @@
 package org.flixel;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.
  * It can be filled with a random selection of tiles to quickly add detail.
@@ -35,7 +33,7 @@ public class FlxTileblock extends FlxSprite
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
-	public FlxTileblock loadTiles(TextureRegion TileGraphic, int TileWidth, int TileHeight, int Empties)
+	public FlxTileblock loadTiles(String TileGraphic, int TileWidth, int TileHeight, int Empties)
 	{
 		if(TileGraphic == null)
 			return this;
@@ -99,7 +97,7 @@ public class FlxTileblock extends FlxSprite
 	 * @param	TileWidth		The width of a single tile in the graphic.
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 */
-	public FlxTileblock loadTiles(TextureRegion TileGraphic, int TileWidth, int TileHeight)
+	public FlxTileblock loadTiles(String TileGraphic, int TileWidth, int TileHeight)
 	{
 		return loadTiles(TileGraphic, TileWidth, TileHeight, 0);
 	}
@@ -110,7 +108,7 @@ public class FlxTileblock extends FlxSprite
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
 	 * @param	TileWidth		The width of a single tile in the graphic.
 	 */
-	public FlxTileblock loadTiles(TextureRegion TileGraphic, int TileWidth)
+	public FlxTileblock loadTiles(String TileGraphic, int TileWidth)
 	{
 		return loadTiles(TileGraphic, TileWidth, 0, 0);
 	}
@@ -120,7 +118,7 @@ public class FlxTileblock extends FlxSprite
 	 * 
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
 	 */
-	public FlxTileblock loadTiles(TextureRegion TileGraphic)
+	public FlxTileblock loadTiles(String TileGraphic)
 	{
 		return loadTiles(TileGraphic, 0, 0, 0);
 	}

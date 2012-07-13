@@ -1,6 +1,5 @@
 package org.flixel;
 
-import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxSprite;
 import org.flixel.system.FlxAnim;
 import org.flixel.system.FlxTextureData;
@@ -20,6 +19,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public class FlxSprite extends FlxObject
 {
+	protected String ImgDefault = "org/flixel/data/pack:default";
+	
 	/**
 	 * WARNING: The origin of the sprite will default to its center.
 	 * If you change this, the visuals and the collisions will likely be
@@ -135,7 +136,7 @@ public class FlxSprite extends FlxObject
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public FlxSprite(float X, float Y, TextureRegion SimpleGraphic)
+	public FlxSprite(float X, float Y, String SimpleGraphic)
 	{
 		super(X, Y);
 		
@@ -161,7 +162,7 @@ public class FlxSprite extends FlxObject
 		_callback = null;
 		
 		if(SimpleGraphic == null)
-			SimpleGraphic = SystemAsset.ImgDefault;
+			SimpleGraphic = ImgDefault;
 		loadGraphic(SimpleGraphic);
 	}
 		
@@ -240,10 +241,10 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated,boolean Reverse,int Width,int Height,boolean Unique)
+	public FlxSprite loadGraphic(String Graphic,boolean Animated,boolean Reverse,int Width,int Height,boolean Unique)
 	{
 		_bakedRotation = 0;
-		_pixels = FlxG.addBitmap(Graphic, Unique);
+		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
 		
 		if(Width == 0)
 		{
@@ -277,7 +278,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated,boolean Reverse,int Width,int Height)
+	public FlxSprite loadGraphic(String Graphic,boolean Animated,boolean Reverse,int Width,int Height)
 	{
 		return loadGraphic(Graphic, Animated, Reverse, Width, Height, false);
 	}
@@ -292,7 +293,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated,boolean Reverse,int Width)
+	public FlxSprite loadGraphic(String Graphic,boolean Animated,boolean Reverse,int Width)
 	{
 		return loadGraphic(Graphic, Animated, Reverse, Width, 0, false);
 	}
@@ -306,7 +307,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated,boolean Reverse)
+	public FlxSprite loadGraphic(String Graphic,boolean Animated,boolean Reverse)
 	{
 		return loadGraphic(Graphic, Animated, Reverse, 0, 0, false);
 	}
@@ -319,7 +320,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic,boolean Animated)
+	public FlxSprite loadGraphic(String Graphic,boolean Animated)
 	{
 		return loadGraphic(Graphic, Animated, false, 0, 0, false);
 	}
@@ -331,7 +332,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadGraphic(TextureRegion Graphic)
+	public FlxSprite loadGraphic(String Graphic)
 	{
 		return loadGraphic(Graphic, false, false, 0, 0, false);
 	}
@@ -349,7 +350,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadRotatedGraphic(TextureRegion Graphic, int Rotations, int Frame, boolean AntiAliasing, boolean AutoBuffer)
+	public FlxSprite loadRotatedGraphic(String Graphic, int Rotations, int Frame, boolean AntiAliasing, boolean AutoBuffer)
 	{
 		_bakedRotation = 0;
 		_pixels = FlxG.addBitmap(Graphic);
@@ -462,7 +463,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadRotatedGraphic(TextureRegion Graphic, int Rotations, int Frame, boolean AntiAliasing)
+	public FlxSprite loadRotatedGraphic(String Graphic, int Rotations, int Frame, boolean AntiAliasing)
 	{
 		return loadRotatedGraphic(Graphic, Rotations, Frame, AntiAliasing, false);
 	}
@@ -477,7 +478,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadRotatedGraphic(TextureRegion Graphic, int Rotations, int Frame)
+	public FlxSprite loadRotatedGraphic(String Graphic, int Rotations, int Frame)
 	{
 		return loadRotatedGraphic(Graphic, Rotations, Frame, false, false);
 	}
@@ -491,7 +492,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadRotatedGraphic(TextureRegion Graphic, int Rotations)
+	public FlxSprite loadRotatedGraphic(String Graphic, int Rotations)
 	{
 		return loadRotatedGraphic(Graphic, Rotations, -1, false, false);
 	}
@@ -504,7 +505,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSprite loadRotatedGraphic(TextureRegion Graphic)
+	public FlxSprite loadRotatedGraphic(String Graphic)
 	{
 		return loadRotatedGraphic(Graphic, 16, -1, false, false);
 	}

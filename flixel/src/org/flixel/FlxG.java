@@ -14,6 +14,11 @@ import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
+import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -21,6 +26,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -255,9 +261,9 @@ public class FlxG
 	static protected ObjectMap<String, BitmapFont> _fontCache;
 	
 	/**
-	 * Global <code>AssetManager</code> for managing assets.
+	 * Internal asset management system.
 	 */
-	static public AssetManager assetManager;
+	static AssetManager _assetManager;
 	
 	/**
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
@@ -639,7 +645,7 @@ public class FlxG
 		}
 		catch (Exception e) 
 		{
-			FlxG.log("FlxG.resetGame", e.getMessage());
+			FlxG.log(e.getMessage());
 		}
 	}
 	
@@ -708,7 +714,7 @@ public class FlxG
 			FlxG.log("WARNING: FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
 			return null;
 		}
-		FlxSound sound = new FlxSound();//(FlxSound) sounds.recycle(FlxSound.class);
+		FlxSound sound = (FlxSound) sounds.recycle(FlxSound.class);
 		if(EmbeddedSound != null)
 			sound.loadEmbedded(EmbeddedSound,Looped,AutoDestroy);
 		else
@@ -861,7 +867,7 @@ public class FlxG
 		FlxG._cache = new ObjectMap<String, TextureRegion>();
 		FlxG._fontCache = new ObjectMap<String, BitmapFont>();
 		
-		FlxG.assetManager = new AssetManager();
+		FlxG._assetManager = new AssetManager();
 		
 		FlxG.mute = false;
 		FlxG._volume = 0.5f;
@@ -898,7 +904,7 @@ public class FlxG
 		FlxG.clearFontCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
-		FlxG.assetManager.clear();
+		FlxG._assetManager.clear();
 		FlxG.levels.clear();
 		FlxG.scores.clear();
 		FlxG.level = 0;
@@ -1054,7 +1060,7 @@ public class FlxG
 		*/
 		if(!checkBitmapCache(Key))
 		{
-			Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(Width), FlxU.ceilPowerOfTwo(Height), Format.RGBA8888);			
+			Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(Width), MathUtils.nextPowerOfTwo(Height), Format.RGBA8888);			
 			p.setColor(FlxU.colorFromHex(Color));
 			p.fillRectangle(0, 0, Width, Height);
 			_cache.put(Key, new TextureRegion(new Texture(new FlxTextureData(p))));
@@ -1101,12 +1107,12 @@ public class FlxG
 	 * 
 	 * @return	The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Reverse, boolean Unique, String Key)
+	static public TextureRegion addBitmap(String Graphic, boolean Reverse, boolean Unique, String Key)
 	{
 		/*
 		if(Key == null)
 		{
-			Key = Graphic;
+			Key = Graphic+(Reverse?"_REVERSE_":"");;
 			if(Unique && checkBitmapCache(Key))
 			{
 				int inc = 0;
@@ -1118,35 +1124,43 @@ public class FlxG
 				Key = ukey;
 			}
 		}
-		
-		//If there is no data for this key, generate the requested graphic
-		if(!checkBitmapCache(Key))
-		{
-			assetManager.load(Key, TextureRegion.class);
-			assetManager.finishLoading();
-		}
-		return assetManager.get(Key, TextureRegion.class);
-		
 		*/
+		String[] split = Graphic.split(":");
+		
+		if (split.length != 2)
+			throw new IllegalArgumentException("Invalid path: " + Graphic + ". Use format packfile:region.");
+		
+		String fileName = split[0];
+		String regionName = split[1];
+		
+		TextureRegion textureRegion = loadAsset(fileName, TextureAtlas.class).findRegion(regionName);
+		
+		if (textureRegion == null)
+			throw new RuntimeException("Could not find region " + regionName + " in " + fileName);
+		
 		if (Unique)
 		{
-			TextureData textureData = Graphic.getTexture().getTextureData();
+			TextureData textureData = textureRegion.getTexture().getTextureData();
 		
 			if(!textureData.isPrepared())
 				textureData.prepare();
 			
-			Pixmap newPixmap = new Pixmap(MathUtils.nextPowerOfTwo(Graphic.getRegionWidth()), MathUtils.nextPowerOfTwo(Graphic.getRegionHeight()), Pixmap.Format.RGBA8888);
+			int rx = textureRegion.getRegionX();
+			int ry = textureRegion.getRegionY();
+			int rw = textureRegion.getRegionWidth();
+			int rh = textureRegion.getRegionHeight();
+			
+			Pixmap newPixmap = new Pixmap(MathUtils.nextPowerOfTwo(rw), MathUtils.nextPowerOfTwo(rh), Pixmap.Format.RGBA8888);
 			Pixmap graphicPixmap = textureData.consumePixmap();
-			newPixmap.drawPixmap(graphicPixmap, 0, 0, Graphic.getRegionX(), Graphic.getRegionY(), Graphic.getRegionWidth(), Graphic.getRegionHeight());
+			newPixmap.drawPixmap(graphicPixmap, 0, 0, rx, ry, rw, rh);
 			
 			if (textureData.disposePixmap())
 				graphicPixmap.dispose();
 				
-			Graphic = new TextureRegion(new Texture(new FlxTextureData(newPixmap)));
+			textureRegion = new TextureRegion(new Texture(new FlxTextureData(newPixmap)));
 		}
-		return Graphic;
+		return textureRegion;
 	}
-	
 	
 	/**
 	 * Loads a <code>TextureRegion</code> from a file and caches it.
@@ -1157,11 +1171,10 @@ public class FlxG
 	 * 
 	 * @return	The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Reverse, boolean Unique)
+	static public TextureRegion addBitmap(String Graphic, boolean Reverse, boolean Unique)
 	{
 		return addBitmap(Graphic, Reverse, Unique, null);
 	}
-	
 	
 	/**
 	 * Loads a <code>TextureRegion</code> from a file and caches it.
@@ -1171,7 +1184,7 @@ public class FlxG
 	 * 
 	 * @return	The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(TextureRegion Graphic, boolean Reverse)
+	static public TextureRegion addBitmap(String Graphic, boolean Reverse)
 	{
 		return addBitmap(Graphic, Reverse, false, null);
 	}
@@ -1183,7 +1196,7 @@ public class FlxG
 	 * 
 	 * @return	The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(TextureRegion Graphic)
+	static public TextureRegion addBitmap(String Graphic)
 	{
 		return addBitmap(Graphic, false, false, null);
 	}
@@ -1266,6 +1279,49 @@ public class FlxG
 			}
 		}
 		_fontCache.clear();
+	}
+	
+	/**
+	 * Internal function for loading assets using the <code>assetManager</code>.
+	 *
+	 * @param Path	The file path to the asset.
+	 * @param Type	The type of asset to load.
+	 * 
+	 * @return	The loaded asset.
+	 */
+	static <T> T loadAsset(String Path, Class<T> Type)
+	{
+		if (!_assetManager.isLoaded(Path, Type))
+		{
+			FileHandleResolver resolver = null;
+			if (Path.startsWith("org/flixel"))
+				resolver = new ClasspathFileHandleResolver();
+			else
+				resolver = new InternalFileHandleResolver();
+		
+			if (Type == TextureAtlas.class)
+			{
+				_assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(resolver));
+				_assetManager.setLoader(Texture.class, new TextureLoader(resolver));
+			}
+		
+			_assetManager.load(Path, Type);
+			_assetManager.finishLoading();
+		}
+		
+		return _assetManager.get(Path, Type);
+	}
+	
+	/**
+	 * Loads an external text file.
+	 * 
+	 * @param FileName	The path to the text file.
+	 * 
+	 * @return	The contents of the file.
+	 */
+	static public String loadString(String FileName)
+	{
+		return Gdx.files.internal(FileName).readString();
 	}
 	
 	/**
