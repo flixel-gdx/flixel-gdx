@@ -6,6 +6,22 @@ import org.flixel.event.AFlxButton;
 
 public class PlayState extends FlxState
 {
+	// Tileset that works with AUTO mode (best for thin walls)
+	private static String auto_tiles = "examples/flxtilemap/pack:auto_tiles";
+
+	// Tileset that works with ALT mode (best for thicker walls)
+	private static String alt_tiles = "examples/flxtilemap/pack:alt_tiles";
+
+	// Tileset that works with OFF mode (do what you want mode)
+	private static String empty_tiles = "examples/flxtilemap/pack:empty_tiles";
+
+	// Default tilemaps. Embedding text files is a little weird.
+	private static String default_auto = "examples/flxtilemap/default_auto.txt";
+	private static String default_alt ="examples/flxtilemap/default_alt.txt";
+	private static String default_empty = "examples/flxtilemap/default_empty.txt";
+
+	private static String ImgSpaceman = "examples/flxtilemap/pack:spaceman";
+	
 	// Some static constants for the size of the tilemap tiles
 	private static final int TILE_WIDTH = 16;
 	private static final int TILE_HEIGHT = 16;
@@ -53,7 +69,7 @@ public class PlayState extends FlxState
 		 */
 
 		// Initializes the map using the generated string, the tile images, and the tile size
-		collisionMap.loadMap(Asset.Default_Auto, Asset.Auto_Tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+		collisionMap.loadMap(FlxG.loadString(default_auto), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 		add(collisionMap);
 
 		highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
@@ -68,19 +84,19 @@ public class PlayState extends FlxState
 			{
 				case FlxTilemap.AUTO:
 					collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-						Asset.Alt_Tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
+						alt_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
 					autoAltBtn.label.setText("ALT");
 					break;
 
 				case FlxTilemap.ALT:
 					collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-						Asset.Empty_Tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+						empty_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 					autoAltBtn.label.setText("OFF");
 					break;
 
 				case FlxTilemap.OFF:
 					collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-						Asset.Auto_Tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+						auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 					autoAltBtn.label.setText("AUTO");
 					break;
 			}
@@ -93,19 +109,19 @@ public class PlayState extends FlxState
 			switch(collisionMap.auto)
 			{
 				case FlxTilemap.AUTO:
-					collisionMap.loadMap(Asset.Default_Auto, Asset.Auto_Tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+					collisionMap.loadMap(FlxG.loadString(default_auto), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 					player.x = 64;
 					player.y = 220;
 					break;
 
 				case FlxTilemap.ALT:
-					collisionMap.loadMap(Asset.Default_Alt, Asset.Alt_Tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
+					collisionMap.loadMap(FlxG.loadString(default_alt), alt_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
 					player.x = 64;
 					player.y = 128;
 					break;
 
 				case FlxTilemap.OFF:
-					collisionMap.loadMap(Asset.Default_Empty, Asset.Empty_Tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+					collisionMap.loadMap(FlxG.loadString(default_empty), empty_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 					player.x = 64;
 					player.y = 64;
 					break;
@@ -149,7 +165,7 @@ public class PlayState extends FlxState
 	private void setupPlayer()
 	{
 		player = new FlxSprite(64, 220);
-		player.loadGraphic(Asset.ImgSpaceman, true, true, 16);
+		player.loadGraphic(ImgSpaceman, true, true, 16);
 
 		//bounding box tweaks
 		player.width = 14;

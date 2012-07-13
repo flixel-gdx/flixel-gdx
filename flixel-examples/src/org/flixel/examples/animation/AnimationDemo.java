@@ -8,11 +8,4 @@ public class AnimationDemo extends FlxGame
 	{
 		super(480, 320, PlayState.class, 1, 60, 30);
 	}
-	
-	@Override
-	public void create()
-	{
-		Asset.create();
-		super.create();
-	}
 }

@@ -5,7 +5,7 @@ import org.flixel.event.AFlxCamera;
 
 public class Spawner extends FlxSprite
 {
-	//private String ImgSpawner = "examples/mode/spawner.png";
+	private String ImgSpawner = "examples/mode/pack:spawner";
 	private String SndExplode = "examples/mode/asplode.mp3";
 	private String SndExplode2 = "examples/mode/menu_hit_2.mp3";
 	private String SndHit = "examples/mode/hit.mp3";
@@ -21,7 +21,7 @@ public class Spawner extends FlxSprite
 	public Spawner(int X,int Y,FlxEmitter Gibs,FlxGroup Bots,FlxGroup BotBullets, FlxEmitter BotGibs,Player ThePlayer)
 	{
 		super(X,Y);
-		loadGraphic(Asset.ImgSpawner,true);
+		loadGraphic(ImgSpawner,true);
 		_gibs = Gibs;
 		_bots = Bots;
 		_botBullets = BotBullets;

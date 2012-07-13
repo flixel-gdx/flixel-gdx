@@ -4,12 +4,14 @@ import org.flixel.FlxSprite;
 
 public class Pusher extends FlxSprite
 {
+	private static String ImgPusher = "examples/tiledmap2/pack:pusher";
+	
 	private float _x;
 	private float _width;
 
 	public Pusher(float X, float Y, float Width)
 	{
-		super(X, Y, Asset.ImgPusher);
+		super(X, Y, ImgPusher);
 		_x = X;				//The starting height								
 		_width = Width;		//How far over to travel		
 		immovable = true;	//We want the pusher to be "solid" and not shift during collisions		

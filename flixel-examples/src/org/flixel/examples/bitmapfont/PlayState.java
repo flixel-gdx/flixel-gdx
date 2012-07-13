@@ -15,13 +15,13 @@ public class PlayState extends FlxState
 		FlxG.setBgColor(0xff131c1b);
 		
 		text = new FlxText(10, 10, 200, "flixel-android");
-//		text.setSize(2);
+		text.setSize(20);
 		add(text);
 		
 		
 		FlxText text2 = new FlxText(10, 100, 200, "flixel-\nandroid");
 		text2.setColor(0xFF0000FF);
-//		text2.setFormat(0.5f, 0xFFFF0000, HAlignment.LEFT);
+		//text2.setFormat(null, 0.5f, 0xFFFF0000, "left");
 		add(text2);
 		
 		FlxText text3 = new FlxText(10, 140, 200, "FlxText");

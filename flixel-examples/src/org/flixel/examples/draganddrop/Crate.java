@@ -6,12 +6,14 @@ import org.flixel.FlxSprite;
 
 public class Crate extends FlxSprite
 {
+	private String ImgCrate = "examples/draganddrop/pack:crate";
+	
 	private boolean _pressed;
 	
 	public Crate(float x, float y)
 	{
 		super(x, y);
-		loadGraphic(Asset.ImgCrate);
+		loadGraphic(ImgCrate);
 		_pressed = false;
 		setSolid(true);
 		acceleration.y = 400;

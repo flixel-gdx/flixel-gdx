@@ -1,10 +1,12 @@
 package org.flixel;
 
 import org.flixel.event.AFlxObject;
+import org.flixel.system.FlxTextureData;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 
@@ -509,12 +511,12 @@ public class FlxObject extends FlxBasic
 		
 		if(_debug == null)
 		{
-			Pixmap p = new Pixmap(FlxU.ceilPowerOfTwo(width), FlxU.ceilPowerOfTwo(height),Pixmap.Format.RGBA8888);
+			Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(width), MathUtils.nextPowerOfTwo(height),Pixmap.Format.RGBA8888);
 			p.setColor(FlxU.colorFromHex(boundingBoxColor));			
 			p.drawRectangle(0, 0, width, height);
-			_debug = new TextureRegion(new Texture(p));
+			_debug = new TextureRegion(new Texture(new FlxTextureData(p)));
 			_debug.flip(false, true);
-			p.dispose();
+			//p.dispose();
 		}
 		
 		//draw graphics shape to SpriteBatch.

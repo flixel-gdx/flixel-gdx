@@ -6,7 +6,6 @@ import org.flixel.FlxPoint;
 import org.flixel.system.replay.MouseRecord;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -78,7 +77,7 @@ public class Mouse extends FlxPoint
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
 	 */
-	public void show(TextureRegion Graphic,float Scale,int XOffset,int YOffset)
+	public void show(String Graphic,float Scale,int XOffset,int YOffset)
 	{
 		//_cursorContainer.visible = true;
 		//if(Graphic != null)
@@ -94,7 +93,7 @@ public class Mouse extends FlxPoint
 	 * @param	Scale		Change the size of the cursor.  Default = 1, or native size.  2 = 2x as big, 0.5 = half size, etc.
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 */
-	public void show(TextureRegion Graphic,float Scale,int XOffset)
+	public void show(String Graphic,float Scale,int XOffset)
 	{
 		show(Graphic, Scale, XOffset, 0);
 	}
@@ -102,12 +101,12 @@ public class Mouse extends FlxPoint
 	/**
 	 * Either show an existing cursor or load a new one.
 	 * 
-	 * @param	Graphic		The image you want to use for the cursor.
+	 * @param	imgCursor		The image you want to use for the cursor.
 	 * @param	Scale		Change the size of the cursor.  Default = 1, or native size.  2 = 2x as big, 0.5 = half size, etc.
 	 */
-	public void show(TextureRegion Graphic,float Scale)
+	public void show(String imgCursor,float Scale)
 	{
-		show(Graphic, Scale, 0, 0);
+		show(imgCursor, Scale, 0, 0);
 	}
 	
 	/**
@@ -115,7 +114,7 @@ public class Mouse extends FlxPoint
 	 * 
 	 * @param	Graphic		The image you want to use for the cursor.
 	 */
-	public void show(TextureRegion Graphic)
+	public void show(String Graphic)
 	{
 		show(Graphic, 1, 0, 0);
 	}
@@ -152,7 +151,7 @@ public class Mouse extends FlxPoint
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
 	 */
-	public void load(TextureRegion Graphic,float Scale,int XOffset,int YOffset)
+	public void load(String Graphic,float Scale,int XOffset,int YOffset)
 	{
 		/*
 		if(_cursor != null)
@@ -177,7 +176,7 @@ public class Mouse extends FlxPoint
 	 * @param	Scale		Change the size of the cursor.
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 */
-	public void load(TextureRegion Graphic,float Scale,int XOffset)
+	public void load(String Graphic,float Scale,int XOffset)
 	{
 		load(Graphic, Scale, XOffset, 0);
 	}
@@ -188,7 +187,7 @@ public class Mouse extends FlxPoint
 	 * @param	Graphic		The image you want to use for the cursor.
 	 * @param	Scale		Change the size of the cursor.
 	 */
-	public void load(TextureRegion Graphic,float Scale)
+	public void load(String Graphic,float Scale)
 	{
 		load(Graphic, Scale, 0, 0);
 	}
@@ -198,7 +197,7 @@ public class Mouse extends FlxPoint
 	 * 
 	 * @param	Graphic		The image you want to use for the cursor.
 	 */
-	public void load(TextureRegion Graphic)
+	public void load(String Graphic)
 	{
 		load(Graphic, 1, 0, 0);
 	}

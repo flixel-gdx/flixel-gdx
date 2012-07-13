@@ -8,6 +8,8 @@ import com.badlogic.gdx.Application.ApplicationType;
 
 public class PlayState2 extends FlxState
 {
+	private String ImgGibs = "examples/flxcollisions/pack:gibs";
+	
 	protected FlxText _fps;
 	protected FlxSprite _focus;
 
@@ -40,12 +42,12 @@ public class PlayState2 extends FlxState
 		dispenser.setXSpeed(-100,100);
 		dispenser.setYSpeed(-100,100);
 		dispenser.bounce = 0.65f;
-		dispenser.makeParticles(Asset.ImgGibs,300,16,true,0.8f);
+		dispenser.makeParticles(ImgGibs,300,16,true,0.8f);
 		dispenser.start(false,10,0.05f);
 		add(dispenser);
 
 		//Camera tracker
-		_focus = new FlxSprite(FlxG.width/2,FlxG.height/2).loadGraphic(Asset.ImgGibs,true);
+		_focus = new FlxSprite(FlxG.width/2,FlxG.height/2).loadGraphic(ImgGibs,true);
 		_focus.setFrame(3);
 		_focus.setSolid(false);
 		add(_focus);

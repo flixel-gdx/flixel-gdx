@@ -4,7 +4,7 @@ import org.flixel.*;
 
 public class EnemyBullet extends FlxSprite
 {
-	//private String ImgBullet = "examples/mode/bot_bullet.png";
+	private String ImgBullet = "examples/mode/pack:bot_bullet";
 	private String SndHit = "examples/mode/jump.mp3";
 	private String SndShoot = "examples/mode/enemy.mp3";
 	
@@ -13,7 +13,7 @@ public class EnemyBullet extends FlxSprite
 	public EnemyBullet()
 	{
 		super();
-		loadGraphic(Asset.ImgBotBullet,true);
+		loadGraphic(ImgBullet,true);
 		addAnimation("idle",new int[]{0, 1}, 50);
 		addAnimation("poof",new int[]{2, 3, 4}, 50, false);
 		speed = 120;

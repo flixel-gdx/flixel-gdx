@@ -181,11 +181,11 @@ public class FlxSound extends FlxBasic
 	{
 		kill();
 		
-		if (_sound != null)
-			FlxG.assetManager.unload(FlxG.assetManager.getAssetFileName(_sound));
+		if (_sound != null && FlxG._assetManager.containsAsset(_sound))
+			FlxG._assetManager.unload(FlxG._assetManager.getAssetFileName(_sound));
 		
-		if (_music != null)
-			FlxG.assetManager.unload(FlxG.assetManager.getAssetFileName(_music));
+		if (_music != null && FlxG._assetManager.containsAsset(_music))
+			FlxG._assetManager.unload(FlxG._assetManager.getAssetFileName(_music));
 		
 		_sound = null;
 		_music = null;
@@ -279,6 +279,9 @@ public class FlxSound extends FlxBasic
 	 */
 	public FlxSound loadEmbedded(String EmbeddedSound, boolean Looped, boolean AutoDestroy, int Type)
 	{
+		stop();
+		createSound();
+		
 		//If the type is not specified, make a guess based on the file size.
 		if (Type == -1)
 		{
@@ -287,20 +290,10 @@ public class FlxSound extends FlxBasic
 		}
 		
 		Class<?> classType = Type == SFX ? Sound.class : Music.class;
-		
-		if (!FlxG.assetManager.isLoaded(EmbeddedSound, classType))
-		{
-			FlxG.assetManager.load(EmbeddedSound, classType);
-			FlxG.assetManager.finishLoading();
-		}
-		
-		stop();
-		createSound();
-		
 		if (classType == Sound.class)
-			_sound = FlxG.assetManager.get(EmbeddedSound, Sound.class);
+			_sound = FlxG.loadAsset(EmbeddedSound, Sound.class);
 		else
-			_music = FlxG.assetManager.get(EmbeddedSound, Music.class);
+			_music = FlxG.loadAsset(EmbeddedSound, Music.class);
 		
 		//NOTE: can't pull ID3 info from embedded sound currently
 		_looped = Looped;

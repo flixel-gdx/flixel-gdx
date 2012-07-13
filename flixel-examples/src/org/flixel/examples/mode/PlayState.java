@@ -8,14 +8,14 @@ import com.badlogic.gdx.utils.Array;
 
 public class PlayState extends FlxState
 {
-	//protected String ImgTech = "examples/mode/tech_tiles.png";
-	//protected String ImgDirtTop = "examples/mode/dirt_top.png";
-	//protected String ImgDirt = "examples/mode/dirt.png";
+	protected String ImgTech = "examples/mode/pack:tech_tiles";
+	protected String ImgDirtTop = "examples/mode/pack:dirt_top";
+	protected String ImgDirt = "examples/mode/pack:dirt";
 	protected String SndMode = "examples/mode/mode.mp3";
 	protected String SndCount = "examples/mode/countdown.mp3";
-	//private String ImgGibs = "examples/mode/gibs.png";
-	//private String ImgSpawnerGibs = "examples/mode/spawner_gibs.png";
-	//private String ImgMiniFrame = "examples/mode/miniframe.png";
+	private String ImgGibs = "examples/mode/pack:gibs";
+	private String ImgSpawnerGibs = "examples/mode/pack:spawner_gibs";
+	private String ImgMiniFrame = "examples/mode/pack:miniframe";
 	
 	//major game object storage
 	protected FlxGroup _blocks;
@@ -56,7 +56,7 @@ public class PlayState extends FlxState
 		_littleGibs.setRotation(-720,-720);
 		_littleGibs.gravity = 350;
 		_littleGibs.bounce = 0.5f;
-		_littleGibs.makeParticles(Asset.ImgGibs,100,10,true,0.5f);
+		_littleGibs.makeParticles(ImgGibs,100,10,true,0.5f);
 
 		//Next we create a smaller pool of larger metal bits for exploding.
 		_bigGibs = new FlxEmitter();
@@ -65,7 +65,7 @@ public class PlayState extends FlxState
 		_bigGibs.setRotation(-720,-720);
 		_bigGibs.gravity = 350;
 		_bigGibs.bounce = 0.35f;
-		_bigGibs.makeParticles(Asset.ImgSpawnerGibs,50,20,true,0.5f);
+		_bigGibs.makeParticles(ImgSpawnerGibs,50,20,true,0.5f);
 
 		//Then we'll set up the rest of our object groups or pools
 		_blocks = new FlxGroup();
@@ -296,23 +296,23 @@ public class PlayState extends FlxState
 
 		//First, we create the walls, ceiling and floors:
 		b = new FlxTileblock(0,0,640,16);
-		b.loadTiles(Asset.ImgTech);
+		b.loadTiles(ImgTech);
 		_blocks.add(b);
 
 		b = new FlxTileblock(0,16,16,640-16);
-		b.loadTiles(Asset.ImgTech);
+		b.loadTiles(ImgTech);
 		_blocks.add(b);
 
 		b = new FlxTileblock(640-16,16,16,640-16);
-		b.loadTiles(Asset.ImgTech);
+		b.loadTiles(ImgTech);
 		_blocks.add(b);
 
 		b = new FlxTileblock(16,640-24,640-32,8);
-		b.loadTiles(Asset.ImgDirtTop);
+		b.loadTiles(ImgDirtTop);
 		_blocks.add(b);
 
 		b = new FlxTileblock(16,640-16,640-32,16);
-		b.loadTiles(Asset.ImgDirt);
+		b.loadTiles(ImgDirt);
 		_blocks.add(b);
 
 		//Then we split the game world up into a 4x4 grid,
@@ -378,18 +378,18 @@ public class PlayState extends FlxState
 
 			FlxTileblock b;
 			b = new FlxTileblock(RX+bx*8,RY+by*8,bw*8,bh*8);
-			b.loadTiles(Asset.ImgTech);
+			b.loadTiles(ImgTech);
 			_blocks.add(b);
 
 			//If the block has room, add some non-colliding "dirt" graphics for variety
 			if((bw >= 4) && (bh >= 5))
 			{
 				b = new FlxTileblock(RX+bx*8+8,RY+by*8,bw*8-16,8);
-				b.loadTiles(Asset.ImgDirtTop);
+				b.loadTiles(ImgDirtTop);
 				_decorations.add(b);
 
 				b = new FlxTileblock(RX+bx*8+8,RY+by*8+8,bw*8-16,bh*8-24);
-				b.loadTiles(Asset.ImgDirt);
+				b.loadTiles(ImgDirt);
 				_decorations.add(b);
 			}
 		}
@@ -401,7 +401,7 @@ public class PlayState extends FlxState
 			_spawners.add(sp);
 
 			//Then create a dedicated camera to watch the spawner
-			_hud.add(new FlxSprite(3 + (_spawners.length-1)*16, 3, Asset.ImgMiniFrame));
+			_hud.add(new FlxSprite(3 + (_spawners.length-1)*16, 3, ImgMiniFrame));
 			FlxCamera camera = new FlxCamera(10 + (_spawners.length-1)*32,10,24,24,1);
 			camera.follow(sp);
 			FlxG.addCamera(camera);

@@ -4,10 +4,12 @@ import org.flixel.*;
 
 public class Player extends FlxSprite
 {
+	private String ImgPlayer = "examples/flxcollisions/pack:player";
+	
 	public Player(float X, float Y)
 	{
 		super(X, Y);
-		loadGraphic(Asset.ImgPlayer,true);
+		loadGraphic(ImgPlayer,true);
 		maxVelocity.x = 100;			//walking speed
 		acceleration.y = 400;			//gravity
 		drag.x = maxVelocity.x*4;		//deceleration (sliding to a stop)

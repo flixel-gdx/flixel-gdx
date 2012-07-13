@@ -6,8 +6,6 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxU;
-import org.flixel.data.SystemAsset;
-
 import com.badlogic.gdx.Gdx;
 
 
@@ -35,7 +33,7 @@ public class PlayState extends FlxState
 		FlxSprite s;
 		for(int i = 0; i < 10; i++)
 		{	
-			_sprites.add(s = new FlxSprite(FlxU.floor(FlxG.random()*40)*7,FlxU.floor(FlxG.random()*30)*7, SystemAsset.ImgDefault));			
+			_sprites.add(s = new FlxSprite(FlxU.floor(FlxG.random()*40)*7,FlxU.floor(FlxG.random()*30)*7));			
 		}
 		add(_sprites);
 		

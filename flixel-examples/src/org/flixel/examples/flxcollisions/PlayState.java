@@ -9,6 +9,15 @@ import com.badlogic.gdx.utils.Array;
 
 public class PlayState extends FlxState
 {	
+	private String ImgMap = "examples/flxcollisions/pack:map";
+	private String ImgTiles = "examples/flxcollisions/pack:tiles";
+	private String ImgBG = "examples/flxcollisions/pack:bg";
+	private String ImgGibs = "examples/flxcollisions/pack:gibs";
+
+	private String ImgPusher = "examples/flxcollisions/pack:pusher";
+	private String ImgElevator = "examples/flxcollisions/pack:elevator";
+	private String ImgCrate = "examples/flxcollisions/pack:crate";
+	
 	protected FlxTilemap _level;
 	protected Player _player;
 
@@ -17,7 +26,7 @@ public class PlayState extends FlxState
 	{			
 		//Background
 		FlxG.setBgColor(0xffacbcd7);
-		FlxSprite decoration = new FlxSprite(256,159,Asset.ImgBG);
+		FlxSprite decoration = new FlxSprite(256,159,ImgBG);
 		decoration.moves = false;
 		decoration.setSolid(false);
 		add(decoration);
@@ -29,7 +38,7 @@ public class PlayState extends FlxState
 		FlxPoint destination;
 
 		//Create the elevator and put it on a up and down path
-		sprite = new FlxSprite(208,80,Asset.ImgElevator);
+		sprite = new FlxSprite(208,80,ImgElevator);
 		sprite.immovable = true;
 		destination = sprite.getMidpoint();
 		destination.y += 112;
@@ -38,7 +47,7 @@ public class PlayState extends FlxState
 		add(sprite);
 
 		//Create the side-to-side pusher object and put it on a different path
-		sprite = new FlxSprite(96,208,Asset.ImgPusher);
+		sprite = new FlxSprite(96,208,ImgPusher);
 		sprite.immovable = true;
 		destination = sprite.getMidpoint();
 		destination.x += 56;
@@ -58,7 +67,7 @@ public class PlayState extends FlxState
 							new FlxPoint(272,48)};
 		for(int i = 0; i < crates.length; i++)
 		{
-			sprite = new FlxSprite(crates[i].x,crates[i].y,Asset.ImgCrate);
+			sprite = new FlxSprite(crates[i].x,crates[i].y,ImgCrate);
 			sprite.height = sprite.height-1;
 			sprite.acceleration.y = 400;
 			sprite.drag.x = 200;
@@ -72,13 +81,13 @@ public class PlayState extends FlxState
 		dispenser.setYSpeed(-50,50);
 		dispenser.gravity = 300;
 		dispenser.bounce = 0.3f;
-		dispenser.makeParticles(Asset.ImgGibs,100,16,true, 0.8f);
+		dispenser.makeParticles(ImgGibs,100,16,true, 0.8f);
 		dispenser.start(false,10,0.035f);
 		add(dispenser);
 
 		//Basic level structure
 		_level = new FlxTilemap();
-		_level.loadMap(FlxTilemap.imageToCSV(Asset.ImgMap,false,2),Asset.ImgTiles,0,0,FlxTilemap.ALT);
+		_level.loadMap(FlxTilemap.imageToCSV(ImgMap,false,2),ImgTiles,0,0,FlxTilemap.ALT);
 		_level.follow();
 		add(_level);
 

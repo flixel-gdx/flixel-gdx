@@ -17,7 +17,6 @@ public class PlayState extends FlxState
 	public void create()
 	{
 		FlxG.setBgColor(FlxG.BLACK);
-//		FlxG.setBgColor(0x33000000); // whoho
 		
 		FlxEmitter dispenser = new FlxEmitter((FlxG.width - 240) / 2, -64, 1000);
 		dispenser.gravity = 20;
@@ -25,7 +24,7 @@ public class PlayState extends FlxState
 		dispenser.setXSpeed(-50,50);
 		dispenser.setYSpeed(5,20);
 		dispenser.setRotation(-720,720);
-		dispenser.makeParticles(Asset.ImgColors,1000,16,true, 0.5f);
+		//dispenser.makeParticles(Asset.ImgColors,1000,16,true, 0.5f);
 		dispenser.start(false,20,0.005f);
 		add(dispenser);
 	}

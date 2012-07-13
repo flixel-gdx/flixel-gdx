@@ -4,7 +4,7 @@ import org.flixel.*;
 
 public class Bullet extends FlxSprite
 {
-	//private String ImgBullet = "examples/mode/bullet.png";
+	private String ImgBullet = "examples/mode/pack:bullet";
 	private String SndHit = "examples/mode/jump.mp3";
 	private String SndShoot = "examples/mode/shoot.mp3";
 	
@@ -13,7 +13,7 @@ public class Bullet extends FlxSprite
 	public Bullet()
 	{
 		super();
-		loadGraphic(Asset.ImgBullet,true);
+		loadGraphic(ImgBullet,true);
 		width = 6;
 		height = 6;
 		offset.x = 1;

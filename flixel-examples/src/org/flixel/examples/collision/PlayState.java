@@ -10,9 +10,11 @@ public  class PlayState extends FlxState
 
 	//This is our elevator, for smashing the crates
 	private FlxSprite elevator;
+	private String elevatorPNG = "examples/collision/pack:elevator";
 
 	//We'll reuse this when we make a bunch of crates
 	private FlxSprite crate;
+	private String cratePNG = "examples/collision/pack:crate";
 
 	//We'll make 100 per group crates to smash about
 	private int numCrates = 100;
@@ -24,6 +26,7 @@ public  class PlayState extends FlxState
 
 	//We'll make a sweet flixel logo to ride the elevator for option #2
 	private FlxSprite flixelRider;
+	private String flixelRiderPNG = "examples/collision/pack:flixelLogo";
 
 	//Here we have a few buttons for use in altering the demo
 	private FlxButton crateStorm;
@@ -50,7 +53,7 @@ public  class PlayState extends FlxState
 		FlxG.setFlashFramerate(60);
 
 		//Let's setup our elevator, for some wonderful crate bashing goodness
-		elevator = new FlxSprite((FlxG.width / 2) - 100, 250, Asset.ElevatorPNG);
+		elevator = new FlxSprite((FlxG.width / 2) - 100, 250, elevatorPNG);
 		//Make it able to collide, and make sure it's not tossed around
 		elevator.setSolid(elevator.immovable = true);
 		//And add it to the state
@@ -63,7 +66,7 @@ public  class PlayState extends FlxState
 		crateStormGroup = new FlxGroup();
 		for (int i = 0; i < numCrates; i++) {
 			crate = new FlxSprite((FlxG.random() * 200) + 100, 20);
-			crate.loadRotatedGraphic(Asset.CratePNG, 16, 0); //This loads in a graphic, and 'bakes' some rotations in so we don't waste resources computing real rotations later
+			crate.loadRotatedGraphic(cratePNG, 16, 0); //This loads in a graphic, and 'bakes' some rotations in so we don't waste resources computing real rotations later
 			crate.angularVelocity = FlxG.random() * 50-150; //Make it spin a tad
 			crate.acceleration.y = 300; //Gravity
 			crate.acceleration.x = -50; //Some wind for good measure
@@ -77,7 +80,7 @@ public  class PlayState extends FlxState
 		crateStormGroup2 = new FlxGroup();
 		for (int i = 0; i < numCrates; i++) {
 			crate = new FlxSprite((FlxG.random() * 200) + 100, 20);
-			crate.loadRotatedGraphic(Asset.CratePNG, 16, 1);
+			crate.loadRotatedGraphic(cratePNG, 16, 1);
 			crate.angularVelocity = FlxG.random() * 50-150;
 			crate.acceleration.y = 300;
 			crate.acceleration.x = 50;
@@ -96,7 +99,7 @@ public  class PlayState extends FlxState
 		crateStormMegaGroup.add(crateStormGroup2);
 
 		//Cute little flixel logo that will ride the elevator
-		flixelRider = new FlxSprite((FlxG.width / 2) - 13, 0, Asset.FlixelRiderPNG);
+		flixelRider = new FlxSprite((FlxG.width / 2) - 13, 0, flixelRiderPNG);
 		flixelRider.setSolid(flixelRider.visible = flixelRider.exists = false); //But we don't want him on screen just yet...
 		flixelRider.acceleration.y = 800;
 		add(flixelRider);

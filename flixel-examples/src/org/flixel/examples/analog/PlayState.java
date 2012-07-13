@@ -4,7 +4,6 @@ import org.flixel.FlxAnalog;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
-import org.flixel.data.SystemAsset;
 
 public class PlayState extends FlxState
 {
@@ -16,7 +15,7 @@ public class PlayState extends FlxState
 	{
 		FlxG.setBgColor(0xFFFAAAF);
 
-		_player = new FlxSprite(10, 10, SystemAsset.ImgDefault);
+		_player = new FlxSprite(10, 10);
 		add(_player);
 		
 		// Add some wall around the edges.

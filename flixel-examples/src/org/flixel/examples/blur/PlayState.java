@@ -7,7 +7,6 @@ import org.flixel.FlxState;
 import org.flixel.FlxText;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class PlayState extends FlxState
 {
@@ -17,9 +16,6 @@ public class PlayState extends FlxState
 	@Override
 	public void create()
 	{
-		// Background
-		FlxG.setBgColor(0x11000000);
-
 		// Title text, nothing crazy here!
 		FlxText text;
 		text = new FlxText(FlxG.width / 4f, FlxG.height / 2f - 20, FlxG.width / 2, "FlxBlur");
@@ -40,14 +36,12 @@ public class PlayState extends FlxState
 		emitter.setRotation(-360, 360);
 		FlxParticle particle;
 		int particles = 50;
-//		int[] colors = {FlxG.BLUE, (FlxG.BLUE | FlxG.GREEN), FlxG.GREEN, (FlxG.GREEN | FlxG.RED), FlxG.RED};
-		TextureRegion[] colors = {	Asset.Img0090e9, Asset.Img00f2ed, Asset.ImgFFF237, Asset.ImgFF0012, Asset.ImgCC00FF, 
-									Asset.Img00F225, Asset.ImgFF6600, Asset.Img801E98};
+		int[] colors = {FlxG.BLUE, (FlxG.BLUE | FlxG.GREEN), FlxG.GREEN, (FlxG.GREEN | FlxG.RED), FlxG.RED};
+		
 		for (int i = 0; i < particles; i++)
 		{
 			particle = new FlxParticle();
-//			particle.makeGraphic(32, 32, colors[(int) (FlxG.random() * colors.length)]);
-			particle.loadGraphic(colors[(int) (FlxG.random() * colors.length)]);
+			particle.makeGraphic(32, 32, colors[(int) (FlxG.random() * colors.length)]);
 			particle.exists = false;
 			emitter.add(particle);
 		}

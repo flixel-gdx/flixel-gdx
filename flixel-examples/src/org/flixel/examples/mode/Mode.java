@@ -14,11 +14,4 @@ public class Mode extends FlxGame
 	{
 		super(320, 240, 640, 480, MenuState.class, 2, 50, 50);		
 	}
-
-	@Override
-	public void create()
-	{
-		Asset.create();
-		super.create();
-	}
 }

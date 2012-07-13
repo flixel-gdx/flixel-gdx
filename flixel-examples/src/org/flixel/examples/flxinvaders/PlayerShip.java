@@ -4,23 +4,20 @@ import org.flixel.FlxButton;
 import org.flixel.FlxG;
 import org.flixel.FlxGamePad;
 import org.flixel.FlxSprite;
-import org.flixel.event.AFlxButton;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Input.Keys;
 
 public class PlayerShip extends FlxSprite		//Class declaration for the player's little ship
 {
 	private FlxGamePad _pad;
 	private boolean _justPressed;
 	
+	private static final String ImgShip = "examples/flxinvaders/pack:ship";	//Graphic of the player's ship
+	
 	//Constructor for the player - just initializing a simple sprite using a graphic.
 	public PlayerShip(FlxGamePad Pad)
 	{
 		//This initializes this sprite object with the graphic of the ship and
 		// positions it in the middle of the screen.
-		super(FlxG.width/2-6, FlxG.height-12, Asset.ImgShip);
+		super(FlxG.width/2-6, FlxG.height-12, ImgShip);
 		
 		_pad = Pad;
 		_justPressed = false;

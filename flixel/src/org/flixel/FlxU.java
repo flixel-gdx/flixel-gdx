@@ -921,23 +921,4 @@ public class FlxU
 	{
 		return fillArray(0, 10);
 	}
-		
-	
-	/**
-	 * Round up to the next highest power of 2.
-	 * 
-	 * @param value		A value that needs to be power of 2.
-	 * @return			A value of power of 2.
-	 */
-	static public int ceilPowerOfTwo(int value)
-	{
-		value--;
-		value |= value >> 1;
-		value |= value >> 2;
-		value |= value >> 4;
-		value |= value >> 8;
-		value |= value >> 16;
-		value++;
-		return value;
-	}
 }

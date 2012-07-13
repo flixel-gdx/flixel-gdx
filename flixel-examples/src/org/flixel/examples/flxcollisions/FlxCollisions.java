@@ -15,11 +15,4 @@ public class FlxCollisions extends FlxGame
 	{
 		super(320, 240, 640, 480, PlayState.class, 2, 40, 40);
 	}
-	
-	@Override
-	public void create()
-	{
-		Asset.create();
-		super.create();
-	}
 }

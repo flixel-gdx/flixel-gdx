@@ -8,15 +8,15 @@ import org.flixel.event.AFlxReplay;
 public class MenuState extends FlxState
 {
 	//Some graphics and sounds
-	//protected String ImgEnemy = "examples/mode/bot.png";
-	//public String ImgGibs = "examples/mode/spawner_gibs.png";
-	//public String ImgCursor = "examples/mode/cursor.png";
+	protected String ImgEnemy = "examples/mode/pack:bot";
+	public String ImgGibs = "examples/mode/pack:spawner_gibs";
+	public String ImgCursor = "examples/mode/pack:cursor";
 	public String SndHit = "examples/mode/menu_hit.mp3";
 	public String SndHit2 = "examples/mode/menu_hit_2.mp3";
 
 	//Replay data for the "Attract Mode" gameplay demos
-	//public String Attract1 = "examples/mode/attract1.fgr";
-	//public String Attract2 = "examples/mode/attract2.fgr";
+	public String Attract1 = "examples/mode/attract1.fgr";
+	public String Attract2 = "examples/mode/attract2.fgr";
 	
 	public FlxEmitter gibs;
 	public FlxButton playButton;
@@ -51,7 +51,7 @@ public class MenuState extends FlxState
 		gibs.setYSpeed(-200,-20);
 		gibs.setRotation(-720,720);
 		gibs.gravity = 100;
-		gibs.makeParticles(Asset.ImgSpawnerGibs,650,32,true,0);
+		gibs.makeParticles(ImgGibs,650,32,true,0);
 		add(gibs);
 
 		//the letters "mo"
@@ -74,7 +74,7 @@ public class MenuState extends FlxState
 		timer = 0;
 		attractMode = false;
 			
-		FlxG.mouse.show(Asset.ImgCursor,2);
+		FlxG.mouse.show(ImgCursor,2);
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class MenuState extends FlxState
 	protected void onFade()
 	{
 		if(attractMode)
-			FlxG.loadReplay((FlxG.random()<0.5)?Asset.Attract1:Asset.Attract2,new PlayState(),new String[]{"ANY"},22,new AFlxReplay(){@Override public void onComplete(){onDemoComplete();}});
+			FlxG.loadReplay((FlxG.random()<0.5)?FlxG.loadString(Attract1):FlxG.loadString(Attract2),new PlayState(),new String[]{"ANY"},22,new AFlxReplay(){@Override public void onComplete(){onDemoComplete();}});
 		else
 			FlxG.switchState(new PlayState());
 	}

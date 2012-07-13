@@ -18,17 +18,8 @@ import org.flixel.FlxGame;
  */
 public class FlxTilemap extends FlxGame
 {
-
 	public FlxTilemap()
 	{
 		super(400, 300, PlayState.class);
 	}
-	
-	@Override
-	public void create()
-	{
-		Asset.create();
-		super.create();
-	}
-
 }

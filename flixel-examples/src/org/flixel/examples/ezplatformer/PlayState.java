@@ -59,7 +59,7 @@ public class PlayState extends FlxState
 		
 		//Create a new tilemap using our level data
 		level = new FlxTilemap();
-		level.loadMap(FlxTilemap.arrayToCSV(data, 40), Asset.ImgAuto, 0, 0, FlxTilemap.AUTO);
+		level.loadMap(FlxTilemap.arrayToCSV(data, 40), FlxTilemap.ImgAuto, 0, 0, FlxTilemap.AUTO);
 		add(level);
 		
 		//Create the level exit, a dark gray box that is hidden at first

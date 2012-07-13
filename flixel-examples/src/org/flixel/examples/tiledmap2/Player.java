@@ -4,18 +4,18 @@ import org.flixel.FlxButton;
 import org.flixel.FlxG;
 import org.flixel.FlxGamePad;
 import org.flixel.FlxSprite;
-import org.flixel.event.AFlxButton;
-
 import com.badlogic.gdx.Input.Keys;
 
 public class Player extends FlxSprite
 {
+	private static String ImgPlayer = "examples/tiledmap2/pack:player";
+	
 	private FlxGamePad _pad;
 	
 	public Player(float X, float Y, FlxGamePad Pad)
 	{
 		super(X, Y);	
-		loadGraphic(Asset.ImgPlayer,true);
+		loadGraphic(ImgPlayer,true);
 		maxVelocity.x = 100;			//walking speed
 		acceleration.y = 400;			//gravity
 		drag.x = maxVelocity.x*4;		//deceleration (sliding to a stop)

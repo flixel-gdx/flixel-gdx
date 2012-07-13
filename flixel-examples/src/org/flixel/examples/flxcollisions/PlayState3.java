@@ -8,6 +8,8 @@ import com.badlogic.gdx.Application.ApplicationType;
 
 public class PlayState3 extends FlxState
 {
+	private String ImgGibs = "examples/flxcollisions/pack:gibs";
+	
 	protected FlxText _fps;
 
 	protected FlxSprite _platform;
@@ -34,7 +36,7 @@ public class PlayState3 extends FlxState
 		dispenser.setYSpeed(50,100);
 		dispenser.setRotation(-720,720);
 		//dispenser.bounce = 0.1;
-		dispenser.makeParticles(Asset.ImgGibs,300,16,true,0.5f);
+		dispenser.makeParticles(ImgGibs,300,16,true,0.5f);
 		dispenser.start(false,5,0.025f);
 		add(dispenser);
 

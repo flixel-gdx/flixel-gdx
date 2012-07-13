@@ -4,8 +4,8 @@ import org.flixel.*;
 
 public class Enemy extends FlxSprite
 {
-	//protected String ImgBot = "examples/mode/bot.png";
-	//protected String ImgJet = "examples/mode/jet.png";
+	protected String ImgBot = "examples/mode/pack:bot";
+	protected String ImgJet = "examples/mode/pack:jet";
 	protected String SndExplode = "examples/mode/asplode.mp3";
 	protected String SndHit = "examples/mode/hit.mp3";
 	protected String SndJet = "examples/mode/jet.mp3";
@@ -36,7 +36,7 @@ public class Enemy extends FlxSprite
 	public Enemy()
 	{
 		super();
-		loadRotatedGraphic(Asset.ImgBot,64,0,false,true);
+		loadRotatedGraphic(ImgBot,64,0,false,true);
 
 		//We want the enemy's "hit box" or actual size to be
 		//smaller than the enemy graphic itself, just by a few pixels.
@@ -48,7 +48,7 @@ public class Enemy extends FlxSprite
 		// that shoot out the back of the ship.
 		_jets = new FlxEmitter();
 		_jets.setRotation();
-		_jets.makeParticles(Asset.ImgJet,15,0,false,0);
+		_jets.makeParticles(ImgJet,15,0,false,0);
 
 		//These parameters help control the ship's
 		//speed and direction during the update() loop.

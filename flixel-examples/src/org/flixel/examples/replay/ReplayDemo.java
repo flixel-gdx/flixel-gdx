@@ -27,11 +27,4 @@ public class ReplayDemo extends FlxGame
 	{
 		super(400, 300, PlayState.class, 1, 20, 20);
 	}
-	
-	@Override
-	public void create()
-	{
-		Asset.create();
-		super.create();
-	}
 }

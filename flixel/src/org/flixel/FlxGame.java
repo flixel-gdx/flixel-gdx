@@ -824,7 +824,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	public void dispose()
 	{
 		FlxG.log("dispose");
-		FlxG.assetManager.dispose();
+		FlxG._assetManager.dispose();
 	}
 
 	@Override

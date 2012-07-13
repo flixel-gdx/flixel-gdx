@@ -4,12 +4,14 @@ import org.flixel.FlxSprite;
 
 public class Elevator extends FlxSprite
 {
+	private static String ImgElevator = "examples/tiledmap2/pack:elevator";
+	
 	private float _y;
 	private float _height;
 
 	public Elevator(float X, float Y, float Height)
 	{
-		super(X, Y, Asset.ImgElevator);
+		super(X, Y, ImgElevator);
 		width = 48;			//Minor bounding box adjustment
 		_y = Y;				//The starting height
 		_height = Height;	//How far down to travel

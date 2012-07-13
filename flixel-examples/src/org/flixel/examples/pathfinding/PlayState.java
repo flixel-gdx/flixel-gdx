@@ -24,6 +24,14 @@ public class PlayState extends FlxState
     private static final int ACTION_IDLE = 0;
                 
     /*
+     * Embed tile image
+     */
+    private String _imgTiles = "examples/pathfinding/pack:tiles";
+    /*
+     * Embed map data
+     */
+    private String _dataMap = "examples/pathfinding/pathfinding_map.txt";
+    /*
      * Map
      */
     private FlxTilemap _map;
@@ -62,13 +70,12 @@ public class PlayState extends FlxState
     @Override
     public void create()
     {
-    	FlxG.setBgColor(0xFF000000);
         FlxG.setFramerate(50);
         FlxG.setFlashFramerate(50);
                         
         //Load _datamap to _map and add to PlayState
         _map = new FlxTilemap();
-        _map.loadMap(Asset.DataMap, Asset.ImgTiles, TILE_WIDTH, TILE_HEIGHT, 0, 1);
+        _map.loadMap(FlxG.loadString(_dataMap), _imgTiles, TILE_WIDTH, TILE_HEIGHT, 0, 1);
         add(_map);
                         
         //Set goal coordinate and add goal to PlayState

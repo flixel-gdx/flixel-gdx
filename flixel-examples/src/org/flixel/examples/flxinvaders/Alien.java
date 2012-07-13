@@ -9,12 +9,14 @@ public class Alien extends FlxSprite		//Class declaration for the squid monster 
 	private float shotClock;			//A simple timer for deciding when to shoot
 	private int originalX;				//Saves the starting horizontal position (for movement logic)
 	
+	private static final String ImgAlien = "examples/flxinvaders/pack:alien";	//The graphic of the squid monster
+	
 	//This is the constructor for the squid monster.
 	//We are going to set up the basic values and then create a simple animation.
 	public Alien(int X, int Y, long Color, FlxGroup Bullets)
 	{
 		super(X,Y);							//Initialize sprite object
-		loadGraphic(Asset.ImgAlien,true);	//Load this animated graphic file
+		loadGraphic(ImgAlien,true);	//Load this animated graphic file
 		setColor(Color);			//setting the color tints the plain white alien graphic
 		originalX = X;
 		resetShotClock();

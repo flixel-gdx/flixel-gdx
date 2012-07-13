@@ -1,6 +1,5 @@
 package org.flixel.examples.tiledmap2;
 
-import org.flixel.FlxButton;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGamePad;
@@ -14,7 +13,10 @@ import com.badlogic.gdx.graphics.g2d.tiled.TiledObjectGroup;
 
 public class PlayState extends FlxState
 {
-	private Player _player;
+	private static String ImgBG = "examples/tiledmap2/pack:bg";
+	private static String ImgGibs = "examples/tiledmap2/pack:gibs";
+	private static String ImgTiles = "examples/tiledmap2/pack:tiles";
+	
 	private FlxTilemap _level;
 	private FlxGamePad _pad;
 
@@ -27,7 +29,7 @@ public class PlayState extends FlxState
 		_pad = new FlxGamePad(FlxGamePad.LEFT_RIGHT, FlxGamePad.A);
 		
 		// Objects that are placed in the very front.
-		FlxSprite decoration = new FlxSprite(256,159,Asset.ImgBG);
+		FlxSprite decoration = new FlxSprite(256,159,ImgBG);
 		decoration.moves = false;
 		decoration.setSolid(false);
 		add(decoration);
@@ -52,7 +54,7 @@ public class PlayState extends FlxState
 					else if(name.equals("pusher"))
 						add(new Pusher(object.x,object.y,object.width));
 					else if(name.equals("player"))
-						add(_player = new Player(object.x,object.y,_pad));
+						add(new Player(object.x,object.y,_pad));
 				}				
 			}
 		}
@@ -66,7 +68,7 @@ public class PlayState extends FlxState
 		dispenser.setYSpeed(-50,50);
 		dispenser.gravity = 300;
 		dispenser.bounce = 0.3f;
-		dispenser.makeParticles(Asset.ImgGibs,100,16,true,0.8f);
+		dispenser.makeParticles(ImgGibs,100,16,true,0.8f);
 		dispenser.start(false,10,0.035f);
 		add(dispenser);
 		
@@ -107,7 +109,7 @@ public class PlayState extends FlxState
 		_level = new FlxTilemap();
 //		_level.loadMap(FlxTilemap.arrayToCSV(data, 40), Asset.ImgTiles);
 //		_level.loadMap(FlxTilemap.array2DToCSV(Asset.map.layers.get(0).tiles), Asset.ImgTiles);
-		_level.loadMap(FlxTilemap.tilemapToCSV(Asset.map, 0), Asset.ImgTiles, 8, 8, FlxTilemap.OFF, 1);
+		_level.loadMap(FlxTilemap.tilemapToCSV(Asset.map, 0), ImgTiles, 8, 8, FlxTilemap.OFF, 1);
 		
 		add(_level);
 		add(_pad);

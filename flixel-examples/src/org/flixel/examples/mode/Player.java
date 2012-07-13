@@ -4,7 +4,7 @@ import org.flixel.*;
 
 public class Player extends FlxSprite
 {
-	//protected String ImgSpaceman = "examples/mode/spaceman.png";
+	protected String ImgSpaceman = "examples/mode/pack:spaceman";
 
 	protected String SndJump = "examples/mode/jump.mp3";
 	protected String SndLand = "examples/mode/land.mp3";
@@ -25,7 +25,7 @@ public class Player extends FlxSprite
 	public Player(int X,int Y,FlxGroup Bullets,FlxEmitter Gibs)
 	{
 		super(X,Y);
-		loadGraphic(Asset.ImgSpaceman,true,true,8);
+		loadGraphic(ImgSpaceman,true,true,8);
 		_restart = 0;
 
 		//bounding box tweaks

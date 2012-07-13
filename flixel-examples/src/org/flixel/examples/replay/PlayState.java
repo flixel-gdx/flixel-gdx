@@ -5,6 +5,11 @@ import org.flixel.event.AFlxReplay;
 
 public class PlayState extends FlxState
 {
+	//===========embed resources===========
+	private String img_autoChange = "examples/replay/pack:tiles";
+
+	private String map_simple = "examples/replay/simpleMap.csv";
+	
 	//===========declare UI stuff===========
 	private FlxText hintText;
 
@@ -40,7 +45,7 @@ public class PlayState extends FlxState
 
 		//Set up the TILEMAP
 		simpleTilemap = new FlxTilemap();
-		simpleTilemap.loadMap(Asset.MapData,Asset.ImgTiles,25,25,FlxTilemap.AUTO);
+		simpleTilemap.loadMap(FlxG.loadString(map_simple),img_autoChange,25,25,FlxTilemap.AUTO);
 		add(simpleTilemap);
 		simpleTilemap.y -= 15;
 

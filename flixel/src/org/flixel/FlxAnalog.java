@@ -1,7 +1,5 @@
 package org.flixel;
 
-import org.flixel.data.SystemAsset;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 
@@ -51,18 +49,18 @@ public class FlxAnalog extends FlxGroup
 		_centerX = X+_pad.radius-32;
 		_centerY = Y+_pad.radius-32;
 		
-		//_base = new FlxSprite(X,Y, SystemAsset.ImgControlBase);
-		//_base.setAlpha(0.75f);
-		//_base.scale = new FlxPoint(difWidth, difHeight);
-		//_base.setSolid(false);
+		_base = new FlxSprite(X,Y);//, SystemAsset.ImgControlBase);
+		_base.setAlpha(0.75f);
+		_base.scale = new FlxPoint(difWidth, difHeight);
+		_base.setSolid(false);
 //		_base.ignoreDrawDebug = true;
-		//add(_base);
+		add(_base);
 		
-		//_stick = new FlxSprite(_centerX, _centerY, SystemAsset.ImgControlKnob);
-		//_stick.setSolid(false);
-		//_stick.scale = new FlxPoint(difWidth, difHeight);
+		_stick = new FlxSprite(_centerX, _centerY);//, SystemAsset.ImgControlKnob);
+		_stick.setSolid(false);
+		_stick.scale = new FlxPoint(difWidth, difHeight);
 //		_stick.ignoreDrawDebug = true;
-		//add(_stick);
+		add(_stick);
 	}
 	
 	
