@@ -228,7 +228,8 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 	 */
 	protected void updateButton()
 	{
-		status = NORMAL;
+		if (status == PRESSED)
+			status = NORMAL;
 		
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
