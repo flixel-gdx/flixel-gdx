@@ -7,28 +7,28 @@ import org.flixel.event.AFlxReplay;
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxQuadTree;
-import org.flixel.system.FlxTextureData;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.FreeTypeFontLoader;
 import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -254,11 +254,6 @@ public class FlxG
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
 	static protected ObjectMap<String, TextureRegion> _cache;
-	
-	/**
-	 * Internal storage system to prevent fonts from being used repeatedly in memory.
-	 */
-	static protected ObjectMap<String, BitmapFont> _fontCache;
 	
 	/**
 	 * Internal asset management system.
@@ -865,7 +860,6 @@ public class FlxG
 		FlxG.height = Height;
 		
 		FlxG._cache = new ObjectMap<String, TextureRegion>();
-		FlxG._fontCache = new ObjectMap<String, BitmapFont>();
 		
 		FlxG._assetManager = new AssetManager();
 		
@@ -875,7 +869,6 @@ public class FlxG
 		FlxG.music = null;
 		
 		FlxG.clearBitmapCache();
-		FlxG.clearFontCache();
 		
 		FlxCamera.defaultZoom = Zoom;
 		FlxG.cameras = new Array<FlxCamera>();
@@ -901,7 +894,6 @@ public class FlxG
 	static void reset()
 	{
 		FlxG.clearBitmapCache();
-		FlxG.clearFontCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
 		FlxG._assetManager.clear();
@@ -1009,19 +1001,6 @@ public class FlxG
 	}
 	
 	/**
-	 * Check the local font cache to see if a bitmap with this key has been
-	 * loaded already.
-	 * 
-	 * @param Key The string key identifying the bitmap.
-	 * 
-	 * @return Whether or not this file can be found in the cache.
-	 */
-	static public boolean checkFontCache(String Key)
-	{
-		return (_fontCache.get(Key) != null);
-	}
-
-	/**
 	 * Generates a new <code>TextureRegion</code> object (a colored square) and caches it.
 	 * 
 	 * @param Width 	How wide the square should be.
@@ -1063,7 +1042,7 @@ public class FlxG
 			Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(Width), MathUtils.nextPowerOfTwo(Height), Format.RGBA8888);			
 			p.setColor(FlxU.colorFromHex(Color));
 			p.fillRectangle(0, 0, Width, Height);
-			_cache.put(Key, new TextureRegion(new Texture(new FlxTextureData(p))));
+			_cache.put(Key, new TextureRegion(new Texture(new ManagedTextureData(p))));
 		}
 		return _cache.get(Key);
 	}
@@ -1157,7 +1136,7 @@ public class FlxG
 			if (textureData.disposePixmap())
 				graphicPixmap.dispose();
 				
-			textureRegion = new TextureRegion(new Texture(new FlxTextureData(newPixmap)));
+			textureRegion = new TextureRegion(new Texture(new ManagedTextureData(newPixmap)));
 		}
 		return textureRegion;
 	}
@@ -1202,46 +1181,6 @@ public class FlxG
 	}
 	
 	/**
-	 * Loads a bitmap from a file, caches it, and generates a horizontally
-	 * flipped version if necessary.
-	 * 
-	 * @param Graphic The image file that you want to load.
-	 * @param Unique Make the bitmap unique, no duplicate allowed.
-	 * @param Key
-	 * 
-	 * @return The <code>BitmapData</code> we just created.
-	 */
-	static public BitmapFont addFont(FileHandle Font, float Size, String Key)
-	{
-		if(Key == null)
-		{
-			Key = Font.nameWithoutExtension()+":"+String.valueOf(Size);
-		}
-		if(!checkFontCache(Key))
-		{
-			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Font);
-			_fontCache.put(Key, generator.generateFont((int) Size, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*", true));
-			generator.dispose();
-		}
-		return _fontCache.get(Key);
-	}
-	
-	/**
-	 * Loads a bitmap from a file, caches it, and generates a horizontally
-	 * flipped version if necessary.
-	 * 
-	 * @param Graphic The image file that you want to load.
-	 * @param Unique Make the bitmap unique, no duplicate allowed.
-	 * @param Key
-	 * 
-	 * @return The <code>BitmapData</code> we just created.
-	 */
-	static public BitmapFont addFont(FileHandle Font, float Size)
-	{
-		return addFont(Font, Size, null);
-	}
-	
-	/**
 	 * Dumps the cache's image references.
 	 */
 	static public void clearBitmapCache()
@@ -1262,36 +1201,17 @@ public class FlxG
 	}
 	
 	/**
-	 * Dumps the cache's font references.
-	 */
-	static public void clearFontCache()
-	{
-		for (Entry<String, BitmapFont> entry : _fontCache.entries())
-		{
-			Texture texture = entry.value.getRegion().getTexture();
-			Pixmap pixmap = null;
-			if (!texture.getTextureData().disposePixmap())
-				pixmap = texture.getTextureData().consumePixmap();
-			if (pixmap != null)
-			{
-				pixmap.dispose();
-				texture.dispose();
-			}
-		}
-		_fontCache.clear();
-	}
-	
-	/**
 	 * Internal function for loading assets using the <code>assetManager</code>.
 	 *
 	 * @param Path	The file path to the asset.
 	 * @param Type	The type of asset to load.
+	 * @param Parameters	Optional parameters for loading the asset.
 	 * 
 	 * @return	The loaded asset.
 	 */
-	static <T> T loadAsset(String Path, Class<T> Type)
+	static <T> T loadAsset(String Path, Class<T> Type, AssetLoaderParameters<T> Parameters)
 	{
-		if (!_assetManager.isLoaded(Path, Type))
+		if (!_assetManager.isLoaded(Path, Type) || Parameters != null)
 		{
 			FileHandleResolver resolver = null;
 			if (Path.startsWith("org/flixel"))
@@ -1304,12 +1224,29 @@ public class FlxG
 				_assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(resolver));
 				_assetManager.setLoader(Texture.class, new TextureLoader(resolver));
 			}
-		
-			_assetManager.load(Path, Type);
+			else if (Type == BitmapFont.class)
+			{
+				_assetManager.setLoader(BitmapFont.class, new FreeTypeFontLoader(resolver));
+			}
+			
+			_assetManager.load(Path, Type, Parameters);
 			_assetManager.finishLoading();
 		}
 		
 		return _assetManager.get(Path, Type);
+	}
+	
+	/**
+	 * Internal function for loading assets using the <code>assetManager</code>.
+	 *
+	 * @param Path	The file path to the asset.
+	 * @param Type	The type of asset to load.
+	 * 
+	 * @return	The loaded asset.
+	 */
+	static <T> T loadAsset(String Path, Class<T> Type)
+	{
+		return loadAsset(Path, Type, null);
 	}
 	
 	/**

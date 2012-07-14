@@ -1,6 +1,5 @@
 package org.flixel;
 
-import org.flixel.data.SystemAsset;
 import org.flixel.event.AFlxReplay;
 import org.flixel.event.IMouseObserver;
 import org.flixel.event.IMouseSubject;
@@ -553,7 +552,6 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		FlxG.resetInput();
 		FlxG.destroySounds();
 		FlxG.clearBitmapCache();
-		FlxG.clearFontCache();
 		
 		// Clear the debugger overlay's Watch window
 		//if(_debugger != null)
@@ -752,8 +750,6 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	{
 		_total = System.currentTimeMillis();
 		
-		SystemAsset.createSystemAsset();
-		
 		FlxG.resWidth = Gdx.graphics.getWidth();
 		FlxG.resHeight = Gdx.graphics.getHeight();
 		FlxG.difWidth = ((float)FlxG.resWidth / stage.stageWidth);
@@ -771,7 +767,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		FlxG.batch = new SpriteBatch();
 		FlxG.flashGfx = new ShapeRenderer();
 		
-		font = SystemAsset.system;
+		font = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
 		
 		if(Gdx.app.getType() != ApplicationType.Android)
 		{
@@ -805,7 +801,6 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		_pauseState.visible = false;
 		FlxG.resumeSounds();
 	}
-	
 	
 	@Override
 	public void pause()

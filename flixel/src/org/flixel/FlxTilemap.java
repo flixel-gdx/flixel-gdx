@@ -2,12 +2,12 @@ package org.flixel;
 
 import org.flixel.event.AFlxObject;
 import org.flixel.event.AFlxTile;
-import org.flixel.system.FlxTextureData;
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
@@ -393,7 +393,7 @@ public class FlxTilemap extends FlxObject
 		p.setColor(c);
 		p.drawRectangle(0, 0, _tileWidth, _tileHeight);
 		
-		DebugTile.setRegion(new Texture(new FlxTextureData(p)));
+		DebugTile.setRegion(new Texture(new ManagedTextureData(p)));
 		DebugTile.flip(false, true);
 		//p.dispose();
 		

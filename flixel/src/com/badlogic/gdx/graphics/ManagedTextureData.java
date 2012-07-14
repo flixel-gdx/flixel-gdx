@@ -1,4 +1,4 @@
-package org.flixel.system;
+package com.badlogic.gdx.graphics;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
  * 
  * @author Thomas Weston
  */
-public class FlxTextureData extends PixmapTextureData 
+public class ManagedTextureData extends PixmapTextureData 
 {
-	public FlxTextureData(Pixmap pixmap) 
+	public ManagedTextureData(Pixmap pixmap) 
 	{
 		super(pixmap, null, false, false);
 	}

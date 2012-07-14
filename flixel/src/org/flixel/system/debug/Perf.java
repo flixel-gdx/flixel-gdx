@@ -4,8 +4,6 @@ import java.text.DecimalFormat;
 
 import org.flixel.FlxG;
 import org.flixel.FlxU;
-import org.flixel.data.SystemAsset;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -49,7 +47,7 @@ public class Perf
 		_lastTime = 0;
 		_updateTimer = 0;
 		
-		_text = SystemAsset.system;
+		_text = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
 		
 		_flixelUpdate = new IntArray(32);
 		_flixelUpdate.size = 32;

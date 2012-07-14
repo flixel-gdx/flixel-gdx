@@ -97,7 +97,7 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		{
 			label = new FlxText(0,0,80,Label);
 			label.setFormat(null,8,0x333333,"center");
-			labelOffset = new FlxPoint(-1,3);
+			labelOffset = new FlxPoint(-1,4);
 		}
 		loadGraphic(ImgDefaultButton,true,false,80,20);
 		

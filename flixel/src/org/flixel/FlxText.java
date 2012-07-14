@@ -2,9 +2,8 @@ package org.flixel;
 
 import java.util.Locale;
 
-import org.flixel.data.SystemAsset;
-
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.assets.loaders.FreeTypeFontLoader.FreeTypeFontParameter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
@@ -44,7 +43,7 @@ public class FlxText extends FlxSprite
 	/**
 	 * Internal reference to the font.
 	 */
-	protected FileHandle _font;
+	protected String _font;
 	/**
 	 * Internal tracker for the size of the text.
 	 */
@@ -66,17 +65,10 @@ public class FlxText extends FlxSprite
 		if(Text == null)
 			Text = "";
 		
-		_textField = new BitmapFontCache(SystemAsset.system);
-		_font = SystemAsset.systemFileHandle;
 		width = Width;
 		_text = Text;
-		setColor(0xFFFFFF);
-		_size = 8;
-		_alignment = HAlignment.LEFT;
-		_shadow = 0;
 		allowCollisions = NONE;
-		
-		calcFrame();
+		setFormat("org/flixel/data/font/nokiafc22.ttf", 8, 0xFFFFFF, "left", 0);
 	}
 	
 	/**
@@ -126,14 +118,19 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(FileHandle Font, float Size, int Color, String Alignment, int ShadowColor)
+	public FlxText setFormat(String Font, float Size, long Color, String Alignment, int ShadowColor)
 	{
 		if(Font == null)
-			Font = SystemAsset.systemFileHandle;
-	
-		if (!Font.equals(_font) || Size != _size)
-			_textField = new BitmapFontCache(FlxG.addFont(Font, Size));
+			Font = _font;
 		
+		if (!Font.equals(_font) || Size != _size)
+		{
+			FreeTypeFontParameter parameters = new FreeTypeFontParameter();
+			parameters.flip = true;
+						
+			_textField = new BitmapFontCache(FlxG.loadAsset(Font + ":" + (int)Size, BitmapFont.class, parameters));
+		}
+ 
 		_font = Font;
 		_size = (int) Size;
 		
@@ -157,7 +154,7 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(FileHandle Font, float Size, int Color, String Alignment)
+	public FlxText setFormat(String Font, float Size, int Color, String Alignment)
 	{
 		return setFormat(Font, Size, Color, Alignment, 0);
 	}
@@ -172,7 +169,7 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(FileHandle Font, float Size, int Color)
+	public FlxText setFormat(String Font, float Size, int Color)
 	{
 		return setFormat(Font, Size, Color, "left", 0);
 	}
@@ -186,7 +183,7 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(FileHandle Font, float Size)
+	public FlxText setFormat(String Font, float Size)
 	{
 		return setFormat(Font, Size, 0xFFFFFFFF, "left", 0);
 	}
@@ -199,7 +196,7 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(FileHandle Font)
+	public FlxText setFormat(String Font)
 	{
 		return setFormat(Font, 8, 0xFFFFFFFF, "left", 0);
 	}
@@ -248,9 +245,7 @@ public class FlxText extends FlxSprite
 		if (Size == _size)
 			return;
 		
-		_size = (int) Size;
-		_textField = new BitmapFontCache(FlxG.addFont(_font, Size));
-		calcFrame();
+		setFormat(_font, Size, _color, getAlignment(), _shadow);
 	}
 	
 	/**
@@ -269,7 +264,7 @@ public class FlxText extends FlxSprite
 	/**
 	 * The font used for this text.
 	 */
-	public FileHandle getFont()
+	public String getFont()
 	{
 		return _font;
 	}
@@ -277,13 +272,12 @@ public class FlxText extends FlxSprite
 	/**
 	 * @private
 	 */
-	public void setFont(FileHandle Font)
+	public void setFont(String Font)
 	{
-		if (_font.equals(Font))
+		if (Font == _font)
 			return;
 		
-		_textField = new BitmapFontCache(FlxG.addFont(Font, _size));
-		calcFrame();
+		setFormat(Font, _size, _color, getAlignment(), _shadow);
 	}
 	
 	/**
