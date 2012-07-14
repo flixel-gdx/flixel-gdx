@@ -1,8 +1,8 @@
 package org.flixel;
 
 import org.flixel.event.AFlxObject;
-import org.flixel.system.FlxTextureData;
 
+import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -514,7 +514,7 @@ public class FlxObject extends FlxBasic
 			Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(width), MathUtils.nextPowerOfTwo(height),Pixmap.Format.RGBA8888);
 			p.setColor(FlxU.colorFromHex(boundingBoxColor));			
 			p.drawRectangle(0, 0, width, height);
-			_debug = new TextureRegion(new Texture(new FlxTextureData(p)));
+			_debug = new TextureRegion(new Texture(new ManagedTextureData(p)));
 			_debug.flip(false, true);
 			//p.dispose();
 		}

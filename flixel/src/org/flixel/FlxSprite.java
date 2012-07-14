@@ -2,8 +2,8 @@ package org.flixel;
 
 import org.flixel.event.AFlxSprite;
 import org.flixel.system.FlxAnim;
-import org.flixel.system.FlxTextureData;
 
+import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -676,7 +676,7 @@ public class FlxSprite extends FlxObject
 
 		pixmap.drawPixmap(brushPixmap, Brush._pixels.getRegionX() + (Brush.getFrame() * Brush.frameWidth), Brush._pixels.getRegionY(), Brush.frameWidth, Brush.frameHeight, X, Y, Brush.frameWidth, Brush.frameHeight);
 		
-		_pixels.getTexture().load(new FlxTextureData(pixmap));
+		_pixels.getTexture().load(new ManagedTextureData(pixmap));
 		calcFrame();
 		
 		if (brushTextureData.disposePixmap())
@@ -758,7 +758,7 @@ public class FlxSprite extends FlxObject
 		pixmap.setColor(FlxU.colorFromHex(Color));
 		pixmap.fillRectangle(_pixels.getRegionX(), _pixels.getRegionY(), _pixels.getRegionWidth(), _pixels.getRegionHeight());
 		
-		_pixels.getTexture().load(new FlxTextureData(pixmap));
+		_pixels.getTexture().load(new ManagedTextureData(pixmap));
 		
 		if(_pixels != framePixels)
 			dirty = true;

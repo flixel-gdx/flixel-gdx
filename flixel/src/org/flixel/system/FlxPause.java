@@ -5,6 +5,8 @@ import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 import org.flixel.FlxU;
+
+import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -33,7 +35,7 @@ public class FlxPause extends FlxGroup
 		p.setColor(FlxU.colorFromHex(0xFF000000));
 		p.fillRectangle(0, 0, w, h);
 		s = new FlxSprite(x-w/2, y-h/2);//, new TextureRegion(new Texture(new FlxTextureData(p))));
-		s.setPixels(new TextureRegion(new Texture(new FlxTextureData(p)),w, h));
+		s.setPixels(new TextureRegion(new Texture(new ManagedTextureData(p)),w, h));
 		s.setAlpha(0.85f);
 		s.setSolid(false);
 		s.scrollFactor.x = s.scrollFactor.y = 0;
