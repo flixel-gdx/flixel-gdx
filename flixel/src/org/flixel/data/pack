@@ -1,17 +1,31 @@
 pack.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
+logo
+  rotate: false
+  xy: 238, 20
+  size: 2, 4
+  orig: 6, 6
+  offset: 2, 1
+  index: -1
+stick
+  rotate: false
+  xy: 136, 104
+  size: 88, 93
+  orig: 88, 93
+  offset: 0, 0
+  index: -1
 button_b
   rotate: false
-  xy: 2, 331
+  xy: 2, 49
   size: 132, 45
   orig: 132, 45
   offset: 0, 0
   index: -1
 button_a
   rotate: false
-  xy: 2, 378
+  xy: 2, 96
   size: 132, 45
   orig: 132, 45
   offset: 0, 0
@@ -32,7 +46,7 @@ autotiles
   index: -1
 button_right
   rotate: false
-  xy: 2, 190
+  xy: 2, 284
   size: 132, 45
   orig: 132, 45
   offset: 0, 0
@@ -46,49 +60,56 @@ autotiles_alt
   index: -1
 button_up
   rotate: false
-  xy: 2, 143
+  xy: 2, 237
   size: 132, 45
   orig: 132, 45
   offset: 0, 0
   index: -1
 button_x
   rotate: false
-  xy: 2, 96
+  xy: 2, 190
   size: 132, 45
   orig: 132, 45
   offset: 0, 0
   index: -1
 button
   rotate: false
-  xy: 136, 2
+  xy: 136, 199
   size: 80, 60
   orig: 80, 60
   offset: 0, 0
   index: -1
 button_left
   rotate: false
-  xy: 2, 237
+  xy: 2, 331
   size: 132, 45
   orig: 132, 45
   offset: 0, 0
   index: -1
 button_y
   rotate: false
-  xy: 2, 49
+  xy: 2, 143
   size: 132, 45
   orig: 132, 45
   offset: 0, 0
   index: -1
+base
+  rotate: false
+  xy: 136, 2
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
 button_down
   rotate: false
-  xy: 2, 284
+  xy: 2, 378
   size: 132, 45
   orig: 132, 45
   offset: 0, 0
   index: -1
 default
   rotate: false
-  xy: 218, 2
+  xy: 238, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

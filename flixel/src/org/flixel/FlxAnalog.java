@@ -1,7 +1,6 @@
 package org.flixel;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * 
@@ -10,9 +9,12 @@ import com.badlogic.gdx.math.Circle;
  */
 public class FlxAnalog extends FlxGroup
 {
-	/**
-	 * How fast the speed of this object is changing.
-	 */
+	// Base image
+	private final String ImgBase = "org/flixel/data/pack:base";
+	// Stick image
+	private final String ImgStick = "org/flixel/data/pack:stick";
+	
+	// How fast the speed of this object is changing.	
 	private static final float ACCELERATION = 10;
 	
 	public float x;
@@ -20,13 +22,16 @@ public class FlxAnalog extends FlxGroup
 	private float _centerX;
 	private float _centerY;
 
-	private Circle _pad;
+	private Rectangle _pad;
 	private FlxSprite _base;
-	private FlxSprite _stick;
+	public FlxSprite _stick;
 	
 	public FlxPoint accel;
 	public boolean pressed;
-	
+	private float yMin;
+	private float yMax;
+	private float xMin;
+	private float xMax;
 		
 	/**
 	 * Constructor
@@ -36,30 +41,30 @@ public class FlxAnalog extends FlxGroup
 	public FlxAnalog(float X, float Y)
 	{
 		accel  = new FlxPoint();
-		//float radius = Gdx.graphics.getWidth()/32;
-		float resWidth = Gdx.graphics.getWidth();
-		float resHeight = Gdx.graphics.getHeight();
-		float difWidth = FlxG.width/resWidth;
-		float difHeight = FlxG.height/resHeight;
-
 		x = X;
 		y = Y;		
 		
-		_pad = new Circle(64+X, 64+Y, 64);
-		_centerX = X+_pad.radius-32;
-		_centerY = Y+_pad.radius-32;
+		yMin = 0-24+y;
+		yMax = 100-24+y;
+		xMin = 0-24+x;
+		xMax = 100-24+x;
 		
-		_base = new FlxSprite(X,Y);//, SystemAsset.ImgControlBase);
-		_base.setAlpha(0.75f);
-		_base.scale = new FlxPoint(difWidth, difHeight);
+		_pad = new Rectangle(x,y,100,100);
+		_centerX = X+_pad.width*.25f;
+		_centerY = Y+_pad.width*.25f;
+		
+		_base = new FlxSprite(X,Y, ImgBase);
+		//_base.setAlpha(0.75f);
 		_base.setSolid(false);
-//		_base.ignoreDrawDebug = true;
+		_base.ignoreDrawDebug = true;
 		add(_base);
 		
-		_stick = new FlxSprite(_centerX, _centerY);//, SystemAsset.ImgControlKnob);
+		_stick = new FlxSprite(_centerX, _centerY, ImgStick);
+		_stick.width = _stick.height = 48;
+		_stick.offset.x = 20; 
+		_stick.offset.y = 3;
 		_stick.setSolid(false);
-		_stick.scale = new FlxPoint(difWidth, difHeight);
-//		_stick.ignoreDrawDebug = true;
+		_stick.ignoreDrawDebug = true;
 		add(_stick);
 	}
 	
@@ -69,20 +74,33 @@ public class FlxAnalog extends FlxGroup
 	{
 		if(FlxG.mouse.pressed())
 		{
-			if(_pad.contains(FlxG.mouse.x, FlxG.mouse.y))
+			if(_pad.contains(FlxG.mouse.screenX, FlxG.mouse.screenY) || pressed)
 			{
 				pressed = true;
 				_stick.x = FlxG.mouse.x - _stick.width*.5f;
 				_stick.y = FlxG.mouse.y - _stick.height*.5f;
-				accel.x = ((64 - (128 - (FlxG.mouse.x)))-x) / ACCELERATION;
-				accel.y = ((64 - (128 - (FlxG.mouse.y)))-y) / ACCELERATION;
+				
+				if(_stick.y <= yMin)
+					_stick.y = yMin;
+				if(_stick.y >= yMax)
+					_stick.y = yMax;
+				if(_stick.x <= xMin)
+					_stick.x = xMin;
+				if(_stick.x >= xMax)
+					_stick.x = xMax;
+				
+				accel.x = ((74 - (100 - (_stick.x)))-x) / ACCELERATION;
+				accel.y = ((74 - (100 - (_stick.y)))-y) / ACCELERATION;
 			}
 		}
 		else
 		{
 			pressed = false;			
-			_stick.x = _centerX;
-			_stick.y = _centerY;
+			_stick.x = _centerX -((_centerX - _stick.x) / 1.5f);
+			_stick.y = _centerY - ((_centerY - _stick.y) / 1.5f);
+			// TODO: add motion to accel when released.
+			accel.x = 0;//FlxU.round(((74 - (100 - (_stick.x)))-x) / ACCELERATION);
+			accel.y = 0;//FlxU.round(((74 - (100 - (_stick.y)))-y) / ACCELERATION);			
 		}
 		super.update();
 	}
