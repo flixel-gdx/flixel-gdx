@@ -6,7 +6,7 @@ import org.flixel.FlxTileblock;
 
 public class PlayState extends FlxState
 {
-	private String ImgTechTiles = "examples/tile/pack:tech";
+	private String ImgTechTiles = "examples/tile/pack:blocks";
 	@Override
 	public void create()
 	{

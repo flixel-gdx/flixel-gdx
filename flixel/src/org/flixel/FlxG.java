@@ -18,12 +18,14 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.FreeTypeFontLoader;
 import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
+import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -997,7 +999,7 @@ public class FlxG
 	 */
 	static public boolean checkBitmapCache(String Key)
 	{
-		return (_cache.get(Key) != null);
+		return _assetManager.isLoaded(Key);//(_cache.get(Key) != null);
 	}
 	
 	/**
@@ -1016,7 +1018,7 @@ public class FlxG
 		if(Key == null)
 		{
 			Key = Width+"x"+Height+":"+Color;
-			if(Unique && (_cache.get(Key) != null))
+			if(Unique && checkBitmapCache(Key))
 			{
 				// Generate a unique key
 				int inc = 0;
@@ -1025,26 +1027,24 @@ public class FlxG
 				{
 					ukey = Key + inc++;
 				}
-				while((_cache.get(ukey) != null));
+				while(checkBitmapCache(ukey));
 				Key = ukey;
 			}
 		}
-		/*
-		if(!checkBitmapCache(Key))
-		{
-			assetManager.load(Key, TextureRegion.class);
-			assetManager.finishLoading();
-		}
-		return assetManager.get(Key, TextureRegion.class);
-		*/
+		
 		if(!checkBitmapCache(Key))
 		{
 			Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(Width), MathUtils.nextPowerOfTwo(Height), Format.RGBA8888);			
 			p.setColor(FlxU.colorFromHex(Color));
-			p.fillRectangle(0, 0, Width, Height);
-			_cache.put(Key, new TextureRegion(new Texture(new ManagedTextureData(p))));
+			p.fill();
+			
+			TextureParameter parameter = new TextureParameter();
+			parameter.magFilter = parameter.minFilter = TextureFilter.Nearest;
+			parameter.textureData = new ManagedTextureData(p);
+			
+			loadAsset(Key, Texture.class, parameter);
 		}
-		return _cache.get(Key);
+		return new TextureRegion(loadAsset(Key,  Texture.class), 0, 0, Width, Height);
 	}
 	
 	/**
@@ -1088,7 +1088,6 @@ public class FlxG
 	 */
 	static public TextureRegion addBitmap(String Graphic, boolean Reverse, boolean Unique, String Key)
 	{
-		/*
 		if(Key == null)
 		{
 			Key = Graphic+(Reverse?"_REVERSE_":"");;
@@ -1103,7 +1102,7 @@ public class FlxG
 				Key = ukey;
 			}
 		}
-		*/
+		
 		String[] split = Graphic.split(":");
 		
 		if (split.length != 2)
@@ -1135,8 +1134,11 @@ public class FlxG
 			
 			if (textureData.disposePixmap())
 				graphicPixmap.dispose();
-				
-			textureRegion = new TextureRegion(new Texture(new ManagedTextureData(newPixmap)));
+			
+			TextureParameter parameter = new TextureParameter();
+			parameter.minFilter = parameter.magFilter = TextureFilter.Nearest;
+			parameter.textureData = new ManagedTextureData(newPixmap);
+			textureRegion = new TextureRegion(loadAsset(Key, Texture.class, parameter), 0, 0, rw, rh);
 		}
 		return textureRegion;
 	}

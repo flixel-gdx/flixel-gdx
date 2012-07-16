@@ -3,6 +3,7 @@ package org.flixel.examples.animation;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
+import org.flixel.FlxU;
 import org.flixel.event.AFlxSprite;
 
 /**
@@ -32,7 +33,7 @@ public class PlayState extends FlxState
 		
 		
 		// NOTE: the zombie image is facing to the left. Normally you should stick sprites facing to the right.
-		s = new FlxSprite(20, 60).loadGraphic(ImgZombie, true, false, 36, 41);
+		s = new FlxSprite(20, 60).loadGraphic(ImgZombie, true, true, 36, 41);
 		s.addAnimation("walk", new int[]{0, 1, 2, 3, 4, 5}, 12);
 		s.setFacing(FlxSprite.LEFT);
 		s.play("walk");
@@ -47,7 +48,7 @@ public class PlayState extends FlxState
 		
 		
 		// Another zombie, but this can move on the x-axis and there is also animation callback.
-		_zombie = new FlxSprite(20, 120).loadGraphic(ImgZombie, true, false, 36, 41);
+		_zombie = new FlxSprite(20, 120).loadGraphic(ImgZombie, true, true, 36, 41);
 		_zombie.addAnimation("walk", new int[]{0, 1, 2, 3, 4, 5}, 2);
 		_zombie.setFacing(FlxSprite.LEFT);
 		_zombie.velocity.x = 5;
