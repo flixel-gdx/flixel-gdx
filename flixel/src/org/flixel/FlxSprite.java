@@ -84,6 +84,10 @@ public class FlxSprite extends FlxObject
 	 */
 	protected Array<FlxAnim> _animations;
 	/**
+	 * Internal, keeps track of whether the sprite was loaded with support for automatic reverse/mirroring.
+	 */
+	protected int _flipped;
+	/**
 	 * Internal, keeps track of the current animation being played.
 	 */
 	protected FlxAnim _curAnim;
@@ -154,6 +158,7 @@ public class FlxSprite extends FlxObject
 		finished = false;
 		_facing = RIGHT;
 		_animations = new Array<FlxAnim>();
+		_flipped = 0;
 		_curAnim = null;
 		_curFrame = 0;
 		_curIndex = 0;
@@ -245,6 +250,11 @@ public class FlxSprite extends FlxObject
 	{
 		_bakedRotation = 0;
 		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
+		
+		if(Reverse)
+			_flipped = 1;
+		else
+			_flipped = 0;
 		
 		if(Width == 0)
 		{
@@ -677,7 +687,7 @@ public class FlxSprite extends FlxObject
 		pixmap.drawPixmap(brushPixmap, Brush._pixels.getRegionX() + (Brush.getFrame() * Brush.frameWidth), Brush._pixels.getRegionY(), Brush.frameWidth, Brush.frameHeight, X, Y, Brush.frameWidth, Brush.frameHeight);
 		
 		_pixels.getTexture().load(new ManagedTextureData(pixmap));
-		calcFrame();
+		//calcFrame();
 		
 		if (brushTextureData.disposePixmap())
 			brushPixmap.dispose();
@@ -1204,7 +1214,7 @@ public class FlxSprite extends FlxObject
 		framePixels.setRegion(indexX+_pixels.getRegionX(), indexY+_pixels.getRegionY(), frameWidth, frameHeight);
 		
 		//handle reversed sprites. Note: in the original flixel the update display bitmap will be called after the flipping.
-		if(_facing == LEFT)
+		if(_flipped > 0 && _facing == LEFT)
 			framePixels.flip(true, true);
 		else
 			framePixels.flip(false, true);
