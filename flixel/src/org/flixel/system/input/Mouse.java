@@ -244,8 +244,8 @@ public class Mouse extends FlxPoint
 		{
 			o = _pointers.get(i);
 			
-			o.screenPosition.x = Gdx.input.getX(i) / FlxG.difWidth;
-			o.screenPosition.y = Gdx.input.getY(i) / FlxG.difHeight;
+			o.screenPosition.x = (float) Gdx.input.getX(i) * FlxG.diffWidth;
+			o.screenPosition.y = (float) Gdx.input.getY(i) * FlxG.diffHeight;
 			
 			if((o.last == -1) && (o.current == -1))
 				o.current = 0;

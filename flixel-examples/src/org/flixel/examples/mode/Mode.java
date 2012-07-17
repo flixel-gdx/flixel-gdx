@@ -12,6 +12,6 @@ public class Mode extends FlxGame
 {
 	public Mode()
 	{
-		super(320, 240, 640, 480, MenuState.class, 2, 50, 50);		
+		super(320, 240, MenuState.class, 2, 50, 50, false, 640, 480, FILL_Y);
 	}
 }

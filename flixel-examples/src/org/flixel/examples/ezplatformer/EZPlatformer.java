@@ -14,6 +14,6 @@ public class EZPlatformer extends FlxGame
 
 	public EZPlatformer()
 	{
-		super(320, 240, 640, 480, PlayState.class, 2);
+		super(320, 240, PlayState.class, 2);
 	}
 }

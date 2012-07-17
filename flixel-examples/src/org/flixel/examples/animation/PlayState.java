@@ -3,7 +3,6 @@ package org.flixel.examples.animation;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
-import org.flixel.FlxU;
 import org.flixel.event.AFlxSprite;
 
 /**

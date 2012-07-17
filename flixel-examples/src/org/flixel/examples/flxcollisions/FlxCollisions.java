@@ -13,6 +13,6 @@ public class FlxCollisions extends FlxGame
 {
 	public FlxCollisions()
 	{
-		super(320, 240, 640, 480, PlayState.class, 2, 40, 40);
+		super(320, 240, PlayState.class, 2, 40, 40);
 	}
 }
