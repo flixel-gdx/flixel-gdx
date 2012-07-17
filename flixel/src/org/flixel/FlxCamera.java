@@ -820,7 +820,7 @@ public class FlxCamera extends FlxBasic
 	public void setScale(float X, float Y)
 	{
 		Stage stage = FlxG.getStage();
-		glCamera.setToOrtho(true, stage.stageWidth/X, stage.stageHeight/Y);
+		glCamera.setToOrtho(true, (float)stage.stageWidth/X, (float)stage.stageHeight/Y);
 	}
 	
 	/**
@@ -841,7 +841,7 @@ public class FlxCamera extends FlxBasic
 		flashGfx.setProjectionMatrix(glCamera.combined);
 		flashGfx.begin(ShapeType.FilledRectangle);
 		flashGfx.setColor(FlxU.colorFromHex(Color));
-		flashGfx.filledRect(x, y, width * _zoom, height * _zoom);
+		flashGfx.filledRect(0, 0, width * _zoom, height * _zoom);
 		flashGfx.end();
 		
 		if (BlendAlpha)

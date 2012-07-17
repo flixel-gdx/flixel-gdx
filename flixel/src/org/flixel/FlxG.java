@@ -156,13 +156,13 @@ public class FlxG
 	/**
 	 * The width in pixels of the display surface.
 	 */
-	static public int resWidth; 
+	static public int screenWidth; 
 	/**
 	 * The height in pixels of the display surface.
 	 */
-	static public int resHeight;
-	static public float difWidth;
-	static public float difHeight;
+	static public int screenHeight;
+	static public float diffWidth;
+	static public float diffHeight;
 	/**
 	 * How many times the quad tree should divide the world on each axis.
 	 * Generally, sparse collisions can have fewer divisons,
@@ -280,7 +280,7 @@ public class FlxG
 	 */
 	public static void log(String tag, Object data)
 	{
-		if((_game != null)) // && (_game._debugger != null))
+		if((Gdx.app != null)) // && (_game._debugger != null))
 		{
 			if(data != null)
 				Gdx.app.log(tag, data.toString());
@@ -878,7 +878,7 @@ public class FlxG
 		useBufferLocking = false;
 		
 		plugins = new Array<FlxBasic>();
-//		addPlugin(new DebugPathDisplay());
+		addPlugin(new DebugPathDisplay());
 		addPlugin(new TimerManager());
 		
 		FlxG.mouse = new Mouse();
@@ -1034,6 +1034,9 @@ public class FlxG
 		
 		if(!checkBitmapCache(Key))
 		{
+			if (Width == 0 || Height == 0)
+				throw new RuntimeException("A bitmaps width and height must be greater than zero.");
+			
 			Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(Width), MathUtils.nextPowerOfTwo(Height), Format.RGBA8888);			
 			p.setColor(FlxU.colorFromHex(Color));
 			p.fill();
@@ -1354,7 +1357,6 @@ public class FlxG
 		resetCameras(null);
 	}
 	
-	
 	/**
 	 * All screens are filled with this color and gradually return to normal.
 	 * 
@@ -1365,7 +1367,10 @@ public class FlxG
 	 */
 	static public void flash(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
-		FlxG.camera.flash(Color,Duration,OnComplete,Force);
+		int i = 0;
+		int l = FlxG.cameras.size;
+		while(i < l)
+			FlxG.cameras.get(i++).flash(Color,Duration,OnComplete,Force);
 	}
 	
 	/**
@@ -1409,7 +1414,6 @@ public class FlxG
 		flash(0xFFFFFFFF, 1, null, false);
 	}
 	
-	
 	/**
 	 * The screen is gradually filled with this color.
 	 * 
@@ -1420,7 +1424,10 @@ public class FlxG
 	 */
 	static public void fade(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
-		FlxG.camera.fade(Color,Duration,OnComplete,Force);
+		int i = 0;
+		int l = FlxG.cameras.size;
+		while(i < l)
+			FlxG.cameras.get(i++).fade(Color,Duration,OnComplete,Force);
 	}
 	
 	/**
@@ -1432,7 +1439,7 @@ public class FlxG
 	 */
 	static public void fade(int Color, float Duration, AFlxCamera OnComplete)
 	{
-		FlxG.camera.fade(Color,Duration,OnComplete,false);
+		fade(Color,Duration,OnComplete,false);
 	}
 	
 	/**
@@ -1443,7 +1450,7 @@ public class FlxG
 	 */
 	static public void fade(int Color, float Duration)
 	{
-		FlxG.camera.fade(Color,Duration,null,false);
+		fade(Color,Duration,null,false);
 	}
 	
 	/**
@@ -1453,7 +1460,7 @@ public class FlxG
 	 */
 	static public void fade(int Color)
 	{
-		FlxG.camera.fade(Color,1,null,false);
+		fade(Color,1,null,false);
 	}
 	
 	/**
@@ -1461,9 +1468,8 @@ public class FlxG
 	 */
 	static public void fade()
 	{
-		FlxG.camera.fade(0xFF000000,1,null,false);
+		fade(0xFF000000,1,null,false);
 	}
-	
 	
 	/**
 	 * A simple screen-shake effect.
@@ -1476,7 +1482,10 @@ public class FlxG
 	 */
 	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete, boolean Force, int Direction)
 	{
-		FlxG.camera.shake(Intensity,Duration,OnComplete,Force,Direction);
+		int i = 0;
+		int l = FlxG.cameras.size;
+		while(i < l)
+			FlxG.cameras.get(i++).shake(Intensity,Duration,OnComplete,Force,Direction);
 	}
 	
 	/**
@@ -1489,7 +1498,7 @@ public class FlxG
 	 */
 	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
-		FlxG.camera.shake(Intensity,Duration,OnComplete,Force,0);
+		shake(Intensity,Duration,OnComplete,Force,0);
 	}
 	
 	/**
@@ -1501,7 +1510,7 @@ public class FlxG
 	 */
 	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete)
 	{
-		FlxG.camera.shake(Intensity,Duration,OnComplete,false,0);
+		shake(Intensity,Duration,OnComplete,false,0);
 	}
 	
 	/**
@@ -1512,7 +1521,7 @@ public class FlxG
 	 */
 	static public void shake(float Intensity, float Duration)
 	{
-		FlxG.camera.shake(Intensity,Duration,null,false,0);
+		shake(Intensity,Duration,null,false,0);
 	}
 	
 	/**
@@ -1522,7 +1531,7 @@ public class FlxG
 	 */
 	static public void shake(float Intensity)
 	{
-		FlxG.camera.shake(Intensity,0.5f,null,false,0);
+		shake(Intensity,0.5f,null,false,0);
 	}
 	
 	/**
@@ -1530,7 +1539,7 @@ public class FlxG
 	 */
 	static public void shake()
 	{
-		FlxG.camera.shake(0.05f,0.5f,null,false,0);
+		shake(0.05f,0.5f,null,false,0);
 	}
 	
 	
@@ -1552,13 +1561,11 @@ public class FlxG
 		int i = 0;
 		int l = FlxG.cameras.size;
 		while(i < l)
-			(FlxG.cameras.get(i++)).setColor(Color);
+			FlxG.cameras.get(i++).setColor(Color);
 	}
 	
-	
-	
 	/**
-	 *e Call this function to see if one <code>FlxObject</code> overlaps another.
+	 * Call this function to see if one <code>FlxObject</code> overlaps another.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a <code>FlxGroup</code> (or even bundling groups together!).
@@ -1934,15 +1941,15 @@ public class FlxG
 	 */
 	public static void drawPlugins()
 	{
-		//FlxBasic plugin;
+		FlxBasic plugin;
 		Array<FlxBasic> pluginList = FlxG.plugins;
 		int i = 0;
 		int l = pluginList.size;
 		while(i < l)
 		{
-			//plugin = pluginList.get(i++);
-			//if(plugin.exists && plugin.visible)
-				//plugin.draw();
+			plugin = pluginList.get(i++);
+			if(plugin.exists && plugin.visible)
+				plugin.draw(FlxG.camera);
 		}
 	}
 
