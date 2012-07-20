@@ -330,13 +330,15 @@ public class FlxText extends FlxSprite
 	@Override
 	protected void calcFrame()
 	{
-		TextBounds bounds = _textField.setWrappedText(_text, 0, 0, width, _alignment);
-		height = (int) FlxU.ceil(bounds.height);		
+		TextBounds bounds = _textField.setWrappedText(_text, 2, 3, width, _alignment);
+		// bounds.height is shorter than it should be, and I don't know why.
+		// After some trial and error, adding seven seems to be about right in most cases.
+		height = (int) FlxU.ceil(bounds.height + 7);		
 		setColor(_color);
 	}
 	
 	@Override
-	public void draw(FlxCamera Camera)
+	public void draw()
 	{			
 		if(_flickerTimer != 0)
 		{
@@ -348,15 +350,20 @@ public class FlxText extends FlxSprite
 		if (_textField.getBounds().width != width)
 			calcFrame();
 		
-		if(!onScreen(Camera))
+		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		
+		if (cameras != null && !cameras.contains(camera, true))
 			return;
 		
-		_point.x = x - (Camera.scroll.x * scrollFactor.x) - offset.x;
-		_point.y = y - (Camera.scroll.y * scrollFactor.y) - offset.y;
+		if(!onScreen(camera))
+			return;
+		
+		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
+		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
 		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
 		
-		_textField.setPosition(_point.x, _point.y + 2);
+		_textField.setPosition(_point.x, _point.y);
 		
 		if (angle != 0)
 		{
@@ -388,6 +395,6 @@ public class FlxText extends FlxSprite
 		_VISIBLECOUNT++;
 		
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-			drawDebug(Camera);
+			drawDebug(camera);
 	}
 }

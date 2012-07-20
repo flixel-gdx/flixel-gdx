@@ -25,7 +25,6 @@ public class DebugPathDisplay extends FlxBasic
 		active = false; //don't call update on this plugin
 	}
 	
-	
 	/**
 	 * Clean up memory.
 	 */
@@ -37,13 +36,12 @@ public class DebugPathDisplay extends FlxBasic
 		_paths = null;
 	}
 	
-	
 	/**
 	 * Called by <code>FlxG.drawPlugins()</code> after the game state has been drawn.
 	 * Cycles through cameras and calls <code>drawDebug()</code> on each one.
 	 */
 	@Override
-	public void draw(FlxCamera Camera)
+	public void draw()
 	{
 		if(!FlxG.visualDebug || ignoreDrawDebug)
 			return;	
@@ -55,7 +53,6 @@ public class DebugPathDisplay extends FlxBasic
 		while(i < l)
 			drawDebug(cameras.get(i++));
 	}
-	
 	
 	/**
 	 * Similar to <code>FlxObject</code>'s <code>drawDebug()</code> functionality,

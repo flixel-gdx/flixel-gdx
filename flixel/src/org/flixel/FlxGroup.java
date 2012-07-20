@@ -125,7 +125,7 @@ public class FlxGroup extends FlxBasic
 	 * @param camera 
 	 */
 	@Override
-	public void draw(FlxCamera Camera)
+	public void draw()
 	{
 		FlxBasic basic;
 		int i = 0;
@@ -133,7 +133,7 @@ public class FlxGroup extends FlxBasic
 		{
 			basic = members.get(i++);
 			if((basic != null) && basic.exists && basic.visible)
-				basic.draw(Camera);
+				basic.draw();
 		}
 	}
 	

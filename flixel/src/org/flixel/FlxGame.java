@@ -17,8 +17,9 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+
+import flash.display.Graphics;
 import flash.display.Stage;
 
 /**
@@ -33,11 +34,11 @@ import flash.display.Stage;
 public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubject
 {
 	/**
-	 * The stage is not scaled.
+	 * The game is not scaled. The stage will be set to the same dimensions as the display.
 	 */
 	public static final int NONE = 0;
 	/**
-	 * Scales the stage to fill the display in the x direction without stretching.
+	 * Scales the stage to fill the display in the x direction without stretching. 
 	 */
 	public static final int FILL_X = 1;
 	/**
@@ -45,7 +46,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	 */
 	public static final int FILL_Y = 2;
 	/**
-	 * Scales the game to fill the entire screen.
+	 * Stretches the game to fill the entire screen.
 	 */
 	public static final int STRETCH = 3;
 	
@@ -691,10 +692,14 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		for (FlxCamera camera : FlxG.cameras)
+		int i = 0;
+		int l = FlxG.cameras.size;
+		FlxCamera camera = null;
+		while (i < l)
 		{
-			FlxG.batch.begin();
-			
+			camera = FlxG.cameras.get(i);
+			FlxBasic._activeCamera = i;
+						
 			//Set the drawing area to the area of the camera
 			//TODO: Only calculate this when needed. 
 			gl.glScissor((int) ((float)camera.x / FlxG.diffWidth), FlxG.screenHeight - ((int) ((float) camera.y / FlxG.diffHeight) + (int) ((float) camera.height / FlxG.diffHeight * camera.getZoom())), (int) FlxU.ceil((float) camera.width / FlxG.diffWidth * camera.getZoom()), (int) FlxU.ceil((float) camera.height / FlxG.diffHeight * camera.getZoom()));
@@ -704,21 +709,29 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 			gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 			
-			FlxG.batch.setProjectionMatrix(camera.glCamera.combined);
+			FlxG.batch.begin();
+			FlxG.flashGfx.begin();
 			
-			_state.draw(camera);
+			FlxG.batch.setProjectionMatrix(camera.glCamera.combined);
+			FlxG.flashGfx.setProjectionMatrix(camera.glCamera.combined);
+			
+			_state.draw();
 			
 			FlxG.batch.end();
+			FlxG.flashGfx.end();
 			
 			camera.drawFX();
+			
+			i++;
 		}
 		
 		//Draw fps display TODO: needs to be deleted some day.
 		FlxG.batch.begin();
 		FlxG.batch.setProjectionMatrix(FlxG.camera.glCamera.combined);
 		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);
-		FlxG.drawPlugins();
 		FlxG.batch.end();
+		
+		FlxG.drawPlugins();
 		
 		if(_debuggerUp)
 		{
@@ -745,7 +758,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		gl.glEnable(GL10.GL_SCISSOR_TEST);
 		
 		FlxG.batch = new SpriteBatch();
-		FlxG.flashGfx = new ShapeRenderer();
+		FlxG.flashGfx = new Graphics();
 		
 		font = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
 		
@@ -764,7 +777,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	{		
 		FlxG.screenWidth = width;
 		FlxG.screenHeight = height;
-		_scaleMode = FILL_Y;
+		
 		switch(_scaleMode)
 		{
 			case NONE:
@@ -819,6 +832,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	{
 		FlxG.log("dispose");
 		FlxG._assetManager.dispose();
+		FlxG.flashGfx.dispose();
 	}
 
 	@Override

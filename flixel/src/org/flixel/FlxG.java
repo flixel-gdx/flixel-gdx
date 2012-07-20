@@ -31,13 +31,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ObjectMap.Entry;
-
+import flash.display.Graphics;
 import flash.display.Stage;
 
 /**
@@ -250,15 +247,10 @@ public class FlxG
 	 * Useful helper objects for doing Flash-specific rendering.
 	 * Primarily used for "debug visuals" like drawing bounding boxes directly to the screen buffer.
 	 */
-	static public ShapeRenderer flashGfx;
+	static public Graphics flashGfx;
 
 	/**
-	 * Internal storage system to prevent graphics from being used repeatedly in memory.
-	 */
-	static protected ObjectMap<String, TextureRegion> _cache;
-	
-	/**
-	 * Internal asset management system.
+	 * Internal storage system to prevent assets from being used repeatedly in memory.
 	 */
 	static AssetManager _assetManager;
 	
@@ -861,8 +853,6 @@ public class FlxG
 		FlxG.width = Width;
 		FlxG.height = Height;
 		
-		FlxG._cache = new ObjectMap<String, TextureRegion>();
-		
 		FlxG._assetManager = new AssetManager();
 		
 		FlxG.mute = false;
@@ -960,7 +950,7 @@ public class FlxG
 			cam = cams.get(i++);
 			if((cam == null) || !cam.exists || !cam.visible)
 				continue;
-			cam.drawFX();
+//			cam.drawFX();
 //			if(useBufferLocking)
 //				cam.buffer.unlock();
 		}
@@ -1190,19 +1180,7 @@ public class FlxG
 	 */
 	static public void clearBitmapCache()
 	{
-		for (Entry<String, TextureRegion> entry : _cache.entries())
-		{
-			Texture texture = entry.value.getTexture();
-			Pixmap pixmap = null;
-			if (!texture.getTextureData().disposePixmap())
-				pixmap = texture.getTextureData().consumePixmap();
-			if (pixmap != null)
-			{
-				pixmap.dispose();
-				texture.dispose();
-			}
-		}
-		_cache.clear();
+		
 	}
 	
 	/**
@@ -1941,6 +1919,8 @@ public class FlxG
 	 */
 	public static void drawPlugins()
 	{
+		FlxG.flashGfx.begin();
+		
 		FlxBasic plugin;
 		Array<FlxBasic> pluginList = FlxG.plugins;
 		int i = 0;
@@ -1949,8 +1929,10 @@ public class FlxG
 		{
 			plugin = pluginList.get(i++);
 			if(plugin.exists && plugin.visible)
-				plugin.draw(FlxG.camera);
+				plugin.draw();
 		}
+		
+		FlxG.flashGfx.end();
 	}
 
 	/**

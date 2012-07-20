@@ -837,7 +837,7 @@ public class FlxCamera extends FlxBasic
 			Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		}
 		
-		ShapeRenderer flashGfx = FlxG.flashGfx;
+		ShapeRenderer flashGfx = FlxG.flashGfx.getShapeRenderer();
 		flashGfx.setProjectionMatrix(glCamera.combined);
 		flashGfx.begin(ShapeType.FilledRectangle);
 		flashGfx.setColor(FlxU.colorFromHex(Color));

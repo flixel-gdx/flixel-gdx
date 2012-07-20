@@ -222,7 +222,7 @@ public class Perf
 	public void draw()
 	{
 		if(output != null)
-		{
+		{/*
 			ShapeRenderer flashGfx = FlxG.flashGfx;
 			flashGfx.setProjectionMatrix(FlxG.camera.glCamera.combined);
 			flashGfx.begin(ShapeType.FilledRectangle);
@@ -231,7 +231,7 @@ public class Perf
 			flashGfx.end();
 			FlxG.batch.begin();
 			_text.drawMultiLine(FlxG.batch, output, FlxG.width-55, 5);
-			FlxG.batch.end();
+			FlxG.batch.end();*/
 		}
 	}
 }

@@ -11,9 +11,10 @@ import com.badlogic.gdx.utils.Array;
  */
 public class FlxBasic
 {
-
 	static int _ACTIVECOUNT;
 	static int _VISIBLECOUNT;
+	
+	static public int _activeCamera;
 		
 	/**
 	 * IDs seem like they could be pretty useful, huh?
@@ -98,11 +99,16 @@ public class FlxBasic
 	 * Overriding <code>draw()</code> is rarely necessary, but can be very useful.
 	 * @param camera 
 	 */
-	public void draw(FlxCamera Camera)
+	public void draw()
 	{
+		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		
+		if (cameras != null && !cameras.contains(camera, true))
+			return;
+		
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-			drawDebug(Camera);
+			drawDebug(camera);
 	}
 	
 	/**
@@ -122,6 +128,7 @@ public class FlxBasic
 	 */
 	public void drawDebug()
 	{
+		drawDebug(null);
 	}
 	
 	/**

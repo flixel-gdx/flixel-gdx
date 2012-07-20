@@ -97,7 +97,7 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		{
 			label = new FlxText(0,0,80,Label);
 			label.setFormat(null,8,0x333333,"center");
-			labelOffset = new FlxPoint(-1,4);
+			labelOffset = new FlxPoint(-1,3);
 		}
 		loadGraphic(ImgDefaultButton,true,false,80,20);
 		
@@ -222,7 +222,6 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		}
 	}
 	
-	
 	/**
 	 * Basic button update logic
 	 */
@@ -312,14 +311,14 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 	 * Just draws the button graphic and text label to the screen.
 	 */
 	@Override
-	public void draw(FlxCamera Camera)
+	public void draw()
 	{
-		super.draw(Camera);
+		super.draw();
 		if(label != null)
 		{
 			label.scrollFactor = scrollFactor;
 			label.cameras = cameras;
-			label.draw(Camera);
+			label.draw();
 		}
 	}
 	

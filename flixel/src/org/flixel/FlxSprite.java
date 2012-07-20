@@ -617,7 +617,7 @@ public class FlxSprite extends FlxObject
 	 * Called by game loop, updates then blits or renders current frame of animation to the screen
 	 */
 	@Override
-	public void draw(FlxCamera Camera)
+	public void draw()
 	{
 		if(_flickerTimer != 0)
 		{
@@ -629,10 +629,15 @@ public class FlxSprite extends FlxObject
 		if(dirty)	//rarely 
 			calcFrame();
 		
-		if (!onScreen(Camera))
+		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		
+		if (cameras != null && !cameras.contains(camera, true))
 			return;
-		_point.x = x - (Camera.scroll.x * scrollFactor.x) - offset.x;
-		_point.y = y - (Camera.scroll.y * scrollFactor.y) - offset.y;
+		
+		if (!onScreen(camera))
+			return;
+		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
+		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
 		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
@@ -654,7 +659,7 @@ public class FlxSprite extends FlxObject
 		}
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-				drawDebug(Camera);		
+				drawDebug(camera);		
 	}
 	
 	/**
@@ -1136,9 +1141,6 @@ public class FlxSprite extends FlxObject
 	{
 		if(Camera == null)
 			Camera = FlxG.camera;
-		
-		if (cameras != null && !cameras.contains(Camera, true))
-			return false;
 		
 		getScreenXY(_point,Camera);
 		_point.x = _point.x - offset.x;
