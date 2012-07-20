@@ -105,9 +105,9 @@ public class PlayState extends FlxState
     }
                 
     @Override
-    public void draw(FlxCamera Camera)
+    public void draw()
     {
-        super.draw(Camera);
+        super.draw();
                         
         //To draw path
         if (_unit.path != null)

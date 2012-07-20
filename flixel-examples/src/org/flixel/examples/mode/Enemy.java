@@ -177,10 +177,10 @@ public class Enemy extends FlxSprite
 	//Even though we updated the jets after we updated the Enemy,
 	//we want to draw the jets below the Enemy, so we call _jets.draw() first.
 	@Override
-	public void draw(FlxCamera Camera)
+	public void draw()
 	{
-		_jets.draw(Camera);
-		super.draw(Camera);
+		_jets.draw();
+		super.draw();
 	}
 
 	//This function is called when player bullets hit the Enemy.

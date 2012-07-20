@@ -6,16 +6,14 @@ import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+
+import flash.display.Graphics;
 
 /**
  * This is a traditional tilemap display and collision class.
@@ -102,18 +100,6 @@ public class FlxTilemap extends FlxObject
 	protected Array<FlxTile> _tileObjects;
 	
 	/**
-	 * Internal, used for rendering the debug bounding box display.
-	 */
-	protected TextureRegion _debugTileNotSolid;
-	/**
-	 * Internal, used for rendering the debug bounding box display.
-	 */
-	protected TextureRegion _debugTilePartial;
-	/**
-	 * Internal, used for rendering the debug bounding box display.
-	 */
-	protected TextureRegion _debugTileSolid;
-	/**
 	 * Internal flag for checking to see if we need to refresh
 	 * the tilemap display to show or hide the bounding boxes.
 	 */
@@ -144,9 +130,6 @@ public class FlxTilemap extends FlxObject
 		_tileObjects = null;
 		immovable = true;
 		cameras = null;
-		_debugTileNotSolid = null;
-		_debugTilePartial = null;
-		_debugTileSolid = null;
 		_lastVisualDebug = FlxG.visualDebug;
 		_startingIndex = 0;
 	}
@@ -171,9 +154,6 @@ public class FlxTilemap extends FlxObject
 		_buffers = null;
 		_data = null;
 		_regions = null;
-		_debugTileNotSolid = null;
-		_debugTilePartial = null;
-		_debugTileSolid = null;
 
 		super.destroy();
 	}
@@ -258,11 +238,6 @@ public class FlxTilemap extends FlxObject
 			_tileObjects.add(new FlxTile(this,i,_tileWidth,_tileHeight,(i >= DrawIndex),(i >= CollideIndex)?allowCollisions:NONE));
 			i++;
 		}
-
-		//create debug tiles for rendering bounding boxes on demand
-		_debugTileNotSolid = makeDebugTile(_debugTileNotSolid, FlxG.BLUE);
-		_debugTilePartial = makeDebugTile(_debugTilePartial, FlxG.PINK);
-		_debugTileSolid = makeDebugTile(_debugTileSolid, FlxG.GREEN);
 		
 		//Then go through and create the actual map
 		width = widthInTiles*_tileWidth;
@@ -376,31 +351,6 @@ public class FlxTilemap extends FlxObject
 	}
 	
 	/**
-	 * Internal function to clean up the map loading code.
-	 * Just generates a wireframe box the size of a tile with the specified color.
-	 */
-	protected TextureRegion makeDebugTile(TextureRegion DebugTile, int Color)
-	{
-		if (DebugTile != null)
-			DebugTile.getTexture().dispose();
-		else
-			DebugTile = new TextureRegion();
-		
-		Color c = FlxU.colorFromHex(Color);
-		c.a = 0.5f;
-		
-		Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(_tileWidth),MathUtils.nextPowerOfTwo(_tileHeight),Pixmap.Format.RGBA8888);
-		p.setColor(c);
-		p.drawRectangle(0, 0, _tileWidth, _tileHeight);
-		
-		DebugTile.setRegion(new Texture(new ManagedTextureData(p)));
-		DebugTile.flip(false, true);
-		//p.dispose();
-		
-		return DebugTile;
-	}
-	
-	/**
 	 * Main logic loop for tilemap is pretty simple,
 	 * just checks to see if visual debug got turned on.
 	 * If it did, the tilemap is flagged as dirty so it
@@ -454,8 +404,9 @@ public class FlxTilemap extends FlxObject
 		int row = 0;
 		int column;
 		int columnIndex;
-		FlxTile tile;		
-		TextureRegion debugTile;
+		FlxTile tile;
+		Graphics gfx = FlxG.flashGfx;
+		
 		while(row < screenRows)
 		{
 			columnIndex = rowIndex;
@@ -472,17 +423,19 @@ public class FlxTilemap extends FlxObject
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{
 						tile = _tileObjects.get(_data.get(columnIndex));
-						if(tile != null)
+						
+						if (tile != null)
 						{
-							if(tile.allowCollisions <= NONE)
-								debugTile = _debugTileNotSolid; //blue
-							else if(tile.allowCollisions != ANY)
-								debugTile = _debugTilePartial; //pink
+							int debugColor;
+							if (tile.allowCollisions <= NONE)
+								debugColor = FlxG.BLUE;
+							else if (tile.allowCollisions != ANY)
+								debugColor = FlxG.PINK;
 							else
-								debugTile = _debugTileSolid; //green
-
-							FlxG.batch.draw(debugTile, _flashPoint.x + _point.x, _flashPoint.y + _point.y);
-							//Buffer.addTile(debugTile, _flashPoint.x - _point.x, _flashPoint.y - _point.y);
+								debugColor = FlxG.GREEN;
+							
+							gfx.lineStyle(1f, debugColor, 0.5f);
+							gfx.drawRect(_flashPoint.x + _point.x, _flashPoint.y + _point.y, _tileWidth, _tileHeight);
 						}
 					}
 				}
@@ -504,10 +457,8 @@ public class FlxTilemap extends FlxObject
 	 * Draws the tilemap buffers to the cameras and handles flickering.
 	 */
 	@Override
-	public void draw(FlxCamera Camera)
+	public void draw()
 	{
-		//if (Camera != null)
-		//return;
 		if(_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -515,30 +466,35 @@ public class FlxTilemap extends FlxObject
 				return;
 		}
 		
+		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		
+		if (cameras != null && !cameras.contains(camera, true))
+			return;
+		
 		FlxTilemapBuffer buffer;
 		int i = 0;
 		int l = 1;//FlxG.cameras.size;
 		while(i < l)
 		{			
 			if(i >= _buffers.size)
-				_buffers.add(new FlxTilemapBuffer(_tileWidth,_tileHeight,widthInTiles,heightInTiles,Camera));
+				_buffers.add(new FlxTilemapBuffer(_tileWidth,_tileHeight,widthInTiles,heightInTiles,camera));
 			buffer = _buffers.get(i++);
 			if(!buffer.dirty)
 			{
-				_point.x = x - (int)(Camera.scroll.x*scrollFactor.x) + buffer.x; //copied from getScreenXY()
-				_point.y = y - (int)(Camera.scroll.y*scrollFactor.y) + buffer.y;
+				_point.x = x - (int)(camera.scroll.x*scrollFactor.x) + buffer.x; //copied from getScreenXY()
+				_point.y = y - (int)(camera.scroll.y*scrollFactor.y) + buffer.y;
 				buffer.dirty = true;//(_point.x > 0) || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
 			}
 			if(buffer.dirty)
 			{
-				drawTilemap(buffer,Camera);
+				drawTilemap(buffer,camera);
 				buffer.dirty = false;
 			}
-			_flashPoint.x = x - (int)(Camera.scroll.x*scrollFactor.x) + buffer.x; //copied from getScreenXY()
-			_flashPoint.y = y - (int)(Camera.scroll.y*scrollFactor.y) + buffer.y;
+			_flashPoint.x = x - (int)(camera.scroll.x*scrollFactor.x) + buffer.x; //copied from getScreenXY()
+			_flashPoint.y = y - (int)(camera.scroll.y*scrollFactor.y) + buffer.y;
 			_flashPoint.x += (_flashPoint.x > 0)?0.0000001:-0.0000001;
 			_flashPoint.y += (_flashPoint.y > 0)?0.0000001:-0.0000001;
-			buffer.draw(Camera,_flashPoint);
+			buffer.draw(camera,_flashPoint);
 			_VISIBLECOUNT++;
 		}
 		

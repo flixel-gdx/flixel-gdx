@@ -2,12 +2,9 @@ package org.flixel;
 
 import org.flixel.event.AFlxObject;
 
-import com.badlogic.gdx.graphics.ManagedTextureData;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+
+import flash.display.Graphics;
 
 
 /**
@@ -262,8 +259,6 @@ public class FlxObject extends FlxBasic
 	 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
 	 */
 	protected boolean _pathRotate;
-	
-	protected TextureRegion _debug;
 		
 	/**
 	 * Instantiates a <code>FlxObject</code>.
@@ -378,9 +373,6 @@ public class FlxObject extends FlxBasic
 		if(path != null)
 			path.destroy();
 		path = null;
-		if(_debug != null)
-			_debug.getTexture().dispose();
-		_debug = null;
 	}
 	
 	
@@ -465,13 +457,18 @@ public class FlxObject extends FlxBasic
 	 * Rarely called, and in this case just increments the visible objects count and calls <code>drawDebug()</code> if necessary.
 	 */
 	@Override
-	public void draw(FlxCamera Camera)
+	public void draw()
 	{
-		if(!onScreen(Camera))
+		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		
+		if (cameras != null && !cameras.contains(camera, true))
+			return;
+		
+		if(!onScreen(camera))
 			return;
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-			drawDebug(Camera);
+			drawDebug(camera);
 	}
 	
 	
@@ -484,18 +481,19 @@ public class FlxObject extends FlxBasic
 	@Override
 	public void drawDebug(FlxCamera Camera)
 	{
-		if(width < 0 || height < 0)
-			return;
-		
 		if(Camera == null)
 			Camera = FlxG.camera;
 		
 		//get bounding box coordinates
-		float boundingBoxX = x - (Camera.scroll.x*scrollFactor.x); //copied from getScreenXY()
-		float boundingBoxY = y - (Camera.scroll.y*scrollFactor.y);
-		boundingBoxX = (float) (boundingBoxX + ((boundingBoxX > 0)?0.0000001:-0.0000001f));
-		boundingBoxY = (float) (boundingBoxY + ((boundingBoxY > 0)?0.0000001:-0.0000001f));
-
+		float boundingBoxX = x - (int)(Camera.scroll.x*scrollFactor.x); //copied from getScreenXY()
+		float boundingBoxY = y - (int)(Camera.scroll.y*scrollFactor.y);
+		boundingBoxX = (int) (boundingBoxX + ((boundingBoxX > 0)?0.0000001f:-0.0000001f));
+		boundingBoxY = (int) (boundingBoxY + ((boundingBoxY > 0)?0.0000001f:-0.0000001f));
+		int boundingBoxWidth = width;//(width != (int)width)?width:width-1;
+		int boundingBoxHeight = height;//(height != (int)height)?height:height-1;
+		
+		Graphics gfx = FlxG.flashGfx;
+		
 		int boundingBoxColor;
 		if(allowCollisions > 0)
 		{
@@ -509,18 +507,8 @@ public class FlxObject extends FlxBasic
 		else
 			boundingBoxColor = FlxG.BLUE;
 		
-		if(_debug == null)
-		{
-			Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(width), MathUtils.nextPowerOfTwo(height),Pixmap.Format.RGBA8888);
-			p.setColor(FlxU.colorFromHex(boundingBoxColor));			
-			p.drawRectangle(0, 0, width, height);
-			_debug = new TextureRegion(new Texture(new ManagedTextureData(p)));
-			_debug.flip(false, true);
-			//p.dispose();
-		}
-		
-		//draw graphics shape to SpriteBatch.
-		FlxG.batch.draw(_debug, boundingBoxX, boundingBoxY);
+		gfx.lineStyle(1.f, boundingBoxColor, 0.5f);
+		gfx.drawRect(boundingBoxX, boundingBoxY, boundingBoxWidth, boundingBoxHeight);
 	}
 	
 	/**
