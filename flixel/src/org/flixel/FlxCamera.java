@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import flash.display.Stage;
 
-
 /**
  * The camera class is used to display the game's visuals in the Flash player.
  * By default one camera is created automatically, that is the same size as the Flash player.
@@ -181,7 +180,6 @@ public class FlxCamera extends FlxBasic
 	 * Internal helper to store the angle of the camera.
 	 */
 	private float _angle;
-
 	
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
@@ -245,8 +243,7 @@ public class FlxCamera extends FlxBasic
 	{
 		this(X, Y, Width, Height, 0);
 	}
-	
-	
+		
 	@Override
 	public void destroy()
 	{
@@ -260,7 +257,6 @@ public class FlxCamera extends FlxBasic
 		_fxShakeComplete = null;
 		_fxShakeOffset = null;
 	}
-	
 	
 	/**
 	 * Updates the camera scroll as well as special effects like screen-shake or fades.
@@ -396,7 +392,6 @@ public class FlxCamera extends FlxBasic
 		follow(Target, STYLE_LOCKON);
 	}
 	
-	
 	/**
 	 * Move the camera focus to this location instantly.
 	 * 
@@ -482,7 +477,6 @@ public class FlxCamera extends FlxBasic
 		setBounds(0, 0, 0, 0, false);
 	}
 	
-	
 	/**
 	 * The screen is filled with this color and gradually returns to normal.
 	 * 
@@ -544,7 +538,6 @@ public class FlxCamera extends FlxBasic
 		flash(0xFFFFFFFF, 1, null, false);
 	}
 
-	
 	/**
 	 * The screen is gradually filled with this color.
 	 * 
@@ -605,8 +598,7 @@ public class FlxCamera extends FlxBasic
 	{
 		fade(0xFF000000, 1, null, false);
 	}
-	
-	
+		
 	/**
 	 * A simple screen-shake effect.
 	 * 
@@ -695,7 +687,6 @@ public class FlxCamera extends FlxBasic
 		glCamera.position.y = -y + _flashOffsetY;
 	}
 	
-	
 	/**
 	 * Copy the bounds, focus object, and deadzone info from an existing camera.
 	 * 
@@ -753,20 +744,16 @@ public class FlxCamera extends FlxBasic
 	 */
 	public float getAlpha()
 	{
-		return 1;//_flashBitmap.getColor().a;
+		return 1;
 	}
-	
 	
 	/**
 	 * @private
 	 */ 
 	public void setAlpha(float Alpha)
 	{		
-		//Color color = _flashBitmap.getColor();
-		//_flashBitmap.setColor(color.r, color.g, color.b, Alpha);
-		//_flashBitmap.setColor(0,0,0,0);
+		
 	}
-	
 	
 	/**
 	 * The angle of the camera display (in degrees).
@@ -801,7 +788,6 @@ public class FlxCamera extends FlxBasic
 	public void setColor(int Color)
 	{
 		bgColor = Color;
-//		_flashSprite.setColor(FlxU.colorFromHex(Color)); //TODO: the background color for the camera.
 	}
 	
 	/**
@@ -809,10 +795,11 @@ public class FlxCamera extends FlxBasic
 	 * Currently yields weird display results,
 	 * since cameras aren't nested in an extra display object yet.
 	 */
-//	public function getScale():FlxPoint
-//	{
-//		return _point.make(_flashSprite.scaleX,_flashSprite.scaleY);
-//	}
+	public FlxPoint getScale()
+	{
+		Stage stage = FlxG.getStage();
+		return _point.make(stage.stageWidth/glCamera.viewportWidth,stage.stageHeight/glCamera.viewportHeight);
+	}
 	
 	/**
 	 * @private
@@ -836,6 +823,8 @@ public class FlxCamera extends FlxBasic
 			Gdx.gl.glEnable(GL10.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		}
+		else
+			Gdx.gl.glDisable(GL10.GL_BLEND);
 		
 		ShapeRenderer flashGfx = FlxG.flashGfx.getShapeRenderer();
 		flashGfx.setProjectionMatrix(glCamera.combined);
@@ -843,9 +832,6 @@ public class FlxCamera extends FlxBasic
 		flashGfx.setColor(FlxU.colorFromHex(Color));
 		flashGfx.filledRect(0, 0, width * _zoom, height * _zoom);
 		flashGfx.end();
-		
-		if (BlendAlpha)
-			Gdx.gl.glDisable(GL10.GL_BLEND);
 	}
 	
 	/**
@@ -884,6 +870,5 @@ public class FlxCamera extends FlxBasic
 			glCamera.position.x = x + _flashOffsetX + _fxShakeOffset.x;
 			glCamera.position.y = y + _flashOffsetY + _fxShakeOffset.y;
 		}
-	}
-	
+	}	
 }

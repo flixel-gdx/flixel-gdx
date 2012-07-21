@@ -97,7 +97,6 @@ public class FlxBasic
 	/**
 	 * Override this function to control how the object is drawn.
 	 * Overriding <code>draw()</code> is rarely necessary, but can be very useful.
-	 * @param camera 
 	 */
 	public void draw()
 	{
@@ -140,7 +139,8 @@ public class FlxBasic
 	 */
 	public void kill()
 	{
-		alive = exists = false;
+		alive = false;
+		exists = false;
 	}
 	
 	/**
@@ -149,7 +149,8 @@ public class FlxBasic
 	 */
 	public void revive()
 	{
-		alive = exists = true;
+		alive = true;
+		exists = true;
 	}
 	
 	/**
@@ -157,6 +158,6 @@ public class FlxBasic
 	 */
 	public String toString()
 	{
-		return FlxU.getClassName(this.getClass());
+		return FlxU.getClassName(this,true);
 	}
 }

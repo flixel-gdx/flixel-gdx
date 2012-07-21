@@ -84,7 +84,7 @@ public class PlayState extends FlxState
 		dispenser.makeParticles(ImgGibs,100,16,true, 0.8f);
 		dispenser.start(false,10,0.035f);
 		add(dispenser);
-
+		
 		//Basic level structure
 		_level = new FlxTilemap();
 		_level.loadMap(FlxTilemap.imageToCSV(ImgMap,false,2),ImgTiles,0,0,FlxTilemap.ALT);

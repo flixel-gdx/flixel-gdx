@@ -629,16 +629,22 @@ public class FlxU
 	 * 
 	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
 	 */
-	static public String getClassName(Class<?> Obj)
+	static public String getClassName(Object Obj, boolean Simple)
 	{	
-		String s = Obj.getName();
-		if(s.lastIndexOf('.') > 0)
-		{
-			s = s.substring(s.lastIndexOf('.') + 1);
-		}
-		return s;
+		return Simple ? Obj.getClass().getSimpleName() : Obj.getClass().getName();
 	}
 	
+	/**
+	 * Get the <code>String</code> name of any <code>Object</code>.
+	 * 
+	 * @param	Obj		The <code>Object</code> object in question.
+	 * 
+	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
+	 */
+	static public String getClassName(Object Obj)
+	{
+		return getClassName(Obj, false);
+	}
 	
 	/**
 	 * Check to see if two objects have the same class name.

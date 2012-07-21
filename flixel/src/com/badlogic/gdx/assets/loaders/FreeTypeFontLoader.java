@@ -48,9 +48,9 @@ public class FreeTypeFontLoader extends SynchronousAssetLoader<BitmapFont, FreeT
 	
 	static public class FreeTypeFontParameter extends AssetLoaderParameters<BitmapFont> 
 	{
-        /** whether to generate mipmaps **/
+        /** Which characters to create in the font **/
         public String characters = null;
-        /** The texture to put the {@link TextureData} in, optional. **/
+        /** Whether the font should be flipped on the y axis or not **/
         public boolean flip = false;
 	}
 }
