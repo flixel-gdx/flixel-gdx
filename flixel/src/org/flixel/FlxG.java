@@ -173,6 +173,10 @@ public class FlxG
 	 */
 	static public boolean visualDebug;
 	/**
+	 * Setting this to true will disable/skip stuff that isn't necessary for mobile platforms like Android. [BETA]
+	 */
+	static public boolean mobile;
+	/**
 	 * The global random number generator seed (for deterministic behavior in recordings and saves).
 	 */
 	static public float globalSeed;
@@ -199,7 +203,9 @@ public class FlxG
 	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
 	 */
 	static public Keyboard keys;
-	
+	/**
+	 * A reference to a <code>FlxSensor</code> object.	Important for input!
+	 */
 	static public Sensor sensor;
 	
 	/**
@@ -267,17 +273,17 @@ public class FlxG
 	/**
 	 * Log data to the debugger.
 	 * 
-	 * @param	tag		Handy if you want to use filter in LogCat.
-	 * @param	data	The message you want to log to the console.
+	 * @param	Tag		Handy if you want to use filter in LogCat.
+	 * @param	Data	The message you want to log to the console.
 	 */
-	public static void log(String tag, Object data)
+	public static void log(String Tag, Object Data)
 	{
-		if((Gdx.app != null)) // && (_game._debugger != null))
+		if((Gdx.app != null)/* && (_game._debugger != null)*/)
 		{
-			if(data != null)
-				Gdx.app.log(tag, data.toString());
+			if(Data != null)
+				Gdx.app.log(Tag, Data.toString());
 			else
-				Gdx.app.log(tag, "null");
+				Gdx.app.log(Tag, "null");
 		}
 	}
 	
@@ -301,8 +307,8 @@ public class FlxG
 	 */
 	static public void watch(Object AnyObject,String VariableName,String DisplayName)
 	{
-		//if((_game != null) && (_game._debugger != null))
-			//_game._debugger.watch.add(AnyObject,VariableName,DisplayName);
+		if((_game != null) && (_game._debugger != null))
+			_game._debugger.watch.add(AnyObject,VariableName,DisplayName);
 	}
 	
 	/**
@@ -326,8 +332,8 @@ public class FlxG
 	 */
 	static public void unwatch(Object AnyObject,String VariableName)
 	{
-		//if((_game != null) && (_game._debugger != null))
-			//_game._debugger.watch.remove(AnyObject,VariableName);
+		if((_game != null) && (_game._debugger != null))
+			_game._debugger.watch.remove(AnyObject,VariableName);
 	}
 	
 	/**
@@ -348,16 +354,15 @@ public class FlxG
 	 */
 	static public float getFramerate()
 	{
-		return 1000/_game._step;
+		return 1000f/_game._step;
 	}
-	
 	
 	/**
 	 * @private
 	 */
 	static public void setFramerate(int Framerate)
 	{
-		_game._step = 1000/Framerate;
+		_game._step = (int) (1000f/Framerate);
 		if(_game._maxAccumulation < _game._step)
 				_game._maxAccumulation = (int) _game._step;
 	}
@@ -369,10 +374,7 @@ public class FlxG
 	 */
 	static public float getFlashFramerate()
 	{
-		//if(_game.root != null)
-			//return _game.stage.frameRate;
-		//else
-			return 0;
+		return _game._flashFramerate;
 	}
 	
 	/**
@@ -381,12 +383,11 @@ public class FlxG
 	static public void setFlashFramerate(int Framerate)
 	{
 		_game._flashFramerate = Framerate;
-		_game._maxAccumulation = 2000/_game._flashFramerate - 1;
+		_game._maxAccumulation = (int) (2000f/_game._flashFramerate - 1);
 		if(_game._maxAccumulation < _game._step)
 			_game._maxAccumulation = (int) _game._step;
 	}
 
-	
 	/**
 	 * Generates a random number.  Deterministic, meaning safe
 	 * to use if you want to record replays in random environments.
@@ -402,12 +403,11 @@ public class FlxG
 	 * Shuffles the entries in an array into a new random order.
 	 * <code>FlxG.shuffle()</code> is deterministic and safe for use with replays/recordings.
 	 * HOWEVER, <code>FlxU.shuffle()</code> is NOT deterministic and unsafe for use with replays/recordings.
-	 * @param <T>
 	 * 
-	 * @param	A				A Flash <code>Array</code> object containing...stuff.
+	 * @param	A				A libgdx <code>Array</code> object containing...stuff.
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * 
-	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
+	 * @return	The same libgdx <code>Array</code> object that you passed in in the first place.
 	 */
 	static public <T> Array<T> shuffle(Array<T> Objects,int HowManyTimes)
 	{
@@ -433,7 +433,7 @@ public class FlxG
 	 * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
 	 * HOWEVER, <code>FlxU.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
 	 * 
-	 * @param	Objects		A Flash array of objects.
+	 * @param	Objects		A libgdx array of objects.
 	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * 
@@ -458,7 +458,7 @@ public class FlxG
 	 * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
 	 * HOWEVER, <code>FlxU.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
 	 * 
-	 * @param	Objects		A Flash array of objects.
+	 * @param	Objects		A libgdx array of objects.
 	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
 	 * 
 	 * @return	The random object that was selected.
@@ -474,7 +474,7 @@ public class FlxG
 	 * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
 	 * HOWEVER, <code>FlxU.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
 	 * 
-	 * @param	Objects		A Flash array of objects.
+	 * @param	Objects		A libgdx array of objects.
 	 * 
 	 * @return	The random object that was selected.
 	 */
@@ -482,7 +482,6 @@ public class FlxG
 	{
 		return getRandom(Objects, 0, 0);
 	}
-	
 
 	/**
 	 * Load replay data from a string and play it back.
@@ -493,7 +492,7 @@ public class FlxG
 	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
 	 * @param	Callback	Optional parameter: if set, called when the replay finishes.  Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
 	 */
-	static public void loadReplay(String Data,FlxState State,String[] CancelKeys,float Timeout,AFlxReplay Callback)
+	static public void loadReplay(String Data,FlxState State,Array<String> CancelKeys,float Timeout,AFlxReplay Callback)
 	{
 		_game._replay.load(Data);
 		if(State == null)
@@ -514,7 +513,7 @@ public class FlxG
 	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
 	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
 	 */
-	static public void loadReplay(String Data,FlxState State,String[] CancelKeys,float Timeout)
+	static public void loadReplay(String Data,FlxState State,Array<String> CancelKeys,float Timeout)
 	{
 		loadReplay(Data, State, CancelKeys, Timeout, null);
 	}
@@ -526,7 +525,7 @@ public class FlxG
 	 * @param	State		Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
 	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
 	 */
-	static public void loadReplay(String Data,FlxState State,String[] CancelKeys)
+	static public void loadReplay(String Data,FlxState State,Array<String> CancelKeys)
 	{
 		loadReplay(Data, State, CancelKeys, 0, null);
 	}
@@ -581,8 +580,8 @@ public class FlxG
 	static public void stopReplay()
 	{
 		_game._replaying = false;
-		//if(_game._debugger != null)
-			//_game._debugger.vcr.stopped();
+		if(_game._debugger != null)
+			_game._debugger.vcr.stopped();
 		resetInput();
 	}
 	
@@ -618,8 +617,8 @@ public class FlxG
 	static public String stopRecording()
 	{
 		_game._recording = false;
-		//if(_game._debugger != null)
-			//_game._debugger.vcr.stopped();
+		if(_game._debugger != null)
+			_game._debugger.vcr.stopped();
 		return _game._replay.save();
 	}
 	
@@ -637,7 +636,6 @@ public class FlxG
 			FlxG.log(e.getMessage());
 		}
 	}
-	
 	
 	/**
 	 * Like hitting the reset button on a game console, this will re-launch the game as if it just started.
@@ -808,7 +806,6 @@ public class FlxG
 //			volumeHandler(FlxG.mute?0:_volume);
 	}
 	
-	
 	/**
 	 * Called by FlxGame on state changes to stop and destroy sounds.
 	 * 
@@ -904,7 +901,6 @@ public class FlxG
 			debugPathDisplay.clear();
 	}
 	
-	
 	/**
 	 * Called by the game object to update the keyboard and mouse input tracking objects.
 	 */
@@ -935,7 +931,6 @@ public class FlxG
 		}
 	}
 	
-	
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.
 	 */
@@ -955,7 +950,6 @@ public class FlxG
 //				cam.buffer.unlock();
 		}
 	}
-
 	
 	/**
 	 * Called by the game object to update the cameras and their tracking/special effects logic.
@@ -989,7 +983,7 @@ public class FlxG
 	 */
 	static public boolean checkBitmapCache(String Key)
 	{
-		return _assetManager.isLoaded(Key);//(_cache.get(Key) != null);
+		return _assetManager.isLoaded(Key);
 	}
 	
 	/**
@@ -1002,7 +996,7 @@ public class FlxG
 	 * @param Key		Force the cache to use a specific Key to index the <code>TextureRegion</code>.
 	 * 
 	 * @return The <code>TextureRegion</code> we just created.
-	 *///TODO: Bug: using this will hit the performance. The Texture won't be dupilcated, so how come?
+	 */
 	static public TextureRegion createBitmap(int Width, int Height, long Color, boolean Unique, String Key)
 	{		
 		if(Key == null)
@@ -1250,9 +1244,7 @@ public class FlxG
 	 */
 	static public Stage getStage()
 	{
-		//if(_game.root != null)
-			return _game.stage;
-		//return null;
+		return _game.stage;
 	}
 	
 	/**
@@ -1263,7 +1255,6 @@ public class FlxG
 		return _game._state;
 	}
 	
-	
 	/**
 	 * Switch from the current game state to the one specified here.
 	 */
@@ -1271,7 +1262,6 @@ public class FlxG
 	{
 		_game._requestedState = State;
 	}
-	
 	
 	/**
 	 * Add a new camera object to the game.
@@ -1287,7 +1277,6 @@ public class FlxG
 		return NewCamera;
 	}
 	
-	
 	/**
 	 * Remove a camera from the game.
 	 * 
@@ -1300,7 +1289,6 @@ public class FlxG
 		if(Destroy)
 			Camera.destroy();
 	}
-	
 	
 	/**
 	 * Dumps all the current cameras and resets to just one camera.
@@ -1520,7 +1508,6 @@ public class FlxG
 		shake(0.05f,0.5f,null,false,0);
 	}
 	
-	
 	/**
 	 * Get and set the background color of the game.
 	 * Get functionality is equivalent to FlxG.camera.bgColor.
@@ -1570,7 +1557,6 @@ public class FlxG
 		quadTree.destroy();
 		return result;
 	}
-	
 	
 	/**
 	 * Call this function to see if one <code>FlxObject</code> overlaps another.
@@ -1640,7 +1626,6 @@ public class FlxG
 	{
 		return overlap(null, null, null, null);
 	}
-	
 	
 	/**
 	 * Call this function to see if one <code>FlxObject</code> collides with another.
@@ -1751,7 +1736,6 @@ public class FlxG
 		});
 	}
 	
-	
 	/**
 	 * Adds a new plugin to the global plugin array.
 	 * 
@@ -1776,7 +1760,6 @@ public class FlxG
 		return Plugin;
 	}
 
-	
 	/**
 	 * Retrieves a plugin based on its class name from the global plugin array.
 	 * 
@@ -1797,8 +1780,7 @@ public class FlxG
 		}
 		return null;
 	}
-	
-	
+		
 	/**
 	 * Removes an instance of a plugin from the global plugin array.
 	 * 
@@ -1819,7 +1801,6 @@ public class FlxG
 		}
 		return Plugin;
 	}
-	
 	
 	/**
 	 * Removes an instance of a plugin from the global plugin array.
@@ -1857,7 +1838,6 @@ public class FlxG
 			sounds.update();
 	}
 	
-	
 	/**
 	 * Pause all sounds currently playing.
 	 */
@@ -1876,7 +1856,6 @@ public class FlxG
 		}
 	}
 
-
 	/**
 	 * Resume playing existing sounds.
 	 */
@@ -1894,7 +1873,6 @@ public class FlxG
 				sound.resume();
 		}
 	}
-
 	
 	/**
 	 * Used by the game object to call <code>update()</code> on all the plugins.
@@ -1912,7 +1890,6 @@ public class FlxG
 				plugin.update();
 		}
 	}
-
 
 	/**
 	 * Used by the game object to call <code>draw()</code> on all the plugins.

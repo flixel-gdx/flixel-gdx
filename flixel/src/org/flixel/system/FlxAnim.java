@@ -1,6 +1,5 @@
 package org.flixel.system;
 
-
 /**
  * Just a helper structure for the FlxSprite animation system.
  * 
@@ -41,8 +40,7 @@ public class FlxAnim
 			delay = 1.0f/FrameRate;
 		frames = Frames;
 		looped = Looped;
-	}
-	
+	}	
 	
 	/**
 	 * Constructor
@@ -55,7 +53,6 @@ public class FlxAnim
 	{
 		this(Name, Frames, FrameRate, true);
 	}
-	
 	
 	/**
 	 * Constructor

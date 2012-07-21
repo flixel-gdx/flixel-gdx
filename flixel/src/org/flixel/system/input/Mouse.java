@@ -559,6 +559,8 @@ public class Mouse extends FlxPoint
 			o.current = -1;
 		else 
 			o.current = 0;
+		
+		activePointers--;
 	}
 	
 	
@@ -586,6 +588,8 @@ public class Mouse extends FlxPoint
 			o.current = 1;
 		else
 			o.current = 2;
+		
+		activePointers++;
 	}
 	
 	/**

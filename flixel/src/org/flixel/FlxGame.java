@@ -5,7 +5,6 @@ import org.flixel.event.IMouseObserver;
 import org.flixel.event.IMouseSubject;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
-import org.flixel.system.FlxPause;
 import org.flixel.system.FlxReplay;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -80,6 +79,10 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
 	 */
 	Class<? extends FlxState> _iState;
+	/**
+	 * Whether the game object's basic initialization has finished yet.
+	 */
+	protected boolean _created;
 	
 	/**
 	 * Total number of milliseconds elapsed since game start.
@@ -90,6 +93,10 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	 * Counts down as we step through the game loop.
 	 */
 	protected int _accumulator;
+	/**
+	 * Whether the Flash player lost focus.
+	 */
+	protected boolean _lostFocus;
 	/**
 	 * Milliseconds of time per step of the game loop.  FlashEvent.g. 60 fps = 16ms.
 	 */	
@@ -111,6 +118,23 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	 * A flag for keeping track of whether a game reset was requested or not.
 	 */
 	boolean _requestedReset;
+	
+	/**
+	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
+	 */
+	protected TextureRegion _focus;
+	/**
+	 * The sound tray display container (see <code>createSoundTray()</code>).
+	 */
+	protected FlxSprite _soundTray;
+	/**
+	 * Helps us auto-hide the sound tray after a volume change.
+	 */
+	protected float _soundTrayTimer;
+	/**
+	 * Helps display the volume bars on the sound tray.
+	 */
+	protected Array<FlxSprite> _soundTrayBars;
 	/**
 	 * The debugger overlay object.
 	 */
@@ -144,7 +168,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	 * Array that keeps track of keypresses that can cancel a replay.
 	 * Handy for skipping cutscenes or getting out of attract modes!
 	 */
-	String[] _replayCancelKeys;
+	Array<String> _replayCancelKeys;
 	/**
 	 * Helps time out a replay if necessary.
 	 */
@@ -158,11 +182,19 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	 */
 	protected int _scaleMode;
 	
+	/**
+	 * Temporary font to display the fps.
+	 */
 	private BitmapFont font;
 		
-	private GL10 gl;
-	private FlxPause _pauseState;
+	/**
+	 * Handle to OpenGL.
+	 */
+	private GL10 _gl;
 	
+	/**
+	 * Represents the Flash stage.
+	 */
 	public Stage stage;
 		
 	private Array<IMouseObserver> observers;
@@ -182,6 +214,9 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor, int StageSizeX, int StageSizeY, int ScaleMode)
 	{
+		//super high priority init stuff (focus, mouse, etc)
+		_lostFocus = false;
+		
 		// basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		FlxG.setFramerate(GameFramerate);
@@ -202,7 +237,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		_accumulator = (int) _step;
 		_total = 0;
 		_state = null;
-		//useSoundHotKeys = true;
+		useSoundHotKeys = true;
 		useSystemCursor = UseSystemCursor;
 		//if(!useSystemCursor)
 			//Gdx.input.setCursorCatched(true);
@@ -220,6 +255,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		_iState = InitialState;
 		_requestedState = null;
 		_requestedReset = true;
+		_created = false;
 	}
 	
 	/**
@@ -311,32 +347,91 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	}
 	
 	/**
+	 * Makes the little volume tray slide out.
+	 * 
+	 * @param	Silent	Whether or not it should beep.
+	 */
+	void showSoundTray(boolean Silent)
+	{
+		// Can't load sounds from a classpath, so can't have default sounds.
+		//if(!Silent)
+			//FlxG.play(SndBeep);
+		_soundTrayTimer = 1;
+		_soundTray.y = 0;
+		_soundTray.visible = true;
+		int globalVolume = Math.round(FlxG.getVolume()*10);
+		if(FlxG.mute)
+			globalVolume = 0;
+		for (int i = 0; i < _soundTrayBars.size; i++)
+		{
+			if(i < globalVolume) _soundTrayBars.get(i).setAlpha(1);
+			else _soundTrayBars.get(i).setAlpha(0.5f);
+		}
+	}
+	
+	/**
+	 * Makes the little volume tray slide out.
+	 */
+	void showSoundTray()
+	{
+		showSoundTray(false);
+	}
+	
+	/**
 	 * Internal event handler for input and focus.
 	 * 
 	 * @param	KeyCode		A libgdx key code.
 	 */
 	@Override
 	public boolean keyUp(int KeyCode)
-	{
-		if(KeyCode == Keys.F2)
-			FlxG.visualDebug = !FlxG.visualDebug;
-		
-		/*if(_debuggerUp && _debugger.watch.editing)
-			return false;*/
-		
-		if((_debugger != null) && ((KeyCode == Keys.F3) || (KeyCode == Keys.BACKSLASH)))
+	{		
+		if (_debuggerUp && _debugger.watch.editing)
+			return false;
+		if (!FlxG.mobile)
 		{
-			_debugger.visible = !_debugger.visible;
-			_debuggerUp = _debugger.visible;
+			if((_debugger != null) && ((KeyCode == Keys.APOSTROPHE) || (KeyCode == Keys.BACKSLASH)))
+			{
+				_debugger.visible = !_debugger.visible;
+				_debuggerUp = _debugger.visible;
 			
-			/*if(_debugger.visible)
-				flash.ui.Mouse.show();
-			else if(!useSystemCursor)
-				flash.ui.Mouse.hide();*/
-			//_console.toggle();
-			return true;
+				/*if(_debugger.visible)
+					flash.ui.Mouse.show();
+				else if(!useSystemCursor)
+					flash.ui.Mouse.hide();*/
+				//_console.toggle();
+				return true;
+			}
+			if(useSoundHotKeys)
+			{
+				int c = KeyCode;
+				//String code = String.fromCharCode(KeyCode);
+				switch(c)
+				{
+					case Keys.NUM_0:
+					//case Keys.NUM_0:
+						FlxG.mute = !FlxG.mute;
+						//TODO: volumeHandler
+						//if(FlxG.volumeHandler != null)
+							//FlxG.volumeHandler(FlxG.mute?0:FlxG.volume);
+						showSoundTray();
+						return true;
+					case Keys.MINUS:
+					//case Keys.UNDERSCORE:
+						FlxG.mute = false;
+			    		FlxG.setVolume(FlxG.getVolume() - 0.1f);
+			    		showSoundTray();
+						return true;
+					case Keys.PLUS:
+					//case Keys.PLUS:
+						FlxG.mute = false;
+			    		FlxG.setVolume(FlxG.getVolume() + 0.1f);
+			    		showSoundTray();
+						return true;
+					default:
+						break;
+				}
+			}
 		}
-		
 		if(_replaying)
 			return true;
 		
@@ -352,25 +447,18 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	 */
 	@Override
 	public boolean keyDown(int KeyCode)
-	{
-		if(KeyCode == Keys.MENU || KeyCode == Keys.F1)
+	{		
+		if(_debuggerUp && _debugger.watch.editing)
+			return false;
+		if(_replaying && (_replayCancelKeys != null) && (_debugger == null) && /*(KeyCode != Keys.TILDE) && */(KeyCode != Keys.BACKSLASH))
 		{
-			if(!FlxG.paused)
-				onFocusLost();
-			else
-				onFocus();			
-		}
-		
-		//if(_debuggerUp && _debugger.watch.editing)
-			//return;
-		if(_replaying && (_replayCancelKeys != null) && (_debugger == null) /*&& (KeyCode != 192)*/ && (KeyCode != Keys.BACKSLASH))
-		{
+			//boolean cancel = false;
 			String replayCancelKey;
 			int i = 0;
-			int l = _replayCancelKeys.length;
+			int l = _replayCancelKeys.size;
 			while(i < l)
 			{
-				replayCancelKey = _replayCancelKeys[i++];
+				replayCancelKey = _replayCancelKeys.get(i++);
 				if((replayCancelKey == "ANY") || (FlxG.keys.getKeyCode(replayCancelKey) == KeyCode))
 				{
 					if(_replayCallback != null)
@@ -404,19 +492,19 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	{
 		if(_debuggerUp)
 		{
-			//if(_debugger.hasMouse)
-				//return;
-			//if(_debugger.watch.editing)
-				//_debugger.watch.submit();
+			if(_debugger.hasMouse)
+				return false;
+			if(_debugger.watch.editing)
+				_debugger.watch.submit();
 		}
 		if(_replaying && (_replayCancelKeys != null))
 		{
 			String replayCancelKey;
 			int i = 0;
-			int l = _replayCancelKeys.length;
+			int l = _replayCancelKeys.size;
 			while(i < l)
 			{
-				replayCancelKey = _replayCancelKeys[i++];
+				replayCancelKey = _replayCancelKeys.get(i++);
 				if((replayCancelKey == "MOUSE") || (replayCancelKey == "ANY"))
 				{
 					if(_replayCallback != null)
@@ -432,8 +520,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 			return true;
 		}
 		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
-		FlxG.mouse.activePointers++;
-		//notifyObserver();
+		
 		return true;
 	}
 
@@ -443,31 +530,10 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	@Override
 	public boolean touchUp(int X, int Y, int Pointer, int Button)
 	{
-		if(/*(_debuggerUp && _debugger.hasMouse) ||*/ _replaying)
+		if((_debuggerUp && _debugger.hasMouse) || _replaying)
 			return true;
 		FlxG.mouse.handleMouseUp(X, Y, Pointer, Button);
-		FlxG.mouse.activePointers--;
 		notifyObserver();
-		return true;
-	}
-
-	/**
-	 * Internal event handler for input and focus.
-	 */
-	@Override
-	public boolean touchDragged(int X, int Y, int Pointer)
-	{
-		//FlxG.mouse.handleMouseDrag(X, Y, Pointer);
-		//notifyObserver();
-		return true;
-	}
-
-	
-	@Override
-	public boolean touchMoved(int X, int Y)
-	{
-		//FlxG.mouse.handleMouseMove(X, Y);
-		//notifyObserver();
 		return true;
 	}
 
@@ -477,10 +543,46 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	@Override
 	public boolean scrolled(int Amount)
 	{
-		if(/*(_debuggerUp && _debugger.hasMouse) ||*/ _replaying)
-			return true;
+		if((_debuggerUp && _debugger.hasMouse) || _replaying)
+			return false;
 		FlxG.mouse.handleMouseWheel(Amount);
 		return true;
+	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 */
+	@Override
+	public boolean touchDragged(int X, int Y, int Pointer)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchMoved(int X, int Y)
+	{
+		return false;
+	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 */
+	@Override
+	public void resume()
+	{
+		FlxG.resetInput();
+		_lostFocus = /*_focus.visible =*/ false;
+		FlxG.resumeSounds();
+	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 */
+	@Override
+	public void pause()
+	{
+		_lostFocus = /*_focus.visible =*/ true;
+		FlxG.pauseSounds();
 	}
 
 	/**
@@ -492,36 +594,39 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		long mark = System.currentTimeMillis();
 		long elapsedMS = mark - _total;
 		_total = mark;
-		
-		/*if((_debugger != null) && _debugger.vcr.paused)
+		updateSoundTray(elapsedMS);
+		if (!_lostFocus)
 		{
-			//if(_debugger.vcr.stepRequested)
-			//{
-				//_debugger.vcr.stepRequested = false;
-				step(); //TODO: ahw bugger, needs VCR to get the correct frames for debug :(. Disabled and use the normal steps.
-			//}
-		}
-		else*/
-		{
-			_accumulator += elapsedMS;
-			if(_accumulator > _maxAccumulation)
-				_accumulator = _maxAccumulation;
-			while(_accumulator >= _step)
+			if((_debugger != null) && _debugger.vcr.paused)
 			{
-				step();
-				_accumulator = _accumulator - _step; 
+				if(_debugger.vcr.stepRequested)
+				{
+					_debugger.vcr.stepRequested = false;
+					step();
+				}
 			}
-		}
+			else
+			{
+				_accumulator += elapsedMS;
+				if(_accumulator > _maxAccumulation)
+					_accumulator = _maxAccumulation;
+				while(_accumulator >= _step)
+				{
+					step();
+					_accumulator = _accumulator - _step; 
+				}
+			}
 			
-		FlxBasic._VISIBLECOUNT = 0;
-		draw();
+			FlxBasic._VISIBLECOUNT = 0;
+			draw();
 			
-		if(_debuggerUp)
-		{
-			_debugger.perf.flash((int) elapsedMS);
-			_debugger.perf.visibleObjects(FlxBasic._VISIBLECOUNT);
-			_debugger.perf.update();
-			//_debugger.watch.update();
+			if(_debuggerUp)
+			{
+				_debugger.perf.flash((int) elapsedMS);
+				_debugger.perf.visibleObjects(FlxBasic._VISIBLECOUNT);
+				_debugger.perf.update();
+				_debugger.watch.update();
+			}
 		}
 	}
 	
@@ -539,8 +644,8 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		FlxG.clearBitmapCache();
 		
 		// Clear the debugger overlay's Watch window
-		//if(_debugger != null)
-			//_debugger.watch.removeAll();
+		if(_debugger != null)
+			_debugger.watch.removeAll();
 		
 		// Clear any timers left in the timer manager
 		TimerManager timerManager = FlxTimer.getManager();
@@ -549,15 +654,11 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		
 		//Destroy the old state (if there is an old state)
 		if(_state != null)
-		{
-			//_state.remove(_pauseState, true);
 			_state.destroy();
-		}
 		
 		//Finally assign and create the new state
 		_state = _requestedState;
 		_state.create();
-		_state.add(_pauseState);
 	}
 	
 	/**
@@ -593,7 +694,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 			_recording = true;
 			if(_debugger != null)
 			{
-				//_debugger.vcr.recording();
+				_debugger.vcr.recording();
 				FlxG.log("FLIXEL: starting new flixel gameplay record.");
 			}
 		}
@@ -602,8 +703,8 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 			_replayRequested = false;
 			_replay.rewind();
 			FlxG.globalSeed = _replay.seed;
-			//if(_debugger != null)
-				//_debugger.vcr.playing();
+			if(_debugger != null)
+				_debugger.vcr.playing();
 			_replaying = true;
 		}
 		
@@ -639,22 +740,55 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 					_replayCallback = null;
 				}
 			}
-			//if(_debugger != null)
-				//_debugger.vcr.updateRuntime(_step);
+			if(_debugger != null)
+				_debugger.vcr.updateRuntime(_step);
 		}
 		else
 			FlxG.updateInput();
 		if(_recording)
 		{
 			_replay.recordFrame();
-			//if(_debugger != null)
-				//_debugger.vcr.updateRuntime(_step);
+			if(_debugger != null)
+				_debugger.vcr.updateRuntime(_step);
 		}
-		
 		update();
 		FlxG.mouse.wheel = 0;
 		if(_debuggerUp)
 			_debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);
+	}
+	
+	/**
+	 * This function just updates the soundtray object.
+	 */
+	protected void updateSoundTray(float MS)
+	{
+		//animate stupid sound tray thing
+
+		if(_soundTray != null)
+		{
+			if(_soundTrayTimer > 0)
+				_soundTrayTimer -= MS/1000;
+			else if(_soundTray.y > -_soundTray.height)
+			{
+				_soundTray.y -= (MS/1000)*FlxG.height*2;
+				if(_soundTray.y <= -_soundTray.height)
+				{
+					_soundTray.visible = false;
+
+					//Save sound preferences
+					FlxSave soundPrefs = new FlxSave();
+					if(soundPrefs.bind("flixel"))
+					{
+						//TODO: a better solution than using a FlxPoint
+						if(soundPrefs.get("sound", FlxPoint.class) == null)
+							soundPrefs.put("sound", new FlxPoint());
+						soundPrefs.get("sound", FlxPoint.class).x = FlxG.mute ? 0 : 1;
+						soundPrefs.get("sound", FlxPoint.class).y = FlxG.getVolume();
+						soundPrefs.close();
+					}
+				}
+			}
+		}
 	}
 	
 	/**
@@ -664,18 +798,16 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	protected void update()
 	{
 		long mark = System.currentTimeMillis();
-		FlxG.elapsed = FlxG.timeScale*(_step/1000.f);
-				
-		if(FlxG.paused)
-		{
-			_pauseState.update();
-			return;
-		}
 		
+		FlxG.elapsed = FlxG.timeScale*(_step/1000.f);
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
 		_state.update();
 		FlxG.updateCameras();
+		
+		// TODO: temporary key for turning on debug, delete when FlxDebugger complete
+		if(FlxG.keys.justPressed(Keys.F2))
+			FlxG.visualDebug = !FlxG.visualDebug;
 		
 		if(_debuggerUp)
 			_debugger.perf.flixelUpdate((int)(System.currentTimeMillis()-mark));
@@ -688,10 +820,6 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	{
 		long mark = System.currentTimeMillis();
 		
-		//Clear the background to solid white
-		gl.glClearColor(1, 1, 1, 1);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
 		int i = 0;
 		int l = FlxG.cameras.size;
 		FlxCamera camera = null;
@@ -699,15 +827,18 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		{
 			camera = FlxG.cameras.get(i);
 			FlxBasic._activeCamera = i;
-						
-			//Set the drawing area to the area of the camera
-			//TODO: Only calculate this when needed. 
-			gl.glScissor((int) ((float)camera.x / FlxG.diffWidth), FlxG.screenHeight - ((int) ((float) camera.y / FlxG.diffHeight) + (int) ((float) camera.height / FlxG.diffHeight * camera.getZoom())), (int) FlxU.ceil((float) camera.width / FlxG.diffWidth * camera.getZoom()), (int) FlxU.ceil((float) camera.height / FlxG.diffHeight * camera.getZoom()));
 			
+			//Set the drawing area		
+			int scissorWidth = (int) FlxU.ceil(camera.width / FlxG.diffWidth * camera.getZoom());
+			int scissorHeight = (int) FlxU.ceil(camera.height / FlxG.diffHeight * camera.getZoom());
+			int scissorX = (int) (camera.x / FlxG.diffWidth);
+			int scissorY = (int) (FlxG.screenHeight - ((camera.y / FlxG.diffHeight) + scissorHeight));
+			_gl.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
+
 			//Clear the camera
 			float[] rgba = FlxU.getRGBA(camera.bgColor);
-			gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
-			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			_gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+			_gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 			
 			FlxG.batch.begin();
 			FlxG.flashGfx.begin();
@@ -734,10 +865,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		FlxG.drawPlugins();
 		
 		if(_debuggerUp)
-		{
 			_debugger.perf.flixelDraw((int) (System.currentTimeMillis()-mark));
-			//_debugger.perf.draw();
-		}
 	}
 	
 	/**
@@ -746,30 +874,142 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	@Override
 	public void create()
 	{	
+		if (_created)
+			return;
+		
 		_total = System.currentTimeMillis();
 		
-		Gdx.input.setInputProcessor(this);
-		
-		_pauseState = new FlxPause();
-		
-		gl = Gdx.gl10;
+		//Set up the view window
+		_gl = Gdx.gl10;
 		//gl.glEnable(GL10.GL_CULL_FACE);
 		//gl.glCullFace(GL10.GL_BACK);
-		gl.glEnable(GL10.GL_SCISSOR_TEST);
-		
+		_gl.glEnable(GL10.GL_SCISSOR_TEST);
 		FlxG.batch = new SpriteBatch();
 		FlxG.flashGfx = new Graphics();
 		
-		font = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
+		//Add basic input event listeners and mouse container
+		Gdx.input.setInputProcessor(this);		
 		
-		if(Gdx.app.getType() != ApplicationType.Android)
+		//Detect whether on not we're running on a mobile
+		FlxG.mobile = Gdx.app.getType() != ApplicationType.Desktop;
+		
+		//Let mobile devs opt out of unnecessary overlays.
+		if(!FlxG.mobile)
 		{
 			//Debugger overlay
 			if(FlxG.debug || forceDebugger)
 			{
-				_debugger = new FlxDebugger();
-			}			
+				_debugger = new FlxDebugger(FlxG.width*FlxCamera.defaultZoom,FlxG.height*FlxCamera.defaultZoom);
+				//addChild(_debugger);
+			}
+
+			//Volume display tab
+			createSoundTray();
+			
+			//Focus gained/lost monitoring
+			createFocusScreen();
 		}
+		
+		_created = true;
+		
+		font = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
+	}
+	
+	/**
+	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
+	 */
+	protected void createSoundTray()
+	{
+		//_soundTray.visible = false;
+		//_soundTray.scaleX = 2;
+		//_soundTray.scaleY = 2;
+		//var tmp:Bitmap = new Bitmap(new BitmapData(80,30,true,0x7F000000));
+		//_soundTray.x = (FlxG.width/2)*FlxCamera.defaultZoom-(tmp.width/2)*_soundTray.scaleX;
+		//_soundTray.addChild(tmp);
+
+		//var text:TextField = new TextField();
+		//text.width = tmp.width;
+		//text.height = tmp.height;
+		//text.multiline = true;
+		//text.wordWrap = true;
+		//text.selectable = false;
+		//text.embedFonts = true;
+		//text.antiAliasType = AntiAliasType.NORMAL;
+		//text.gridFitType = GridFitType.PIXEL;
+		//text.defaultTextFormat = new TextFormat("system",8,0xffffff,null,null,null,null,null,"center");;
+		//_soundTray.addChild(text);
+		//text.text = "VOLUME";
+		//text.y = 16;
+
+		//var bx:uint = 10;
+		//var by:uint = 14;
+		//_soundTrayBars = new Array();
+		//var i:uint = 0;
+		//while(i < 10)
+		//{
+			//tmp = new Bitmap(new BitmapData(4,++i,false,0xffffff));
+			//tmp.x = bx;
+			//tmp.y = by;
+			//_soundTrayBars.push(_soundTray.addChild(tmp));
+			//bx += 6;
+			//by--;
+		//}
+
+		//_soundTray.y = -_soundTray.height;
+		//_soundTray.visible = false;
+		//addChild(_soundTray);
+
+		//load saved sound preferences for this game if they exist
+		FlxSave soundPrefs = new FlxSave();
+		if(soundPrefs.bind("flixel") && (soundPrefs.get("sound", FlxPoint.class) != null))
+		{
+			//if(soundPrefs.get("sound", FlxPoint.class).y != null)
+				FlxG.setVolume(soundPrefs.get("sound", FlxPoint.class).y);
+			//if(soundPrefs.data.sound.mute != null)
+				FlxG.mute = soundPrefs.get("sound", FlxPoint.class).x == 1 ? true : false;
+			soundPrefs.destroy();
+		}
+	}
+	
+	/**
+	 * Sets up the darkened overlay with the big white "play" button that appears when a flixel game loses focus.
+	 */
+	protected void createFocusScreen()
+	{
+		//var gfx:Graphics = _focus.graphics;
+		//var screenWidth:uint = FlxG.width*FlxCamera.defaultZoom;
+		//var screenHeight:uint = FlxG.height*FlxCamera.defaultZoom;
+
+		//draw transparent black backdrop
+		//gfx.moveTo(0,0);
+		//gfx.beginFill(0,0.5);
+		//gfx.lineTo(screenWidth,0);
+		//gfx.lineTo(screenWidth,screenHeight);
+		//gfx.lineTo(0,screenHeight);
+		//gfx.lineTo(0,0);
+		//gfx.endFill();
+
+		//draw white arrow
+		//var halfWidth:uint = screenWidth/2;
+		//var halfHeight:uint = screenHeight/2;
+		//var helper:uint = FlxU.min(halfWidth,halfHeight)/3;
+		//gfx.moveTo(halfWidth-helper,halfHeight-helper);
+		//gfx.beginFill(0xffffff,0.65);
+		//gfx.lineTo(halfWidth+helper,halfHeight);
+		//gfx.lineTo(halfWidth-helper,halfHeight+helper);
+		//gfx.lineTo(halfWidth-helper,halfHeight-helper);
+		//gfx.endFill();
+
+		//var logo:Bitmap = new ImgLogo();
+		//logo.scaleX = int(helper/10);
+		//if(logo.scaleX < 1)
+			//logo.scaleX = 1;
+		//logo.scaleY = logo.scaleX;
+		//logo.x -= logo.scaleX;
+		//logo.alpha = 0.35;
+		//_focus.addChild(logo);
+
+		//addChild(_focus);
 	}
 
 	@Override
@@ -799,34 +1039,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		FlxG.diffWidth = ((float)stage.stageWidth / FlxG.screenWidth);
 		FlxG.diffHeight = ((float)stage.stageHeight / FlxG.screenHeight);
 	}	
-	
-	protected void onFocusLost()
-	{
-		FlxG.paused = true;
-		_pauseState.visible = true;
-		FlxG.pauseSounds();
-	}
-	
-	protected void onFocus()
-	{
-		FlxG.paused = false;
-		_pauseState.visible = false;
-		FlxG.resumeSounds();
-	}
-	
-	@Override
-	public void pause()
-	{
-		FlxG.log("pause");
-		onFocusLost();
-	}
-
-	@Override
-	public void resume()
-	{
-		FlxG.log("resume");
-	}
-	
+		
 	@Override
 	public void dispose()
 	{
@@ -855,6 +1068,5 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		{
 			observers.get(i).updateListener();
 		}
-		
 	}
 }

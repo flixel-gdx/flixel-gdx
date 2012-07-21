@@ -14,7 +14,6 @@ package org.flixel;
  */
 public class FlxEmitter extends FlxGroup
 {
-	
 	/**
 	 * The X position of the top left corner of the emitter in world space.
 	 */
@@ -102,8 +101,7 @@ public class FlxEmitter extends FlxGroup
 	 * Internal point object, handy for reusing for memory mgmt purposes.
 	 */
 	protected FlxPoint _point;
-	
-	
+		
 	/**
 	 * Creates a new <code>FlxEmitter</code> object at a specific position.
 	 * Does NOT automatically generate or attach particles!
@@ -135,7 +133,6 @@ public class FlxEmitter extends FlxGroup
 		on = false;
 		_point = new FlxPoint();
 	}
-	
 	
 	/**
 	 * Creates a new <code>FlxEmitter</code> object at a specific position.
@@ -169,7 +166,6 @@ public class FlxEmitter extends FlxGroup
 		this(0, 0, 0);
 	}
 	
-	
 	/**
 	 * Clean up memory.
 	 */
@@ -183,7 +179,6 @@ public class FlxEmitter extends FlxGroup
 		_point = null;
 		super.destroy();
 	}
-	
 	
 	/**
 	 * This function generates a new array of particle sprites to attach to the emitter.
@@ -313,7 +308,6 @@ public class FlxEmitter extends FlxGroup
 		return makeParticles(Graphics, 50, 16, false, 0.8f);
 	}
 	
-	
 	/**
 	 * Called automatically by the game loop, decides when to launch particles and when to "die".
 	 */
@@ -354,7 +348,6 @@ public class FlxEmitter extends FlxGroup
 		super.update();
 	}
 	
-	
 	/**
 	 * Call this function to turn off all the particles and the emitter.
 	 */
@@ -364,7 +357,6 @@ public class FlxEmitter extends FlxGroup
 		on = false;
 		super.kill();
 	}
-	
 	
 	/**
 	 * Call this function to start emitting particles.
@@ -430,7 +422,6 @@ public class FlxEmitter extends FlxGroup
 		start(true, 0, 0.1f, 0);
 	}
 	
-	
 	/**
 	 * This function can be used both internally and externally to emit the next particle.
 	 */
@@ -465,7 +456,6 @@ public class FlxEmitter extends FlxGroup
 		particle.drag.y = particleDrag.y;
 		particle.onEmit();
 	}
-	
 	
 	/**
 	 * A more compact way of setting the width and height of the emitter.

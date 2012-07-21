@@ -10,6 +10,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * This class just wraps the libgdx <code>ShapeRenderer</code> to make it look more like
+ * the Flash graphics API. If you need access to the actual <code>ShapeRenderer</code>, use
+ * the <code>getShapeRenderer</code> method.
+ * @author Thomas Weston
+ */
 public class Graphics {
 	
 	static private ShapeRenderer _shapeRenderer;
@@ -19,7 +25,7 @@ public class Graphics {
 	public Graphics()
 	{
 		if (_shapeRenderer == null)
-			_shapeRenderer = new ShapeRenderer();
+			_shapeRenderer = new ShapeRenderer(10000);
 		else
 			throw new RuntimeException("An instance of Graphics already exists.");
 		
