@@ -140,7 +140,7 @@ public class Mouse extends FlxPoint
 	 */
 	public boolean getVisible()
 	{
-		return false;//_cursorContainer.visible;
+		return true;//_cursorContainer.visible;
 	}
 	
 	/**
