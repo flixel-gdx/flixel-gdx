@@ -1,17 +1,17 @@
 package org.flixel;
 
 import org.flixel.event.AFlxButton;
-import org.flixel.event.IMouseObserver;
 
-import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Gdx;
+import flash.events.Event;
+import flash.events.Listener;
+import flash.events.MouseEvent;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
  * 
  * @author	Ka Wing Chin
  */
-public class FlxButton extends FlxSprite implements IMouseObserver
+public class FlxButton extends FlxSprite
 {
 	 protected String ImgDefaultButton = "org/flixel/data/pack:button";
 	
@@ -162,8 +162,8 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 	@Override
 	public void destroy()
 	{		
-		if(FlxG._game != null)
-			FlxG._game.removeObserver(this);
+		if(FlxG.getStage() != null)
+			FlxG.getStage().removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		if(label != null)
 		{
 			label.destroy();
@@ -189,9 +189,9 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		super.preUpdate();		
 		if(!_initialized)
 		{
-			if(FlxG._game != null)
+			if(FlxG.getStage() != null)
 			{
-				FlxG._game.addObserver(this);
+				FlxG.getStage().addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				_initialized = true;
 			}
 		}
@@ -232,59 +232,62 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
-		if(cameras == null)
-			cameras = FlxG.cameras;
-		FlxCamera camera;
-		int i = 0;
-		int l = cameras.size;
-		int pointerId = 0;		
-		int	totalPointers = FlxG.mouse.activePointers + 1;
-		boolean offAll = true;
-		while(i < l)
+		if(FlxG.mouse.getVisible())
 		{
-			camera = cameras.get(i++);
-			while(pointerId < totalPointers)
+			if(cameras == null)
+				cameras = FlxG.cameras;
+			FlxCamera camera;
+			int i = 0;
+			int l = cameras.size;
+			int pointerId = 0;		
+			int	totalPointers = FlxG.mouse.activePointers + 1;
+			boolean offAll = true;
+			while(i < l)
 			{
-				FlxG.mouse.getWorldPosition(pointerId, camera, _point);
-				if(overlapsPoint(_point, true, camera))
+				camera = cameras.get(i++);
+				while(pointerId < totalPointers)
 				{
-					offAll = false;
-					if(FlxG.mouse.pressed(pointerId))
+					FlxG.mouse.getWorldPosition(pointerId, camera, _point);
+					if(overlapsPoint(_point, true, camera))
 					{
-						status = PRESSED;
-						if(FlxG.mouse.justPressed(pointerId))
+						offAll = false;
+						if(FlxG.mouse.pressed(pointerId))
 						{
-							if(callback != null)
+							status = PRESSED;
+							if(FlxG.mouse.justPressed(pointerId))
 							{
-								callback.onDown();
+								if(callback != null)
+								{
+									callback.onDown();
+								}
+								if(soundDown != null)
+									soundDown.play(true);
 							}
-							if(soundDown != null)
-								soundDown.play(true);
+						}
+					
+						if(status == NORMAL)
+						{
+							status = HIGHLIGHT;
+							if(callback != null)
+								callback.onOver();
+							if(soundOver != null)
+								soundOver.play(true);
 						}
 					}
-					
-					if(status == NORMAL)
-					{
-						status = HIGHLIGHT;
-						if(callback != null)
-							callback.onOver();
-						if(soundOver != null)
-							soundOver.play(true);
-					}
-				}
-				++pointerId;
-			}			
-		}
-		if(offAll)
-		{
-			if(status != NORMAL)
-			{
-				if(callback != null)
-					callback.onOut();
-				if(soundOut != null)
-					soundOut.play(true);
+					++pointerId;
+				}			
 			}
-			status = NORMAL;
+			if(offAll)
+			{
+				if(status != NORMAL)
+				{
+					if(callback != null)
+						callback.onOut();
+					if(soundOut != null)
+						soundOut.play(true);
+				}
+				status = NORMAL;
+			}
 		}
 		
 		//Then if the label and/or the label offset exist,
@@ -301,7 +304,7 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		}
 
 		//Then pick the appropriate frame of animation
-		if((status == HIGHLIGHT) && (_onToggle || Gdx.app.getType() != ApplicationType.Desktop))
+		if((status == HIGHLIGHT) && (_onToggle || FlxG.mobile))
 			setFrame(NORMAL);
 		else
 			setFrame(status);
@@ -499,14 +502,20 @@ public class FlxButton extends FlxSprite implements IMouseObserver
 		_onToggle = On;
 	}
 
-	@Override
-	public void updateListener()
+	/**
+	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxU.openURL()</code>).
+	 */
+	Listener onMouseUp = new Listener()
 	{
-		if(!exists || !visible || !active || (status != PRESSED))
-			return;
-		if(callback != null)
-			callback.onUp();
-		if(soundUp != null)
-			soundUp.play(true);
-	}	
+		@Override
+		public void onEvent(Event e)
+		{
+			if(!exists || !visible || !active || (status != PRESSED))
+				return;
+			if(callback != null)
+				callback.onUp();
+			if(soundUp != null)
+				soundUp.play(true);
+		}
+	};
 }

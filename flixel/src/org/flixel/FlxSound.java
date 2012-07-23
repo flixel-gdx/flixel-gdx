@@ -181,11 +181,11 @@ public class FlxSound extends FlxBasic
 	{
 		kill();
 		
-		if (_sound != null && FlxG._assetManager.containsAsset(_sound))
-			FlxG._assetManager.unload(FlxG._assetManager.getAssetFileName(_sound));
+		//if (_sound != null && FlxG._assetManager.containsAsset(_sound))
+			//FlxG._assetManager.unload(FlxG._assetManager.getAssetFileName(_sound));
 		
-		if (_music != null && FlxG._assetManager.containsAsset(_music))
-			FlxG._assetManager.unload(FlxG._assetManager.getAssetFileName(_music));
+		//if (_music != null && FlxG._assetManager.containsAsset(_music))
+			//FlxG._assetManager.unload(FlxG._assetManager.getAssetFileName(_music));
 		
 		_sound = null;
 		_music = null;

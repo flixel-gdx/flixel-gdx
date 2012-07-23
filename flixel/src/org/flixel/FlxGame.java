@@ -1,8 +1,6 @@
 package org.flixel;
 
 import org.flixel.event.AFlxReplay;
-import org.flixel.event.IMouseObserver;
-import org.flixel.event.IMouseSubject;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxReplay;
@@ -20,6 +18,7 @@ import com.badlogic.gdx.utils.Array;
 
 import flash.display.Graphics;
 import flash.display.Stage;
+import flash.events.MouseEvent;
 
 /**
  * FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.
@@ -30,7 +29,7 @@ import flash.display.Stage;
  * @author	Ka Wing Chin
  * @author	Thomas Weston
  */
-public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubject
+public class FlxGame implements ApplicationListener, InputProcessor
 {
 	/**
 	 * The game is not scaled. The stage will be set to the same dimensions as the display.
@@ -197,7 +196,6 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 	 */
 	public Stage stage;
 		
-	private Array<IMouseObserver> observers;
 	/**
 	 * Instantiate a new game object.
 	 * 
@@ -221,7 +219,6 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		FlxG.setFramerate(GameFramerate);
 		FlxG.setFlashFramerate(FlashFramerate);
-		observers = new Array<IMouseObserver>();
 		
 		// if no stage size has been specified, set it to the game size
 		if (StageSizeX == 0 && StageSizeY == 0)
@@ -520,7 +517,6 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 			return true;
 		}
 		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
-		
 		return true;
 	}
 
@@ -533,7 +529,7 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		if((_debuggerUp && _debugger.hasMouse) || _replaying)
 			return true;
 		FlxG.mouse.handleMouseUp(X, Y, Pointer, Button);
-		notifyObserver();
+		stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, X, Y));
 		return true;
 	}
 
@@ -1046,27 +1042,5 @@ public class FlxGame implements ApplicationListener, InputProcessor, IMouseSubje
 		FlxG.log("dispose");
 		FlxG._assetManager.dispose();
 		FlxG.flashGfx.dispose();
-	}
-
-	@Override
-	public void addObserver(IMouseObserver o)
-	{
-		observers.add(o);
-	}
-
-	@Override
-	public void removeObserver(IMouseObserver o)
-	{
-		observers.removeValue(o, false);
-	}
-
-	@Override
-	public void notifyObserver()
-	{
-		int l = observers.size;
-		for(int i = 0; i < l; i++)
-		{
-			observers.get(i).updateListener();
-		}
 	}
 }
