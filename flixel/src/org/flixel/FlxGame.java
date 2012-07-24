@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-
 import flash.display.Graphics;
 import flash.display.Stage;
 import flash.events.MouseEvent;
@@ -185,11 +184,6 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 * Temporary font to display the fps.
 	 */
 	private BitmapFont font;
-		
-	/**
-	 * Handle to OpenGL.
-	 */
-	private GL10 _gl;
 	
 	/**
 	 * Represents the Flash stage.
@@ -407,9 +401,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 					case Keys.NUM_0:
 					//case Keys.NUM_0:
 						FlxG.mute = !FlxG.mute;
-						//TODO: volumeHandler
-						//if(FlxG.volumeHandler != null)
-							//FlxG.volumeHandler(FlxG.mute?0:FlxG.volume);
+						if(FlxG.volumeHandler != null)
+							FlxG.volumeHandler.callback(FlxG.mute?0:FlxG.getVolume());
 						showSoundTray();
 						return true;
 					case Keys.MINUS:
@@ -675,7 +668,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			}
 			catch (Exception e)
 			{
-				FlxG.log("FlxGame", e.getMessage());
+				throw new RuntimeException(e);
 			}
 			_replayTimer = 0;
 			_replayCancelKeys = null;
@@ -686,7 +679,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		if(_recordingRequested)
 		{
 			_recordingRequested = false;
-			_replay.create(FlxG.globalSeed);
+			_replay.create((float) FlxG.globalSeed);
 			_recording = true;
 			if(_debugger != null)
 			{
@@ -818,43 +811,20 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		
 		int i = 0;
 		int l = FlxG.cameras.size;
-		FlxCamera camera = null;
 		while (i < l)
 		{
-			camera = FlxG.cameras.get(i);
-			FlxBasic._activeCamera = i;
+			FlxG._activeCamera = FlxG.cameras.get(i);
 			
-			//Set the drawing area		
-			int scissorWidth = (int) FlxU.ceil(camera.width / FlxG.diffWidth * camera.getZoom());
-			int scissorHeight = (int) FlxU.ceil(camera.height / FlxG.diffHeight * camera.getZoom());
-			int scissorX = (int) (camera.x / FlxG.diffWidth);
-			int scissorY = (int) (FlxG.screenHeight - ((camera.y / FlxG.diffHeight) + scissorHeight));
-			_gl.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
-
-			//Clear the camera
-			float[] rgba = FlxU.getRGBA(camera.bgColor);
-			_gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
-			_gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-			
-			FlxG.batch.begin();
-			FlxG.flashGfx.begin();
-			
-			FlxG.batch.setProjectionMatrix(camera.glCamera.combined);
-			FlxG.flashGfx.setProjectionMatrix(camera.glCamera.combined);
-			
+			FlxG.lockCameras();
 			_state.draw();
-			
-			FlxG.batch.end();
-			FlxG.flashGfx.end();
-			
-			camera.drawFX();
+			FlxG.unlockCameras();
 			
 			i++;
 		}
 		
 		//Draw fps display TODO: needs to be deleted some day.
 		FlxG.batch.begin();
-		FlxG.batch.setProjectionMatrix(FlxG.camera.glCamera.combined);
+		FlxG.batch.setProjectionMatrix(FlxG.camera._glCamera.combined);
 		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);
 		FlxG.batch.end();
 		
@@ -876,10 +846,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_total = System.currentTimeMillis();
 		
 		//Set up the view window
-		_gl = Gdx.gl10;
+		FlxG._gl = Gdx.gl10;
 		//gl.glEnable(GL10.GL_CULL_FACE);
 		//gl.glCullFace(GL10.GL_BACK);
-		_gl.glEnable(GL10.GL_SCISSOR_TEST);
+		FlxG._gl.glEnable(GL10.GL_SCISSOR_TEST);
 		FlxG.batch = new SpriteBatch();
 		FlxG.flashGfx = new Graphics();
 		

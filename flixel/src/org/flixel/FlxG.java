@@ -4,6 +4,7 @@ import org.flixel.event.AFlxCamera;
 import org.flixel.event.AFlxG;
 import org.flixel.event.AFlxObject;
 import org.flixel.event.AFlxReplay;
+import org.flixel.event.AFlxVolume;
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxQuadTree;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -151,6 +153,13 @@ public class FlxG
 	 */
 	static public FlxRect worldBounds;
 	/**
+	 * How many times the quad tree should divide the world on each axis.
+	 * Generally, sparse collisions can have fewer divisons,
+	 * while denser collision activity usually profits from more.
+	 * Default value is 6.
+	 */
+	static public int worldDivisions;
+	/**
 	 * The width in pixels of the display surface.
 	 */
 	static public int screenWidth; 
@@ -158,15 +167,14 @@ public class FlxG
 	 * The height in pixels of the display surface.
 	 */
 	static public int screenHeight;
-	static public float diffWidth;
-	static public float diffHeight;
 	/**
-	 * How many times the quad tree should divide the world on each axis.
-	 * Generally, sparse collisions can have fewer divisons,
-	 * while denser collision activity usually profits from more.
-	 * Default value is 6.
+	 * The stage width divided by the screen width.
 	 */
-	static public int worldDivisions;
+	static public float diffWidth;
+	/**
+	 * The stage height divided by the screen height.
+	 */
+	static public float diffHeight;
 	/**
 	 * Whether to show visual debug displays or not.
 	 * Default = false.
@@ -179,7 +187,7 @@ public class FlxG
 	/**
 	 * The global random number generator seed (for deterministic behavior in recordings and saves).
 	 */
-	static public float globalSeed;
+	static public double globalSeed;
 	/**
 	 * <code>FlxG.levels</code> and <code>FlxG.scores</code> are generic
 	 * global variables that can be used for various cross-state stuff.
@@ -247,7 +255,13 @@ public class FlxG
 	 * By default flixel uses a couple of plugins:
 	 * DebugPathDisplay, and TimerManager.
 	 */
-	 static public Array<FlxBasic> plugins;
+	static public Array<FlxBasic> plugins;
+	 
+	 /**
+	  * Set this hook to get a callback whenever the volume changes.
+	  * Function should take the form <code>myVolumeHandler(Volume:Number)</code>.
+	  */
+	static public AFlxVolume volumeHandler;
 	 
 	/**
 	 * Useful helper objects for doing Flash-specific rendering.
@@ -265,6 +279,16 @@ public class FlxG
 	 */
 	static public SpriteBatch batch;
 	
+	/**
+	 * Internal reference to OpenGL.
+	 */
+	static GL10 _gl;
+	
+	/**
+	 * The camera currently being drawn.
+	 */
+	static FlxCamera _activeCamera;
+	
 	static public String getLibraryName()
 	{
 		return FlxG.LIBRARY_NAME + " v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION;
@@ -274,7 +298,7 @@ public class FlxG
 	 * Log data to the debugger.
 	 * 
 	 * @param	Tag		Handy if you want to use filter in LogCat.
-	 * @param	Data	The message you want to log to the console.
+	 * @param	Data	Anything you want to log to the console.
 	 */
 	public static void log(String Tag, Object Data)
 	{
@@ -290,7 +314,7 @@ public class FlxG
 	/**
 	 * Log data to the debugger. The tag is "flixel".
 	 * 
-	 * @param	Data	The message you want to log to the console.
+	 * @param	Data	Anything you want to log to the console.
 	 */
 	public static void log(Object data)
 	{
@@ -396,7 +420,7 @@ public class FlxG
 	 */
 	static public float random()
 	{
-		return globalSeed = FlxU.srand(globalSeed);
+		return (float) (globalSeed = FlxU.srand(globalSeed));
 	}
 	
 	/**
@@ -633,7 +657,7 @@ public class FlxG
 		}
 		catch (Exception e) 
 		{
-			FlxG.log(e.getMessage());
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -783,6 +807,122 @@ public class FlxG
 	}
 	
 	/**
+	 * Creates a new sound object from an embedded <code>Class</code> object.
+	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
+	 * 
+	 * @param	EmbeddedSound	The sound you want to play.
+	 * @param	Volume			How loud to play it (0 to 1).
+	 * @param	Looped			Whether to loop this sound.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * 
+	 * @return	A <code>FlxSound</code> object.
+	 */
+	static public FlxSound play(String EmbeddedSound, float Volume, boolean Looped, boolean AutoDestroy)
+	{
+		return FlxG.loadSound(EmbeddedSound,Volume,Looped,AutoDestroy,true);
+	}
+
+	/**
+	 * Creates a new sound object from an embedded <code>Class</code> object.
+	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
+	 * 
+	 * @param	EmbeddedSound	The sound you want to play.
+	 * @param	Volume			How loud to play it (0 to 1).
+	 * @param	Looped			Whether to loop this sound.
+	 * 
+	 * @return	A <code>FlxSound</code> object.
+	 */
+	public static FlxSound play(String EmbeddedSound, float Volume, boolean Looped)
+	{
+		return play(EmbeddedSound,Volume,Looped,true);
+	}
+	
+	/**
+	 * Creates a new sound object from an embedded <code>Class</code> object.
+	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
+	 * 
+	 * @param	EmbeddedSound	The sound you want to play.
+	 * @param	Volume			How loud to play it (0 to 1).
+	 * 
+	 * @return	A <code>FlxSound</code> object.
+	 */
+	public static FlxSound play(String EmbeddedSound, float Volume)
+	{
+		return play(EmbeddedSound,Volume,false,true);
+	}
+
+	/**
+	 * Creates a new sound object from an embedded <code>Class</code> object.
+	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
+	 * 
+	 * @param	EmbeddedSound	The sound you want to play.
+	 * 
+	 * @return	A <code>FlxSound</code> object.
+	 */
+	public static FlxSound play(String EmbeddedSound)
+	{
+		return play(EmbeddedSound,1.0f,false,true);
+	}
+	
+	/**
+	 * Creates a new sound object from a URL.
+	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
+	 * 
+	 * @param	URL		The URL of the sound you want to play.
+	 * @param	Volume	How loud to play it (0 to 1).
+	 * @param	Looped	Whether or not to loop this sound.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * 
+	 * @return	A FlxSound object.
+	 */
+	static public FlxSound stream(String URL,float Volume,boolean Looped,boolean AutoDestroy)
+	{
+		return FlxG.loadSound(null,Volume,Looped,AutoDestroy,true,URL);
+	}
+	
+	/**
+	 * Creates a new sound object from a URL.
+	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
+	 * 
+	 * @param	URL		The URL of the sound you want to play.
+	 * @param	Volume	How loud to play it (0 to 1).
+	 * @param	Looped	Whether or not to loop this sound.
+	 * 
+	 * @return	A FlxSound object.
+	 */
+	static public FlxSound stream(String URL,float Volume,boolean Looped)
+	{
+		return stream(URL, Volume, Looped, true);
+	}
+	
+	/**
+	 * Creates a new sound object from a URL.
+	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
+	 * 
+	 * @param	URL		The URL of the sound you want to play.
+	 * @param	Volume	How loud to play it (0 to 1).
+	 * 
+	 * @return	A FlxSound object.
+	 */
+	static public FlxSound stream(String URL,float Volume)
+	{
+		return stream(URL, Volume, false, true);
+	}
+	
+	/**
+	 * Creates a new sound object from a URL.
+	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
+	 * 
+	 * @param	URL		The URL of the sound you want to play.
+	 * 
+	 * @return	A FlxSound object.
+	 */
+	static public FlxSound stream(String URL)
+	{
+		return stream(URL, 1.0f, false, true);
+	}
+	
+	/**
 	 * Set <code>volume</code> to a number between 0 and 1 to change the global volume.
 	 * 
 	 * @default 0.5
@@ -802,8 +942,8 @@ public class FlxG
 			_volume = 0;
 		else if(_volume > 1)
 			_volume = 1;
-//		if(volumeHandler != null)
-//			volumeHandler(FlxG.mute?0:_volume);
+		if(volumeHandler != null)
+			volumeHandler.callback(FlxG.mute?0:_volume);
 	}
 	
 	/**
@@ -825,9 +965,7 @@ public class FlxG
 		{
 			sound = (FlxSound) sounds.members.get(i++);
 			if((sound != null) && (ForceDestroy || !sound.survive))
-			{
 				sound.destroy();
-			}
 		}
 	}
 
@@ -842,134 +980,49 @@ public class FlxG
 	}
 	
 	/**
-	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
+	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
-	static void init(FlxGame Game, int Width, int Height, float Zoom)
+	public static void updateSounds()
 	{
-		FlxG._game = Game;
-		FlxG.width = Width;
-		FlxG.height = Height;
-		
-		FlxG._assetManager = new AssetManager();
-		
-		FlxG.mute = false;
-		FlxG._volume = 0.5f;
-		FlxG.sounds = new FlxGroup();
-		FlxG.music = null;
-		
-		FlxG.clearBitmapCache();
-		
-		FlxCamera.defaultZoom = Zoom;
-		FlxG.cameras = new Array<FlxCamera>();
-		FlxG.camera = null;
-		useBufferLocking = false;
-		
-		plugins = new Array<FlxBasic>();
-		addPlugin(new DebugPathDisplay());
-		addPlugin(new TimerManager());
-		
-		FlxG.mouse = new Mouse();
-		FlxG.keys = new Keyboard();
-		FlxG.sensor = new Sensor();
-		
-		FlxG.levels = new Array<Object>();
-		FlxG.scores = new IntArray();
-		FlxG.visualDebug = false;
+		if((music != null) && music.active)
+			music.update();
+		if((sounds != null) && sounds.active)
+			sounds.update();
 	}
 	
 	/**
-	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
+	 * Pause all sounds currently playing.
 	 */
-	static void reset()
+	public static void pauseSounds()
 	{
-		FlxG.clearBitmapCache();
-		FlxG.resetInput();
-		FlxG.destroySounds(true);
-		FlxG._assetManager.clear();
-		FlxG.levels.clear();
-		FlxG.scores.clear();
-		FlxG.level = 0;
-		FlxG.score = 0;
-		FlxG.paused = false;
-		FlxG.timeScale = 1.0f;
-		FlxG.elapsed = 0;
-		FlxG.globalSeed = (float) Math.random();
-		FlxG.worldBounds = new FlxRect(-10,-10,FlxG.width+20,FlxG.height+20);
-		FlxG.worldDivisions = 6;
-		DebugPathDisplay debugPathDisplay = (DebugPathDisplay) FlxG.getPlugin(DebugPathDisplay.class);
-		if(debugPathDisplay != null)
-			debugPathDisplay.clear();
-	}
-	
-	/**
-	 * Called by the game object to update the keyboard and mouse input tracking objects.
-	 */
-	public static void updateInput()
-	{
-		FlxG.keys.update();		
-		FlxG.mouse.update();
-		FlxG.sensor.update();
-	}
-	
-	/**
-	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.  
-	 */
-	public static void lockCameras()
-	{
-		FlxCamera cam;
-		Array<FlxCamera> cams = FlxG.cameras;
+		if((music != null) && music.exists && music.active)
+			music.pause();
 		int i = 0;
-		int l = cams.size;
+		FlxSound sound;
+		int l = sounds.length;
 		while(i < l)
-		{
-			cam = cams.get(i++);
-			if((cam != null) && cam.exists)
-			{
-				//if(cam.active)
-					//cam.draw();
-			}
+		{			
+			sound = (FlxSound) sounds.members.get(i++);
+			if((sound != null) && sound.exists && sound.active)
+				sound.pause();
 		}
 	}
-	
+
 	/**
-	 * Called by the game object to draw the special FX and unlock all the camera buffers.
+	 * Resume playing existing sounds.
 	 */
-	public static void unlockCameras()
+	public static void resumeSounds()
 	{
-		FlxCamera cam;
-		Array<FlxCamera> cams = FlxG.cameras;
+		if((music != null) && music.exists)
+			music.play();
 		int i = 0;
-		int l = cams.size;
+		FlxSound sound;
+		int l = sounds.length;
 		while(i < l)
 		{
-			cam = cams.get(i++);
-			if((cam == null) || !cam.exists || !cam.visible)
-				continue;
-//			cam.drawFX();
-//			if(useBufferLocking)
-//				cam.buffer.unlock();
-		}
-	}
-	
-	/**
-	 * Called by the game object to update the cameras and their tracking/special effects logic.
-	 */
-	public static void updateCameras()
-	{
-		FlxCamera cam;
-		Array<FlxCamera> cams = FlxG.cameras;
-		int i = 0;
-		int l = cams.size;
-		while(i < l)
-		{
-			cam = cams.get(i++);
-			if((cam != null) && cam.exists)
-			{
-				if(cam.active)
-					cam.update();
-				cam.glCamera.position.x = -cam.x + cam._flashOffsetX;
-				cam.glCamera.position.y = -cam.y + cam._flashOffsetY;
-			}
+			sound = (FlxSound) sounds.members.get(i++);
+			if((sound != null) && sound.exists)
+				sound.resume();
 		}
 	}
 	
@@ -1075,9 +1128,13 @@ public class FlxG
 	 */
 	static public TextureRegion addBitmap(String Graphic, boolean Reverse, boolean Unique, String Key)
 	{
-		if(Key == null)
+		if(Key != null)
 		{
-			Key = Graphic+(Reverse?"_REVERSE_":"");;
+			Unique = true;
+		}
+		else
+		{
+			Key = Graphic/*+(Reverse?"_REVERSE_":"")*/;
 			if(Unique && checkBitmapCache(Key))
 			{
 				int inc = 0;
@@ -1103,7 +1160,7 @@ public class FlxG
 		if (textureRegion == null)
 			throw new RuntimeException("Could not find region " + regionName + " in " + fileName);
 		
-		if (Unique)
+		if (Unique && !checkBitmapCache(Key))
 		{
 			TextureData textureData = textureRegion.getTexture().getTextureData();
 		
@@ -1127,6 +1184,11 @@ public class FlxG
 			parameter.textureData = new ManagedTextureData(newPixmap);
 			textureRegion = new TextureRegion(loadAsset(Key, Texture.class, parameter), 0, 0, rw, rh);
 		}
+		else if (Unique)
+		{
+			textureRegion = new TextureRegion(loadAsset(Key, Texture.class), 0, 0, textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+		}
+		
 		return textureRegion;
 	}
 	
@@ -1264,6 +1326,26 @@ public class FlxG
 	}
 	
 	/**
+	 * Change the way the debugger's windows are laid out.
+	 * 
+	 * @param	Layout		See the presets above (e.g. <code>DEBUGGER_MICRO</code>, etc).
+	 */
+	static public void setDebuggerLayout(int Layout)
+	{
+		if(_game._debugger != null)
+			_game._debugger.setLayout(Layout);
+	}
+
+	/**
+	 * Just resets the debugger windows to whatever the last selected layout was (<code>DEBUGGER_STANDARD</code> by default).
+	 */
+	static public void resetDebuggerLayout()
+	{
+		if(_game._debugger != null)
+			_game._debugger.resetLayout();
+	}
+	
+	/**
 	 * Add a new camera object to the game.
 	 * Handy for PiP, split-screen, etc.
 	 * 
@@ -1273,7 +1355,7 @@ public class FlxG
 	 */
 	static public FlxCamera addCamera(FlxCamera NewCamera)
 	{			
-		cameras.add(NewCamera);
+		FlxG.cameras.add(NewCamera);
 		return NewCamera;
 	}
 	
@@ -1285,9 +1367,20 @@ public class FlxG
 	 */
 	static public void removeCamera(FlxCamera Camera, boolean Destroy)
 	{
-		cameras.removeValue(Camera, true);
+		if(!cameras.removeValue(Camera, true))
+			FlxG.log("Error removing camera, not part of game.");
 		if(Destroy)
 			Camera.destroy();
+	}
+	
+	/**
+	 * Remove a camera from the game.
+	 * 
+	 * @param	Camera	The camera you want to remove.
+	 */
+	static public void removeCamera(FlxCamera Camera)
+	{
+		removeCamera(Camera, true);
 	}
 	
 	/**
@@ -1301,7 +1394,6 @@ public class FlxG
 		FlxCamera cam;
 		int i = 0;
 		int l = cameras.size;
-
 		while(i < l)
 		{
 			cam = FlxG.cameras.get(i++);
@@ -1331,7 +1423,7 @@ public class FlxG
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public void flash(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	static public void flash(long Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
 		int i = 0;
 		int l = FlxG.cameras.size;
@@ -1346,7 +1438,7 @@ public class FlxG
 	 * @param	Duration	How long it takes for the flash to fade.
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 */
-	static public void flash(int Color, float Duration, AFlxCamera OnComplete)
+	static public void flash(long Color, float Duration, AFlxCamera OnComplete)
 	{
 		flash(Color, Duration, OnComplete, false);
 	}
@@ -1357,7 +1449,7 @@ public class FlxG
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the flash to fade.
 	 */
-	static public void flash(int Color, float Duration)
+	static public void flash(long Color, float Duration)
 	{
 		flash(Color, Duration, null, false);
 	}
@@ -1367,7 +1459,7 @@ public class FlxG
 	 * 
 	 * @param	Color		The color you want to use.
 	 */
-	static public void flash(int Color)
+	static public void flash(long Color)
 	{
 		flash(Color, 1, null, false);
 	}
@@ -1388,7 +1480,7 @@ public class FlxG
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public void fade(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	static public void fade(long Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
 		int i = 0;
 		int l = FlxG.cameras.size;
@@ -1403,7 +1495,7 @@ public class FlxG
 	 * @param	Duration	How long it takes for the fade to finish.
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 */
-	static public void fade(int Color, float Duration, AFlxCamera OnComplete)
+	static public void fade(long Color, float Duration, AFlxCamera OnComplete)
 	{
 		fade(Color,Duration,OnComplete,false);
 	}
@@ -1414,7 +1506,7 @@ public class FlxG
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the fade to finish.
 	 */
-	static public void fade(int Color, float Duration)
+	static public void fade(long Color, float Duration)
 	{
 		fade(Color,Duration,null,false);
 	}
@@ -1424,7 +1516,7 @@ public class FlxG
 	 * 
 	 * @param	Color		The color you want to use.
 	 */
-	static public void fade(int Color)
+	static public void fade(long Color)
 	{
 		fade(Color,1,null,false);
 	}
@@ -1476,7 +1568,7 @@ public class FlxG
 	 */
 	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete)
 	{
-		shake(Intensity,Duration,OnComplete,false,0);
+		shake(Intensity,Duration,OnComplete,true,0);
 	}
 	
 	/**
@@ -1487,7 +1579,7 @@ public class FlxG
 	 */
 	static public void shake(float Intensity, float Duration)
 	{
-		shake(Intensity,Duration,null,false,0);
+		shake(Intensity,Duration,null,true,0);
 	}
 	
 	/**
@@ -1497,7 +1589,7 @@ public class FlxG
 	 */
 	static public void shake(float Intensity)
 	{
-		shake(Intensity,0.5f,null,false,0);
+		shake(Intensity,0.5f,null,true,0);
 	}
 	
 	/**
@@ -1505,7 +1597,7 @@ public class FlxG
 	 */
 	static public void shake()
 	{
-		shake(0.05f,0.5f,null,false,0);
+		shake(0.05f,0.5f,null,true,0);
 	}
 	
 	/**
@@ -1513,7 +1605,7 @@ public class FlxG
 	 * Get functionality is equivalent to FlxG.camera.bgColor.
 	 * Set functionality sets the background color of all the current cameras.
 	 */
-	static public int getBgColor()
+	static public long getBgColor()
 	{
 		if(FlxG.camera == null)
 			return 0xff000000;
@@ -1521,12 +1613,12 @@ public class FlxG
 			return FlxG.camera.bgColor;
 	}
 	
-	static public void setBgColor(int Color)
+	static public void setBgColor(long Color)
 	{
 		int i = 0;
 		int l = FlxG.cameras.size;
 		while(i < l)
-			FlxG.cameras.get(i++).setColor(Color);
+			FlxG.cameras.get(i++).bgColor = Color;
 	}
 	
 	/**
@@ -1548,7 +1640,7 @@ public class FlxG
 	{
 		if(ObjectOrGroup1 == null)
 			ObjectOrGroup1 = FlxG.getState();
-		if((ObjectOrGroup2 == ObjectOrGroup1) || ((ObjectOrGroup2 != null) && ObjectOrGroup2.equals(ObjectOrGroup1)))
+		if(ObjectOrGroup2 == ObjectOrGroup1)
 			ObjectOrGroup2 = null;
 		FlxQuadTree.divisions = FlxG.worldDivisions;
 		FlxQuadTree quadTree = new FlxQuadTree(FlxG.worldBounds.x,FlxG.worldBounds.y,FlxG.worldBounds.width,FlxG.worldBounds.height);
@@ -1563,7 +1655,7 @@ public class FlxG
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a <code>FlxGroup</code> (or even bundling groups together!).
-	 * 
+	 *    
 	 * <p>NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.</p>
 	 * 
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
@@ -1774,7 +1866,7 @@ public class FlxG
 		int l = pluginList.size;
 		while(i < l)
 		{
-			if(pluginList.get(i).getClass().equals(ClassType))
+			if(ClassType.isInstance(pluginList.get(i).getClass()))
 				return plugins.get(i);
 			i++;
 		}
@@ -1795,7 +1887,7 @@ public class FlxG
 		int i = pluginList.size-1;
 		while(i >= 0)
 		{
-			if(pluginList.get(i).equals(Plugin))
+			if(pluginList.get(i) == Plugin)
 				pluginList.removeIndex(i);
 			i--;
 		}
@@ -1817,7 +1909,7 @@ public class FlxG
 		int i = pluginList.size-1;
 		while(i >= 0)
 		{
-			if(pluginList.get(i).getClass().equals(ClassType))
+			if(ClassType.isInstance(pluginList.get(i)))
 			{
 				pluginList.removeIndex(i);
 				results = true;
@@ -1828,49 +1920,140 @@ public class FlxG
 	}
 	
 	/**
-	 * Called by the game loop to make sure the sounds get updated each frame.
+	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
-	public static void updateSounds()
+	static void init(FlxGame Game, int Width, int Height, float Zoom)
 	{
-		if((music != null) && music.active)
-			music.update();
-		if((sounds != null) && sounds.active)
-			sounds.update();
+		FlxG._game = Game;
+		FlxG.width = Width;
+		FlxG.height = Height;
+		
+		FlxG._assetManager = new AssetManager();
+		
+		FlxG.mute = false;
+		FlxG._volume = 0.5f;
+		FlxG.sounds = new FlxGroup();
+		FlxG.music = null;
+		FlxG.volumeHandler = null;
+		
+		FlxG.clearBitmapCache();
+		
+		FlxCamera.defaultZoom = Zoom;
+		FlxG.cameras = new Array<FlxCamera>();
+		FlxG.camera = null;
+		useBufferLocking = false;
+		
+		plugins = new Array<FlxBasic>();
+		addPlugin(new DebugPathDisplay());
+		addPlugin(new TimerManager());
+		
+		FlxG.mouse = new Mouse();
+		FlxG.keys = new Keyboard();
+		FlxG.sensor = new Sensor();
+		
+		FlxG.levels = new Array<Object>();
+		FlxG.scores = new IntArray();
+		FlxG.visualDebug = false;
 	}
 	
 	/**
-	 * Pause all sounds currently playing.
+	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
-	public static void pauseSounds()
+	static void reset()
 	{
-		if((music != null) && music.exists && music.active)
-			music.pause();
-		int i = 0;
-		FlxSound sound;
-		int l = sounds.length;
-		while(i < l)
-		{			
-			sound = (FlxSound) sounds.members.get(i++);
-			if((sound != null) && sound.exists && sound.active)
-				sound.pause();
-		}
+		FlxG.clearBitmapCache();
+		FlxG.resetInput();
+		FlxG.destroySounds(true);
+		FlxG._assetManager.clear();
+		FlxG.levels.clear();
+		FlxG.scores.clear();
+		FlxG.level = 0;
+		FlxG.score = 0;
+		FlxG.paused = false;
+		FlxG.timeScale = 1.0f;
+		FlxG.elapsed = 0;
+		FlxG.globalSeed = Math.random();
+		FlxG.worldBounds = new FlxRect(-10,-10,FlxG.width+20,FlxG.height+20);
+		FlxG.worldDivisions = 6;
+		DebugPathDisplay debugPathDisplay = (DebugPathDisplay) FlxG.getPlugin(DebugPathDisplay.class);
+		if(debugPathDisplay != null)
+			debugPathDisplay.clear();
 	}
-
+	
 	/**
-	 * Resume playing existing sounds.
+	 * Called by the game object to update the keyboard and mouse input tracking objects.
 	 */
-	public static void resumeSounds()
+	public static void updateInput()
 	{
-		if((music != null) && music.exists)
-			music.play();
+		FlxG.keys.update();
+		if(!_game._debuggerUp || !_game._debugger.hasMouse)
+			FlxG.mouse.update();
+		FlxG.sensor.update();
+	}
+	
+	/**
+	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.  
+	 */
+	public static void lockCameras()
+	{
+		FlxCamera camera = FlxG._activeCamera;
+		
+		//Set the drawing area		
+		int scissorWidth = (int) FlxU.ceil(camera.width / FlxG.diffWidth * camera.getZoom());
+		int scissorHeight = (int) FlxU.ceil(camera.height / FlxG.diffHeight * camera.getZoom());
+		int scissorX = (int) (camera.x / FlxG.diffWidth);
+		int scissorY = (int) (FlxG.screenHeight - ((camera.y / FlxG.diffHeight) + scissorHeight));
+		_gl.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
+
+		//Clear the camera
+		float[] rgba = FlxU.getRGBA(camera.bgColor);
+		_gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+		_gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
+		//Set tint
+		rgba = FlxU.getRGBA(camera.getColor());
+		FlxG.batch.setColor(rgba[0], rgba[1], rgba[2], 1.0f);
+		
+		FlxG.batch.setProjectionMatrix(camera._glCamera.combined);
+		FlxG.flashGfx.setProjectionMatrix(camera._glCamera.combined);
+		
+		//Get ready for drawing
+		FlxG.batch.begin();
+		FlxG.flashGfx.begin();
+	}
+	
+	/**
+	 * Called by the game object to draw the special FX and unlock all the camera buffers.
+	 */
+	public static void unlockCameras()
+	{
+		FlxCamera camera = FlxG._activeCamera;
+		
+		FlxG.batch.end();
+		FlxG.flashGfx.end();
+		
+		camera.drawFX();
+	}
+	
+	/**
+	 * Called by the game object to update the cameras and their tracking/special effects logic.
+	 */
+	public static void updateCameras()
+	{
+		FlxCamera cam;
+		Array<FlxCamera> cams = FlxG.cameras;
 		int i = 0;
-		FlxSound sound;
-		int l = sounds.length;
+		int l = cams.size;
 		while(i < l)
 		{
-			sound = (FlxSound) sounds.members.get(i++);
-			if((sound != null) && sound.exists)
-				sound.resume();
+			cam = cams.get(i++);
+			if((cam != null) && cam.exists)
+			{
+				if(cam.active)
+					cam.update();
+				cam._glCamera.position.x = -cam.x + cam._flashOffsetX;
+				cam._glCamera.position.y = -cam.y + cam._flashOffsetY;
+			}
 		}
 	}
 	
@@ -1911,64 +2094,6 @@ public class FlxG
 		
 		FlxG.flashGfx.end();
 	}
-
-	/**
-	 * Creates a new sound object from an embedded <code>Class</code> object.
-	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
-	 * 
-	 * @param	EmbeddedSound	The sound you want to play.
-	 * @param	Volume			How loud to play it (0 to 1).
-	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
-	 * 
-	 * @return	A <code>FlxSound</code> object.
-	 */
-	static public FlxSound play(String EmbeddedSound, float Volume, boolean Looped, boolean AutoDestroy)
-	{
-		return FlxG.loadSound(EmbeddedSound,Volume,Looped,AutoDestroy,true);
-	}
-
-	/**
-	 * Creates a new sound object from an embedded <code>Class</code> object.
-	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
-	 * 
-	 * @param	EmbeddedSound	The sound you want to play.
-	 * @param	Volume			How loud to play it (0 to 1).
-	 * @param	Looped			Whether to loop this sound.
-	 * 
-	 * @return	A <code>FlxSound</code> object.
-	 */
-	public static FlxSound play(String EmbeddedSound, float Volume, boolean Looped)
-	{
-		return FlxG.loadSound(EmbeddedSound,Volume,Looped,false,true);
-	}
-	
-	/**
-	 * Creates a new sound object from an embedded <code>Class</code> object.
-	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
-	 * 
-	 * @param	EmbeddedSound	The sound you want to play.
-	 * @param	Volume			How loud to play it (0 to 1).
-	 * 
-	 * @return	A <code>FlxSound</code> object.
-	 */
-	public static FlxSound play(String EmbeddedSound, float Volume)
-	{
-		return FlxG.loadSound(EmbeddedSound,Volume,false,false,true);
-	}
-
-	/**
-	 * Creates a new sound object from an embedded <code>Class</code> object.
-	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
-	 * 
-	 * @param	EmbeddedSound	The sound you want to play.
-	 * 
-	 * @return	A <code>FlxSound</code> object.
-	 */
-	public static FlxSound play(String EmbeddedSound)
-	{
-		return FlxG.loadSound(EmbeddedSound,1.0f,false,false,true);
-	}
 	
 	/**
 	 * Vibrates for the given amount of time. Note that you'll need the permission
@@ -2005,7 +2130,6 @@ public class FlxG
 	
 	/**
 	 * Stops the vibrator.
-	 * Or call directly Gdx.input.cancelVibrate().
 	 */
 	public static void stopVibrate()
 	{

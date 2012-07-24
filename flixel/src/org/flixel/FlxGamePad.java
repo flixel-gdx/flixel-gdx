@@ -145,7 +145,7 @@ public class FlxGamePad extends FlxGroup
 	 * @param Callback	The callback for the button.
 	 * @return			The button.
 	 */
-	public FlxButton createButton(float X, float Y, int Width, int Height, String Image, AFlxButton Callback)
+	public FlxButton createButton(float X, float Y, int Width, int Height, String Image, AFlxButton OnClick)
 	{
 		FlxButton button = new FlxButton(X, Y);
 		button.loadGraphic(Image, true, false, Width, Height);
@@ -153,8 +153,8 @@ public class FlxGamePad extends FlxGroup
 		button.immovable = true;
 		button.ignoreDrawDebug = true;
 		button.scrollFactor.x = button.scrollFactor.y = 0;
-		if(Callback != null)
-			button.callback = Callback;
+		if(OnClick != null)
+			button.onDown = OnClick;
 		return button;
 	}	
 	

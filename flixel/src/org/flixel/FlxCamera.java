@@ -58,12 +58,12 @@ public class FlxCamera extends FlxBasic
 	 * The X position of this camera's display.  Zoom does NOT affect this number.
 	 * Measured in pixels from the left side of the flash window.
 	 */
-	public int x;
+	public float x;
 	/**
 	 * The Y position of this camera's display.  Zoom does NOT affect this number.
 	 * Measured in pixels from the top of the flash window.
 	 */
-	public int y;
+	public float y;
 	/**
 	 * How wide the camera display is, in game pixels.
 	 */
@@ -95,14 +95,14 @@ public class FlxCamera extends FlxBasic
 	 */
 	public FlxPoint scroll;
 	/**
-	 * The actual bitmap data of the camera display itself.
+	 * The actual libgdx camera.
 	 */
-	public OrthographicCamera glCamera;
+	OrthographicCamera _glCamera;
 	/**
 	 * The natural background color of the camera. Defaults to FlxG.bgColor.
 	 * NOTE: can be transparent for crazy FX!
 	 */
-	public int bgColor;
+	public long bgColor;
 	/**
 	 * Indicates how far the camera is zoomed in.
 	 */
@@ -114,7 +114,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, help with color transforming the flash bitmap.
 	 */
-	protected int _color;
+	protected long _color;
 	
 	/**
 	 * Internal, used to render buffer to screen space.
@@ -127,7 +127,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	protected int _fxFlashColor;
+	protected long _fxFlashColor;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -143,7 +143,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	protected int _fxFadeColor;
+	protected long _fxFadeColor;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -179,7 +179,11 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal helper to store the angle of the camera.
 	 */
-	private float _angle;
+	protected float _angle;
+	/**
+	 * Internal helper to store the alpha value of the camera.
+	 */
+	protected float _alpha;
 	
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
@@ -201,18 +205,17 @@ public class FlxCamera extends FlxBasic
 		scroll = new FlxPoint();
 		_point = new FlxPoint();
 		bounds = null;
-	
-		glCamera = new OrthographicCamera();						
-		
+		_glCamera = new OrthographicCamera();						
 		bgColor = FlxG.getBgColor();
 		_color = 0xFFFFFF;
+		_alpha = 1.0f;
 		
 		setZoom(Zoom); //sets the scale of flash sprite, which in turn loads flashoffset values
-		_flashOffsetX = glCamera.position.x;
-		_flashOffsetY = glCamera.position.y;
+		_flashOffsetX = _glCamera.position.x;
+		_flashOffsetY = _glCamera.position.y;
 		
-		glCamera.position.x = -x + _flashOffsetX;
-		glCamera.position.y = -y + _flashOffsetY;	
+		_glCamera.position.x = -x + _flashOffsetX;
+		_glCamera.position.y = -y + _flashOffsetY;	
 		
 		_fxFlashColor = 0;
 		_fxFlashDuration = 0.0f;
@@ -244,6 +247,9 @@ public class FlxCamera extends FlxBasic
 		this(X, Y, Width, Height, 0);
 	}
 		
+	/**
+	 * Clean up memory.
+	 */
 	@Override
 	public void destroy()
 	{
@@ -251,7 +257,7 @@ public class FlxCamera extends FlxBasic
 		scroll = null;
 		deadzone = null;
 		bounds = null;
-		glCamera = null;
+		_glCamera = null;
 		_fxFlashComplete = null;
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
@@ -273,8 +279,8 @@ public class FlxCamera extends FlxBasic
 			else
 			{
 				float edge;
-				float targetX = (target.x + ((target.x > 0)?0.0000001f:-0.0000001f));
-				float targetY = (target.y + ((target.y > 0)?0.0000001f:-0.0000001f));
+				float targetX = target.x + ((target.x > 0)?0.0000001f:-0.0000001f);
+				float targetY = target.y + ((target.y > 0)?0.0000001f:-0.0000001f);
 				
 				edge = targetX - deadzone.x;
 				if(scroll.x > edge)
@@ -332,9 +338,6 @@ public class FlxCamera extends FlxBasic
 			if(_fxShakeDuration <= 0)
 			{
 				_fxShakeOffset.make();
-				// Putting the camera back to its original place.
-				glCamera.position.x = (FlxG.width/2f-x);
-				glCamera.position.y = (FlxG.height/2f-y);
 				if(_fxShakeComplete != null)
 					_fxShakeComplete.onShakeComplete();
 			}
@@ -347,7 +350,7 @@ public class FlxCamera extends FlxBasic
 			}
 		}
 		
-		glCamera.update(false);
+		_glCamera.update(false);
 	}
 	
 	/**
@@ -399,8 +402,8 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void focusOn(FlxPoint Point)
 	{
-		Point.x += (Point.x > 0)?0.0000001:-0.0000001;
-		Point.y += (Point.y > 0)?0.0000001:-0.0000001;
+		Point.x += (Point.x > 0)?0.0000001f:-0.0000001f;
+		Point.y += (Point.y > 0)?0.0000001f:-0.0000001f;
 		scroll.make(Point.x - width*0.5f,Point.y - height*0.5f);
 	}
 	
@@ -485,9 +488,9 @@ public class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public void flash(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	public void flash(long Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
-		if(!Force && (_fxFlashAlpha > 0.0))
+		if(!Force && (_fxFlashAlpha > 0.0f))
 			return;
 		_fxFlashColor = Color;
 		if(Duration <= 0)
@@ -504,7 +507,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Duration	How long it takes for the flash to fade.
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 */
-	public void flash(int Color, float Duration, AFlxCamera OnComplete)
+	public void flash(long Color, float Duration, AFlxCamera OnComplete)
 	{
 		flash(Color, Duration, OnComplete, false);
 	}
@@ -515,7 +518,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the flash to fade.
 	 */
-	public void flash(int Color, float Duration)
+	public void flash(long Color, float Duration)
 	{
 		flash(Color, Duration, null, false);
 	}
@@ -525,7 +528,7 @@ public class FlxCamera extends FlxBasic
 	 * 
 	 * @param	Color		The color you want to use.
 	 */
-	public void flash(int Color)
+	public void flash(long Color)
 	{
 		flash(Color, 1, null, false);
 	}
@@ -546,9 +549,9 @@ public class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public void fade(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	public void fade(long Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
-		if(!Force && (_fxFadeAlpha > 0.0))
+		if(!Force && (_fxFadeAlpha > 0.0f))
 			return;
 		_fxFadeColor = Color;
 		if(Duration <= 0)
@@ -565,7 +568,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Duration	How long it takes for the fade to finish.
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 */
-	public void fade(int Color, float Duration, AFlxCamera OnComplete)
+	public void fade(long Color, float Duration, AFlxCamera OnComplete)
 	{
 		fade(Color, Duration, OnComplete, false);
 	}
@@ -576,7 +579,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the fade to finish.
 	 */
-	public void fade(int Color, float Duration)
+	public void fade(long Color, float Duration)
 	{
 		fade(Color, Duration, null, false);
 	}
@@ -586,7 +589,7 @@ public class FlxCamera extends FlxBasic
 	 * 
 	 * @param	Color		The color you want to use.
 	 */
-	public void fade(int Color)
+	public void fade(long Color)
 	{
 		fade(Color, 1, null, false);
 	}
@@ -641,7 +644,7 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void shake(float Intensity, float Duration, AFlxCamera OnComplete)
 	{
-		shake(Intensity, Duration, OnComplete, false, SHAKE_BOTH_AXES);
+		shake(Intensity, Duration, OnComplete, true, SHAKE_BOTH_AXES);
 	}
 	
 	/**
@@ -652,7 +655,7 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void shake(float Intensity, float Duration)
 	{
-		shake(Intensity, Duration, null, false, SHAKE_BOTH_AXES);
+		shake(Intensity, Duration, null, true, SHAKE_BOTH_AXES);
 	}
 	
 	/**
@@ -662,7 +665,7 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void shake(float Intensity)
 	{
-		shake(Intensity, 1, null, false, SHAKE_BOTH_AXES);
+		shake(Intensity, 0.5f, null, true, SHAKE_BOTH_AXES);
 	}
 	
 	/**
@@ -672,7 +675,7 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void shake()
 	{
-		shake(0.05f, 1, null, false, SHAKE_BOTH_AXES);
+		shake(0.05f, 0.5f, null, true, SHAKE_BOTH_AXES);
 	}
 	
 	/**
@@ -683,8 +686,8 @@ public class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0f;
 		_fxFadeAlpha = 0.0f;
 		_fxShakeDuration = 0;
-		glCamera.position.x = -x + _flashOffsetX;
-		glCamera.position.y = -y + _flashOffsetY;
+		_glCamera.position.x = -x + _flashOffsetX;
+		_glCamera.position.y = -y + _flashOffsetY;
 	}
 	
 	/**
@@ -744,7 +747,7 @@ public class FlxCamera extends FlxBasic
 	 */
 	public float getAlpha()
 	{
-		return 1;
+		return _alpha;
 	}
 	
 	/**
@@ -752,7 +755,7 @@ public class FlxCamera extends FlxBasic
 	 */ 
 	public void setAlpha(float Alpha)
 	{		
-		
+		_alpha = Alpha;
 	}
 	
 	/**
@@ -771,13 +774,13 @@ public class FlxCamera extends FlxBasic
 	public void setAngle(float Angle)
 	{
 		_angle = Angle;
-		glCamera.rotate(Angle, 0, 0, 1);
+		_glCamera.rotate(Angle, 0, 0, 1);
 	}
 	
 	/**
 	 * The color tint of the camera display. 
 	 */
-	public int getColor()
+	public long getColor()
 	{
 		return _color;
 	}
@@ -785,9 +788,26 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * @private
 	 */
-	public void setColor(int Color)
+	public void setColor(long Color)
 	{
-		bgColor = Color;
+		_color = Color;
+	}
+	
+	/**
+	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
+	 * Default behavior is chunky-style.
+	 */
+	public boolean getAntialiasing()
+	{
+		return true;
+	}
+
+	/**
+	 * @private
+	 */
+	public void setAntialiasing(boolean Antialiasing)
+	{
+		
 	}
 	
 	/**
@@ -798,7 +818,7 @@ public class FlxCamera extends FlxBasic
 	public FlxPoint getScale()
 	{
 		Stage stage = FlxG.getStage();
-		return _point.make(stage.stageWidth/glCamera.viewportWidth,stage.stageHeight/glCamera.viewportHeight);
+		return _point.make(stage.stageWidth/_glCamera.viewportWidth,stage.stageHeight/_glCamera.viewportHeight);
 	}
 	
 	/**
@@ -807,7 +827,7 @@ public class FlxCamera extends FlxBasic
 	public void setScale(float X, float Y)
 	{
 		Stage stage = FlxG.getStage();
-		glCamera.setToOrtho(true, (float)stage.stageWidth/X, (float)stage.stageHeight/Y);
+		_glCamera.setToOrtho(true, (float)stage.stageWidth/X, (float)stage.stageHeight/Y);
 	}
 	
 	/**
@@ -827,10 +847,10 @@ public class FlxCamera extends FlxBasic
 			Gdx.gl.glDisable(GL10.GL_BLEND);
 		
 		ShapeRenderer flashGfx = FlxG.flashGfx.getShapeRenderer();
-		flashGfx.setProjectionMatrix(glCamera.combined);
+		flashGfx.setProjectionMatrix(_glCamera.combined);
 		flashGfx.begin(ShapeType.FilledRectangle);
 		flashGfx.setColor(FlxU.colorFromHex(Color));
-		flashGfx.filledRect(0, 0, width * _zoom, height * _zoom);
+		flashGfx.filledRect(0, 0, width, height);
 		flashGfx.end();
 	}
 	
@@ -867,8 +887,8 @@ public class FlxCamera extends FlxBasic
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
-			glCamera.position.x = x + _flashOffsetX + _fxShakeOffset.x;
-			glCamera.position.y = y + _flashOffsetY + _fxShakeOffset.y;
+			_glCamera.position.x = x + _flashOffsetX + _fxShakeOffset.x;
+			_glCamera.position.y = y + _flashOffsetY + _fxShakeOffset.y;
 		}
 	}	
 }

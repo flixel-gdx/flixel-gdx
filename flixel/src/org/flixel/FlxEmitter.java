@@ -25,11 +25,11 @@ public class FlxEmitter extends FlxGroup
 	/**
 	 * The width of the emitter.  Particles can be randomly generated from anywhere within this box.
 	 */
-	public int width;
+	public float width;
 	/**
 	 * The height of the emitter.  Particles can be randomly generated from anywhere within this box.
 	 */
-	public int height;
+	public float height;
 	/**
 	 * The minimum possible velocity of a particle.
 	 * The default value is (-100,-100).
@@ -218,7 +218,7 @@ public class FlxEmitter extends FlxGroup
 				try {
 					particle = particleClass.newInstance();
 				} catch (Exception e) {
-					FlxG.log(e.getMessage());
+					throw new RuntimeException(e);
 				}
 			}
 			if(Multiple)
@@ -427,31 +427,29 @@ public class FlxEmitter extends FlxGroup
 	 */
 	public void emitParticle()
 	{			
-		FlxParticle particle = null;
-		
-		particle = (FlxParticle) recycle(FlxParticle.class);
-		
+		FlxParticle	particle = (FlxParticle) recycle(FlxParticle.class);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
-		particle.reset((float) (x - (particle.width>>1) + FlxG.random()*width), (float) (y - (particle.height>>1) + FlxG.random()*height));
+		particle.reset(x - (particle.width>>1) + FlxG.random()*width, y - (particle.height>>1) + FlxG.random()*height);
 		particle.visible = true;
 		
 		if(minParticleSpeed.x != maxParticleSpeed.x)
-			particle.velocity.x = (float) (minParticleSpeed.x + FlxG.random()*(maxParticleSpeed.x-minParticleSpeed.x));
+			particle.velocity.x = minParticleSpeed.x + FlxG.random()*(maxParticleSpeed.x-minParticleSpeed.x);
 		else
 			particle.velocity.x = minParticleSpeed.x;
 		if(minParticleSpeed.y != maxParticleSpeed.y)
-			particle.velocity.y = (float) (minParticleSpeed.y + FlxG.random()*(maxParticleSpeed.y-minParticleSpeed.y));
+			particle.velocity.y = minParticleSpeed.y + FlxG.random()*(maxParticleSpeed.y-minParticleSpeed.y);
 		else
 			particle.velocity.y = minParticleSpeed.y;
 		particle.acceleration.y = gravity;
 		
 		if(minRotation != maxRotation)
-			particle.angularVelocity = (float) (minRotation + FlxG.random()*(maxRotation-minRotation));
+			particle.angularVelocity = minRotation + FlxG.random()*(maxRotation-minRotation);
 		else
 			particle.angularVelocity = minRotation;
 		if(particle.angularVelocity != 0)
-			particle.angle = (float) (FlxG.random()*360-180);
+			particle.angle = FlxG.random()*360-180;
+		
 		particle.drag.x = particleDrag.x;
 		particle.drag.y = particleDrag.y;
 		particle.onEmit();
@@ -548,7 +546,7 @@ public class FlxEmitter extends FlxGroup
 	 */
 	public void setRotation(float Min)
 	{
-		setRotation(Min,  0);
+		setRotation(Min, 0);
 	}
 	
 	/**
@@ -556,7 +554,7 @@ public class FlxEmitter extends FlxGroup
 	 */
 	public void setRotation()
 	{
-		setRotation(0,  0);
+		setRotation(0, 0);
 	}
 	
 	/**
@@ -567,7 +565,7 @@ public class FlxEmitter extends FlxGroup
 	public void at(FlxObject Object)
 	{
 		Object.getMidpoint(_point);
-		x = _point.x - (width>>1);
-		y = _point.y - (height>>1);
+		x = _point.x - ((int)width>>1);
+		y = _point.y - ((int)height>>1);
 	}
 }

@@ -629,7 +629,7 @@ public class FlxSprite extends FlxObject
 		if(dirty)	//rarely 
 			calcFrame();
 		
-		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		FlxCamera camera = FlxG._activeCamera;
 		
 		if (cameras != null && !cameras.contains(camera, true))
 			return;
