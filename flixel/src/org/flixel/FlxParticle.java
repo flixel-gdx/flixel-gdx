@@ -1,6 +1,5 @@
 package org.flixel;
 
-
 /**
  * This is a simple particle class that extends the default behavior
  * of <code>FlxSprite</code> to have slightly more specialized behavior
@@ -38,7 +37,6 @@ public class FlxParticle extends FlxSprite
 		friction = 500;
 	}
 	
-	
 	/**
 	 * The particle's main update logic.  Basically it checks to see if it should
 	 * be dead yet, and then has some special bounce behavior if there is some gravity on it.
@@ -59,13 +57,14 @@ public class FlxParticle extends FlxSprite
 			if(angularVelocity != 0)
 				angularVelocity = -angularVelocity;
 		}
+		
 		if(acceleration.y > 0) //special behavior for particles with gravity
 		{
-			if(touching > 0 & FLOOR > 0)
+			if((touching & FLOOR) > 0)
 			{
 				drag.x = friction;
 				
-				if(!(wasTouching > 0 & FLOOR > 0))
+				if(!((wasTouching & FLOOR) > 0))
 				{
 					if(velocity.y < -elasticity*10)
 					{
@@ -83,7 +82,6 @@ public class FlxParticle extends FlxSprite
 				drag.x = 0;
 		}
 	}
-	
 	
 	/**
 	 * Triggered whenever this object is launched by a <code>FlxEmitter</code>.

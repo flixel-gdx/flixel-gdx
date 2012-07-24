@@ -1,11 +1,10 @@
 package org.flixel;
 
 import org.flixel.event.AFlxSave;
+import org.flixel.system.FlxSaveData;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
 	
 /**
  * A class to help automate and simplify save game functionality.
@@ -21,6 +20,11 @@ public class FlxSave
 	static protected int ERROR = 2;
 	
 	/**
+	 * Allows you to directly access the data container in the local shared object.
+	 * @default null
+	 */
+	public FlxSaveData data;
+	/**
 	 * The name of the local shared object.
 	 * @default null
 	 */
@@ -34,15 +38,11 @@ public class FlxSave
 	/**
 	 * Internal tracker for callback function in case save takes too long.
 	 */
-	protected AFlxSave _callback;
+	protected AFlxSave _onComplete;
 	/**
 	 * Internal tracker for save object close request.
 	 */
 	protected boolean _closeRequested;
-	/**
-	 * Internal helper for serialising objects.
-	 */
-	protected Json _json;
 	
 	/**
 	 * Blanks out the containers.
@@ -59,9 +59,9 @@ public class FlxSave
 	{
 		_sharedObject = null;
 		name = null;
-		_callback = null;
+		data = null;
+		_onComplete = null;
 		_closeRequested = false;
-		_json = null;
 	}
 	
 	/**
@@ -77,7 +77,6 @@ public class FlxSave
 		name = Name;
 		
 		_sharedObject = Gdx.app.getPreferences(name);
-		_json = new Json(JsonWriter.OutputType.minimal);
 		
 		if (_sharedObject == null)
 		{
@@ -86,6 +85,7 @@ public class FlxSave
 			return false;
 		}
 		
+		data = new FlxSaveData(_sharedObject);
 		return true;
 	}
 	
@@ -143,7 +143,7 @@ public class FlxSave
 	{
 		if(!checkBinding())
 			return false;
-		_callback = OnComplete;
+		_onComplete = OnComplete;
 		
 		_sharedObject.flush();
 		
@@ -187,46 +187,6 @@ public class FlxSave
 		_sharedObject.flush();
 		return true;
 	}
-		
-	/**
-	 * Put a value into the shared object.
-	 * 
-	 * @param Key	A string, used to retrieve the object later.
-	 * @param Value	The object to store.
-	 */
-	public void put(String Key, Object Value)
-	{
-		_sharedObject.putString(Key, _json.toJson(Value));
-	}
-	
-	/**
-	 * Get a value from the shared object. Returns null if
-	 * the key doesn't exist.
-	 * 
-	 * @param Key	The object's key.
-	 * @param Type	The class of the object you are retrieving.
-	 * 
-	 * @return	The object.
-	 */
-	public <T> T get(String Key, Class<T> Type)
-	{
-		if (!contains(Key))
-			return null;
-		
-		return _json.fromJson(Type, _sharedObject.getString(Key));
-	}
-	
-	/**
-	 * Check whether or not a key exists in this shared object.
-	 * 
-	 * @param Key	The key to check.
-	 * 
-	 * @return	If the key exists.
-	 */
-	public boolean contains(String Key)
-	{
-		return _sharedObject.contains(Key);
-	}
 	
 	/**
 	 * Event handler for special case storage requests.
@@ -236,8 +196,8 @@ public class FlxSave
 	 */
 	protected boolean onDone()
 	{
-		if(_callback != null)
-			_callback.onComplete(true);
+		if(_onComplete != null)
+			_onComplete.onComplete(true);
 		if(_closeRequested)
 			destroy();			
 		return true;

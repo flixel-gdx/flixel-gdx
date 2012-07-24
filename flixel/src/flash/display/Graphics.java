@@ -56,13 +56,13 @@ public class Graphics {
 		_shapeRenderer.line(x, y + height, x, y);
 	}
 	
-	public void lineStyle(float thickness, int color, float alpha)
+	public void lineStyle(float thickness, long debugColor, float alpha)
 	{
-		float[] rgba = FlxU.getRGBA(color);
+		float[] rgba = FlxU.getRGBA(debugColor);
 		_shapeRenderer.setColor(rgba[0], rgba[1], rgba[2], alpha);
 	}
 	
-	public void lineStyle(float thickness, int color)
+	public void lineStyle(float thickness, long color)
 	{
 		lineStyle(thickness, color, 1.0f);
 	}

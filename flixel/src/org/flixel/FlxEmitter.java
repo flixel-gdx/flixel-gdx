@@ -430,7 +430,7 @@ public class FlxEmitter extends FlxGroup
 		FlxParticle	particle = (FlxParticle) recycle(FlxParticle.class);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
-		particle.reset(x - (particle.width>>1) + FlxG.random()*width, y - (particle.height>>1) + FlxG.random()*height);
+		particle.reset(x - ((int)particle.width>>1) + FlxG.random()*width, y - ((int)particle.height>>1) + FlxG.random()*height);
 		particle.visible = true;
 		
 		if(minParticleSpeed.x != maxParticleSpeed.x)

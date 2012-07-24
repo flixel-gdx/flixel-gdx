@@ -1,5 +1,6 @@
 package org.flixel;
 
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Stores a 2D floating point coordinate.
@@ -16,7 +17,6 @@ public class FlxPoint
 	 * @default 0
 	 */
 	public float y;
-	
 	
 	/**
 	 * Instantiate a new point object.
@@ -105,5 +105,33 @@ public class FlxPoint
 		Point.x = x;
 		Point.y = y;
 		return Point;
+	}
+	
+	/**
+	 * Helper function, just copies the values from the specified libgdx vector.
+	 * 
+	 * @param	Point	Any <code>Point</code>.
+	 * 
+	 * @return	A reference to itself.
+	 */
+	public FlxPoint copyFromFlash(Vector2 FlashPoint)
+	{
+		x = FlashPoint.x;
+		y = FlashPoint.y;
+		return this;
+	}
+
+	/**
+	 * Helper function, just copies the values from this point to the specified libgdx vector.
+	 * 
+	 * @param	Point	Any <code>Point</code>.
+	 * 
+	 * @return	A reference to the altered point parameter.
+	 */
+	public Vector2 copyToFlash(Vector2 FlashPoint)
+	{
+		FlashPoint.x = x;
+		FlashPoint.y = y;
+		return FlashPoint;
 	}
 }
