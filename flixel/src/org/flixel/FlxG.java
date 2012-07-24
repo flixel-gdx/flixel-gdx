@@ -1859,7 +1859,7 @@ public class FlxG
 	 * 
 	 * @return	The plugin object, or null if no matching plugin was found.
 	 */
-	static public FlxBasic getPlugin(Class<?> ClassType)
+	static public FlxBasic getPlugin(Class<? extends FlxBasic> ClassType)
 	{
 		Array<FlxBasic> pluginList = FlxG.plugins;
 		int i = 0;
@@ -1901,7 +1901,7 @@ public class FlxG
 	 * 
 	 * @return	Whether or not at least one instance of this plugin type was removed.
 	 */
-	static public boolean removePluginType(Class<?> ClassType)
+	static public boolean removePluginType(Class<? extends FlxBasic> ClassType)
 	{
 		//Don't add repeats
 		boolean results = false;

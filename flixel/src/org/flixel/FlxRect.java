@@ -26,7 +26,6 @@ public class FlxRect
 	 */
 	public float height;
 	
-	
 	/**
 	 * Instantiate a new rectangle.
 	 * 
@@ -116,7 +115,6 @@ public class FlxRect
 		return y + height;
 	}
 	
-	
 	/**
 	 * Instantiate a new rectangle.
 	 * 
@@ -135,7 +133,6 @@ public class FlxRect
 		height = Height;
 		return this;
 	}
-	
 	
 	/**
 	 * Instantiate a new rectangle.
@@ -186,7 +183,6 @@ public class FlxRect
 		return make(0, 0, 0, 0);
 	}
 	
-	
 	/**
 	 * Helper function, just copies the values from the specified rectangle.
 	 * 
@@ -202,7 +198,6 @@ public class FlxRect
 		height = Rect.height;
 		return this;
 	}
-	
 	
 	/**
 	 * Helper function, just copies the values from this rectangle to the specified rectangle.
@@ -220,9 +215,8 @@ public class FlxRect
 		return Rect;
 	}
 	
-	
 	/**
-	 * Helper function, just copies the values from the specified Flash rectangle.
+	 * Helper function, just copies the values from the specified libgdx rectangle.
 	 * 
 	 * @param	FlashRect	Any <code>Rectangle</code>.
 	 * 
@@ -232,13 +226,13 @@ public class FlxRect
 	{
 		x = FlashRect.x;
 		y = FlashRect.y;
-		width = FlashRect.getWidth();
-		height = FlashRect.getHeight();
+		width = FlashRect.width;
+		height = FlashRect.height;
 		return this;
 	}
 	
 	/**
-	 * Helper function, just copies the values from this rectangle to the specified Flash rectangle.
+	 * Helper function, just copies the values from this rectangle to the specified libgdx rectangle.
 	 * 
 	 * @param	Point	Any <code>Rectangle</code>.
 	 * 
@@ -252,7 +246,6 @@ public class FlxRect
 		FlashRect.height = height;
 		return FlashRect;
 	}
-	
 	
 	/**
 	 * Checks to see if some <code>FlxRect</code> object overlaps this <code>FlxRect</code> object.

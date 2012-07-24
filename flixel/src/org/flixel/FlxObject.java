@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.Array;
 
 import flash.display.Graphics;
 
-
 /**
  * This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).
  * It includes some basic attributes about game objects, including retro-style flickering,
@@ -100,11 +99,11 @@ public class FlxObject extends FlxBasic
 	/**
 	 * The width of this object.
 	 */
-	public int width;
+	public float width;
 	/**
 	 * The height of this object.
 	 */
-	public int height;
+	public float height;
 
 	/**
 	 * Whether an object will move/alter position after a collision.
@@ -320,7 +319,6 @@ public class FlxObject extends FlxBasic
 		this(X, Y, Width, 0);
 	}
 	
-	
 	/**
 	 * Instantiates a <code>FlxObject</code>.
 	 * 
@@ -332,7 +330,6 @@ public class FlxObject extends FlxBasic
 		this(X, Y, 0, 0);
 	}
 	
-	
 	/**
 	 * Instantiates a <code>FlxObject</code>.
 	 * 
@@ -343,7 +340,6 @@ public class FlxObject extends FlxBasic
 		this(X, 0, 0, 0);
 	}
 	
-	
 	/**
 	 * Instantiates a <code>FlxObject</code>.
 	 */
@@ -351,7 +347,6 @@ public class FlxObject extends FlxBasic
 	{
 		this(0, 0, 0, 0);
 	}
-	
 	
 	/**
 	 * Override this function to null out variables or
@@ -374,7 +369,6 @@ public class FlxObject extends FlxBasic
 			path.destroy();
 		path = null;
 	}
-	
 	
 	/**
 	 * Pre-update is called right before <code>update()</code> on each object in the game loop.
@@ -407,7 +401,6 @@ public class FlxObject extends FlxBasic
 			updatePathMotion();
 	}
 	
-	
 	/**
 	 * Post-update is called right after <code>update()</code> on each object in the game loop.
 	 * In <code>FlxObject</code> this function handles integrating the objects motion
@@ -422,7 +415,6 @@ public class FlxObject extends FlxBasic
 		wasTouching = touching;
 		touching = NONE;
 	}
-	
 	
 	/**
 	 * Internal function for updating the position and speed of this object.
@@ -439,19 +431,18 @@ public class FlxObject extends FlxBasic
 		angle += angularVelocity*FlxG.elapsed;
 		angularVelocity += velocityDelta;
 		
-		velocityDelta = (FlxU.computeVelocity(velocity.x,acceleration.x,drag.x,maxVelocity.x) - velocity.x)/2.f;
+		velocityDelta = (FlxU.computeVelocity(velocity.x,acceleration.x,drag.x,maxVelocity.x) - velocity.x)/2f;
 		velocity.x += velocityDelta;
 		delta = velocity.x*FlxG.elapsed;
 		velocity.x += velocityDelta;
 		x += delta;
 		
-		velocityDelta = (FlxU.computeVelocity(velocity.y,acceleration.y,drag.y,maxVelocity.y) - velocity.y)/2.f;
+		velocityDelta = (FlxU.computeVelocity(velocity.y,acceleration.y,drag.y,maxVelocity.y) - velocity.y)/2f;
 		velocity.y += velocityDelta;
 		delta = velocity.y*FlxG.elapsed;
 		velocity.y += velocityDelta;
 		y += delta;
 	}
-	
 	
 	/**
 	 * Rarely called, and in this case just increments the visible objects count and calls <code>drawDebug()</code> if necessary.
@@ -471,7 +462,6 @@ public class FlxObject extends FlxBasic
 			drawDebug(camera);
 	}
 	
-	
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
@@ -489,11 +479,10 @@ public class FlxObject extends FlxBasic
 		float boundingBoxY = y - (int)(Camera.scroll.y*scrollFactor.y);
 		boundingBoxX = (int) (boundingBoxX + ((boundingBoxX > 0)?0.0000001f:-0.0000001f));
 		boundingBoxY = (int) (boundingBoxY + ((boundingBoxY > 0)?0.0000001f:-0.0000001f));
-		int boundingBoxWidth = width;//(width != (int)width)?width:width-1;
-		int boundingBoxHeight = height;//(height != (int)height)?height:height-1;
+		int boundingBoxWidth = (int) width;
+		int boundingBoxHeight = (int) height;
 		
 		Graphics gfx = FlxG.flashGfx;
-		
 		int boundingBoxColor;
 		if(allowCollisions > 0)
 		{
@@ -523,9 +512,6 @@ public class FlxObject extends FlxBasic
 	 */
 	public void followPath(FlxPath Path,float Speed,int Mode,boolean AutoRotate)
 	{
-		if (Path == null)
-			return;
-		
 		if (Path.nodes.size <= 0)
 		{
 			FlxG.log("WARNING: Paths need at least one node in them to be followed.");
@@ -692,6 +678,7 @@ public class FlxObject extends FlxBasic
 	/**
 	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
 	 * 
+	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
 	 */
 	protected FlxPoint advancePath()
 	{
@@ -823,7 +810,6 @@ public class FlxObject extends FlxBasic
 				(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
 	
-	
 	/**
 	 * Checks to see if some <code>FlxObject</code> overlaps this <code>FlxObject</code> or <code>FlxGroup</code>.
 	 * If the group has a LOT of things in it, it might be faster to use <code>FlxG.overlaps()</code>.
@@ -852,7 +838,6 @@ public class FlxObject extends FlxBasic
 	{
 		return overlaps(ObjectOrGroup, false, null);
 	}
-	
 	
 	/**
 	 * Checks to see if this <code>FlxObject</code> were located at the given position, would it overlap the <code>FlxObject</code> or <code>FlxGroup</code>?
@@ -905,8 +890,8 @@ public class FlxObject extends FlxBasic
 		FlxPoint objectScreenPos = object.getScreenXY(null,Camera);
 		_point.x = X - (Camera.scroll.x*scrollFactor.x); //copied from getScreenXY()
 		_point.y = Y - (Camera.scroll.y*scrollFactor.y);
-		_point.x += (_point.x > 0)?0.0000001:-0.0000001;
-		_point.y += (_point.y > 0)?0.0000001:-0.0000001;
+		_point.x += (_point.x > 0)?0.0000001f:-0.0000001f;
+		_point.y += (_point.y > 0)?0.0000001f:-0.0000001f;
 		return	(objectScreenPos.x + object.width > _point.x) && (objectScreenPos.x < _point.x + width) &&
 			(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
@@ -990,7 +975,6 @@ public class FlxObject extends FlxBasic
 	{
 		return overlapsPoint(Point, false, null);
 	}
-	
 
 	/**
 	 * Check and see if this object is currently on screen.
@@ -1031,10 +1015,10 @@ public class FlxObject extends FlxBasic
 			Point = new FlxPoint();
 		if(Camera == null)
 			Camera = FlxG.camera;
-		Point.x = x - (Camera.scroll.x*scrollFactor.x);
-		Point.y = y - (Camera.scroll.y*scrollFactor.y);
-		Point.x += (Point.x > 0)?0.0000001:-0.0000001;
-		Point.y += (Point.y > 0)?0.0000001:-0.0000001;
+		Point.x = x - (int)(Camera.scroll.x*scrollFactor.x);
+		Point.y = y - (int)(Camera.scroll.y*scrollFactor.y);
+		Point.x += (Point.x > 0)?0.0000001f:-0.0000001f;
+		Point.y += (Point.y > 0)?0.0000001f:-0.0000001f;
 		return Point;
 	}
 	
@@ -1042,6 +1026,7 @@ public class FlxObject extends FlxBasic
 	 * Call this function to figure out the on-screen position of the object.
 	 * 
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera. 
+	 *
 	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
 	 */
 	public FlxPoint getScreenXY(FlxPoint Point)
@@ -1058,7 +1043,6 @@ public class FlxObject extends FlxBasic
 	{
 		return getScreenXY(null, null);
 	}
-	
 	
 	/**
 	 * Tells this object to flicker, retro-style.
@@ -1197,8 +1181,6 @@ public class FlxObject extends FlxBasic
 		if(health <= 0)
 			kill();
 	}
-	
-	
 
 	/**
 	 * The main collision resolution function in flixel.
@@ -1214,7 +1196,6 @@ public class FlxObject extends FlxBasic
 		boolean separatedY = separateY(Object1,Object2);
 		return separatedX || separatedY;
 	}
-	
 	
 	/**
 	 * The X-axis component of the object separation process.
@@ -1302,7 +1283,7 @@ public class FlxObject extends FlxBasic
 			
 			if(!obj1immovable && !obj2immovable)
 			{
-				overlap *= 0.5;
+				overlap *= 0.5f;
 				Object1.x = Object1.x - overlap;
 				Object2.x += overlap;
 
@@ -1329,7 +1310,6 @@ public class FlxObject extends FlxBasic
 		else
 			return false;
 	}
-	
 	
 	/**
 	 * The Y-axis component of the object separation process.
@@ -1416,7 +1396,7 @@ public class FlxObject extends FlxBasic
 			
 			if(!obj1immovable && !obj2immovable)
 			{
-				overlap *= 0.5;
+				overlap *= 0.5f;
 				Object1.y = Object1.y - overlap;
 				Object2.y += overlap;
 

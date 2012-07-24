@@ -768,12 +768,9 @@ public class FlxGame implements ApplicationListener, InputProcessor
 					FlxSave soundPrefs = new FlxSave();
 					if(soundPrefs.bind("flixel"))
 					{
-						//TODO: a better solution than using a FlxPoint
-						if(soundPrefs.get("sound", FlxPoint.class) == null)
-							soundPrefs.put("sound", new FlxPoint());
-						soundPrefs.get("sound", FlxPoint.class).x = FlxG.mute ? 0 : 1;
-						soundPrefs.get("sound", FlxPoint.class).y = FlxG.getVolume();
-						soundPrefs.close();
+						soundPrefs.data.put("mute", FlxG.mute);
+						soundPrefs.data.put("volume", FlxG.getVolume());
+						soundPrefs.close();						
 					}
 				}
 			}
@@ -927,12 +924,12 @@ public class FlxGame implements ApplicationListener, InputProcessor
 
 		//load saved sound preferences for this game if they exist
 		FlxSave soundPrefs = new FlxSave();
-		if(soundPrefs.bind("flixel") && (soundPrefs.get("sound", FlxPoint.class) != null))
+		if(soundPrefs.bind("flixel"))// && (soundPrefs.data.get("sound") != null))
 		{
-			//if(soundPrefs.get("sound", FlxPoint.class).y != null)
-				FlxG.setVolume(soundPrefs.get("sound", FlxPoint.class).y);
-			//if(soundPrefs.data.sound.mute != null)
-				FlxG.mute = soundPrefs.get("sound", FlxPoint.class).x == 1 ? true : false;
+			if(soundPrefs.data.get("volume", Float.class) != null)
+				FlxG.setVolume(soundPrefs.data.get("volume", Float.class));
+			if(soundPrefs.data.get("mute", Boolean.class) != null)
+				FlxG.mute = soundPrefs.data.get("mute", Boolean.class);
 			soundPrefs.destroy();
 		}
 	}

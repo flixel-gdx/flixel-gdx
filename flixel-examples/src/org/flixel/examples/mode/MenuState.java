@@ -41,11 +41,11 @@ public class MenuState extends FlxState
 		FlxSave save = new FlxSave();
 		if(save.bind("Mode"))
 		{
-			if(!save.contains("plays"))
-				save.put("plays", 0);
+			if(save.data.get("plays", Integer.class) == null)
+				save.data.put("plays", 0);
 			else
-				save.put("plays", save.get("plays", Integer.class) + 1);
-			FlxG.log("Number of plays: "+save.get("plays", Integer.class));
+				save.data.put("plays", save.data.get("plays", Integer.class) + 1);
+			FlxG.log("Number of plays: "+save.data.get("plays", Integer.class));
 			//save.erase();
 			save.close();
 		}
@@ -68,7 +68,7 @@ public class MenuState extends FlxState
 		add(title1);
 
 		//the letters "de"
-		title2 = new FlxText(-60,title1.y,title1.width,"de");
+		title2 = new FlxText(-60,title1.y,(int) title1.width,"de");
 		title2.setSize(title1.getSize());
 		title2.setColor(title1.getColor());
 		title2.antialiasing = title1.antialiasing;

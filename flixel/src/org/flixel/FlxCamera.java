@@ -416,7 +416,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Height			The largest Y value of your level (usually the level height).
 	 * @param	UpdateWorld		Whether the global quad-tree's dimensions should be updated to match (default: false).
 	 */
-	public void setBounds(float X, float Y, int Width, int Height, boolean UpdateWorld)
+	public void setBounds(float X, float Y, float Width, float Height, boolean UpdateWorld)
 	{
 		if(bounds == null)
 			bounds = new FlxRect();
@@ -434,7 +434,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Width			The largest X value of your level (usually the level width).
 	 * @param	Height			The largest Y value of your level (usually the level height).
 	 */
-	public void setBounds(float X, float Y, int Width, int Height)
+	public void setBounds(float X, float Y, float Width, float Height)
 	{
 		setBounds(X, Y, Width, Height, false);
 	}
@@ -446,7 +446,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Y				The smallest Y value of your level (usually 0).
 	 * @param	Width			The largest X value of your level (usually the level width).
 	 */
-	public void setBounds(float X, float Y, int Width)
+	public void setBounds(float X, float Y, float Width)
 	{
 		setBounds(X, Y, Width, 0, false);
 	}

@@ -1471,7 +1471,7 @@ public class FlxTilemap extends FlxObject
 	{
 		if(Camera == null)
 			Camera = FlxG.camera;
-		Camera.setBounds(x+Border*_tileWidth,y+Border*_tileHeight,width-Border*_tileWidth*2,height-Border*_tileHeight*2,UpdateWorld);
+		Camera.setBounds(x+Border*_tileWidth,y+Border*_tileHeight,(int)width-Border*_tileWidth*2,(int)height-Border*_tileHeight*2,UpdateWorld);
 	}
 	
 	/**

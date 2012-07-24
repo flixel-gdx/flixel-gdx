@@ -40,8 +40,8 @@ public class FlxTileblock extends FlxSprite
 
 		//First create a tile brush
 		FlxSprite sprite = new FlxSprite().loadGraphic(TileGraphic,true,false,TileWidth,TileHeight);		
-		int spriteWidth = sprite.width;
-		int spriteHeight = sprite.height;
+		int spriteWidth = (int) sprite.width;
+		int spriteHeight = (int) sprite.height;
 		int total = sprite.frames + Empties;
 					
 		//Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
@@ -57,7 +57,7 @@ public class FlxTileblock extends FlxSprite
 			regen = true;
 		}
 		if(regen)
-			makeGraphic(width,height,0,true);
+			makeGraphic((int)width,(int)height,0,true);
 		else
 			this.fill(0);
 		
@@ -66,8 +66,8 @@ public class FlxTileblock extends FlxSprite
 		int column;
 		int destinationX;
 		int destinationY = 0;
-		int widthInTiles = width/spriteWidth;
-		int heightInTiles = height/spriteHeight;
+		int widthInTiles = (int) (width/spriteWidth);
+		int heightInTiles = (int) (height/spriteHeight);
 		while(row < heightInTiles)
 		{
 			destinationX = 0;

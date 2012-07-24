@@ -267,7 +267,7 @@ public class FlxSprite extends FlxObject
 		if(Height == 0)
 		{
 			if(Animated)
-				Height = width;
+				Height = (int) width;
 			else
 				Height = (int) _pixels.getRegionHeight();
 		}
@@ -367,16 +367,16 @@ public class FlxSprite extends FlxObject
 		if(Frame >= 0)
 		{
 			width = frameWidth = _pixels.getRegionHeight();
-			int rx = Frame*width;
+			int rx = (int) (Frame*width);
 			int ry = 0;
 			int fw = _pixels.getRegionWidth();
 			
 			if(rx >= fw)
 			{
-				ry = (rx/fw)*width;
+				ry = (int) ((rx/fw)*width);
 				rx %= fw;
 			}
-			_pixels = new TextureRegion(_pixels, rx, ry, width, width);
+			_pixels = new TextureRegion(_pixels, rx, ry, (int) width, (int) width);
 		}
 		else
 			width = frameWidth = _pixels.getRegionWidth();
@@ -591,7 +591,7 @@ public class FlxSprite extends FlxObject
 	protected void resetHelpers()
 	{			
 		if((framePixels == null) || (framePixels.getWidth() != width) || (framePixels.getHeight() != height))
-			framePixels = new Sprite(_pixels, 0, 0, width, height);
+			framePixels = new Sprite(_pixels, 0, 0, (int) width, (int) height);
 		framePixels.setRegion(_pixels, 0, 0, frameWidth, frameHeight);
 		framePixels.flip(false, true);
 		origin.make(frameWidth*0.5f,frameHeight*0.5f);

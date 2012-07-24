@@ -25,7 +25,7 @@ public class FlxPath
 	/**
 	 * Specify a debug display color for the path.  Default is white.
 	 */
-	public int debugColor;
+	public long debugColor;
 	/**
 	 * Specify a debug display scroll factor for the path.  Default is (1,1).
 	 * NOTE: does not affect world movement!  Object scroll factors take care of that.
@@ -37,6 +37,7 @@ public class FlxPath
 	 * @default false
 	 */
 	public boolean ignoreDrawDebug;
+	
 	/**
 	 * Internal helper for keeping new variable instantiations under control.
 	 */
@@ -180,17 +181,12 @@ public class FlxPath
 	 */
 	public FlxPoint remove(FlxPoint Node)
 	{
-		/*
+		
 		int index = nodes.indexOf(Node, true);
 		if(index >= 0)
 			return nodes.removeIndex(index);
 		else
 			return null;
-		*/
-		if (nodes.removeValue(Node, true))
-			return Node;
-		
-		return null;
 	}
 	
 	/**
@@ -272,7 +268,7 @@ public class FlxPath
 			int nodeSize = 2;
 			if((i == 0) || (i == l-1))
 				nodeSize *= 2;
-			int nodeColor = debugColor;
+			long nodeColor = debugColor;
 			if(l > 1)
 			{
 				if(i == 0)
@@ -302,8 +298,8 @@ public class FlxPath
 			gfx.lineStyle(1,debugColor,linealpha);
 			_point.x = nextNode.x - (int)(Camera.scroll.x*debugScrollFactor.x); //copied from getScreenXY()
 			_point.y = nextNode.y - (int)(Camera.scroll.y*debugScrollFactor.y);
-			_point.x = (int)(_point.x + ((_point.x > 0)?0.0000001:-0.0000001));
-			_point.y = (int)(_point.y + ((_point.y > 0)?0.0000001:-0.0000001));
+			_point.x = (int)(_point.x + ((_point.x > 0)?0.0000001f:-0.0000001f));
+			_point.y = (int)(_point.y + ((_point.y > 0)?0.0000001f:-0.0000001f));
 			gfx.lineTo(_point.x,_point.y);
 
 			i++;

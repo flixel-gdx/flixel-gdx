@@ -1,9 +1,16 @@
 package org.flixel;
 
-
+import java.util.Comparator;
 
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.
+ * NOTE: Although <code>FlxGroup</code> extends <code>FlxBasic</code>, it will not automatically
+ * add itself to the global collisions quad tree, it will only add its members.
+ * 
+ * @author	Ka Wing Chin
+ */
 public class FlxGroup extends FlxBasic
 {
 	/**
@@ -45,7 +52,6 @@ public class FlxGroup extends FlxBasic
 	 */
 	protected int _sortOrder;
 	
-	
 	/**
 	 * Constructor
 	 */
@@ -59,11 +65,13 @@ public class FlxGroup extends FlxBasic
 		_sortIndex = null;
 	}
 	
+	/**
+	 * Constructor
+	 */
 	public FlxGroup()
 	{
 		this(0);
 	}
-	
 	
 	/**
 	 * Override this function to handle any deleting or "shutdown" type operations you might need,
@@ -88,7 +96,6 @@ public class FlxGroup extends FlxBasic
 		_sortIndex = null;
 	}
 	
-	
 	/**
 	 * Just making sure we don't increment the active objects count.
 	 */
@@ -96,7 +103,6 @@ public class FlxGroup extends FlxBasic
 	public void preUpdate()
 	{
 	}
-	
 	
 	/**
 	 * Automatically goes through and calls update on everything you added.
@@ -118,11 +124,8 @@ public class FlxGroup extends FlxBasic
 		}
 	}
 	
-	
 	/**
 	 * Automatically goes through and calls render on everything you added.
-	 * @param camera 
-	 * @param camera 
 	 */
 	@Override
 	public void draw()
@@ -137,7 +140,6 @@ public class FlxGroup extends FlxBasic
 		}
 	}
 	
-	
 	/**
 	 * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
 	 */
@@ -146,14 +148,12 @@ public class FlxGroup extends FlxBasic
 		return _maxSize;
 	}
 	
-	
 	/**
 	 * @private
 	 */
 	public void setMaxSize(int Size)
 	{
 		_maxSize = Size;
-		//members.setMaxSize(Size);
 		if(_marker >= _maxSize)
 			_marker = 0;
 		if((_maxSize == 0) || (members == null) || (_maxSize >= members.size))
@@ -173,8 +173,6 @@ public class FlxGroup extends FlxBasic
 		length = _maxSize;
 		members.shrink();
 	}
-	
-	
 	
 	/**
 	 * Adds a new <code>FlxBasic</code> subclass (FlxBasic, FlxSprite, Enemy, etc) to the group.
@@ -210,17 +208,19 @@ public class FlxGroup extends FlxBasic
 			i++;
 		}
 		
-		//Don't add the object if the group is already full
-		if(_maxSize > 0 && members.size >= _maxSize)
-			return Object;
+		//Failing that, expand the array (if we can) and add the object.
+		if(_maxSize > 0)
+		{
+			if(members.size >= _maxSize)
+				return Object;
+		}
 
 		//If we made it this far, then we successfully grew the group,
 		//and we can go ahead and add the object at the first open slot.
 		members.add(Object);
 		length = i+1;
 		return Object;
-	}
-	
+	}	
 	
 	/**
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
@@ -254,12 +254,10 @@ public class FlxGroup extends FlxBasic
 			{
 				if(ObjectClass == null)
 					return null;
-				
 				try {
 					return add(ObjectClass.newInstance());
 				} catch (Exception e) {
-					FlxG.log(e.getMessage());
-					return null;
+					throw new RuntimeException(e);
 				}
 			}
 			else
@@ -277,16 +275,39 @@ public class FlxGroup extends FlxBasic
 				return basic;
 			if(ObjectClass == null)
 				return null;
-			
 			try {
 				return add(ObjectClass.newInstance());
 			} catch (Exception e) {
-				FlxG.log(e.getMessage());
-				return null;
+				throw new RuntimeException(e.getMessage());
 			}
 		}
 	}
 	
+	/**
+	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
+	 * 
+	 * <p>If you specified a maximum size for this group (like in FlxEmitter),
+	 * then recycle will employ what we're calling "rotating" recycling.
+	 * Recycle() will first check to see if the group is at capacity yet.
+	 * If group is not yet at capacity, recycle() returns a new object.
+	 * If the group IS at capacity, then recycle() just returns the next object in line.</p>
+	 * 
+	 * <p>If you did NOT specify a maximum size for this group,
+	 * then recycle() will employ what we're calling "grow-style" recycling.
+	 * Recycle() will return either the first object with exists == false,
+	 * or, finding none, add a new object to the array,
+	 * doubling the size of the array if necessary.</p>
+	 * 
+	 * <p>WARNING: If this function needs to create a new object,
+	 * and no object class was provided, it will return null
+	 * instead of a valid object!</p>
+	 * 
+	 * @return A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
+	 */
+	public FlxBasic recycle()
+	{
+		return recycle(null);
+	}
 	
 	/**
 	 * Removes an object from the group.
@@ -311,6 +332,17 @@ public class FlxGroup extends FlxBasic
 		return Object;
 	}
 	
+	/**
+	 * Removes an object from the group.
+	 * 
+	 * @param	Object	The <code>FlxBasic</code> you want to remove.
+	 * 
+	 * @return	The removed object.
+	 */
+	public FlxBasic remove(FlxBasic Object)
+	{
+		return remove(Object, false);
+	}
 	
 	/**
 	 * Replaces an existing <code>FlxBasic</code> with a new one.
@@ -329,7 +361,6 @@ public class FlxGroup extends FlxBasic
 		return NewObject;
 	}
 	
-	
 	/**
 	 * Call this function to sort the group according to a particular value and order.
 	 * For example, to sort game objects for Zelda-style overlaps you might call
@@ -340,13 +371,38 @@ public class FlxGroup extends FlxBasic
 	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
 	 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.  
 	 */
-	/*public void sort(String Index, int Order)
+	public void sort(String Index, int Order)
 	{
 		_sortIndex = Index;
 		_sortOrder = Order;
 		members.sort(sortHandler);
-	}*/
+	}
 	
+	/**
+	 * Call this function to sort the group according to a particular value and order.
+	 * For example, to sort game objects for Zelda-style overlaps you might call
+	 * <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
+	 * <code>FlxState.update()</code> override.  To sort all existing objects after
+	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",DESCENDING)</code>.
+	 * 
+	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
+	 */
+	public void sort(String Index)
+	{
+		sort(Index, ASCENDING);
+	}
+	
+	/**
+	 * Call this function to sort the group according to a particular value and order.
+	 * For example, to sort game objects for Zelda-style overlaps you might call
+	 * <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
+	 * <code>FlxState.update()</code> override.  To sort all existing objects after
+	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",DESCENDING)</code>.
+	 */
+	public void sort()
+	{
+		sort("y", ASCENDING);
+	}
 	
 	/**
 	 * Go through and set the specified variable to the specified value on all members of the group.
@@ -365,7 +421,7 @@ public class FlxGroup extends FlxBasic
 			if(basic != null)
 			{
 				if(Recurse && (basic instanceof FlxGroup))
-					((FlxGroup) basic).setAll(VariableName, Value, Recurse);
+					((FlxGroup)basic).setAll(VariableName, Value, Recurse);
 				else
 				{
 					try
@@ -374,7 +430,7 @@ public class FlxGroup extends FlxBasic
 					}
 					catch(Exception e)
 					{
-						FlxG.log("FlxGroup", e.getMessage());
+						throw new RuntimeException(e);
 					}					
 				}
 			}
@@ -391,8 +447,7 @@ public class FlxGroup extends FlxBasic
 	{
 		setAll(VariableName, Value, true);
 	}
-	
-	
+
 	/**
 	 * Go through and call the specified function on all members of the group.
 	 * Currently only works on functions that have no required parameters.
@@ -410,7 +465,7 @@ public class FlxGroup extends FlxBasic
 			if(basic != null)
 			{
 				if(Recurse && (basic instanceof FlxGroup))
-					((FlxGroup)(basic)).callAll(FunctionName, Recurse);
+					((FlxGroup)basic).callAll(FunctionName, Recurse);
 				else
 				{
 					try
@@ -419,13 +474,23 @@ public class FlxGroup extends FlxBasic
 					}
 					catch(Exception e)
 					{
-						FlxG.log("FlxGroup", e.getMessage());
+						throw new RuntimeException(e);
 					}
 				}
 			}
 		}
 	}
 	
+	/**
+	 * Go through and call the specified function on all members of the group.
+	 * Currently only works on functions that have no required parameters.
+	 * 
+	 * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
+	 */ 
+	public void callAll(String FunctionName)
+	{
+		callAll(FunctionName, true);
+	}
 	
 	/**
 	 * Call this function to retrieve the first object with exists == false in the group.
@@ -448,6 +513,16 @@ public class FlxGroup extends FlxBasic
 		return null;
 	}
 	
+	/**
+	 * Call this function to retrieve the first object with exists == false in the group.
+	 * This is handy for recycling in general, e.g. respawning enemies.
+	 *  
+	 * @return	A <code>FlxBasic</code> currently flagged as not existing.
+	 */
+	public FlxBasic getFirstAvailable()
+	{
+		return getFirstAvailable(null);
+	}
 	
 	/**
 	 * Call this function to retrieve the first index set to 'null'.
@@ -489,7 +564,6 @@ public class FlxGroup extends FlxBasic
 		return null;
 	}
 	
-	
 	/**
 	 * Call this function to retrieve the first object with dead == false in the group.
 	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
@@ -508,7 +582,6 @@ public class FlxGroup extends FlxBasic
 		}
 		return null;
 	}
-	
 	
 	/**
 	 * Call this function to retrieve the first object with dead == true in the group.
@@ -553,7 +626,6 @@ public class FlxGroup extends FlxBasic
 		return count;
 	}
 	
-	
 	/**
 	 * Call this function to find out how many members of the group are dead.
 	 * 
@@ -594,6 +666,28 @@ public class FlxGroup extends FlxBasic
 	}
 	
 	/**
+	 * Returns a member at random from the group.
+	 * 
+	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+	 * 
+	 * @return	A <code>FlxBasic</code> from the members list.
+	 */
+	public FlxBasic getRandom(int StartIndex)
+	{
+		return getRandom(StartIndex, 0);
+	}
+	
+	/**
+	 * Returns a member at random from the group.
+	 *  
+	 * @return	A <code>FlxBasic</code> from the members list.
+	 */
+	public FlxBasic getRandom()
+	{
+		return getRandom(0, 0);
+	}
+	
+	/**
 	 * Remove all instances of <code>FlxBasic</code> subclass (FlxSprite, FlxBlock, etc) from the list.
 	 * WARNING: does not destroy() or kill() any of these objects!
 	 */
@@ -602,7 +696,6 @@ public class FlxGroup extends FlxBasic
 		length = 0;
 		members.clear();
 	}
-	
 	
 	/**
 	 * Calls kill on the group's members and then on the group itself.
@@ -621,7 +714,6 @@ public class FlxGroup extends FlxBasic
 		super.kill();
 	}
 	
-	
 	/**
 	 * Helper function for the sort process.
 	 * 
@@ -629,13 +721,25 @@ public class FlxGroup extends FlxBasic
 	 * @param	Obj2	The second object being sorted.
 	 * 
 	 * @return	An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
-	 */ //TODO: sortHandler
-	/*protected int sortHandler(FlxBasic Obj1, FlxBasic Obj2)
+	 */ 
+	//TODO: sortHandler only works with floats
+	Comparator<FlxBasic> sortHandler = new Comparator<FlxBasic>()
 	{
-		if(Obj1[_sortIndex] < Obj2[_sortIndex])
-			return _sortOrder;
-		else if(Obj1[_sortIndex] > Obj2[_sortIndex])
-			return -_sortOrder;
-		return 0;
-	}*/
+		@Override
+		public int compare(FlxBasic Obj1, FlxBasic Obj2)
+		{
+			try
+			{
+				if(Obj1.getClass().getField(_sortIndex).getFloat(Obj1) < Obj2.getClass().getField(_sortIndex).getFloat(Obj2))
+					return _sortOrder;
+				else if(Obj1.getClass().getField(_sortIndex).getFloat(Obj1) > Obj2.getClass().getField(_sortIndex).getFloat(Obj2))
+					return -_sortOrder;
+			}
+			catch(Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+			return 0;
+		}
+	};
 }
