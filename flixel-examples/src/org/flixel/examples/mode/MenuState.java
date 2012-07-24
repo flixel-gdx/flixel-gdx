@@ -123,12 +123,12 @@ public class MenuState extends FlxState
 			text.setColor(0x3a5c39);
 			add(text);
 
-			FlxButton flixelButton = new FlxButton(FlxG.width/2-40,FlxG.height/3+54,"flixel.org",new AFlxButton(){@Override public void onUp(){onFlixel();}});
+			FlxButton flixelButton = new FlxButton(FlxG.width/2-40,FlxG.height/3+54,"flixel.org",new AFlxButton(){@Override public void callback(){onFlixel();}});
 			flixelButton.setColor(0xff729954);
 			flixelButton.label.setColor(0xffd8eba2);
 			add(flixelButton);
 
-			FlxButton dannyButton = new FlxButton(flixelButton.x,flixelButton.y + 22,"music: dannyB",new AFlxButton(){@Override public void onUp(){onDanny();}});
+			FlxButton dannyButton = new FlxButton(flixelButton.x,flixelButton.y + 22,"music: dannyB",new AFlxButton(){@Override public void callback(){onDanny();}});
 			dannyButton.setColor(flixelButton.getColor());
 			dannyButton.label.setColor(flixelButton.label.getColor());
 			add(dannyButton);
@@ -138,7 +138,7 @@ public class MenuState extends FlxState
 			text.setAlignment("center");
 			add(text);
 
-			playButton = new FlxButton(flixelButton.x,flixelButton.y + 82,"CLICK HERE",new AFlxButton(){@Override public void onUp(){onPlay();}});
+			playButton = new FlxButton(flixelButton.x,flixelButton.y + 82,"CLICK HERE",new AFlxButton(){@Override public void callback(){onPlay();}});
 			playButton.setColor(flixelButton.getColor());
 			playButton.label.setColor(flixelButton.label.getColor());
 			add(playButton);

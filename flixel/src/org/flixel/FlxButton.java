@@ -37,11 +37,23 @@ public class FlxButton extends FlxSprite
 	 */
 	public FlxPoint labelOffset;
 	/**
-	 * This event is called when the button is released or pressed.
+	 * This function is called when the button is released.
 	 * We recommend assigning your main button behavior to this function
 	 * via the <code>FlxButton</code> constructor.
 	 */
-	public AFlxButton callback;
+	public AFlxButton onUp;
+	/**
+	 * This function is called when the button is pressed down.
+	 */
+	public AFlxButton onDown;
+	/**
+	 * This function is called when the mouse goes over the button.
+	 */
+	public AFlxButton onOver;
+	/**
+	 * This function is called when the mouse leaves the button area.
+	 */
+	public AFlxButton onOut;
 	/**
 	 * Shows the current state of the button.
 	 */
@@ -90,7 +102,7 @@ public class FlxButton extends FlxSprite
 	 * @param	Label		The text that you want to appear on the button.
 	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public FlxButton(float X, float Y, String Label, AFlxButton Callback)
+	public FlxButton(float X, float Y, String Label, AFlxButton onClick)
 	{
 		super(X,Y);
 		if(Label != null)
@@ -101,7 +113,10 @@ public class FlxButton extends FlxSprite
 		}
 		loadGraphic(ImgDefaultButton,true,false,80,20);
 		
-		callback = Callback;
+		onUp = onClick;
+		onDown = null;
+		onOut = null;
+		onOver = null;
 		
 		soundOver = null;
 		soundOut = null;
@@ -169,8 +184,10 @@ public class FlxButton extends FlxSprite
 			label.destroy();
 			label = null;
 		}
-		callback = null;
-
+		onUp = null;
+		onDown = null;
+		onOut = null;
+		onOver = null;
 		if(soundOver != null)
 			soundOver.destroy();
 		if(soundOut != null)
@@ -256,9 +273,9 @@ public class FlxButton extends FlxSprite
 							status = PRESSED;
 							if(FlxG.mouse.justPressed(pointerId))
 							{
-								if(callback != null)
+								if(onDown != null)
 								{
-									callback.onDown();
+									onDown.callback();
 								}
 								if(soundDown != null)
 									soundDown.play(true);
@@ -268,8 +285,8 @@ public class FlxButton extends FlxSprite
 						if(status == NORMAL)
 						{
 							status = HIGHLIGHT;
-							if(callback != null)
-								callback.onOver();
+							if(onOver != null)
+								onOver.callback();
 							if(soundOver != null)
 								soundOver.play(true);
 						}
@@ -281,8 +298,8 @@ public class FlxButton extends FlxSprite
 			{
 				if(status != NORMAL)
 				{
-					if(callback != null)
-						callback.onOut();
+					if(onOut != null)
+						onOut.callback();
 					if(soundOut != null)
 						soundOut.play(true);
 				}
@@ -512,8 +529,8 @@ public class FlxButton extends FlxSprite
 		{
 			if(!exists || !visible || !active || (status != PRESSED))
 				return;
-			if(callback != null)
-				callback.onUp();
+			if(onUp != null)
+				onUp.callback();
 			if(soundUp != null)
 				soundUp.play(true);
 		}

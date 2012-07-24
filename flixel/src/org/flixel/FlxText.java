@@ -350,7 +350,7 @@ public class FlxText extends FlxSprite
 		if (_textField.getBounds().width != width)
 			calcFrame();
 		
-		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		FlxCamera camera = FlxG._activeCamera;
 		
 		if (cameras != null && !cameras.contains(camera, true))
 			return;

@@ -13,8 +13,6 @@ public class FlxBasic
 {
 	static int _ACTIVECOUNT;
 	static int _VISIBLECOUNT;
-	
-	static public int _activeCamera;
 		
 	/**
 	 * IDs seem like they could be pretty useful, huh?
@@ -100,7 +98,7 @@ public class FlxBasic
 	 */
 	public void draw()
 	{
-		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		FlxCamera camera = FlxG._activeCamera;
 		
 		if (cameras != null && !cameras.contains(camera, true))
 			return;

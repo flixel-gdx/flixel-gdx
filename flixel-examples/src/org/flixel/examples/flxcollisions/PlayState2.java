@@ -56,7 +56,7 @@ public class PlayState2 extends FlxState
 
 		if (Gdx.app.getType() == ApplicationType.Android)
 		{
-			FlxButton nextButton = new FlxButton(0, FlxG.height - 20, "Next", new AFlxButton(){@Override public void onUp(){FlxG.switchState(new PlayState3());}});
+			FlxButton nextButton = new FlxButton(0, FlxG.height - 20, "Next", new AFlxButton(){@Override public void callback(){FlxG.switchState(new PlayState3());}});
 			nextButton.scrollFactor.x = nextButton.scrollFactor.y = 0;
 			nextButton.setSolid(false);
 			add(nextButton);

@@ -25,7 +25,7 @@ public class PlayState extends FlxState
 	AFlxButton vibrate = new AFlxButton()
 	{
 		@Override
-		public void onUp()
+		public void callback()
 		{
 			FlxG.vibrate();
 		}
@@ -35,7 +35,7 @@ public class PlayState extends FlxState
 	AFlxButton repeat = new AFlxButton()
 	{
 		@Override
-		public void onUp()
+		public void callback()
 		{
 			FlxG.vibrate(new long[]{1000,2000,3000}, 1);
 		}
@@ -45,7 +45,7 @@ public class PlayState extends FlxState
 	AFlxButton stop = new AFlxButton()
 	{
 		@Override
-		public void onUp()
+		public void callback()
 		{
 			FlxG.stopVibrate();
 		}

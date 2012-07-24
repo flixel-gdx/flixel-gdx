@@ -147,13 +147,13 @@ public class FlxU
 	/**
 	 * Generates a random number based on the seed provided.
 	 * 
-	 * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
+	 * @param	globalSeed	A number between 0 and 1, used to generate a predictable random number (very optional).
 	 * 
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	static public float srand(double Seed)
+	static public float srand(double globalSeed)
 	{
-		return (float) (((69621 * (Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF);
+		return (float) (((69621 * (globalSeed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF);
 	}
 	
 	/**
@@ -364,17 +364,17 @@ public class FlxU
 	 * Loads an array with the RGBA values of a Flash <code>int</code> color.
 	 * RGB values are stored 0-255.  Alpha is stored as a floating point number between 0 and 1.
 	 * 
-	 * @param	Color	The color you want to break into components.
+	 * @param	bgColor	The color you want to break into components.
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * 
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public float[] getRGBA(int Color, float[] Results)
+	static public float[] getRGBA(long bgColor, float[] Results)
 	{
-		Results[0] = (float)((Color >> 16) & 0xFF) / 255;		
-		Results[1] = (float)((Color >> 8) & 0xFF) / 255;
-		Results[2] = (float)(Color & 0xFF) / 255;
-		Results[3] = (float)((Color >> 24) & 0xFF) / 255;
+		Results[0] = (float)((bgColor >> 16) & 0xFF) / 255;		
+		Results[1] = (float)((bgColor >> 8) & 0xFF) / 255;
+		Results[2] = (float)(bgColor & 0xFF) / 255;
+		Results[3] = (float)((bgColor >> 24) & 0xFF) / 255;
 		return Results;
 	}
 	
@@ -383,14 +383,14 @@ public class FlxU
 	 * Loads an array with the RGBA values of a Flash <code>int</code> color.
 	 * RGB values are stored 0-255.  Alpha is stored as a floating point number between 0 and 1.
 	 * 
-	 * @param	Color	The color you want to break into components.
+	 * @param	bgColor	The color you want to break into components.
 	 * 
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public float[] getRGBA(int Color)
+	static public float[] getRGBA(long bgColor)
 	{		
 		float[] Results = new float[4];
-		return getRGBA(Color, Results);
+		return getRGBA(bgColor, Results);
 	}
 	
 	

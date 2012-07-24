@@ -459,7 +459,7 @@ public class FlxObject extends FlxBasic
 	@Override
 	public void draw()
 	{
-		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		FlxCamera camera = FlxG._activeCamera;
 		
 		if (cameras != null && !cameras.contains(camera, true))
 			return;

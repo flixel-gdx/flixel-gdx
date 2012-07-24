@@ -129,7 +129,7 @@ public class PlayState extends FlxState
 	AFlxButton onCollision = new AFlxButton()
 	{
 		@Override
-		public void onUp()
+		public void callback()
 		{
 			isCollisionOn = !isCollisionOn;
 			if(isCollisionOn)
@@ -167,7 +167,7 @@ public class PlayState extends FlxState
 	AFlxButton onGravity = new AFlxButton()
 	{
 		@Override
-		public void onUp()
+		public void callback()
 		{
 			isGravityOn = !isGravityOn;
 			if(isGravityOn)

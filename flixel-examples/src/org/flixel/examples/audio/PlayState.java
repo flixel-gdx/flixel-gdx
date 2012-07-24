@@ -51,7 +51,8 @@ public class PlayState extends FlxState
 	
 	AFlxButton playMusic = new AFlxButton()
 	{
-		public void onUp() 
+		@Override
+		public void callback() 
 		{			
 			if(FlxG.music == null)
 			{
@@ -79,7 +80,8 @@ public class PlayState extends FlxState
 	
 	AFlxButton stopMusic = new AFlxButton()
 	{
-		public void onUp() 
+		@Override
+		public void callback() 
 		{
 			if(FlxG.music != null)
 			{
@@ -92,7 +94,8 @@ public class PlayState extends FlxState
 	
 	AFlxButton playSound = new AFlxButton()
 	{
-		public void onUp() 
+		@Override
+		public void callback() 
 		{
 			flixel.play(true);
 			// it can also be done by this:

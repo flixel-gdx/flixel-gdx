@@ -78,7 +78,7 @@ public class PlayState extends FlxState
 
 		// When switching between modes here, the map is reloaded with it's own data, so the positions of tiles are kept the same
 		// Notice that different tilesets are used when the auto mode is switched
-		autoAltBtn = new FlxButton(4, FlxG.height - 24, "AUTO", new AFlxButton(){@Override public void onUp()
+		autoAltBtn = new FlxButton(4, FlxG.height - 24, "AUTO", new AFlxButton(){@Override public void callback()
 		{
 			switch(collisionMap.auto)
 			{
@@ -104,7 +104,7 @@ public class PlayState extends FlxState
 		}});
 		add(autoAltBtn);
 
-		resetBtn = new FlxButton(8 + autoAltBtn.width, FlxG.height - 24, "Reset", new AFlxButton(){@Override public void onUp()
+		resetBtn = new FlxButton(8 + autoAltBtn.width, FlxG.height - 24, "Reset", new AFlxButton(){@Override public void callback()
 		{
 			switch(collisionMap.auto)
 			{

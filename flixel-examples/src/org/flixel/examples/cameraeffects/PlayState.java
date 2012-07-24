@@ -22,7 +22,7 @@ public class PlayState extends FlxState
 	AFlxButton onFade = new AFlxButton()
 	{
 		@Override
-		public void onUp()
+		public void callback()
 		{
 			FlxG.log("fade!");
 			FlxG.fade(0xFF000000, 2, new AFlxCamera(){ @Override public void onFadeComplete(){FlxG.camera.stopFX();}});
@@ -32,7 +32,7 @@ public class PlayState extends FlxState
 	AFlxButton onFlash = new AFlxButton()
 	{
 		@Override
-		public void onUp()
+		public void callback()
 		{
 			FlxG.log("flash!");
 			FlxG.flash(0xFFFFFFFF, 2);
@@ -42,7 +42,7 @@ public class PlayState extends FlxState
 	AFlxButton onShake = new AFlxButton()
 	{
 		@Override
-		public void onUp()
+		public void callback()
 		{
 			FlxG.log("shake!");
 			FlxG.shake(0.05f, 2);

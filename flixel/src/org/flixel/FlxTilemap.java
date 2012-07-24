@@ -466,7 +466,7 @@ public class FlxTilemap extends FlxObject
 				return;
 		}
 		
-		FlxCamera camera = FlxG.cameras.get(_activeCamera);
+		FlxCamera camera = FlxG._activeCamera;
 		
 		if (cameras != null && !cameras.contains(camera, true))
 			return;
