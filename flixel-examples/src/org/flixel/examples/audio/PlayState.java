@@ -40,7 +40,7 @@ public class PlayState extends FlxState
 		add(new FlxButton(10, 100, "play sound", playSound));	
 		
 		// Load the sound in the memory, it will be recycled when needed.
-		flixel = FlxG.loadSound(SndFlixel, 1f);
+		flixel = FlxG.loadSound(SndFlixel, 1f, false, false);
 	}	
 	
 	@Override
