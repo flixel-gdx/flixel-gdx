@@ -298,7 +298,6 @@ public class FlxU
 		return makeColor(Red, Green, Blue, 0);
 	}
 	
-	
 	/**
 	 * Generate a Flash <code>int</code> color from HSB components.
 	 * 
@@ -369,7 +368,7 @@ public class FlxU
 	 * 
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public float[] getRGBA(long bgColor, float[] Results)
+	static public float[] getRGBA(int bgColor, float[] Results)
 	{
 		Results[0] = (float)((bgColor >> 16) & 0xFF) / 255;		
 		Results[1] = (float)((bgColor >> 8) & 0xFF) / 255;
@@ -387,7 +386,7 @@ public class FlxU
 	 * 
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public float[] getRGBA(long bgColor)
+	static public float[] getRGBA(int bgColor)
 	{		
 		float[] Results = new float[4];
 		return getRGBA(bgColor, Results);
@@ -465,17 +464,20 @@ public class FlxU
 	 * @param hex Must be of the form 0xAARRGGBB
 	 * @return the generated Color object
 	 */
-	static public Color colorFromHex(long hex)
+	static public Color colorFromHex(int Hex)
 	{
-		float a = (hex & 0xFF000000L) >> 24;
-		float r = (hex & 0xFF0000L) >> 16;
-		float g = (hex & 0xFF00L) >> 8;
-		float b = (hex & 0xFFL);
+		float a = (Hex & 0xFF000000L) >> 24;
+		float r = (Hex & 0xFF0000L) >> 16;
+		float g = (Hex & 0xFF00L) >> 8;
+		float b = (Hex & 0xFFL);
 
 		return new Color(r / 255f, g / 255f, b / 255f, a / 255f);
 	}
 
-	
+	static public int argbToRgba(int Color)
+	{
+		return (Color << 8) | (Color >>> 24);
+	}
 	
 	/**
 	 * Format seconds as minutes with a colon, an optionally with milliseconds too.

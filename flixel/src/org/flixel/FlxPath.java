@@ -25,7 +25,7 @@ public class FlxPath
 	/**
 	 * Specify a debug display color for the path.  Default is white.
 	 */
-	public long debugColor;
+	public int debugColor;
 	/**
 	 * Specify a debug display scroll factor for the path.  Default is (1,1).
 	 * NOTE: does not affect world movement!  Object scroll factors take care of that.
@@ -268,7 +268,7 @@ public class FlxPath
 			int nodeSize = 2;
 			if((i == 0) || (i == l-1))
 				nodeSize *= 2;
-			long nodeColor = debugColor;
+			int nodeColor = debugColor;
 			if(l > 1)
 			{
 				if(i == 0)

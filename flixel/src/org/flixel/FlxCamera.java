@@ -102,7 +102,7 @@ public class FlxCamera extends FlxBasic
 	 * The natural background color of the camera. Defaults to FlxG.bgColor.
 	 * NOTE: can be transparent for crazy FX!
 	 */
-	public long bgColor;
+	public int bgColor;
 	/**
 	 * Indicates how far the camera is zoomed in.
 	 */
@@ -114,7 +114,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, help with color transforming the flash bitmap.
 	 */
-	protected long _color;
+	protected int _color;
 	
 	/**
 	 * Internal, used to render buffer to screen space.
@@ -127,7 +127,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	protected long _fxFlashColor;
+	protected int _fxFlashColor;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -143,7 +143,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	protected long _fxFadeColor;
+	protected int _fxFadeColor;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -488,7 +488,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public void flash(long Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	public void flash(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
 		if(!Force && (_fxFlashAlpha > 0.0f))
 			return;
@@ -507,7 +507,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Duration	How long it takes for the flash to fade.
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 */
-	public void flash(long Color, float Duration, AFlxCamera OnComplete)
+	public void flash(int Color, float Duration, AFlxCamera OnComplete)
 	{
 		flash(Color, Duration, OnComplete, false);
 	}
@@ -518,7 +518,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the flash to fade.
 	 */
-	public void flash(long Color, float Duration)
+	public void flash(int Color, float Duration)
 	{
 		flash(Color, Duration, null, false);
 	}
@@ -528,7 +528,7 @@ public class FlxCamera extends FlxBasic
 	 * 
 	 * @param	Color		The color you want to use.
 	 */
-	public void flash(long Color)
+	public void flash(int Color)
 	{
 		flash(Color, 1, null, false);
 	}
@@ -549,7 +549,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public void fade(long Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	public void fade(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
 		if(!Force && (_fxFadeAlpha > 0.0f))
 			return;
@@ -568,7 +568,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Duration	How long it takes for the fade to finish.
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 */
-	public void fade(long Color, float Duration, AFlxCamera OnComplete)
+	public void fade(int Color, float Duration, AFlxCamera OnComplete)
 	{
 		fade(Color, Duration, OnComplete, false);
 	}
@@ -579,7 +579,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the fade to finish.
 	 */
-	public void fade(long Color, float Duration)
+	public void fade(int Color, float Duration)
 	{
 		fade(Color, Duration, null, false);
 	}
@@ -589,7 +589,7 @@ public class FlxCamera extends FlxBasic
 	 * 
 	 * @param	Color		The color you want to use.
 	 */
-	public void fade(long Color)
+	public void fade(int Color)
 	{
 		fade(Color, 1, null, false);
 	}
@@ -780,7 +780,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The color tint of the camera display. 
 	 */
-	public long getColor()
+	public int getColor()
 	{
 		return _color;
 	}
@@ -788,7 +788,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * @private
 	 */
-	public void setColor(long Color)
+	public void setColor(int Color)
 	{
 		_color = Color;
 	}
@@ -836,7 +836,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	public void fill(long Color, boolean BlendAlpha)
+	public void fill(int Color, boolean BlendAlpha)
 	{
 		if (BlendAlpha)
 		{
@@ -849,7 +849,8 @@ public class FlxCamera extends FlxBasic
 		ShapeRenderer flashGfx = FlxG.flashGfx.getShapeRenderer();
 		flashGfx.setProjectionMatrix(_glCamera.combined);
 		flashGfx.begin(ShapeType.FilledRectangle);
-		flashGfx.setColor(FlxU.colorFromHex(Color));
+		float[] rgba = FlxU.getRGBA(Color);
+		flashGfx.setColor(rgba[0], rgba[1], rgba[2], rgba[3]);
 		flashGfx.filledRect(0, 0, width, height);
 		flashGfx.end();
 	}
@@ -859,7 +860,7 @@ public class FlxCamera extends FlxBasic
 	 * 
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 */
-	public void fill(long Color)
+	public void fill(int Color)
 	{
 		fill(Color, true);
 	}
@@ -875,14 +876,14 @@ public class FlxCamera extends FlxBasic
 		if(_fxFlashAlpha > 0.0f)
 		{
 			alphaComponent = _fxFlashColor>>24;
-			fill(((long)(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFlashAlpha)<<24)+(_fxFlashColor&0x00ffffff));
+			fill(((int)(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFlashAlpha)<<24)+(_fxFlashColor&0x00ffffff));
 		}
 		
 		//Draw the "fade" special effect onto the buffer
 		if(_fxFadeAlpha > 0.0f)
 		{
 			alphaComponent = _fxFadeColor>>24;
-			fill(((long)(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFadeAlpha)<<24)+(_fxFadeColor&0x00ffffff));
+			fill(((int)(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFadeAlpha)<<24)+(_fxFadeColor&0x00ffffff));
 		}
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))

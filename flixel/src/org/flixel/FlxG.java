@@ -516,14 +516,14 @@ public class FlxG
 	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
 	 * @param	Callback	Optional parameter: if set, called when the replay finishes.  Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
 	 */
-	static public void loadReplay(String Data,FlxState State,Array<String> CancelKeys,float Timeout,AFlxReplay Callback)
+	static public void loadReplay(String Data,FlxState State,String[] CancelKeys,float Timeout,AFlxReplay Callback)
 	{
 		_game._replay.load(Data);
 		if(State == null)
 			FlxG.resetGame();
 		else
 			FlxG.switchState(State);
-		_game._replayCancelKeys = CancelKeys;
+		_game._replayCancelKeys = new Array<String>(CancelKeys);
 		_game._replayTimer = (int) (Timeout*1000);
 		_game._replayCallback = Callback;
 		_game._replayRequested = true;
@@ -537,7 +537,7 @@ public class FlxG
 	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
 	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
 	 */
-	static public void loadReplay(String Data,FlxState State,Array<String> CancelKeys,float Timeout)
+	static public void loadReplay(String Data,FlxState State,String[] CancelKeys,float Timeout)
 	{
 		loadReplay(Data, State, CancelKeys, Timeout, null);
 	}
@@ -549,7 +549,7 @@ public class FlxG
 	 * @param	State		Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
 	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
 	 */
-	static public void loadReplay(String Data,FlxState State,Array<String> CancelKeys)
+	static public void loadReplay(String Data,FlxState State,String[] CancelKeys)
 	{
 		loadReplay(Data, State, CancelKeys, 0, null);
 	}
@@ -1050,7 +1050,7 @@ public class FlxG
 	 * 
 	 * @return The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion createBitmap(int Width, int Height, long Color, boolean Unique, String Key)
+	static public TextureRegion createBitmap(int Width, int Height, int Color, boolean Unique, String Key)
 	{		
 		if(Key == null)
 		{
@@ -1075,7 +1075,7 @@ public class FlxG
 				throw new RuntimeException("A bitmaps width and height must be greater than zero.");
 			
 			Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(Width), MathUtils.nextPowerOfTwo(Height), Format.RGBA8888);			
-			p.setColor(FlxU.colorFromHex(Color));
+			p.setColor(FlxU.argbToRgba(Color));
 			p.fill();
 			
 			TextureParameter parameter = new TextureParameter();
@@ -1159,7 +1159,9 @@ public class FlxG
 		
 		if (textureRegion == null)
 			throw new RuntimeException("Could not find region " + regionName + " in " + fileName);
-		
+		else
+			textureRegion = new TextureRegion(textureRegion);
+			
 		if (Unique && !checkBitmapCache(Key))
 		{
 			TextureData textureData = textureRegion.getTexture().getTextureData();
@@ -1423,7 +1425,7 @@ public class FlxG
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public void flash(long Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	static public void flash(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
 		int i = 0;
 		int l = FlxG.cameras.size;
@@ -1438,7 +1440,7 @@ public class FlxG
 	 * @param	Duration	How long it takes for the flash to fade.
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 */
-	static public void flash(long Color, float Duration, AFlxCamera OnComplete)
+	static public void flash(int Color, float Duration, AFlxCamera OnComplete)
 	{
 		flash(Color, Duration, OnComplete, false);
 	}
@@ -1449,7 +1451,7 @@ public class FlxG
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the flash to fade.
 	 */
-	static public void flash(long Color, float Duration)
+	static public void flash(int Color, float Duration)
 	{
 		flash(Color, Duration, null, false);
 	}
@@ -1459,7 +1461,7 @@ public class FlxG
 	 * 
 	 * @param	Color		The color you want to use.
 	 */
-	static public void flash(long Color)
+	static public void flash(int Color)
 	{
 		flash(Color, 1, null, false);
 	}
@@ -1480,7 +1482,7 @@ public class FlxG
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public void fade(long Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	static public void fade(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
 	{
 		int i = 0;
 		int l = FlxG.cameras.size;
@@ -1495,7 +1497,7 @@ public class FlxG
 	 * @param	Duration	How long it takes for the fade to finish.
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 */
-	static public void fade(long Color, float Duration, AFlxCamera OnComplete)
+	static public void fade(int Color, float Duration, AFlxCamera OnComplete)
 	{
 		fade(Color,Duration,OnComplete,false);
 	}
@@ -1506,7 +1508,7 @@ public class FlxG
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the fade to finish.
 	 */
-	static public void fade(long Color, float Duration)
+	static public void fade(int Color, float Duration)
 	{
 		fade(Color,Duration,null,false);
 	}
@@ -1516,7 +1518,7 @@ public class FlxG
 	 * 
 	 * @param	Color		The color you want to use.
 	 */
-	static public void fade(long Color)
+	static public void fade(int Color)
 	{
 		fade(Color,1,null,false);
 	}
@@ -1605,7 +1607,7 @@ public class FlxG
 	 * Get functionality is equivalent to FlxG.camera.bgColor.
 	 * Set functionality sets the background color of all the current cameras.
 	 */
-	static public long getBgColor()
+	static public int getBgColor()
 	{
 		if(FlxG.camera == null)
 			return 0xff000000;
@@ -1613,7 +1615,7 @@ public class FlxG
 			return FlxG.camera.bgColor;
 	}
 	
-	static public void setBgColor(long Color)
+	static public void setBgColor(int Color)
 	{
 		int i = 0;
 		int l = FlxG.cameras.size;
