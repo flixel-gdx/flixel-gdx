@@ -3,8 +3,6 @@ package org.flixel.examples.flxcollisions;
 import org.flixel.*;
 import org.flixel.event.AFlxButton;
 
-import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
 public class PlayState extends FlxState
@@ -99,7 +97,7 @@ public class PlayState extends FlxState
 		tx.setShadow(0xFF233e58);
 		add(tx);
 
-		if (Gdx.app.getType() == ApplicationType.Android)
+		if (FlxG.mobile)
 		{
 			FlxButton nextButton = new FlxButton(0, FlxG.height - 20, "Next", new AFlxButton(){@Override public void callback(){FlxG.switchState(new PlayState2());}});
 			nextButton.setSolid(false);

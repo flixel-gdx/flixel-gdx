@@ -5,8 +5,6 @@ import org.flixel.event.AFlxButton;
 import org.flixel.event.AFlxCamera;
 import org.flixel.event.AFlxReplay;
 
-import com.badlogic.gdx.utils.Array;
-
 public class MenuState extends FlxState
 {
 	//Some graphics and sounds
@@ -183,7 +181,7 @@ public class MenuState extends FlxState
 	protected void onFade()
 	{
 		if(attractMode)
-			FlxG.loadReplay((FlxG.random()<0.5)?FlxG.loadString(Attract1):FlxG.loadString(Attract2),new PlayState(),new Array<String>(new String[]{"ANY"}),22,new AFlxReplay(){@Override public void onComplete(){onDemoComplete();}});
+			FlxG.loadReplay((FlxG.random()<0.5)?FlxG.loadString(Attract1):FlxG.loadString(Attract2),new PlayState(),new String[]{"ANY"},22,new AFlxReplay(){@Override public void onComplete(){onDemoComplete();}});
 		else
 			FlxG.switchState(new PlayState());
 	}

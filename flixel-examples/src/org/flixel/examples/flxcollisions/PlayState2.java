@@ -3,9 +3,6 @@ package org.flixel.examples.flxcollisions;
 import org.flixel.*;
 import org.flixel.event.AFlxButton;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Application.ApplicationType;
-
 public class PlayState2 extends FlxState
 {
 	private String ImgGibs = "examples/flxcollisions/pack:gibs";
@@ -54,7 +51,7 @@ public class PlayState2 extends FlxState
 		FlxG.camera.follow(_focus);
 		FlxG.camera.setBounds(0,0,640,480,true);
 
-		if (Gdx.app.getType() == ApplicationType.Android)
+		if (FlxG.mobile)
 		{
 			FlxButton nextButton = new FlxButton(0, FlxG.height - 20, "Next", new AFlxButton(){@Override public void callback(){FlxG.switchState(new PlayState3());}});
 			nextButton.scrollFactor.x = nextButton.scrollFactor.y = 0;

@@ -34,13 +34,13 @@ public class PlayState extends FlxState
 		// NOTE: the zombie image is facing to the left. Normally you should stick sprites facing to the right.
 		s = new FlxSprite(20, 60).loadGraphic(ImgZombie, true, true, 36, 41);
 		s.addAnimation("walk", new int[]{0, 1, 2, 3, 4, 5}, 12);
-		s.setFacing(FlxSprite.LEFT);
+		s.setFacing(FlxSprite.RIGHT);
 		s.play("walk");
 		add(s);
 		
 		
 		// Zombie with more frames added to slow down an animation.
-		s = new FlxSprite(100, 60).loadGraphic(ImgZombie, true, false, 36, 41);
+		s = new FlxSprite(100, 60).loadGraphic(ImgZombie, true, true, 36, 41);
 		s.addAnimation("head bounce", new int[]{7, 7, 8, 9, 10, 11, 11, 11, 10, 10, 10, 9, 9, 8, 8, 7, 7, 7}, 10);
 		s.play("head bounce");
 		add(s);

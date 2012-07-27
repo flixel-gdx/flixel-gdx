@@ -118,7 +118,7 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(String Font, float Size, long Color, String Alignment, int ShadowColor)
+	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor)
 	{
 		if(Font == null)
 			Font = _font;
@@ -252,7 +252,7 @@ public class FlxText extends FlxSprite
 	 * @private
 	 */
 	@Override
-	public void setColor(long Color)
+	public void setColor(int Color)
 	{
 		Color &= 0x00FFFFFFL;
 		
@@ -380,7 +380,8 @@ public class FlxText extends FlxSprite
 		//Render a single pixel shadow beneath the text
 		if (_shadow != 0)
 		{
-			_textField.setColor(FlxU.colorFromHex(_shadow));
+			float[] rgba = FlxU.getRGBA(_shadow);
+			_textField.setColor(rgba[0], rgba[1], rgba[2], rgba[3]);
 			_textField.translate(1f, 1f);
 			_textField.draw(FlxG.batch);
 			_textField.translate(-1f, -1f);

@@ -28,7 +28,7 @@ public class Log extends FlxWindow
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */	
-	public Log(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds, long BGColor, long TopColor)
+	public Log(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds, int BGColor, int TopColor)
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 
@@ -54,7 +54,7 @@ public class Log extends FlxWindow
 	 * @param Bounds		A rectangle indicating the valid screen area for the window.
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 */	
-	public Log(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds, long BGColor)
+	public Log(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds, int BGColor)
 	{
 		this(Title, Width, Height, Resizable, Bounds, BGColor, 0x7f000000);
 	}

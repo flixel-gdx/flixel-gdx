@@ -1,5 +1,7 @@
 package org.flixel.system;
 
+import com.badlogic.gdx.utils.IntArray;
+
 /**
  * Just a helper structure for the FlxSprite animation system.
  * 
@@ -18,7 +20,7 @@ public class FlxAnim
 	/**
 	 * A list of frames stored as <code>uint</code> objects
 	 */
-	public int[] frames;
+	public IntArray frames;
 	/**
 	 * Whether or not the animation is looped
 	 */
@@ -38,7 +40,7 @@ public class FlxAnim
 		delay = 0;
 		if(FrameRate > 0)
 			delay = 1.0f/FrameRate;
-		frames = Frames;
+		frames = new IntArray(Frames);
 		looped = Looped;
 	}	
 	

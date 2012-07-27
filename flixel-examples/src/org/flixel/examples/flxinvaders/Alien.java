@@ -13,7 +13,7 @@ public class Alien extends FlxSprite		//Class declaration for the squid monster 
 	
 	//This is the constructor for the squid monster.
 	//We are going to set up the basic values and then create a simple animation.
-	public Alien(int X, int Y, long Color, FlxGroup Bullets)
+	public Alien(int X, int Y, int Color, FlxGroup Bullets)
 	{
 		super(X,Y);							//Initialize sprite object
 		loadGraphic(ImgAlien,true);	//Load this animated graphic file
