@@ -12,6 +12,7 @@ import org.flixel.FlxState;
  */
 public class PlayState extends FlxState
 {
+	public String ImgColors = "examples/thousandparticles/pack:colors";
 
 	@Override
 	public void create()
@@ -24,7 +25,7 @@ public class PlayState extends FlxState
 		dispenser.setXSpeed(-50,50);
 		dispenser.setYSpeed(5,20);
 		dispenser.setRotation(-720,720);
-		//dispenser.makeParticles(Asset.ImgColors,1000,16,true, 0.5f);
+		dispenser.makeParticles(ImgColors,1000,16,true, 0.5f);
 		dispenser.start(false,20,0.005f);
 		add(dispenser);
 	}

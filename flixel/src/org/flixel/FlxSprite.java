@@ -45,7 +45,7 @@ public class FlxSprite extends FlxObject
 	 * E.g. "multiply", "screen", etc.
 	 * @default null
 	 */
-	public String blend;
+	public int[] blend;
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
@@ -568,7 +568,15 @@ public class FlxSprite extends FlxObject
 			if((angle != 0) && (_bakedRotation <= 0))
 				framePixels.setRotation(angle);
 			framePixels.setPosition(_point.x, _point.y);
-			framePixels.draw(FlxG.batch);
+			if(blend != null)
+			{
+				FlxG.batch.enableBlending();
+				FlxG.blend(blend);
+				framePixels.draw(FlxG.batch);
+				FlxG.batch.disableBlending();
+			}
+			else
+				framePixels.draw(FlxG.batch);
 		}
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)

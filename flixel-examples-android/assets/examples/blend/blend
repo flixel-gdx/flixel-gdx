@@ -1,0 +1,19 @@
+
+blend.png
+format: RGBA4444
+filter: Nearest,Nearest
+repeat: none
+flamingos
+  rotate: false
+  xy: 2, 2
+  size: 400, 400
+  orig: 400, 400
+  offset: 0, 0
+  index: -1
+flamingobg
+  rotate: false
+  xy: 2, 404
+  size: 400, 400
+  orig: 400, 400
+  offset: 0, 0
+  index: -1
