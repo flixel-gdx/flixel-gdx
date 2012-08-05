@@ -1185,6 +1185,7 @@ public class FlxG
 			parameter.minFilter = parameter.magFilter = TextureFilter.Nearest;
 			parameter.textureData = new ManagedTextureData(newPixmap);
 			textureRegion = new TextureRegion(loadAsset(Key, Texture.class, parameter), 0, 0, rw, rh);
+			newPixmap.dispose();
 		}
 		else if (Unique)
 		{
@@ -2136,5 +2137,10 @@ public class FlxG
 	public static void stopVibrate()
 	{
 		Gdx.input.cancelVibrate();
+	}
+	
+	public static void blend(int[] blend)
+	{
+		FlxG.batch.setBlendFunction(blend[0], blend[1]);
 	}
 }
