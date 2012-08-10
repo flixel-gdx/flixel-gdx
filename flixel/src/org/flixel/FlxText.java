@@ -2,8 +2,6 @@ package org.flixel;
 
 import java.util.Locale;
 
-import com.badlogic.gdx.assets.loaders.FreeTypeFontLoader.FreeTypeFontParameter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
@@ -124,11 +122,8 @@ public class FlxText extends FlxSprite
 			Font = _font;
 		
 		if (!Font.equals(_font) || Size != _size)
-		{
-			FreeTypeFontParameter parameters = new FreeTypeFontParameter();
-			parameters.flip = true;
-						
-			_textField = new BitmapFontCache(FlxG.loadAsset(Font + ":" + (int)Size, BitmapFont.class, parameters));
+		{			
+			_textField = new BitmapFontCache(FlxG._cache.loadFont(Font, (int)Size));			
 		}
  
 		_font = Font;
@@ -331,8 +326,8 @@ public class FlxText extends FlxSprite
 	protected void calcFrame()
 	{
 		TextBounds bounds = _textField.setWrappedText(_text, 2, 3, width, _alignment);
-		// bounds.height is shorter than it should be, and I don't know why.
-		// After some trial and error, adding seven seems to be about right in most cases.
+		// bounds.height is shorter than it should be.
+		// After some trial and error, adding seven seems to make it about right in most cases.
 		height = (int) FlxU.ceil(bounds.height + 7);		
 		setColor(_color);
 	}

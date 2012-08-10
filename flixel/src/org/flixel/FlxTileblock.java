@@ -1,5 +1,8 @@
 package org.flixel;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.TextureData;
+
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.
  * It can be filled with a random selection of tiles to quickly add detail.
@@ -24,7 +27,6 @@ public class FlxTileblock extends FlxSprite
 		immovable = true;
 	}
 	
-	
 	/**
 	 * Fills the block with a randomly arranged selection of graphics from the image provided.
 	 * 
@@ -43,7 +45,7 @@ public class FlxTileblock extends FlxSprite
 		int spriteWidth = (int) sprite.width;
 		int spriteHeight = (int) sprite.height;
 		int total = sprite.frames + Empties;
-					
+
 		//Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		boolean regen = false;
 		if(width % sprite.width != 0)
@@ -60,6 +62,13 @@ public class FlxTileblock extends FlxSprite
 			makeGraphic((int)width,(int)height,0,true);
 		else
 			this.fill(0);
+		
+		TextureData brushTextureData = sprite.framePixels.getTexture().getTextureData();
+		
+		if(!brushTextureData.isPrepared())
+			brushTextureData.prepare();
+				
+		Pixmap brushPixmap = brushTextureData.consumePixmap();
 		
 		//Stamp random tiles onto the canvas
 		int row = 0;
@@ -78,7 +87,7 @@ public class FlxTileblock extends FlxSprite
 				{
 					sprite.randomFrame();
 					sprite.drawFrame();
-					stamp(sprite,destinationX,destinationY);
+					stamp(brushPixmap, sprite.framePixels.getRegionX(), sprite.framePixels.getRegionY() - sprite.frameHeight, sprite.frameWidth, sprite.frameHeight, destinationX + _pixels.getRegionX(), destinationY + _pixels.getRegionY());
 				}
 				destinationX += spriteWidth;
 				column++;
@@ -86,6 +95,9 @@ public class FlxTileblock extends FlxSprite
 			destinationY += spriteHeight;
 			row++;
 		}
+		
+		if (brushTextureData.disposePixmap())
+			brushPixmap.dispose();
 		
 		return this;
 	}

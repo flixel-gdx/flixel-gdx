@@ -278,18 +278,25 @@ public class FlxSound extends FlxBasic
 		stop();
 		createSound();
 		
-		//If the type is not specified, make a guess based on the file size.
-		if (Type == AUTO)
+		switch (Type)
 		{
-			//FileHandle file = Gdx.files.internal(EmbeddedSound);
-			Type = MUSIC;//file.length() < 24576 ? SFX : MUSIC;
+			case AUTO:
+				//If the type is not specified, make a guess based on the file size.
+				//FileHandle file = Gdx.files.internal(EmbeddedSound);
+				Type = MUSIC;//file.length() < 24576 ? SFX : MUSIC;
+				return loadEmbedded(EmbeddedSound, Looped, AutoDestroy, Type);
+				
+			case SFX:
+				_sound = FlxG._cache.loadSound(EmbeddedSound);
+				break;
+			
+			case MUSIC:
+				_music = FlxG._cache.loadMusic(EmbeddedSound);
+				break;
+				
+			default:
+				break;
 		}
-		
-		Class<?> classType = (Type == SFX ? Sound.class : Music.class);
-		if (classType == Sound.class)
-			_sound = FlxG.loadAsset(EmbeddedSound, Sound.class);
-		else
-			_music = FlxG.loadAsset(EmbeddedSound, Music.class);
 		
 		//NOTE: can't pull ID3 info from embedded sound currently
 		_looped = Looped;

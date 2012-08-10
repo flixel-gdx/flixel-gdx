@@ -2,6 +2,7 @@ package org.flixel;
 
 import org.flixel.event.AFlxReplay;
 import org.flixel.plugin.TimerManager;
+import org.flixel.system.FlxAssetCache;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxReplay;
 
@@ -548,7 +549,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	}
 
 	@Override
-	public boolean touchMoved(int X, int Y)
+	public boolean mouseMoved(int X, int Y)
 	{
 		return false;
 	}
@@ -849,6 +850,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG._gl.glEnable(GL10.GL_SCISSOR_TEST);
 		FlxG.batch = new SpriteBatch();
 		FlxG.flashGfx = new Graphics();
+		FlxG._cache = new FlxAssetCache();
 		
 		//Add basic input event listeners and mouse container
 		Gdx.input.setInputProcessor(this);		
@@ -1007,7 +1009,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	public void dispose()
 	{
 		FlxG.log("dispose");
-		FlxG._assetManager.dispose();
+		FlxG._cache.dispose();
 		FlxG.flashGfx.dispose();
 	}
 }
