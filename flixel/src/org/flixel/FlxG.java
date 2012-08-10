@@ -1220,7 +1220,7 @@ public class FlxG
 	 */
 	static public void clearBitmapCache()
 	{
-		_cache.clear();
+		//_cache.clear();
 	}
 	
 	/**
