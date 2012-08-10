@@ -130,7 +130,11 @@ public class FlxSprite extends FlxObject
 	 * Internal, stores the entire source graphic (not the current displayed animation frame), used with Flash getter/setter.
 	 */
 	protected TextureRegion _pixels;
-
+	/**
+	 * Internal tracker for reloading the texture if its pixmap has been modified.
+	 */
+	protected ManagedTextureData _newTextureData;
+	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
 	 * Optionally can load a simple, one-frame graphic instead.
@@ -165,6 +169,7 @@ public class FlxSprite extends FlxObject
 		_frameTimer = 0;
 		
 		_callback = null;
+		_newTextureData = null;
 		
 		if(SimpleGraphic == null)
 			SimpleGraphic = ImgDefault;
@@ -228,6 +233,7 @@ public class FlxSprite extends FlxObject
 		scale = null;
 		_curAnim = null;
 		_callback = null;
+		_newTextureData = null;
 		framePixels = null;
 		super.destroy();
 	}
@@ -545,6 +551,12 @@ public class FlxSprite extends FlxObject
 		if(dirty)	//rarely 
 			calcFrame();
 		
+		if(_newTextureData != null)	//even rarer
+		{
+			_pixels.getTexture().load(_newTextureData);
+			_newTextureData = null;
+		}
+		
 		FlxCamera camera = FlxG._activeCamera;
 		
 		if (cameras != null && !cameras.contains(camera, true))
@@ -592,27 +604,17 @@ public class FlxSprite extends FlxObject
 	 * @param	Y			They Y coordinate of the brush's top left corner on this sprite.
 	 */
 	public void stamp(FlxSprite Brush, int X, int Y)
-	{	
-		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
-		
-		TextureData textureData = _pixels.getTexture().getTextureData();
-		
-		if(!textureData.isPrepared())
-			textureData.prepare();
-		
-		Pixmap pixmap = textureData.consumePixmap();
+	{			
+		Brush.drawFrame();
 		
 		TextureData brushTextureData = Brush.framePixels.getTexture().getTextureData();
 		
 		if(!brushTextureData.isPrepared())
 			brushTextureData.prepare();
 		
-		Brush.drawFrame();
 		Pixmap brushPixmap = brushTextureData.consumePixmap();
 
-		pixmap.drawPixmap(brushPixmap, Brush._pixels.getRegionX() + (Brush.getFrame() * Brush.frameWidth), Brush._pixels.getRegionY(), Brush.frameWidth, Brush.frameHeight, X, Y, Brush.frameWidth, Brush.frameHeight);
-		
-		_pixels.getTexture().load(new ManagedTextureData(pixmap));
+		stamp(brushPixmap, Brush.framePixels.getRegionX(), Brush.framePixels.getRegionY() - Brush.frameHeight, Brush.frameWidth, Brush.frameHeight, X + _pixels.getRegionX(), Y + _pixels.getRegionY());
 		
 		if (brushTextureData.disposePixmap())
 			brushPixmap.dispose();
@@ -642,6 +644,35 @@ public class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * This function draws or stamps one <code>FlxSprite</code> onto another.
+	 * This function is NOT intended to replace <code>draw()</code>!
+	 * 
+	 * @param	Brush			The image you want to use as a brush or stamp or pen or whatever.
+	 * @param	SourceX			The X coordinate of the brush's top left corner.
+	 * @param	SourceY			They Y coordinate of the brush's top left corner.
+	 * @param	SourceWidth		The brush's width.
+	 * @param	SourceHeight	The brush's height.
+	 * @param	DestinationX	The X coordinate of the brush's top left corner on this sprite.
+	 * @param	DestinationY	The Y coordinate of the brush's top right corner on this sprite.
+	 */
+	public void stamp(Pixmap Brush, int SourceX, int SourceY, int SourceWidth, int SourceHeight, int DestinationX, int DestinationY)
+	{	
+		Pixmap.setBlending(Pixmap.Blending.SourceOver);
+		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
+		
+		TextureData textureData = _pixels.getTexture().getTextureData();
+		
+		if(!textureData.isPrepared())
+			textureData.prepare();
+		
+		Pixmap pixmap = textureData.consumePixmap();
+
+		pixmap.drawPixmap(Brush, SourceX, SourceY, SourceWidth, SourceHeight, DestinationX, DestinationY, SourceWidth, SourceHeight);
+		
+		_newTextureData = new ManagedTextureData(pixmap);
+	}
+	
+	/**
 	 * This function draws a line on this sprite from position X1,Y1
 	 * to position X2,Y2 with the specified color.
 	 * 
@@ -654,6 +685,7 @@ public class FlxSprite extends FlxObject
 	 */
 	public void drawLine(float StartX, float StartY, float EndX, float EndY, int Color, int Thickness)
 	{		
+		Pixmap.setBlending(Pixmap.Blending.SourceOver);
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
 		TextureData textureData = _pixels.getTexture().getTextureData();
@@ -668,7 +700,7 @@ public class FlxSprite extends FlxObject
 		pixmap.setColor(FlxU.argbToRgba(Color));
 		pixmap.drawLine((int) (rx + StartX), (int) (ry + StartY), (int) (rx + EndX), (int) (ry + EndY));
 		
-		_pixels.getTexture().load(new ManagedTextureData(pixmap));
+		_newTextureData = new ManagedTextureData(pixmap);
 	}
 	
 	/**
@@ -693,6 +725,7 @@ public class FlxSprite extends FlxObject
 	 */
 	public void fill(int Color)
 	{		
+		Pixmap.setBlending(Pixmap.Blending.SourceOver);
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
 		TextureData textureData = _pixels.getTexture().getTextureData();
@@ -703,8 +736,8 @@ public class FlxSprite extends FlxObject
 		Pixmap pixmap = textureData.consumePixmap();
 		pixmap.setColor(FlxU.argbToRgba(Color));
 		pixmap.fillRectangle(_pixels.getRegionX(), _pixels.getRegionY(), _pixels.getRegionWidth(), _pixels.getRegionHeight());
-		
-		_pixels.getTexture().load(new ManagedTextureData(pixmap));
+
+		_newTextureData = new ManagedTextureData(pixmap);
 	}
 	
 	/**
@@ -915,8 +948,8 @@ public class FlxSprite extends FlxObject
 		int rows = _pixels.getRegionHeight() + row;
 		int columns = _pixels.getRegionWidth() + _pixels.getRegionX();
 		
-		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		Pixmap.setBlending(Pixmap.Blending.None);
+		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
 		TextureData textureData = _pixels.getTexture().getTextureData();
 		
@@ -941,7 +974,7 @@ public class FlxSprite extends FlxObject
 			row++;
 		}		
 		
-		_pixels.getTexture().load(new ManagedTextureData(pixmap));
+		_newTextureData = new ManagedTextureData(pixmap);
 		return positions;
 	}
 	
@@ -1111,6 +1144,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @return	Whether or not the point overlaps this object.
 	 */
+	//TODO: pixel hittest. Loading the pixmap will be too slow to be usable, is there another way?
 	public boolean pixelsOverlapPoint(FlxPoint Point,int Mask,FlxCamera Camera)
 	{
 		if(Camera == null)
@@ -1181,7 +1215,7 @@ public class FlxSprite extends FlxObject
 			framePixels.flip(true, true);
 		else
 			framePixels.flip(false, true);
-		
+
 		if(_callback != null)
 			_callback.onAnimate(((_curAnim != null)?(_curAnim.name):null),_curFrame,_curIndex);
 		dirty = false;

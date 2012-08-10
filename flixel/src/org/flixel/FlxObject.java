@@ -512,7 +512,7 @@ public class FlxObject extends FlxBasic
 	 */
 	public void followPath(FlxPath Path,float Speed,int Mode,boolean AutoRotate)
 	{
-		if (Path.nodes.size <= 0)
+		if (Path == null || Path.nodes.size <= 0)
 		{
 			FlxG.log("WARNING: Paths need at least one node in them to be followed.");
 			return;

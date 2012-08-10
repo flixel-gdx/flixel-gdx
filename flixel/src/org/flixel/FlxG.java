@@ -7,31 +7,18 @@ import org.flixel.event.AFlxReplay;
 import org.flixel.event.AFlxVolume;
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
+import org.flixel.system.FlxAssetCache;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetLoaderParameters;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.FreeTypeFontLoader;
-import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
-import com.badlogic.gdx.assets.loaders.TextureLoader;
-import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
-import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.ManagedTextureData;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.TextureData;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -272,7 +259,7 @@ public class FlxG
 	/**
 	 * Internal storage system to prevent assets from being used repeatedly in memory.
 	 */
-	static AssetManager _assetManager;
+	static FlxAssetCache _cache;
 	
 	/**
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
@@ -965,7 +952,9 @@ public class FlxG
 		{
 			sound = (FlxSound) sounds.members.get(i++);
 			if((sound != null) && (ForceDestroy || !sound.survive))
+			{
 				sound.destroy();
+			}
 		}
 	}
 
@@ -1036,7 +1025,7 @@ public class FlxG
 	 */
 	static public boolean checkBitmapCache(String Key)
 	{
-		return _assetManager.isLoaded(Key);
+		return _cache.containsTexture(Key);
 	}
 	
 	/**
@@ -1073,18 +1062,14 @@ public class FlxG
 		{
 			if (Width == 0 || Height == 0)
 				throw new RuntimeException("A bitmaps width and height must be greater than zero.");
+
+			Pixmap pixmap = new Pixmap(MathUtils.nextPowerOfTwo(Width), MathUtils.nextPowerOfTwo(Height), Format.RGBA8888);			
+			pixmap.setColor(FlxU.argbToRgba(Color));
+			pixmap.fill();
 			
-			Pixmap p = new Pixmap(MathUtils.nextPowerOfTwo(Width), MathUtils.nextPowerOfTwo(Height), Format.RGBA8888);			
-			p.setColor(FlxU.argbToRgba(Color));
-			p.fill();
-			
-			TextureParameter parameter = new TextureParameter();
-			parameter.magFilter = parameter.minFilter = TextureFilter.Nearest;
-			parameter.textureData = new ManagedTextureData(p);
-			
-			loadAsset(Key, Texture.class, parameter);
+			_cache.loadTexture(Key, pixmap, Width, Height);
 		}
-		return new TextureRegion(loadAsset(Key,  Texture.class), 0, 0, Width, Height);
+		return _cache.loadTexture(Key, Width, Height);
 	}
 	
 	/**
@@ -1155,7 +1140,7 @@ public class FlxG
 		String fileName = split[0];
 		String regionName = split[1];
 		
-		TextureRegion textureRegion = loadAsset(fileName, TextureAtlas.class).findRegion(regionName);
+		TextureRegion textureRegion = _cache.loadTexture(fileName, regionName);
 		
 		if (textureRegion == null)
 			throw new RuntimeException("Could not find region " + regionName + " in " + fileName);
@@ -1181,15 +1166,11 @@ public class FlxG
 			if (textureData.disposePixmap())
 				graphicPixmap.dispose();
 			
-			TextureParameter parameter = new TextureParameter();
-			parameter.minFilter = parameter.magFilter = TextureFilter.Nearest;
-			parameter.textureData = new ManagedTextureData(newPixmap);
-			textureRegion = new TextureRegion(loadAsset(Key, Texture.class, parameter), 0, 0, rw, rh);
-			newPixmap.dispose();
+			textureRegion = _cache.loadTexture(Key, newPixmap, rw, rh);
 		}
 		else if (Unique)
 		{
-			textureRegion = new TextureRegion(loadAsset(Key, Texture.class), 0, 0, textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+			textureRegion = _cache.loadTexture(Key, textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
 		}
 		
 		return textureRegion;
@@ -1239,56 +1220,7 @@ public class FlxG
 	 */
 	static public void clearBitmapCache()
 	{
-		
-	}
-	
-	/**
-	 * Internal function for loading assets using the <code>assetManager</code>.
-	 *
-	 * @param Path	The file path to the asset.
-	 * @param Type	The type of asset to load.
-	 * @param Parameters	Optional parameters for loading the asset.
-	 * 
-	 * @return	The loaded asset.
-	 */
-	static <T> T loadAsset(String Path, Class<T> Type, AssetLoaderParameters<T> Parameters)
-	{
-		if (!_assetManager.isLoaded(Path, Type) || Parameters != null)
-		{
-			FileHandleResolver resolver = null;
-			if (Path.startsWith("org/flixel"))
-				resolver = new ClasspathFileHandleResolver();
-			else
-				resolver = new InternalFileHandleResolver();
-		
-			if (Type == TextureAtlas.class)
-			{
-				_assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(resolver));
-				_assetManager.setLoader(Texture.class, new TextureLoader(resolver));
-			}
-			else if (Type == BitmapFont.class)
-			{
-				_assetManager.setLoader(BitmapFont.class, new FreeTypeFontLoader(resolver));
-			}
-			
-			_assetManager.load(Path, Type, Parameters);
-			_assetManager.finishLoading();
-		}
-		
-		return _assetManager.get(Path, Type);
-	}
-	
-	/**
-	 * Internal function for loading assets using the <code>assetManager</code>.
-	 *
-	 * @param Path	The file path to the asset.
-	 * @param Type	The type of asset to load.
-	 * 
-	 * @return	The loaded asset.
-	 */
-	static <T> T loadAsset(String Path, Class<T> Type)
-	{
-		return loadAsset(Path, Type, null);
+		_cache.clear();
 	}
 	
 	/**
@@ -1931,8 +1863,6 @@ public class FlxG
 		FlxG.width = Width;
 		FlxG.height = Height;
 		
-		FlxG._assetManager = new AssetManager();
-		
 		FlxG.mute = false;
 		FlxG._volume = 0.5f;
 		FlxG.sounds = new FlxGroup();
@@ -1967,7 +1897,7 @@ public class FlxG
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
-		FlxG._assetManager.clear();
+
 		FlxG.levels.clear();
 		FlxG.scores.clear();
 		FlxG.level = 0;
