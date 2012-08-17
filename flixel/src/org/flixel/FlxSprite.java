@@ -520,7 +520,6 @@ public class FlxSprite extends FlxObject
 		framePixels.flip(false, true);
 		origin.make(frameWidth*0.5f,frameHeight*0.5f);
 		frames = (int) ((_pixels.getRegionWidth() / frameWidth) * (_pixels.getRegionHeight() / frameHeight));
-		framePixels.setColor((_color>>16)*0.00392f,(_color>>8&0xff)*0.00392f,(_color&0xff)*0.00392f,_alpha);
 		_curIndex = 0;
 	}
 	
@@ -551,7 +550,7 @@ public class FlxSprite extends FlxObject
 		if(dirty)	//rarely 
 			calcFrame();
 		
-		if(_newTextureData != null)	//even rarer
+		if(_newTextureData != null)	//even more rarely
 		{
 			_pixels.getTexture().load(_newTextureData);
 			_newTextureData = null;
@@ -568,13 +567,18 @@ public class FlxSprite extends FlxObject
 		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
 		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
+		
+		//tinting
+		float[] tintColor = FlxU.multiplyColors(_color, camera.getColor());
+		framePixels.setColor(tintColor[0], tintColor[1], tintColor[2], _alpha);
+		
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
-		{ 	// Simple render
+		{ 	//Simple render
 			framePixels.setPosition(_point.x, _point.y);
 			framePixels.draw(FlxG.batch);
 		}
 		else
-		{ 	// Advanced render
+		{ 	//Advanced render
 			framePixels.setOrigin(origin.x, origin.y);
 			framePixels.setScale(scale.x, scale.y);
 			if((angle != 0) && (_bakedRotation <= 0))
@@ -590,6 +594,7 @@ public class FlxSprite extends FlxObject
 			else
 				framePixels.draw(FlxG.batch);
 		}
+		
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
 				drawDebug(camera);		
@@ -1061,10 +1066,8 @@ public class FlxSprite extends FlxObject
 	 */
 	public void setColor(int Color)
 	{
-		Color &= 0x00FFFFFFL;
-		_color = Color;
-		
-		framePixels.setColor((_color>>16)*0.00392f,(_color>>8&0xff)*0.00392f,(_color&0xff)*0.00392f,_alpha);
+		Color &= 0x00FFFFFF;
+		_color = Color;		
 	}
 	
 	/**

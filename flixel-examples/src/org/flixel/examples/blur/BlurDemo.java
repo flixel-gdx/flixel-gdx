@@ -3,7 +3,7 @@ package org.flixel.examples.blur;
 import org.flixel.FlxGame;
 
 /**
- * A demo that shows colored squares. The squares leave a trail.
+ * A simple motion-trails special effect test.
  * 
  * @author Adam Atomic
  * @author Ka Wing Chin
@@ -12,6 +12,6 @@ public class BlurDemo extends FlxGame
 {
 	public BlurDemo()
 	{
-		super(480, 320, PlayState.class, 1, 30, 30);
+		super(640, 480, PlayState.class, 1, 50, 50);
 	}
 }

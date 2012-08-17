@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+//TODO: Documentation.
 public class FlxAssetCache
 {
 	protected AssetManager _assetManager;
@@ -112,6 +113,8 @@ public class FlxAssetCache
 		_assetManager.dispose();
 	}
 	
+	//TODO: Need to be able to specify which assets to dispose, so that FlxG::destroySounds doesn't
+	//dispose surviving FlxSounds.
 	public void clear()
 	{
 		//_assetManager.clear();

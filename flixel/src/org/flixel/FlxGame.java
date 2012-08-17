@@ -345,7 +345,6 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	void showSoundTray(boolean Silent)
 	{
-		// Can't load sounds from a classpath, so can't have default sounds.
 		//if(!Silent)
 			//FlxG.play(SndBeep);
 		_soundTrayTimer = 1;
@@ -413,7 +412,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			    		showSoundTray();
 						return true;
 					case Keys.PLUS:
-					//case Keys.PLUS:
+					case Keys.EQUALS:
 						FlxG.mute = false;
 			    		FlxG.setVolume(FlxG.getVolume() + 0.1f);
 			    		showSoundTray();
@@ -574,7 +573,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_lostFocus = /*_focus.visible =*/ true;
 		FlxG.pauseSounds();
 	}
-
+	
 	/**
 	 * Handles the render call and figures out how many updates and draw calls to do.
 	 */
@@ -883,6 +882,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	/**
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
+	//TODO: Sound tray
 	protected void createSoundTray()
 	{
 		//_soundTray.visible = false;
@@ -939,6 +939,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	/**
 	 * Sets up the darkened overlay with the big white "play" button that appears when a flixel game loses focus.
 	 */
+	//TODO: Focus screen
 	protected void createFocusScreen()
 	{
 		//var gfx:Graphics = _focus.graphics;
@@ -978,6 +979,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	}
 
 	@Override
+	//TODO: This should be in FlxCamera. Different cameras should be able to be set to different scale modes.
 	public void resize(int width, int height)
 	{		
 		FlxG.screenWidth = width;

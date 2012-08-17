@@ -21,7 +21,7 @@ public class PlayState extends FlxState
 
 	@Override
 	public void create()
-	{			
+	{		
 		//Background
 		FlxG.setBgColor(0xffacbcd7);
 		FlxSprite decoration = new FlxSprite(256,159,ImgBG);
@@ -30,7 +30,7 @@ public class PlayState extends FlxState
 		add(decoration);
 		add(new FlxText(32,36,96,"collision").setFormat(null,16,0xFF778ea1,"center"));
 		add(new FlxText(32,60,96,"DEMO").setFormat(null,24,0xFF778ea1,"center"));
-
+		
 		FlxPath path;
 		FlxSprite sprite;
 		FlxPoint destination;
@@ -93,8 +93,8 @@ public class PlayState extends FlxState
 		FlxText tx;
 		tx = new FlxText(2,0,FlxG.width/3,FlxG.getLibraryName());
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
-		tx.setColor(0xFF778ea1);
-		tx.setShadow(0xFF233e58);
+		tx.setColor(0x778ea1);
+		tx.setShadow(0x233e58);
 		add(tx);
 
 		if (FlxG.mobile)
@@ -108,8 +108,8 @@ public class PlayState extends FlxState
 			//Instructions
 			tx = new FlxText(2,FlxG.height-12,FlxG.width,"Interact with ARROWS + SPACE, or press ENTER for next demo.");
 			tx.scrollFactor.x = tx.scrollFactor.y = 0;
-			tx.setColor(0xFF778ea1);
-			tx.setShadow(0xFF233e58);
+			tx.setColor(0x778ea1);
+			tx.setShadow(0x233e58);
 			add(tx);
 		}
 	}
