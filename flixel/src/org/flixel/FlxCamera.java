@@ -2,7 +2,6 @@ package org.flixel;
 
 import org.flixel.event.AFlxCamera;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -840,17 +839,17 @@ public class FlxCamera extends FlxBasic
 	{
 		if (BlendAlpha)
 		{
-			Gdx.gl.glEnable(GL10.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+			FlxG._gl.glEnable(GL10.GL_BLEND);
+			FlxG._gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		}
 		else
-			Gdx.gl.glDisable(GL10.GL_BLEND);
+			FlxG._gl.glDisable(GL10.GL_BLEND);
 		
 		ShapeRenderer flashGfx = FlxG.flashGfx.getShapeRenderer();
 		flashGfx.setProjectionMatrix(_glCamera.combined);
 		flashGfx.begin(ShapeType.FilledRectangle);
-		float[] rgba = FlxU.getRGBA(Color);
-		flashGfx.setColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+		float[] color = FlxU.multiplyColors(Color, _color);
+		flashGfx.setColor(color[0], color[1], color[2], ((Color >> 24) & 0xff) / 255f);
 		flashGfx.filledRect(0, 0, width, height);
 		flashGfx.end();
 	}

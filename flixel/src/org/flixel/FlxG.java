@@ -1939,13 +1939,20 @@ public class FlxG
 		_gl.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
 
 		//Clear the camera
-		float[] rgba = FlxU.getRGBA(camera.bgColor);
-		_gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
-		_gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		if(((camera.bgColor >> 24) & 0xff) == 0xff)
+		{
+			float[] tintColor = FlxU.multiplyColors(camera.bgColor, camera.getColor());
+			_gl.glClearColor(tintColor[0], tintColor[1], tintColor[2], tintColor[3]);
+			_gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		}
+		else
+		{
+			camera.fill(camera.bgColor);
+		}
 		
 		//Set tint
-		rgba = FlxU.getRGBA(camera.getColor());
-		FlxG.batch.setColor(rgba[0], rgba[1], rgba[2], 1.0f);
+		float[] tintColor = FlxU.getRGBA(camera.getColor());
+		FlxG.batch.setColor(tintColor[0], tintColor[1], tintColor[2], 1.0f);
 		
 		FlxG.batch.setProjectionMatrix(camera._glCamera.combined);
 		FlxG.flashGfx.setProjectionMatrix(camera._glCamera.combined);

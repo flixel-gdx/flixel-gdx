@@ -8,7 +8,6 @@ import android.content.Intent;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 
 public class FlxU
@@ -279,9 +278,9 @@ public class FlxU
 	 * 
 	 * @return  The color as a <code>int</code>.
 	 */
-	static public int makeColor(int Red, int Green, int Blue, int Alpha)
+	static public int makeColor(int Red, int Green, int Blue, float Alpha)
 	{
-		return (((Alpha>1)?Alpha:(Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
+		return ((int)((Alpha>1)?Alpha:(Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
 	}
 	
 	/**
@@ -358,40 +357,37 @@ public class FlxU
 		return makeColorHSB(Hue, Saturation, Brightness, 1);
 	}
 
-
 	/**
 	 * Loads an array with the RGBA values of a Flash <code>int</code> color.
 	 * RGB values are stored 0-255.  Alpha is stored as a floating point number between 0 and 1.
 	 * 
-	 * @param	bgColor	The color you want to break into components.
+	 * @param	Color	The color you want to break into components.
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * 
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public float[] getRGBA(int bgColor, float[] Results)
+	static public float[] getRGBA(int Color, float[] Results)
 	{
-		Results[0] = (float)((bgColor >> 16) & 0xFF) / 255;		
-		Results[1] = (float)((bgColor >> 8) & 0xFF) / 255;
-		Results[2] = (float)(bgColor & 0xFF) / 255;
-		Results[3] = (float)((bgColor >> 24) & 0xFF) / 255;
+		Results[0] = (float)((Color >> 16) & 0xFF) / 255;		
+		Results[1] = (float)((Color >> 8) & 0xFF) / 255;
+		Results[2] = (float)(Color & 0xFF) / 255;
+		Results[3] = (float)((Color >> 24) & 0xFF) / 255;
 		return Results;
 	}
-	
 	
 	/**
 	 * Loads an array with the RGBA values of a Flash <code>int</code> color.
 	 * RGB values are stored 0-255.  Alpha is stored as a floating point number between 0 and 1.
 	 * 
-	 * @param	bgColor	The color you want to break into components.
+	 * @param	Color	The color you want to break into components.
 	 * 
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public float[] getRGBA(int bgColor)
+	static public float[] getRGBA(int Color)
 	{		
 		float[] Results = new float[4];
-		return getRGBA(bgColor, Results);
+		return getRGBA(Color, Results);
 	}
-	
 	
 	/**
 	 * Loads an array with the HSB values of a Flash <code>int</code> color.
@@ -440,7 +436,6 @@ public class FlxU
 		return Results;
 	}
 	
-	
 	/**
 	 * Loads an array with the HSB values of a Flash <code>int</code> color.
 	 * Hue is a value between 0 and 360.  Saturation, Brightness and Alpha
@@ -457,26 +452,23 @@ public class FlxU
 		return getHSB(Color, Results);		
 	}
 	
-	
-	/**
-	 * Expects a hex value as integer and returns the appropriate Color object.
-	 * 
-	 * @param hex Must be of the form 0xAARRGGBB
-	 * @return the generated Color object
-	 */
-	static public Color colorFromHex(int Hex)
-	{
-		float a = (Hex & 0xFF000000L) >> 24;
-		float r = (Hex & 0xFF0000L) >> 16;
-		float g = (Hex & 0xFF00L) >> 8;
-		float b = (Hex & 0xFFL);
-
-		return new Color(r / 255f, g / 255f, b / 255f, a / 255f);
-	}
-
 	static public int argbToRgba(int Color)
 	{
 		return (Color << 8) | (Color >>> 24);
+	}
+	
+	static public float[] multiplyColors(int Color1, int Color2)
+	{
+		float[] results = new float[4];
+		float[] color1 = FlxU.getRGBA(Color1);
+		float[] color2 = FlxU.getRGBA(Color2);
+		
+		results[0] = color1[0] * color2[0];
+		results[1] = color1[1] * color2[1];
+		results[2] = color1[2] * color2[2];
+		results[3] = color1[3] * color2[3];
+		
+		return results;
 	}
 	
 	/**

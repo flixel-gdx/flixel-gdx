@@ -249,7 +249,7 @@ public class FlxText extends FlxSprite
 	@Override
 	public void setColor(int Color)
 	{
-		Color &= 0x00FFFFFFL;
+		Color &= 0x00FFFFFF;
 		
 		_color = Color;
 	
@@ -375,14 +375,16 @@ public class FlxText extends FlxSprite
 		//Render a single pixel shadow beneath the text
 		if (_shadow != 0)
 		{
-			float[] rgba = FlxU.getRGBA(_shadow);
-			_textField.setColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+			float[] tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
+			_textField.setColor(tintColor[0], tintColor[1], tintColor[2], _alpha);
 			_textField.translate(1f, 1f);
 			_textField.draw(FlxG.batch);
 			_textField.translate(-1f, -1f);
-			setColor(_color);
 		}
 		
+		float[]	tintColor = FlxU.multiplyColors(_color, camera.getColor());
+		_textField.setColor(tintColor[0], tintColor[1], tintColor[2], _alpha);
+
 		_textField.draw(FlxG.batch);
 		
 		if (angle != 0)
