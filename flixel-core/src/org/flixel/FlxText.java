@@ -379,7 +379,10 @@ public class FlxText extends FlxSprite
 			int tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
 			_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 			_textField.translate(1f, 1f);
+			FlxG.batch.enableBlending();
+			FlxG.batch.setBlendFunction(0x0302, 0x0303);
 			_textField.draw(FlxG.batch);
+			FlxG.batch.disableBlending();
 			_textField.translate(-1f, -1f);
 		}
 		
@@ -387,7 +390,10 @@ public class FlxText extends FlxSprite
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 
+		FlxG.batch.enableBlending();
+		FlxG.batch.setBlendFunction(0x0302, 0x0303);
 		_textField.draw(FlxG.batch);
+		FlxG.batch.disableBlending();
 		
 		if (angle != 0)
 			FlxG.batch.setTransformMatrix(_matrix);
