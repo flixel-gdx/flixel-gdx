@@ -124,9 +124,9 @@ public class Log extends FlxWindow
 		if(_lines.size > MAX_LOG_LINES)
 		{
 			_lines.removeIndex(0);
-			String newText = "";
-			for(int i = 0; i < _lines.size; i++)
-				newText += _lines.get(i)+"\n";
+			//String newText = "";
+			//for(int i = 0; i < _lines.size; i++)
+				//newText += _lines.get(i)+"\n";
 			//_text.text = newText;
 		}
 		//else

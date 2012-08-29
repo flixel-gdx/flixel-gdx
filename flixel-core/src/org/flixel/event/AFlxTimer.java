@@ -2,7 +2,7 @@ package org.flixel.event;
 
 import org.flixel.FlxTimer;
 
-public abstract class AFlxTimer
+public interface AFlxTimer
 {
-	public void onComplete(FlxTimer flxTimer){}
+	public void callback(FlxTimer Timer);
 }

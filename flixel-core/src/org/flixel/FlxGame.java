@@ -453,7 +453,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				{
 					if(_replayCallback != null)
 					{
-						_replayCallback.onComplete();
+						_replayCallback.callback();
 						_replayCallback = null;
 					}
 					else
@@ -499,7 +499,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				{
 					if(_replayCallback != null)
 					{
-						_replayCallback.onComplete();
+						_replayCallback.callback();
 						_replayCallback = null;
 					}
 					else
@@ -559,9 +559,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	@Override
 	public void resume()
 	{
-		FlxG.resetInput();
-		_lostFocus = /*_focus.visible =*/ false;
-		FlxG.resumeSounds();
+		onFocus();
 	}
 	
 	/**
@@ -570,7 +568,30 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	@Override
 	public void pause()
 	{
+		onFocusLost();
+	}
+
+	/**
+	 * Internal event handler for input and focus.
+	 */
+	protected void onFocus()
+	{
+		//if(!_debuggerUp && !useSystemCursor)
+			//flash.ui.Mouse.hide();
+		FlxG.resetInput();
+		_lostFocus /*= _focus.visible*/ = false;
+		//stage.frameRate = _flashFramerate;
+		FlxG.resumeSounds();
+	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 */
+	protected void onFocusLost()
+	{
+		//flash.ui.Mouse.show();
 		_lostFocus = /*_focus.visible =*/ true;
+		//stage.frameRate = 10;
 		FlxG.pauseSounds();
 	}
 	
@@ -599,7 +620,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				_accumulator += elapsedMS;
 				if(_accumulator > _maxAccumulation)
 					_accumulator = _maxAccumulation;
-				while(_accumulator >= _step)
+				while(_accumulator > _step)
 				{
 					step();
 					_accumulator = _accumulator - _step; 
@@ -713,7 +734,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				{
 					if(_replayCallback != null)
 					{
-						_replayCallback.onComplete();
+						_replayCallback.callback();
 						_replayCallback = null;
 					}
 					else
@@ -725,7 +746,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				FlxG.stopReplay();
 				if(_replayCallback != null)
 				{
-					_replayCallback.onComplete();
+					_replayCallback.callback();
 					_replayCallback = null;
 				}
 			}
@@ -790,7 +811,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.updatePlugins();
 		_state.update();
 		FlxG.updateCameras();
-		
+
 		// TODO: temporary key for turning on debug, delete when FlxDebugger complete
 		if(FlxG.keys.justPressed(Keys.F2))
 			FlxG.visualDebug = !FlxG.visualDebug;
@@ -810,13 +831,13 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		int l = FlxG.cameras.size;
 		while (i < l)
 		{
-			FlxG._activeCamera = FlxG.cameras.get(i);
+			FlxG._activeCamera = FlxG.cameras.get(i++);
 			
 			FlxG.lockCameras();
 			_state.draw();
 			FlxG.unlockCameras();
 			
-			i++;
+			FlxG.drawPlugins();
 		}
 				
 		//Draw fps display TODO: needs to be deleted some day.
@@ -825,8 +846,6 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);
 		FlxG.batch.end();
-		
-		FlxG.drawPlugins();
 		
 		if(_debuggerUp)
 			_debugger.perf.flixelDraw((int) (System.currentTimeMillis()-mark));
@@ -843,11 +862,17 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		
 		_total = System.currentTimeMillis();
 		
-		//Set up the view window
+		//Set up OpenGL
 		FlxG._gl = Gdx.gl10;
-		//gl.glEnable(GL10.GL_CULL_FACE);
-		//gl.glCullFace(GL10.GL_BACK);
+		FlxG._gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
+        FlxG._gl.glShadeModel(GL10.GL_FLAT);
+		FlxG._gl.glDisable(GL10.GL_CULL_FACE);
+        FlxG._gl.glDisable(GL10.GL_DITHER);
+        FlxG._gl.glDisable(GL10.GL_LIGHTING);
+        FlxG._gl.glDisable(GL10.GL_DEPTH_TEST);
+        FlxG._gl.glDisable(GL10.GL_FOG);
 		FlxG._gl.glEnable(GL10.GL_SCISSOR_TEST);
+		
 		FlxG.batch = new SpriteBatch();
 		FlxG.flashGfx = new Graphics();
 		FlxG._cache = new FlxAssetCache();
@@ -856,7 +881,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		Gdx.input.setInputProcessor(this);		
 		
 		//Detect whether on not we're running on a mobile
-		FlxG.mobile = Gdx.app.getType() != ApplicationType.Desktop;
+		FlxG.mobile = (Gdx.app.getType() != ApplicationType.Desktop);
 		
 		//Let mobile devs opt out of unnecessary overlays.
 		if(!FlxG.mobile)
@@ -1012,6 +1037,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	public void dispose()
 	{
 		_state.destroy();
+		FlxG.reset();
 		FlxG._cache.dispose();
 		FlxG.flashGfx.dispose();
 	}

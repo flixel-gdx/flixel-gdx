@@ -1,230 +1,127 @@
 package org.flixel.system;
 
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.DynamicPixmapLoader;
-import com.badlogic.gdx.assets.loaders.DynamicPixmapLoader.DynamicPixmapParameter;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.FreeTypeFontLoader;
-import com.badlogic.gdx.assets.loaders.FreeTypeFontLoader.FreeTypeFontParameter;
-import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
-import com.badlogic.gdx.assets.loaders.TextureLoader;
-import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
-import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.ManagedTextureData;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-//TODO: Documentation.
-public class FlxAssetCache
-{
-	protected AssetManager _assetManager;
-	
-	public FlxAssetCache()
-	{
-		_assetManager = new AssetManager();
-	}
-	
-	public TextureRegion loadTexture(String Path, String Region)
-	{
-		if (!_assetManager.isLoaded(Path, TextureAtlas.class))
-		{
-			FileHandleResolver resolver = getFileHandleResolver(Path);
-			_assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(resolver));
-			_assetManager.setLoader(Texture.class, new TextureLoader(resolver));
-			_assetManager.load(Path, TextureAtlas.class);
-            _assetManager.finishLoading();
-		}
-		
-		return new TextureRegion(_assetManager.get(Path, TextureAtlas.class).findRegion(Region));
-	}
-	
-	public TextureRegion loadTexture(String Key, Pixmap Image, int Width, int Height)
-	{		
-		TextureParameter parameter = new TextureParameter();
-		parameter.minFilter = parameter.magFilter = TextureFilter.Nearest;
-		parameter.textureData = new ManagedTextureData(Image);
-        
-		_assetManager.load(Key, Texture.class, parameter);
-		
-		_assetManager.setLoader(Pixmap.class, new DynamicPixmapLoader());
-		DynamicPixmapParameter pixmapParameter = new DynamicPixmapParameter();
-		pixmapParameter.pixmap = Image;
-		_assetManager.load(Key + ":pixmap", Pixmap.class, pixmapParameter);
-		
-		_assetManager.finishLoading();
-		
-        return new TextureRegion(_assetManager.get(Key, Texture.class), 0, 0, Width, Height);
-	}
-	
-	public TextureRegion loadTexture(String Key, int Width, int Height)
-	{
-		return new TextureRegion(_assetManager.get(Key, Texture.class), 0, 0, Width, Height);
-	}
-	
-	public BitmapFont loadFont(String Path, int Size)
-	{
-		String key = Path + ":" + Size;
-		
-		if (!_assetManager.isLoaded(key, BitmapFont.class))
-		{
-			_assetManager.setLoader(BitmapFont.class, new FreeTypeFontLoader(getFileHandleResolver(Path)));
-			
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-            parameter.flip = true;
-            
-			_assetManager.load(key, BitmapFont.class, parameter);
-			_assetManager.finishLoading();
-		}
-		
-		return _assetManager.get(key, BitmapFont.class);
-	}
-	
-	public Sound loadSound(String Path)
-	{
-		if (!_assetManager.isLoaded(Path, Sound.class))
-		{
-			_assetManager.load(Path, Sound.class);
-			_assetManager.finishLoading();
-		}
-		
-		return _assetManager.get(Path, Sound.class);
-	}
-	
-	public Music loadMusic(String Path)
-	{
-		if (!_assetManager.isLoaded(Path, Music.class))
-		{
-			_assetManager.load(Path, Music.class);
-			_assetManager.finishLoading();
-		}
-		
-		return _assetManager.get(Path, Music.class);
-	}
-	
-	public void dispose()
-	{
-		_assetManager.dispose();
-	}
-	
-	//TODO: Need to be able to specify which assets to dispose, so that FlxG::destroySounds doesn't
-	//dispose surviving FlxSounds.
-	public void clear()
-	{
-		//_assetManager.clear();
-	}
-	
-	public boolean containsTexture(String Key)
-	{
-		return _assetManager.isLoaded(Key, Texture.class);
-	}
-	
-	public FileHandleResolver getFileHandleResolver(String Path)
-	{
-		if (Path.startsWith("org/flixel"))
-             return new ClasspathFileHandleResolver();
-		else
-             return new InternalFileHandleResolver();
-	}
-}
-
-/*package org.flixel.system;
-
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 
+/**
+ * This class provides an easy way to load and store textures, fonts,
+ * sounds and music.
+ * 
+ * @author Thomas Weston
+ */
 public class FlxAssetCache 
 {
-	protected ObjectMap<String, TextureAtlas> _atlases;
+	protected ObjectMap<String, Disposable> _atlases;
 	protected ObjectMap<String, TextureRegion> _textureRegions;
-	protected ObjectMap<String, BitmapFont> _fonts;
-	protected ObjectMap<String, Sound> _sounds;
-	protected ObjectMap<String, Music> _music;
-	
+	protected ObjectMap<String, Disposable> _sounds;
 	protected PixmapPacker _pixmapPacker;
 	
 	public FlxAssetCache()
-	{
-		_atlases = new ObjectMap<String, TextureAtlas>();
+	{		
+		_atlases = new ObjectMap<String, Disposable>();
 		_textureRegions = new ObjectMap<String, TextureRegion>();
-		_fonts = new ObjectMap<String, BitmapFont>();
-		_sounds = new ObjectMap<String, Sound>();
-		_music = new ObjectMap<String, Music>();
-		
-		clear();
-		_pixmapPacker = new PixmapPacker(1024, 1024, Format.RGBA8888, 0, false);
-		TextureAtlas atlas = new TextureAtlas();
-		_atlases.put("dynamic", atlas);
-		Gdx.app.setLogLevel(Application.LOG_NONE);
+		_sounds = new ObjectMap<String, Disposable>();
 	}
 	
+	/**
+	 * Loads a <code>TextureRegion</code> from a <code>TextureAtlas</code>.
+	 * 
+	 * @param Path		The path to the <code>TextureAtlas</code>.
+	 * @param Region	The name of the <code>TextureRegion</code>.
+	 * @return			The <code>TextureRegion</code> if found.
+	 */
 	public TextureRegion loadTexture(String Path, String Region)
 	{
 		String Key = Path + ":" + Region;
-		if (!_textureRegions.containsKey(Key))
+		if (!_atlases.containsKey(Key))
 		{
 			if (!_atlases.containsKey(Path))
 			{		
 				_atlases.put(Path, new TextureAtlas(getFileHandle(Path)));
 			}
-			_textureRegions.put(Key, _atlases.get(Path).findRegion(Region));
+			_textureRegions.put(Key, ((TextureAtlas) _atlases.get(Path)).findRegion(Region));
 		}
 		return loadTexture(Key);
 	}
 	
-	public TextureRegion loadTexture(String Key, Pixmap Image)
+	/**
+	 * Converts a <code>Pixmap</code> into a <code>TextureRegion</code> and stores it in the cache.
+	 * 
+	 * @param Key		The key to store the <code>Pixmap</code>.
+	 * @param Image		The <code>Pixmap</code> to store.
+	 * @param Width		The width of the region.
+	 * @param Height	The height of the region.
+	 * @return			The stored <code>Pixamp</code>.
+	 */
+	public TextureRegion loadTexture(String Key, Pixmap Image, int Width, int Height)
 	{	
 		if (!_textureRegions.containsKey(Key))
 		{
-			_pixmapPacker.pack(Key, Image);
-			_pixmapPacker.updateTextureAtlas(_atlases.get("dynamic"), TextureFilter.Nearest, TextureFilter.Nearest, false);
-			_textureRegions.put(Key, _atlases.get("dynamic").findRegion(Key));
+			_textureRegions.put(Key, new TextureRegion(new Texture(new ManagedTextureData(Image)), 0, 0, Width, Height));
 		}
 		return loadTexture(Key);
 	}
 	
+	/**
+	 * Loads a stored <code>TextureRegion</code>.
+	 * 
+	 * @param Key	The Key that was used to store this <code>TextureRegion</code>.
+	 * @return
+	 */
 	public TextureRegion loadTexture(String Key)
 	{
 		return new TextureRegion(_textureRegions.get(Key));
 	}
 	
+	/**
+	 * Whether or not the cache contains a <code>TextureRegion</code> with this key.
+	 * 
+	 * @param Key	The key to check.
+	 * @return		Whether or not the key exists.
+	 */
 	public boolean containsTexture(String Key)
 	{
 		return _textureRegions.containsKey(Key);
 	}
 	
+	/**
+	 * Loads a bitmap font.
+	 * 
+	 * @param Path	The path to the font file.
+	 * @param Size	The size of the font.
+	 * @return		The font.
+	 */
 	public BitmapFont loadFont(String Path, int Size)
 	{
-		if (!_fonts.containsKey(Path + Size))
+		if (!_atlases.containsKey(Path + Size))
 		{
 			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(getFileHandle(Path));
 			FreeTypeBitmapFontData data = generator.generateData(Size, FreeTypeFontGenerator.DEFAULT_CHARS, true);
 			generator.dispose();
-			_fonts.put(Path + Size, new BitmapFont(data, data.getTextureRegion(), true));
+			_atlases.put(Path + Size, new BitmapFont(data, data.getTextureRegion(), true));
 		}
 		
-		return _fonts.get(Path + Size);
+		return (BitmapFont) _atlases.get(Path + Size);
 	}
 	
+	/**
+	 * Loads a <code>Sound</code> from a file.
+	 * @param Path	The path to the file.
+	 * @return		The sound.
+	 */
 	public Sound loadSound(String Path)
 	{
 		if (!_sounds.containsKey(Path))
@@ -232,95 +129,84 @@ public class FlxAssetCache
 			_sounds.put(Path, Gdx.audio.newSound(getFileHandle(Path)));
 		}
 		
-		return _sounds.get(Path);
+		return (Sound) _sounds.get(Path);
 	}
 	
+	/**
+	 * Loads a <code>Music</code> instance from a file.
+	 * @param Path	The path to the file.
+	 * @return		The music.
+	 */
 	public Music loadMusic(String Path)
 	{
-		if (!_music.containsKey(Path))
+		if (!_sounds.containsKey(Path))
 		{
-			_music.put(Path, Gdx.audio.newMusic(getFileHandle(Path)));
+			_sounds.put(Path, Gdx.audio.newMusic(getFileHandle(Path)));
 		}
 		
-		return _music.get(Path);
+		return (Music) _sounds.get(Path);
 	}
 	
+	/**
+	 * Disposes all textures and fonts currently contained in the cache.
+	 */
 	public void disposeTextures()
 	{
-		for (TextureAtlas atlas : _atlases.values())
+		for (Disposable atlas : _atlases.values())
 			atlas.dispose();
 		
-		//_atlases.clear();
-		
+		_atlases.clear();
 		_textureRegions.clear();
-		
-		//if (_pixmapPacker != null)
-			//_pixmapPacker.dispose();
 	}
 	
-	public void disposeFonts()
-	{
-		for (BitmapFont font : _fonts.values())
-			font.dispose();
-		
-		_fonts.clear();
-	}
-	
+	/**
+	 * Disposes all sounds and music currently contained in the cache.
+	 */
 	public void disposeSounds()
 	{
-		for (Sound sound : _sounds.values())
+		for (Disposable sound : _sounds.values())
 			sound.dispose();
 		
 		_sounds.clear();
 	}
 	
-	public void disposeSound(Sound sound)
+	/**
+	 * Disposes the specified sound or music and removes it from the cache.
+	 * @param Sound
+	 */
+	public void disposeSound(Disposable Sound)
 	{
-		String key = _sounds.findKey(sound, true);
+		String key = _sounds.findKey(Sound, true);
 		if (key == null)
 			return;
 		
-		sound.dispose();
+		Sound.dispose();
 		_sounds.remove(key);
 	}
 	
-	public void disposeMusic()
-	{
-		for (Music music : _music.values())
-			music.dispose();
-		
-		_music.clear();
-	}
-	
-	public void disposeMusic(Music music)
-	{
-		String key = _music.findKey(music, true);
-		if (key == null)
-			return;
-		
-		music.dispose();
-		_music.remove(key);
-	}
-	
+	/**
+	 * Disposes the cache.
+	 */
 	public void dispose()
 	{
-		disposeTextures();
-		disposeFonts();
-		disposeSounds();
-		disposeMusic();
-		
-		_pixmapPacker = new PixmapPacker(1024, 1024, Format.RGBA8888, 0, false);
-		TextureAtlas atlas = new TextureAtlas();
-		_atlases.put("dynamic", atlas);
+		clear();
 	}
 	
+	/**
+	 * Disposes all assets currently contained in the cache.
+	 */
 	public void clear()
 	{
-		dispose();
-		
-		
+		disposeTextures();
+		disposeSounds();		
 	}
 	
+	/**
+	 * Gets the correct <code>FileHandle</code> for the specified path.
+	 * 
+	 * @param Path	The path.
+	 * @return		The file handle.
+	 */
 	protected FileHandle getFileHandle(String Path)
 	{
 		if (Path.startsWith("org/flixel"))
@@ -329,4 +215,3 @@ public class FlxAssetCache
 			return Gdx.files.internal(Path);
 	}
 }
-*/

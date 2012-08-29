@@ -1,7 +1,6 @@
 package org.flixel.event;
 
-
-public abstract class AFlxSave
+public interface AFlxSave
 {
-	public void onComplete(boolean success){};
+	public void callback(boolean Success);
 }

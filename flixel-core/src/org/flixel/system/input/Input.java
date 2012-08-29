@@ -49,7 +49,6 @@ public class Input
 		}
 	}
 	
-	
 	/**
 	 * Resets all the keys.
 	 */

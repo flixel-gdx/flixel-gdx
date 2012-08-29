@@ -24,7 +24,7 @@ public class Vis
 	{
 		super();
 
-		int spacing = 7;
+		//int spacing = 7;
 
 		//_bounds = new ImgBounds();
 		//addChild(_bounds);

@@ -432,37 +432,17 @@ public class FlxU
 	 * 
 	 * @param	Color1	The first color to multiply.
 	 * @param	Color2	The second color to multiply.
-	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * 
-	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the multiplied colors.
+	 * @return	The multiplied colors.
 	 */
-	static public float[] multiplyColors(int Color1, int Color2, float[] Results)
+	static public int multiplyColors(int Color1, int Color2)
 	{
-		if(Results == null)
-			Results = new float[4];
+		int r = (int) (((Color1 >> 16) & 0xFF) * ((Color2 >> 16) & 0xFF) * 0.00392f);
+		int g = (int) (((Color1 >> 8) & 0xFF) * ((Color2 >> 8) & 0xFF) * 0.00392f);
+		int b = (int) ((Color1 & 0xFF) * (Color2 & 0xFF) * 0.00392f);
+		int a = (int) (((Color1 >> 24) & 0xFF) * ((Color2 >> 24) & 0xFF) * 0.00392f);
 		
-		float[] color1 = FlxU.getRGBA(Color1);
-		float[] color2 = FlxU.getRGBA(Color2);
-		
-		Results[0] = color1[0] * color2[0] * 0.0000153664f;
-		Results[1] = color1[1] * color2[1] * 0.0000153664f;
-		Results[2] = color1[2] * color2[2] * 0.0000153664f;
-		Results[3] = color1[3] * color2[3];
-		
-		return Results;
-	}
-	
-	/**
-	 * Multiplies two colors together. Colors should be in Flash AARRGGBB format.
-	 * 
-	 * @param	Color1	The first color to multiply.
-	 * @param	Color2	The second color to multiply.
-	 * 
-	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the multiplied colors.
-	 */
-	static public float[] multiplyColors(int Color1, int Color2)
-	{
-		return multiplyColors(Color1, Color2, null);
+		return FlxU.makeColor(r, g, b, a);
 	}
 	
 	/**
@@ -516,7 +496,7 @@ public class FlxU
 		if((AnyArray == null) || (AnyArray.size <= 0))
 			return "";
 		String string = AnyArray.get(0).toString();
-		int i = 0;
+		int i = 1;
 		int l = AnyArray.size;
 		while(i < l)
 			string += ", " + AnyArray.get(i++).toString();

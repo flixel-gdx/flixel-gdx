@@ -315,7 +315,7 @@ public class FlxCamera extends FlxBasic
 		{
 			_fxFlashAlpha -= FlxG.elapsed/_fxFlashDuration;
 			if((_fxFlashAlpha <= 0) && (_fxFlashComplete != null))
-				_fxFlashComplete.onFlashComplete();
+				_fxFlashComplete.callback();
 		}
 		
 		//Update the "fade" special effect
@@ -326,7 +326,7 @@ public class FlxCamera extends FlxBasic
 			{
 				_fxFadeAlpha = 1.0f;
 				if(_fxFadeComplete != null)
-					_fxFadeComplete.onFadeComplete();
+					_fxFadeComplete.callback();
 			}
 		}
 		
@@ -338,7 +338,7 @@ public class FlxCamera extends FlxBasic
 			{
 				_fxShakeOffset.make();
 				if(_fxShakeComplete != null)
-					_fxShakeComplete.onShakeComplete();
+					_fxShakeComplete.callback();
 			}
 			else
 			{
@@ -848,8 +848,8 @@ public class FlxCamera extends FlxBasic
 		ShapeRenderer flashGfx = FlxG.flashGfx.getShapeRenderer();
 		flashGfx.setProjectionMatrix(_glCamera.combined);
 		flashGfx.begin(ShapeType.FilledRectangle);
-		float[] color = FlxU.multiplyColors(Color, _color);
-		flashGfx.setColor(color[0], color[1], color[2], ((Color >> 24) & 0xff) / 255f);
+		int color = FlxU.multiplyColors(Color, _color);
+		flashGfx.setColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((color >> 24) & 0xFF) * 0.00392f);
 		flashGfx.filledRect(0, 0, width, height);
 		flashGfx.end();
 	}

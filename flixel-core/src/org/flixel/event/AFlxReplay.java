@@ -1,6 +1,6 @@
 package org.flixel.event;
 
-public abstract class AFlxReplay
+public interface AFlxReplay
 {
-	public void onComplete(){}
+	public void callback();
 }

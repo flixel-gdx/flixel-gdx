@@ -2,13 +2,7 @@ package org.flixel.event;
 
 import org.flixel.FlxObject;
 
-public abstract class AFlxObject
+public interface AFlxObject
 {
-	public boolean onProcessCallback(FlxObject Object1, FlxObject Object2){return false;}
-	
-	public boolean onSeparateX(FlxObject Object1, FlxObject Object2){return false;}
-	
-	public boolean onSeparateY(FlxObject Object1, FlxObject Object2){return false;}
-
-	public boolean onOverlapsWith(FlxObject object, FlxObject tile){return false;}
+	public boolean callback(FlxObject Object1, FlxObject Object2);
 }

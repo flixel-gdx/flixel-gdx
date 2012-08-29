@@ -42,16 +42,14 @@ public class DebugPathDisplay extends FlxBasic
 	 */
 	@Override
 	public void draw()
-	{
-		if(!FlxG.visualDebug || ignoreDrawDebug)
-			return;	
+	{		
+		FlxCamera camera = FlxG.getActiveCamera();
 		
-		if(cameras == null)
-			cameras = FlxG.cameras;
-		int i = 0;
-		int l = cameras.size;
-		while(i < l)
-			drawDebug(cameras.get(i++));
+		if (cameras != null && !cameras.contains(camera, true))
+			return;
+		
+		if(FlxG.visualDebug && !ignoreDrawDebug)
+			drawDebug(camera);
 	}
 	
 	/**
@@ -88,7 +86,6 @@ public class DebugPathDisplay extends FlxBasic
 		drawDebug(null);
 	}
 	
-	
 	/**
 	 * Add a path to the path debug display manager.
 	 * Usually called automatically by <code>FlxPath</code>'s constructor.
@@ -100,7 +97,6 @@ public class DebugPathDisplay extends FlxBasic
 		_paths.add(Path);
 	}
 	
-	
 	/**
 	 * Remove a path from the path debug display manager.
 	 * Usually called automatically by <code>FlxPath</code>'s <code>destroy()</code> function.
@@ -109,11 +105,10 @@ public class DebugPathDisplay extends FlxBasic
 	 */
 	public void remove(FlxPath Path)
 	{
-		int index = _paths.indexOf(Path, false);
+		int index = _paths.indexOf(Path, true);
 		if(index >= 0)
 			_paths.removeIndex(index);
 	}
-	
 	
 	/**
 	 * Removes all the paths from the path debug display manager.
