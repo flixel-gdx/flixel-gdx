@@ -1,6 +1,9 @@
 package org.flixel.system;
 
 import org.flixel.FlxG;
+import org.flixel.FlxGroup;
+import org.flixel.FlxSprite;
+import org.flixel.FlxText;
 import org.flixel.system.debug.Log;
 import org.flixel.system.debug.Perf;
 import org.flixel.system.debug.VCR;
@@ -15,7 +18,7 @@ import com.badlogic.gdx.math.Vector2;
  * Most of the functionality is in the debug folder widgets,
  * but this class instantiates the widgets and handles their basic formatting and arrangement.
  */
-public class FlxDebugger
+public class FlxDebugger extends FlxGroup
 {
 	/**
 	 * Container for the performance monitor widget.
@@ -41,10 +44,7 @@ public class FlxDebugger
 	 * Whether the mouse is currently over one of the debugger windows or not.
 	 */
 	public boolean hasMouse;
-	/**
-	 * Whether the debugger is visible or not.
-	 */
-	public boolean visible;
+	
 	/**
 	 * Internal, tracks what debugger window layout user has currently selected.
 	 */
@@ -67,15 +67,14 @@ public class FlxDebugger
 	public FlxDebugger(float Width,float Height)
 	{
 		super();
-		//visible = false;
+		visible = false;
 		hasMouse = false;
 		_screen = new Vector2(Width,Height);
 
-		//addChild(new Bitmap(new BitmapData(Width,15,true,0x7f000000)));
+		add(new FlxSprite().makeGraphic((int) Width,15,0x7f000000));
 
-		//var txt:TextField = new TextField();
-		//txt.x = 2;
-		//txt.width = 160;
+		FlxText txt = new FlxText(2, 0, 160);
+		txt.setFormat(null, 12, 0xffffff);
 		//txt.height = 16;
 		//txt.selectable = false;
 		//txt.multiline = false;
@@ -85,8 +84,8 @@ public class FlxDebugger
 			str += " [debug]";
 		else
 			str += " [release]";
-		//txt.text = str;
-		//addChild(txt);
+		txt.setText(str);
+		add(txt);
 
 		_gutter = 8;
 		Rectangle screenBounds = new Rectangle(_gutter,15+_gutter/2,_screen.x-_gutter*2,_screen.y-_gutter*1.5f-15);

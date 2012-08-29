@@ -86,7 +86,7 @@ public class FlxTimer
 				stop();
 			
 			if(_callback != null)
-				_callback.onComplete(this);
+				_callback.callback(this);
 		}
 	}
 	

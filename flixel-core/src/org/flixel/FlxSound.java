@@ -475,7 +475,7 @@ public class FlxSound extends FlxBasic
 				_soundId = _sound.play();
 				if(_soundId == -1)
 					exists = false;
-					//TODO: Detect when Sound/Music is finished.
+					//TODO: Detect when Sound is finished.
 			}
 			else if(_music != null && !_music.isPlaying())
 			{
@@ -655,6 +655,7 @@ public class FlxSound extends FlxBasic
 		
 		if (_sound != null && _soundId != -1)
 			_sound.setPan(_soundId, _panAmount, volume);
+		//TODO: panning for Music
 		else if (_music != null)
 			_music.setVolume(volume);
 	}

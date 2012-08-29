@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxSprite;
+import org.flixel.event.AFlxAnim;
 import org.flixel.system.FlxAnim;
 
 import com.badlogic.gdx.graphics.ManagedTextureData;
@@ -109,7 +109,7 @@ public class FlxSprite extends FlxObject
 	 * If assigned, will be called each time the current frame changes.
 	 * A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
 	 */
-	protected AFlxSprite _callback;
+	protected AFlxAnim _callback;
 	/**
 	 * Internal tracker for what direction the sprite is currently facing, used with Flash getter/setter.
 	 */
@@ -146,8 +146,6 @@ public class FlxSprite extends FlxObject
 	public FlxSprite(float X, float Y, String SimpleGraphic)
 	{
 		super(X, Y);
-		
-		health = 1;
 		
 		offset = new FlxPoint();
 		origin = new FlxPoint();
@@ -214,6 +212,8 @@ public class FlxSprite extends FlxObject
 	@Override
 	public void destroy()
 	{
+		super.destroy();
+		
 		if(_animations != null)
 		{
 			FlxAnim a;
@@ -235,7 +235,6 @@ public class FlxSprite extends FlxObject
 		_callback = null;
 		_newTextureData = null;
 		framePixels = null;
-		super.destroy();
 	}
 	
 	/**
@@ -569,9 +568,9 @@ public class FlxSprite extends FlxObject
 		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
 		
 		//tinting
-		float[] tintColor = FlxU.multiplyColors(_color, camera.getColor());
-		framePixels.setColor(tintColor[0], tintColor[1], tintColor[2], _alpha);
-		
+		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
+		framePixels.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
+
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
 		{ 	//Simple render
 			framePixels.setPosition(_point.x, _point.y);
@@ -587,7 +586,7 @@ public class FlxSprite extends FlxObject
 			if(blend != null)
 			{
 				FlxG.batch.enableBlending();
-				FlxG.blend(blend);
+				FlxG.batch.setBlendFunction(blend[0], blend[1]);
 				framePixels.draw(FlxG.batch);
 				FlxG.batch.disableBlending();
 			}
@@ -847,7 +846,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	AnimationCallback		A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
 	 */
-	public void addAnimationCallback(AFlxSprite AnimationCallback)
+	public void addAnimationCallback(AFlxAnim AnimationCallback)
 	{
 		_callback = AnimationCallback;
 	}
@@ -861,7 +860,7 @@ public class FlxSprite extends FlxObject
 	 */
 	public void play(String AnimName, boolean Force)
 	{
-		if(!Force && (_curAnim != null) && (AnimName.equals(_curAnim.name)) && (_curAnim.looped || !finished)) return;
+		if(!Force && (_curAnim != null) && (AnimName.equals(_curAnim.name)) && (!_curAnim.looped || !finished)) return;
 		_curFrame = 0;
 		_curIndex = 0;
 		_frameTimer = 0;
@@ -1220,7 +1219,7 @@ public class FlxSprite extends FlxObject
 			framePixels.flip(false, true);
 
 		if(_callback != null)
-			_callback.onAnimate(((_curAnim != null)?(_curAnim.name):null),_curFrame,_curIndex);
+			_callback.callback(((_curAnim != null)?(_curAnim.name):null),_curFrame,_curIndex);
 		dirty = false;
 	}
 }

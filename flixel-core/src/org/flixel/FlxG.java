@@ -1,7 +1,7 @@
 package org.flixel;
 
 import org.flixel.event.AFlxCamera;
-import org.flixel.event.AFlxG;
+import org.flixel.event.AFlxCollision;
 import org.flixel.event.AFlxObject;
 import org.flixel.event.AFlxReplay;
 import org.flixel.event.AFlxVolume;
@@ -265,16 +265,18 @@ public class FlxG
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
 	 */
 	static public SpriteBatch batch;
-	
 	/**
 	 * Internal reference to OpenGL.
 	 */
 	static GL10 _gl;
-	
 	/**
 	 * The camera currently being drawn.
 	 */
 	static FlxCamera _activeCamera;
+	/**
+	 * Internal, a pre-allocated array to prevent <code>new</code> calls.
+	 */
+	protected static float[] _floatArray = new float[4];
 	
 	static public String getLibraryName()
 	{
@@ -943,6 +945,7 @@ public class FlxG
 		if((music != null) && (ForceDestroy || !music.survive))
 		{
 			music.destroy();
+			_cache.disposeSound(music._music);
 			music = null;
 		}
 		int i = 0;
@@ -954,6 +957,7 @@ public class FlxG
 			if((sound != null) && (ForceDestroy || !sound.survive))
 			{
 				sound.destroy();
+				_cache.disposeSound(sound._sound);
 			}
 		}
 	}
@@ -1069,7 +1073,7 @@ public class FlxG
 			
 			_cache.loadTexture(Key, pixmap, Width, Height);
 		}
-		return _cache.loadTexture(Key, Width, Height);
+		return _cache.loadTexture(Key);
 	}
 	
 	/**
@@ -1170,7 +1174,7 @@ public class FlxG
 		}
 		else if (Unique)
 		{
-			textureRegion = _cache.loadTexture(Key, textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+			textureRegion = _cache.loadTexture(Key);
 		}
 		
 		return textureRegion;
@@ -1250,6 +1254,14 @@ public class FlxG
 	static public FlxState getState()
 	{
 		return _game._state;
+	}
+	
+	/**
+	 * Read-only: gets the current FlxCamera.
+	 */
+	static public FlxCamera getActiveCamera()
+	{
+		return _activeCamera;
 	}
 	
 	/**
@@ -1571,14 +1583,14 @@ public class FlxG
 	 * 
 	 * @return	Whether any overlaps were detected.
 	 */
-	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxG NotifyCallback, AFlxObject ProcessCallback)
+	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback, AFlxObject ProcessCallback)
 	{
 		if(ObjectOrGroup1 == null)
 			ObjectOrGroup1 = FlxG.getState();
 		if(ObjectOrGroup2 == ObjectOrGroup1)
 			ObjectOrGroup2 = null;
 		FlxQuadTree.divisions = FlxG.worldDivisions;
-		FlxQuadTree quadTree = new FlxQuadTree(FlxG.worldBounds.x,FlxG.worldBounds.y,FlxG.worldBounds.width,FlxG.worldBounds.height);
+		FlxQuadTree quadTree = FlxQuadTree.getNew(FlxG.worldBounds.x,FlxG.worldBounds.y,FlxG.worldBounds.width,FlxG.worldBounds.height,null);
 		quadTree.load(ObjectOrGroup1,ObjectOrGroup2,NotifyCallback,ProcessCallback);
 		boolean result = quadTree.execute();
 		quadTree.destroy();
@@ -1599,7 +1611,7 @@ public class FlxG
 	 * 
 	 * @return	Whether any oevrlaps were detected.
 	 */
-	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxG NotifyCallback)
+	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback)
 	{
 		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, null);
 	}
@@ -1671,16 +1683,9 @@ public class FlxG
 	 * 
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
-	static public boolean collide(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxG NotifyCallback)
+	static public boolean collide(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback)
 	{		
-		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, new AFlxObject()
-		{				
-			@Override
-			public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
-			{
-				return FlxObject.separate(Object1, Object2);
-			}
-		});
+		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, separate);
 	}
 	
 	/**
@@ -1701,14 +1706,7 @@ public class FlxG
 	 */
 	static public boolean collide(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2)
 	{		
-		return overlap(ObjectOrGroup1, ObjectOrGroup2, null, new AFlxObject()
-		{				
-			@Override
-			public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
-			{
-				return FlxObject.separate(Object1, Object2);
-			}
-		});
+		return collide(ObjectOrGroup1, ObjectOrGroup2, null);
 	}
 	
 	/**
@@ -1728,14 +1726,7 @@ public class FlxG
 	 */
 	static public boolean collide(FlxBasic ObjectOrGroup1)
 	{
-		return overlap(ObjectOrGroup1, null, null, new AFlxObject()
-		{				
-			@Override
-			public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
-			{
-				return FlxObject.separate(Object1, Object2);
-			}
-		});
+		return collide(ObjectOrGroup1, null, null);
 	}
 	
 	/**
@@ -1753,14 +1744,7 @@ public class FlxG
 	 */
 	static public boolean collide()
 	{
-		return overlap(null, null, null, new AFlxObject()
-		{				
-			@Override
-			public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
-			{
-				return FlxObject.separate(Object1, Object2);
-			}
-		});
+		return collide(null, null, null);
 	}
 	
 	/**
@@ -1897,6 +1881,7 @@ public class FlxG
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
+		FlxG.stopVibrate();
 
 		FlxG.levels.clear();
 		FlxG.scores.clear();
@@ -1941,8 +1926,8 @@ public class FlxG
 		//Clear the camera
 		if(((camera.bgColor >> 24) & 0xff) == 0xff)
 		{
-			float[] tintColor = FlxU.multiplyColors(camera.bgColor, camera.getColor());
-			_gl.glClearColor(tintColor[0], tintColor[1], tintColor[2], tintColor[3]);
+			int color = FlxU.multiplyColors(camera.bgColor, camera.getColor());
+			_gl.glClearColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((color >> 24) & 0xFF) * 0.00392f);
 			_gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		}
 		else
@@ -1951,8 +1936,8 @@ public class FlxG
 		}
 		
 		//Set tint
-		float[] tintColor = FlxU.getRGBA(camera.getColor());
-		FlxG.batch.setColor(tintColor[0] * 0.00392f, tintColor[1] * 0.00392f, tintColor[2] * 0.00392f, 1.0f);
+		_floatArray = FlxU.getRGBA(camera.getColor(), _floatArray);
+		FlxG.batch.setColor(_floatArray[0] * 0.00392f, _floatArray[1] * 0.00392f, _floatArray[2] * 0.00392f, 1.0f);
 		
 		//Set matrix
 		FlxG.batch.setProjectionMatrix(camera._glCamera.combined);
@@ -2077,8 +2062,15 @@ public class FlxG
 		Gdx.input.cancelVibrate();
 	}
 	
-	public static void blend(int[] blend)
-	{
-		FlxG.batch.setBlendFunction(blend[0], blend[1]);
-	}
+	/**
+	 * Internal callback function for collision.
+	 */
+	protected static AFlxObject separate = new AFlxObject()
+	{				
+		@Override
+		public boolean callback(FlxObject Object1, FlxObject Object2)
+		{
+			return FlxObject.separate(Object1, Object2);
+		}
+	};
 }

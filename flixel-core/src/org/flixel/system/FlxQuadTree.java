@@ -4,7 +4,7 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxRect;
-import org.flixel.event.AFlxG;
+import org.flixel.event.AFlxCollision;
 import org.flixel.event.AFlxObject;
 
 import com.badlogic.gdx.utils.Array;
@@ -149,7 +149,7 @@ public class FlxQuadTree extends FlxRect
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static protected AFlxG _notifyCallback;
+	static protected AFlxCollision _notifyCallback;
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
@@ -188,7 +188,33 @@ public class FlxQuadTree extends FlxRect
 	 * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
 	 */
 	static protected float _checkObjectHullHeight;
-
+	
+	/**
+	 * Internal, a pool of <code>FlxQuadTree</code>s to prevent constant <code>new</code> calls.
+	 */
+	static private FlxObjectPool<FlxQuadTree> _pool = new FlxObjectPool<FlxQuadTree>(){@Override protected FlxQuadTree create(){return new FlxQuadTree();}};
+	
+	/**
+	 * Get a new Quad Tree node from the pool.
+	 * 
+	 * @param	X			The X-coordinate of the point in space.
+	 * @param	Y			The Y-coordinate of the point in space.
+	 * @param	Width		Desired width of this node.
+	 * @param	Height		Desired height of this node.
+	 * @param	Parent		The parent branch or node.  Pass null to create a root.
+	 * 
+	 * @return	A new <code>FlxQuadTree</code>.
+	 */
+	static public FlxQuadTree getNew(float X, float Y, float Width, float Height, FlxQuadTree Parent)
+	{
+		FlxQuadTree quadTree = _pool.getNew();
+		quadTree.init(X, Y, Width, Height, Parent);
+		return quadTree;
+	}
+	
+	private FlxQuadTree()
+	{
+	}
 	
 	/**
 	 * Instantiate a new Quad Tree node.
@@ -199,11 +225,11 @@ public class FlxQuadTree extends FlxRect
 	 * @param	Height		Desired height of this node.
 	 * @param	Parent		The parent branch or node.  Pass null to create a root.
 	 */
-	public FlxQuadTree(float X, float Y, float Width, float Height, FlxQuadTree Parent)
+	protected void init(float X, float Y, float Width, float Height, FlxQuadTree Parent)
 	{
-		super(X,Y,Width,Height);
-		_headA = _tailA = new FlxList();
-		_headB = _tailB = new FlxList();
+		make(X,Y,Width,Height);
+		_headA = _tailA = FlxList.getNew();
+		_headB = _tailB = FlxList.getNew();
 		
 		//Copy the parent's children (if there are any)
 		if(Parent != null)
@@ -218,7 +244,7 @@ public class FlxQuadTree extends FlxRect
 					if(_tailA.object != null)
 					{
 						ot = _tailA;
-						_tailA = new FlxList();
+						_tailA = FlxList.getNew();
 						ot.next = _tailA;
 					}
 					_tailA.object = iterator.object;
@@ -233,11 +259,11 @@ public class FlxQuadTree extends FlxRect
 					if(_tailB.object != null)
 					{
 						ot = _tailB;
-						_tailB = new FlxList();
+						_tailB = FlxList.getNew();
 						ot.next = _tailB;
 					}
 					_tailB.object = iterator.object;
-					iterator = iterator.next;
+					iterator = iterator.next;	
 				}
 			}
 		}
@@ -268,11 +294,10 @@ public class FlxQuadTree extends FlxRect
 	 * @param	Width		Desired width of this node.
 	 * @param	Height		Desired height of this node.
 	 */
-	public FlxQuadTree(float X, float Y, float Width, float Height)
+	protected void init(float X, float Y, float Width, float Height)
 	{
-		this(X, Y, Width, Height, null);
+		init(X, Y, Width, Height, null);
 	}
-	
 	
 	/**
 	 * Clean up memory.
@@ -281,13 +306,13 @@ public class FlxQuadTree extends FlxRect
 	{
 		_headA.destroy();
 		_headA = null;
-		_tailA.destroy();
+		//_tailA.destroy();
 		_tailA = null;
 		_headB.destroy();
 		_headB = null;
-		_tailB.destroy();
+		//_tailB.destroy();
 		_tailB = null;
-
+		
 		if(_northWestTree != null)
 			_northWestTree.destroy();
 		_northWestTree = null;
@@ -304,9 +329,10 @@ public class FlxQuadTree extends FlxRect
 		_object = null;
 		_processingCallback = null;
 		_notifyCallback = null;
+		
+		_pool.dispose(this);
 	}
 
-	
 	/**
 	 * Load objects and/or groups into the quad tree, and register notify and processing callbacks.
 	 * 
@@ -315,7 +341,7 @@ public class FlxQuadTree extends FlxRect
 	 * @param NotifyCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):void</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
 	 * @param ProcessCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):Boolean</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See FlxObject.separate(). 
 	 */
-	public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxG NotifyCallback, AFlxObject ProcessCallback)
+	public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback, AFlxObject ProcessCallback)
 	{
 		add(ObjectOrGroup1, A_LIST);
 		if(ObjectOrGroup2 != null)
@@ -336,7 +362,7 @@ public class FlxQuadTree extends FlxRect
 	 * @param ObjectOrGroup2	Any object that is or extends FlxObject or FlxGroup.  If null, the first parameter will be checked against itself.
 	 * @param NotifyCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):void</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.  
 	 */
-	public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxG NotifyCallback)
+	public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback)
 	{
 		load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, null);
 	}
@@ -351,7 +377,6 @@ public class FlxQuadTree extends FlxRect
 	{
 		load(ObjectOrGroup1, ObjectOrGroup2, null, null);
 	}
-	
 	
 	/**
 	 * Call this function to add an object to the root of the tree.
@@ -406,7 +431,6 @@ public class FlxQuadTree extends FlxRect
 		}
 	}
 	
-	
 	/**
 	 * Internal function for recursively navigating and creating the tree
 	 * while adding objects to the appropriate nodes.
@@ -426,14 +450,14 @@ public class FlxQuadTree extends FlxRect
 			if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
 			{
 				if(_northWestTree == null)
-					_northWestTree = new FlxQuadTree(_leftEdge,_topEdge,_halfWidth,_halfHeight,this);
+					_northWestTree = FlxQuadTree.getNew(_leftEdge,_topEdge,_halfWidth,_halfHeight,this);
 				_northWestTree.addObject();
 				return;
 			}
 			if((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
 			{
 				if(_southWestTree == null)
-					_southWestTree = new FlxQuadTree(_leftEdge,_midpointY,_halfWidth,_halfHeight,this);
+					_southWestTree = FlxQuadTree.getNew(_leftEdge,_midpointY,_halfWidth,_halfHeight,this);
 				_southWestTree.addObject();
 				return;
 			}
@@ -443,14 +467,14 @@ public class FlxQuadTree extends FlxRect
 			if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
 			{
 				if(_northEastTree == null)
-					_northEastTree = new FlxQuadTree(_midpointX,_topEdge,_halfWidth,_halfHeight,this);
+					_northEastTree = FlxQuadTree.getNew(_midpointX,_topEdge,_halfWidth,_halfHeight,this);
 				_northEastTree.addObject();
 				return;
 			}
 			if((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
 			{
 				if(_southEastTree == null)
-					_southEastTree = new FlxQuadTree(_midpointX,_midpointY,_halfWidth,_halfHeight,this);
+					_southEastTree = FlxQuadTree.getNew(_midpointX,_midpointY,_halfWidth,_halfHeight,this);
 				_southEastTree.addObject();
 				return;
 			}
@@ -460,29 +484,28 @@ public class FlxQuadTree extends FlxRect
 		if((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
 		{
 			if(_northWestTree == null)
-				_northWestTree = new FlxQuadTree(_leftEdge,_topEdge,_halfWidth,_halfHeight,this);
+				_northWestTree = FlxQuadTree.getNew(_leftEdge,_topEdge,_halfWidth,_halfHeight,this);
 			_northWestTree.addObject();
 		}
 		if((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
 		{
 			if(_northEastTree == null)
-				_northEastTree = new FlxQuadTree(_midpointX,_topEdge,_halfWidth,_halfHeight,this);
+				_northEastTree = FlxQuadTree.getNew(_midpointX,_topEdge,_halfWidth,_halfHeight,this);
 			_northEastTree.addObject();
 		}
 		if((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
 		{
 			if(_southEastTree == null)
-				_southEastTree = new FlxQuadTree(_midpointX,_midpointY,_halfWidth,_halfHeight,this);
+				_southEastTree = FlxQuadTree.getNew(_midpointX,_midpointY,_halfWidth,_halfHeight,this);
 			_southEastTree.addObject();
 		}
 		if((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
 		{
 			if(_southWestTree == null)
-				_southWestTree = new FlxQuadTree(_leftEdge,_midpointY,_halfWidth,_halfHeight,this);
+				_southWestTree = FlxQuadTree.getNew(_leftEdge,_midpointY,_halfWidth,_halfHeight,this);
 			_southWestTree.addObject();
 		}
 	}
-	
 	
 	/**
 	 * Internal function for recursively adding objects to leaf lists.
@@ -495,7 +518,7 @@ public class FlxQuadTree extends FlxRect
 			if(_tailA.object != null)
 			{
 				ot = _tailA;
-				_tailA = new FlxList();
+				_tailA = FlxList.getNew();
 				ot.next = _tailA;
 			}
 			_tailA.object = _object;
@@ -505,7 +528,7 @@ public class FlxQuadTree extends FlxRect
 			if(_tailB.object != null)
 			{
 				ot = _tailB;
-				_tailB = new FlxList();
+				_tailB = FlxList.getNew();
 				ot.next = _tailB;
 			}
 			_tailB.object = _object;
@@ -522,7 +545,6 @@ public class FlxQuadTree extends FlxRect
 			_southWestTree.addToList();
 	}
 
-	
 	/**
 	 * <code>FlxQuadTree</code>'s other main function.  Call this after adding objects
 	 * using <code>FlxQuadTree.load()</code> to compare the objects that you loaded.
@@ -611,10 +633,10 @@ public class FlxQuadTree extends FlxRect
 				(_objectHullY < _checkObjectHullY + _checkObjectHullHeight) )
 			{
 				//Execute callback functions if they exist
-				if((_processingCallback == null) || _processingCallback.onProcessCallback(_object,checkObject))
+				if((_processingCallback == null) || _processingCallback.callback(_object,checkObject))
 					overlapProcessed = true;
 				if(overlapProcessed && (_notifyCallback != null))
-					_notifyCallback.onNotifyCallback(_object,checkObject);
+					_notifyCallback.callback(_object,checkObject);
 				
 			}
 			_iterator = _iterator.next;
@@ -622,6 +644,4 @@ public class FlxQuadTree extends FlxRect
 		
 		return overlapProcessed;
 	}
-
-
 }

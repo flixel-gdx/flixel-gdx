@@ -355,8 +355,8 @@ public class FlxText extends FlxSprite
 		
 		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
 		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
-		_point.x += (_point.x > 0) ? 0.0000001 : -0.0000001;
-		_point.y += (_point.y > 0) ? 0.0000001 : -0.0000001;
+		_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
+		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
 		
 		_textField.setPosition(_point.x, _point.y);
 		
@@ -375,15 +375,17 @@ public class FlxText extends FlxSprite
 		//Render a single pixel shadow beneath the text
 		if (_shadow != 0)
 		{
-			float[] tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
-			_textField.setColor(tintColor[0], tintColor[1], tintColor[2], _alpha);
+			//tinting
+			int tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
+			_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 			_textField.translate(1f, 1f);
 			_textField.draw(FlxG.batch);
 			_textField.translate(-1f, -1f);
 		}
 		
-		float[]	tintColor = FlxU.multiplyColors(_color, camera.getColor());
-		_textField.setColor(tintColor[0], tintColor[1], tintColor[2], _alpha);
+		//tinting
+		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
+		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 
 		_textField.draw(FlxG.batch);
 		

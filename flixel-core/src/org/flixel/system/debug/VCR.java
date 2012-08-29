@@ -65,7 +65,7 @@ public class VCR
 	{
 		super();
 
-		int spacing = 7;
+		//int spacing = 7;
 
 		//_open = new ImgOpen();
 		//addChild(_open);
@@ -255,7 +255,7 @@ public class VCR
 			return;
 		}
 
-		FlxG.loadReplay(fileContents);
+		//FlxG.loadReplay(fileContents);
 	}
 
 	/**
@@ -385,12 +385,12 @@ public class VCR
 	public void onRestart(boolean StandardMode)
 	{	
 		FlxG.reloadReplay(StandardMode);
-		if(false)
-		{
+		//if(false)
+		//{
 			//_recordOff.visible = false;
 			//_recordOn.visible = false;
 			//_stop.visible = true;
-		}
+		//}
 	}
 
 	/**

@@ -194,6 +194,7 @@ public class FlxObject extends FlxBasic
 	 * This is just a pre-allocated rectangle container to be used however you like
 	 */
 	protected FlxRect _rect;
+	
 	/**
 	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
 	 * FlxObject and FlxSprite default to true.
@@ -277,6 +278,8 @@ public class FlxObject extends FlxBasic
 		mass = 1.0f;
 		elasticity = 0.0f;
 
+		health = 1;
+		
 		immovable = false;
 		moves = true;
 		
@@ -356,6 +359,8 @@ public class FlxObject extends FlxBasic
 	@Override
 	public void destroy()
 	{
+		super.destroy();
+		
 		velocity = null;
 		acceleration = null;
 		drag = null;
@@ -1197,6 +1202,8 @@ public class FlxObject extends FlxBasic
 		return separatedX || separatedY;
 	}
 	
+	
+	
 	/**
 	 * The X-axis component of the object separation process.
 	 * 
@@ -1215,23 +1222,9 @@ public class FlxObject extends FlxBasic
 		
 		//If one of the objects is a tilemap, just pass it off.
 		if(Object1 instanceof FlxTilemap)
-			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2, new AFlxObject()
-			{
-				@Override
-				public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
-				{
-					return separateX(Object1, Object2);
-				}
-			});
+			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2,separateX);
 		if(Object2 instanceof FlxTilemap)
-			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,new AFlxObject()
-			{
-				@Override
-				public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
-				{					
-					return separateX(Object1, Object2);
-				}
-			},true);
+			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,separateX,true);
 		
 		//First, get the two object deltas
 		float overlap = 0;
@@ -1242,9 +1235,15 @@ public class FlxObject extends FlxBasic
 			//Check if the X hulls actually overlap
 			float obj1deltaAbs = (obj1delta > 0)?obj1delta:-obj1delta;
 			float obj2deltaAbs = (obj2delta > 0)?obj2delta:-obj2delta;
-			FlxRect obj1rect = new FlxRect(Object1.x-((obj1delta > 0)?obj1delta:0),Object1.last.y,Object1.width+((obj1delta > 0)?obj1delta:-obj1delta),Object1.height);
-			FlxRect obj2rect = new FlxRect(Object2.x-((obj2delta > 0)?obj2delta:0),Object2.last.y,Object2.width+((obj2delta > 0)?obj2delta:-obj2delta),Object2.height);
-			if((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
+			float obj1x = Object1.x-((obj1delta > 0)?obj1delta:0);
+			float obj1y = Object1.last.y;
+			float obj1width = Object1.width+((obj1delta > 0)?obj1delta:-obj1delta);
+			float obj1height = Object1.height;
+			float obj2x = Object2.x-((obj2delta > 0)?obj2delta:0);
+			float obj2y = Object2.last.y;
+			float obj2width = Object2.width+((obj2delta > 0)?obj2delta:-obj2delta);
+			float obj2height = Object2.height;
+			if((obj1x + obj1width > obj2x) && (obj1x < obj2x + obj2width) && (obj1y + obj1height > obj2y) && (obj1y < obj2y + obj2height))
 			{
 				float maxOverlap = obj1deltaAbs + obj2deltaAbs + OVERLAP_BIAS;
 				
@@ -1329,23 +1328,9 @@ public class FlxObject extends FlxBasic
 		
 		//If one of the objects is a tilemap, just pass it off.
 		if(Object1 instanceof FlxTilemap)
-			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2,new AFlxObject()
-			{
-				@Override
-				public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
-				{					
-					return separateY(Object1, Object2);
-				}
-			});
+			return ((FlxTilemap)(Object1)).overlapsWithCallback(Object2,separateY);
 		if(Object2 instanceof FlxTilemap)
-			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,new AFlxObject()
-			{
-				@Override
-				public boolean onProcessCallback(FlxObject Object1, FlxObject Object2)
-				{					
-					return separateY(Object1, Object2);
-				}
-			},true);
+			return ((FlxTilemap)(Object2)).overlapsWithCallback(Object1,separateY,true);
 
 		//First, get the two object deltas
 		float overlap = 0;
@@ -1356,9 +1341,15 @@ public class FlxObject extends FlxBasic
 			//Check if the Y hulls actually overlap
 			float obj1deltaAbs = (obj1delta > 0)?obj1delta:-obj1delta;
 			float obj2deltaAbs = (obj2delta > 0)?obj2delta:-obj2delta;
-			FlxRect obj1rect = new FlxRect(Object1.x,Object1.y-((obj1delta > 0)?obj1delta:0),Object1.width,Object1.height+obj1deltaAbs);
-			FlxRect obj2rect = new FlxRect(Object2.x,Object2.y-((obj2delta > 0)?obj2delta:0),Object2.width,Object2.height+obj2deltaAbs);
-			if((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
+			float obj1x = Object1.x;
+			float obj1y = Object1.y-((obj1delta > 0)?obj1delta:0);
+			float obj1width = Object1.width;
+			float obj1height = Object1.height+obj1deltaAbs;
+			float obj2x = Object2.x;
+			float obj2y = Object2.y-((obj2delta > 0)?obj2delta:0);
+			float obj2width = Object2.width;
+			float obj2height = Object2.height+obj2deltaAbs;
+			if((obj1x + obj1width > obj2x) && (obj1x < obj2x + obj2width) && (obj1y + obj1height > obj2y) && (obj1y < obj2y + obj2height))
 			{
 				float maxOverlap = obj1deltaAbs + obj2deltaAbs + OVERLAP_BIAS;
 				
@@ -1428,5 +1419,29 @@ public class FlxObject extends FlxBasic
 		}
 		else
 			return false;
-	}		
+	}
+	
+	/**
+	 * Internal callback function for collision.
+	 */
+	protected static AFlxObject separateX = new AFlxObject()
+	{
+		@Override
+		public boolean callback(FlxObject Object1, FlxObject Object2)
+		{					
+			return separateX(Object1, Object2);
+		}
+	};
+	
+	/**
+	 * Internal callback function for collision.
+	 */
+	protected static AFlxObject separateY = new AFlxObject()
+	{
+		@Override
+		public boolean callback(FlxObject Object1, FlxObject Object2)
+		{					
+			return separateY(Object1, Object2);
+		}
+	};
 }

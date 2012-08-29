@@ -1073,9 +1073,9 @@ public class FlxTilemap extends FlxObject
 					if(Callback != null)
 					{
 						if(FlipCallbackParams)
-							overlapFound = Callback.onProcessCallback(Object,tile);
+							overlapFound = Callback.callback(Object,tile);
 						else
-							overlapFound = Callback.onProcessCallback(tile,Object);
+							overlapFound = Callback.callback(tile,Object);
 					}
 					else
 						overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
@@ -1084,7 +1084,7 @@ public class FlxTilemap extends FlxObject
 						if((tile.callback != null) && ((tile.filter == null) || (tile.filter.isInstance(Object))))
 						{
 							tile.mapIndex = rowStart+column;
-							tile.callback.onProcessCallback(tile,Object);
+							tile.callback.callback(tile,Object);
 						}
 						results = true;
 					}
@@ -1092,7 +1092,7 @@ public class FlxTilemap extends FlxObject
 				else if((tile.callback != null) && ((tile.filter == null) || (tile.filter.isInstance(Object))))
 				{
 					tile.mapIndex = rowStart+column;
-					tile.callback.onProcessCallback(tile,Object);
+					tile.callback.callback(tile,Object);
 				}
 				column++;
 			}

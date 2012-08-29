@@ -23,14 +23,15 @@ public class TimerManager extends FlxBasic
 		visible = false; //don't call draw on this plugin
 	}
 	
-	
+	/**
+	 * Clean up memory.
+	 */
 	@Override
 	public void destroy()
 	{
 		clear();
 		_timers = null;
 	}
-	
 	
 	/**
 	 * Called by <code>FlxG.updatePlugins()</code> before the game state has been updated.
@@ -48,7 +49,6 @@ public class TimerManager extends FlxBasic
 				timer.update();
 		}
 	}
-	
 	
 	/**
 	 * Add a new timer to the timer manager.
@@ -70,11 +70,10 @@ public class TimerManager extends FlxBasic
 	 */
 	public void remove(FlxTimer Timer)
 	{
-		int index = _timers.indexOf(Timer, false);
+		int index = _timers.indexOf(Timer, true);
 		if(index >= 0)
 			_timers.removeIndex(index);
 	}
-	
 	
 	/**
 	 * Removes all the timers from the timer manager.
@@ -90,6 +89,5 @@ public class TimerManager extends FlxBasic
 				timer.destroy();
 		}		
 		_timers.clear();
-		_timers.shrink();
 	}
 }

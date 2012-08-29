@@ -197,7 +197,7 @@ public class FlxSave
 	protected boolean onDone()
 	{
 		if(_onComplete != null)
-			_onComplete.onComplete(true);
+			_onComplete.callback(true);
 		if(_closeRequested)
 			destroy();			
 		return true;

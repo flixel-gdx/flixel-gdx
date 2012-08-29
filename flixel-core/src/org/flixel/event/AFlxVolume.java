@@ -1,6 +1,6 @@
 package org.flixel.event;
 
-public abstract class AFlxVolume
+public interface AFlxVolume
 {
-	public void callback(float Volume){};
+	public void callback(float Volume);
 }

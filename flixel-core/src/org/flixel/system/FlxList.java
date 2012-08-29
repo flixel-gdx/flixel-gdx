@@ -21,9 +21,23 @@ public class FlxList
 	public FlxList next;
 	
 	/**
+	 * Internal, a pool of <code>FlxQuadTree</code>s to prevent constant <code>new</code> calls.
+	 */
+	static private FlxObjectPool<FlxList> _pool = new FlxObjectPool<FlxList>(){@Override protected FlxList create(){return new FlxList();}};
+	
+	/**
+	 * Gets a new <code>FlxList</code> from the pool.
+	 * @return
+	 */
+	static public FlxList getNew()
+	{
+		return _pool.getNew();
+	}
+	
+	/**
 	 * Creates a new link, and sets <code>object</code> and <code>next</code> to <code>null</code>.
 	 */
-	public FlxList()
+	private FlxList()
 	{
 		object = null;
 		next = null;
@@ -38,5 +52,7 @@ public class FlxList
 		if(next != null)
 			next.destroy();
 		next = null;
+		
+		_pool.dispose(this);
 	}
 }

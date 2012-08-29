@@ -1,10 +1,6 @@
 package org.flixel.event;
 
-public abstract class AFlxCamera
+public interface AFlxCamera
 {
-	public void onFlashComplete(){};
-	
-	public void onFadeComplete(){};
-	
-	public void onShakeComplete(){}
+	public void callback();
 }
