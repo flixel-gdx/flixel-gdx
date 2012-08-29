@@ -1738,10 +1738,11 @@ public class FlxTilemap extends FlxObject
 	 * @param	RegionY			The Y coordinate of the top left of the region to convert.
 	 * @param	RegionWidth		The width of the region to convert.
 	 * @param	RegionHeight	The height of the region to convert.
+	 * @param	ColorMap		An array of color values (uint 0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-    static public String pixmapToCSV(Pixmap Graphic,boolean Invert,int Scale,int RegionX,int RegionY,int RegionWidth, int RegionHeight)
+    static public String pixmapToCSV(Pixmap Graphic,boolean Invert,int Scale,int RegionX,int RegionY,int RegionWidth, int RegionHeight, IntArray ColorMap)
     {
     	//Walk image and export pixel values
 		int row = RegionY;
@@ -1764,8 +1765,9 @@ public class FlxTilemap extends FlxObject
 				{
 					//Decide if this pixel/tile is solid (1) or not (0)
 					pixel = Graphic.getPixel(column,row);
-				
-					if((Invert && (pixel < 0)) || (!Invert && (pixel > 0)))
+					if(ColorMap != null)
+						pixel = ColorMap.indexOf(pixel >>> 8);
+					else if((Invert && (pixel < 0)) || (!Invert && (pixel > 0)))
 						pixel = 1;
 					else
 						pixel = 0;
@@ -1802,6 +1804,27 @@ public class FlxTilemap extends FlxObject
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
 	 * 
+	 * @param	Graphic			A libgdx <code>Pixmap</code> object, preferably black and white.
+	 * @param	Invert			Load white pixels as solid instead.
+	 * @param	Scale			Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param	RegionX			The X coordinate of the top left of the region to convert.
+	 * @param	RegionY			The Y coordinate of the top left of the region to convert.
+	 * @param	RegionWidth		The width of the region to convert.
+	 * @param	RegionHeight	The height of the region to convert.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+    static public String pixmapToCSV(Pixmap Graphic,boolean Invert,int Scale,int RegionX,int RegionY,int RegionWidth, int RegionHeight)
+    {
+    	return pixmapToCSV(Graphic,Invert,Scale,RegionX,RegionY,RegionWidth,RegionHeight,null);
+    }
+    
+    /**
+	 * Converts a <code>Pixmap</code> object to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
 	 * @param	Graphic		A libgdx <code>Pixmap</code> object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
@@ -1810,7 +1833,7 @@ public class FlxTilemap extends FlxObject
 	 */
     static public String pixmapToCSV(Pixmap Graphic,boolean Invert,int Scale)
     {
-    	return pixmapToCSV(Graphic,Invert,Scale,0,0,Graphic.getWidth(),Graphic.getHeight());
+    	return pixmapToCSV(Graphic,Invert,Scale,0,0,Graphic.getWidth(),Graphic.getHeight(),null);
     }
     
     /**
@@ -1826,7 +1849,7 @@ public class FlxTilemap extends FlxObject
 	 */
     static public String pixmapToCSV(Pixmap Graphic,boolean Invert)
     {
-    	return pixmapToCSV(Graphic,Invert,1,0,0,Graphic.getWidth(),Graphic.getHeight());
+    	return pixmapToCSV(Graphic,Invert,1,0,0,Graphic.getWidth(),Graphic.getHeight(),null);
     }
     
     /**
@@ -1841,7 +1864,7 @@ public class FlxTilemap extends FlxObject
 	 */
     static public String pixmapToCSV(Pixmap Graphic)
     {
-    	return pixmapToCSV(Graphic,false,1,0,0,Graphic.getWidth(),Graphic.getHeight());
+    	return pixmapToCSV(Graphic,false,1,0,0,Graphic.getWidth(),Graphic.getHeight(),null);
     }
     
 	/**
@@ -1853,10 +1876,11 @@ public class FlxTilemap extends FlxObject
 	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param	ColorMap	An array of color values (uint 0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public String bitmapToCSV(TextureRegion Bitmap,boolean Invert,int Scale)
+	static public String bitmapToCSV(TextureRegion Bitmap,boolean Invert,int Scale,IntArray ColorMap)
 	{
 		TextureData textureData = Bitmap.getTexture().getTextureData();
 		
@@ -1865,7 +1889,7 @@ public class FlxTilemap extends FlxObject
 		
 		Pixmap pixmap = textureData.consumePixmap();
 		
-		String csv = pixmapToCSV(pixmap, Invert, Scale, Bitmap.getRegionX(), Bitmap.getRegionY(), Bitmap.getRegionWidth(), Bitmap.getRegionHeight());
+		String csv = pixmapToCSV(pixmap, Invert, Scale, Bitmap.getRegionX(), Bitmap.getRegionY(), Bitmap.getRegionWidth(), Bitmap.getRegionHeight(), ColorMap);
 	
 		if(textureData.disposePixmap())
 			pixmap.dispose();
@@ -1881,12 +1905,29 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
+	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+	static public String bitmapToCSV(TextureRegion Bitmap,boolean Invert,int Scale)
+	{
+		return bitmapToCSV(Bitmap,Invert,1,null);
+	}
+	
+	/**
+	 * Converts a <code>TextureRegion</code> object to a comma-separated string.
+	 * Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding.
+	 * Black pixels must be PURE BLACK.
+	 * 
+	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
+	 * @param	Invert		Load white pixels as solid instead.
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
 	static public String bitmapToCSV(TextureRegion Bitmap,boolean Invert)
 	{
-		return bitmapToCSV(Bitmap, Invert, 1);
+		return bitmapToCSV(Bitmap, Invert, 1, null);
 	}
 	
 	/**
@@ -1901,7 +1942,7 @@ public class FlxTilemap extends FlxObject
 	 */
 	static public String bitmapToCSV(TextureRegion Bitmap)
 	{
-		return bitmapToCSV(Bitmap, false, 1);
+		return bitmapToCSV(Bitmap, false, 1, null);
 	}
 	
 	/**

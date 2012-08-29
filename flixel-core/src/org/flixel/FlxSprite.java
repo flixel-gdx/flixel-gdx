@@ -672,7 +672,11 @@ public class FlxSprite extends FlxObject
 		Pixmap.setBlending(Pixmap.Blending.SourceOver);
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
-		TextureData textureData = _pixels.getTexture().getTextureData();
+		TextureData textureData = null;
+		if (_newTextureData != null)
+			textureData = _newTextureData;
+		else
+			textureData = _pixels.getTexture().getTextureData();
 		
 		if(!textureData.isPrepared())
 			textureData.prepare();
@@ -700,7 +704,11 @@ public class FlxSprite extends FlxObject
 		Pixmap.setBlending(Pixmap.Blending.SourceOver);
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
-		TextureData textureData = _pixels.getTexture().getTextureData();
+		TextureData textureData = null;
+		if (_newTextureData != null)
+			textureData = _newTextureData;
+		else
+			textureData = _pixels.getTexture().getTextureData();
 		
 		if(!textureData.isPrepared())
 			textureData.prepare();
@@ -740,7 +748,11 @@ public class FlxSprite extends FlxObject
 		Pixmap.setBlending(Pixmap.Blending.SourceOver);
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
-		TextureData textureData = _pixels.getTexture().getTextureData();
+		TextureData textureData = null;
+		if (_newTextureData != null)
+			textureData = _newTextureData;
+		else
+			textureData = _pixels.getTexture().getTextureData();
 		
 		if(!textureData.isPrepared())
 			textureData.prepare();
@@ -868,7 +880,7 @@ public class FlxSprite extends FlxObject
 	 */
 	public void play(String AnimName, boolean Force)
 	{
-		if(!Force && (_curAnim != null) && (AnimName.equals(_curAnim.name)) && (!_curAnim.looped || !finished)) return;
+		if(!Force && (_curAnim != null) && (AnimName.equals(_curAnim.name)) && (_curAnim.looped || !finished)) return;
 		_curFrame = 0;
 		_curIndex = 0;
 		_frameTimer = 0;
@@ -963,7 +975,11 @@ public class FlxSprite extends FlxObject
 		Pixmap.setBlending(Pixmap.Blending.None);
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
-		TextureData textureData = _pixels.getTexture().getTextureData();
+		TextureData textureData = null;
+		if (_newTextureData != null)
+			textureData = _newTextureData;
+		else
+			textureData = _pixels.getTexture().getTextureData();
 		
 		if(!textureData.isPrepared())
 			textureData.prepare();
@@ -979,7 +995,7 @@ public class FlxSprite extends FlxObject
 				{
 					pixmap.drawPixel(column,row,NewColor);
 					if(FetchPositions)
-						positions.add(new FlxPoint(column,row));
+						positions.add(new FlxPoint(column - _pixels.getRegionX(),row - _pixels.getRegionY()));
 				}
 				column++;
 			}
@@ -1001,6 +1017,10 @@ public class FlxSprite extends FlxObject
 	 */
 	public TextureRegion getPixels()
 	{
+		if(_newTextureData != null)
+		{
+			_pixels.getTexture().load(_newTextureData);
+		}
 		return _pixels;
 	}
 

@@ -441,7 +441,7 @@ public class FlxU
 		int g = (int) (((Color1 >> 8) & 0xFF) * ((Color2 >> 8) & 0xFF) * 0.00392f);
 		int b = (int) ((Color1 & 0xFF) * (Color2 & 0xFF) * 0.00392f);
 		int a = (int) (((Color1 >> 24) & 0xFF) * ((Color2 >> 24) & 0xFF) * 0.00392f);
-		
+
 		return FlxU.makeColor(r, g, b, a);
 	}
 	

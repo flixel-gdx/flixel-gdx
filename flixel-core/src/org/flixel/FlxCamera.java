@@ -849,7 +849,7 @@ public class FlxCamera extends FlxBasic
 		flashGfx.setProjectionMatrix(_glCamera.combined);
 		flashGfx.begin(ShapeType.FilledRectangle);
 		int color = FlxU.multiplyColors(Color, _color);
-		flashGfx.setColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((color >> 24) & 0xFF) * 0.00392f);
+		flashGfx.setColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((Color >> 24) & 0xFF) * 0.00392f);
 		flashGfx.filledRect(0, 0, width, height);
 		flashGfx.end();
 	}

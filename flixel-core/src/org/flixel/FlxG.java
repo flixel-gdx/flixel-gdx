@@ -1224,7 +1224,7 @@ public class FlxG
 	 */
 	static public void clearBitmapCache()
 	{
-		//_cache.clear();
+		_cache.disposeTextures();
 	}
 	
 	/**
@@ -1853,7 +1853,8 @@ public class FlxG
 		FlxG.music = null;
 		FlxG.volumeHandler = null;
 		
-		FlxG.clearBitmapCache();
+		//FlxG.clearBitmapCache();
+		_cache = new FlxAssetCache();
 		
 		FlxCamera.defaultZoom = Zoom;
 		FlxG.cameras = new Array<FlxCamera>();
