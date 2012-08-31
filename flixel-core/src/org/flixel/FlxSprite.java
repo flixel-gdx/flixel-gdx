@@ -574,10 +574,10 @@ public class FlxSprite extends FlxObject
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
 		{ 	//Simple render
 			framePixels.setPosition(_point.x, _point.y);
-			FlxG.batch.enableBlending();
-			FlxG.batch.setBlendFunction(0x0302, 0x0303);
+//			FlxG.batch.enableBlending();
+//			FlxG.batch.setBlendFunction(0x0302, 0x0303);
 			framePixels.draw(FlxG.batch);
-			FlxG.batch.disableBlending();
+//			FlxG.batch.disableBlending();
 		}
 		else
 		{ 	//Advanced render
@@ -588,17 +588,17 @@ public class FlxSprite extends FlxObject
 			framePixels.setPosition(_point.x, _point.y);
 			if(blend != null)
 			{
-				FlxG.batch.enableBlending();
-				FlxG.batch.setBlendFunction(blend[0], blend[1]);
+//				FlxG.batch.enableBlending();
+//				FlxG.batch.setBlendFunction(blend[0], blend[1]);
 				framePixels.draw(FlxG.batch);
-				FlxG.batch.disableBlending();
+//				FlxG.batch.disableBlending();
 			}
 			else
 			{
-				FlxG.batch.enableBlending();
-				FlxG.batch.setBlendFunction(0x0302, 0x0303);
+//				FlxG.batch.enableBlending();
+//				FlxG.batch.setBlendFunction(0x0302, 0x0303);
 				framePixels.draw(FlxG.batch);
-				FlxG.batch.disableBlending();
+//				FlxG.batch.disableBlending();
 			}
 		}
 		
