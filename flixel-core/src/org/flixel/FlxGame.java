@@ -546,8 +546,9 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		return false;
 	}
 
+
 	@Override
-	public boolean mouseMoved(int X, int Y)
+	public boolean touchMoved(int x, int y)
 	{
 		return false;
 	}
@@ -845,7 +846,6 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);
 		FlxG.batch.end();
-		
 		if(_debuggerUp)
 			_debugger.perf.flixelDraw((int) (System.currentTimeMillis()-mark));
 	}
