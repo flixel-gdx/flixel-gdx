@@ -1,5 +1,7 @@
 package org.flixel.system;
 
+import org.flixel.FlxG;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -98,6 +100,17 @@ public class FlxAssetCache
 	}
 	
 	/**
+	 * Whether or not the cache contains this sound.
+	 * 
+	 * @param Sound		The sound to check.
+	 * @return	Whether or not the sound exists.
+	 */
+	public boolean containsSound(Disposable Sound)
+	{
+		return _sounds.containsValue(Sound, true);
+	}
+	
+	/**
 	 * Loads a bitmap font.
 	 * 
 	 * @param Path	The path to the font file.
@@ -181,7 +194,7 @@ public class FlxAssetCache
 			return;
 		
 		Sound.dispose();
-		_sounds.remove(key);
+		_sounds.remove(key);	
 	}
 	
 	/**
