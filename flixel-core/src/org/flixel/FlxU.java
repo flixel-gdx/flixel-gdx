@@ -65,8 +65,7 @@ public class FlxU
 	 */
 	static public float round(float Value)
 	{
-		float number = (int)(Value+((Value>0)?0.5f:-0.5f));
-		return (Value>0)?(number):((number!=Value)?(number-1):(number));
+		return (int)(Value+((Value>0)?0.5f:-0.5f));
 	}
 	
 	/**

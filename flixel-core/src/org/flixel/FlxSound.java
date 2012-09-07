@@ -1,7 +1,9 @@
 package org.flixel;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 	
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
@@ -151,8 +153,8 @@ public class FlxSound extends FlxBasic
 		_panAmount = 0;
 		_sound = null;
 		_music = null;
-		_soundId = -1;
-		_position = 0;
+		_soundId = 0;
+		_position = -1;
 		_volume = 1.0f;
 		_volumeAdjust = 1.0f;
 		_looped = false;
@@ -185,7 +187,7 @@ public class FlxSound extends FlxBasic
 		
 		_sound = null;
 		_music = null;
-		_soundId = -1;
+		_soundId = 0;
 		_target = null;
 		name = null;
 		artist = null;
@@ -251,7 +253,12 @@ public class FlxSound extends FlxBasic
 		//	amplitude = (amplitudeLeft+amplitudeRight)*0.5;
 		//}
 		
-		if (_music != null && (_wasPlaying && !_music.isPlaying()))
+		//Sound doesn't have an isPlaying property. Instead, we'll just destroy the sound automatically
+		//after playing for 20 seconds.
+		if (_position != -1)
+			_position += FlxG.elapsed;
+		
+		if ((_sound != null && _position > 20) || (_music != null && (_wasPlaying && !_music.isPlaying())))
 			stopped();
 	}
 		
@@ -259,7 +266,7 @@ public class FlxSound extends FlxBasic
 	public void kill()
 	{
 		super.kill();
-		if ((_sound != null && _soundId != -1) || (_music != null && _music.isPlaying()))
+		if ((FlxG._cache.containsSound(_sound) || FlxG._cache.containsSound(_music)) && (_sound != null && _soundId != 0) || (_music != null && _music.isPlaying()))
 			stop();
 	}
 	
@@ -282,8 +289,8 @@ public class FlxSound extends FlxBasic
 		{
 			case AUTO:
 				//If the type is not specified, make a guess based on the file size.
-				//FileHandle file = Gdx.files.internal(EmbeddedSound);
-				Type = MUSIC;//file.length() < 24576 ? SFX : MUSIC;
+				FileHandle file = Gdx.files.internal(EmbeddedSound);
+				Type = file.length() < 24576 ? SFX : MUSIC;
 				return loadEmbedded(EmbeddedSound, Looped, AutoDestroy, Type);
 				
 			case SFX:
@@ -452,11 +459,13 @@ public class FlxSound extends FlxBasic
 		}
 		if(_looped)
 		{
-			if(_sound != null && _soundId == -1)
+			if(_sound != null && _soundId == 0)
 			{
-				_soundId = _sound.loop();
+				int tryLimit = 50;
+				while (_soundId == 0 && tryLimit-- > 0)
+					_soundId = _sound.loop();
 				
-				if(_soundId == -1)
+				if(_soundId == 0)
 					exists = false;
 			}
 			else if(_music != null && !_music.isPlaying())
@@ -470,10 +479,13 @@ public class FlxSound extends FlxBasic
 		}
 		else
 		{
-			if(_sound != null && _soundId == -1)
+			if(_sound != null && _soundId == 0)
 			{
-				_soundId = _sound.play();
-				if(_soundId == -1)
+				int tryLimit = 500;
+				while (_soundId == 0 && tryLimit-- > 0)
+					_soundId = _sound.play();
+				
+				if(_soundId == 0)
 					exists = false;
 					//TODO: Detect when Sound is finished.
 			}
@@ -487,7 +499,8 @@ public class FlxSound extends FlxBasic
 			}
 		}
 		
-		active = ((_music != null && _music.isPlaying()) || _soundId != -1);
+		active = ((_music != null && _music.isPlaying()) || _soundId != 0);
+		_position = 0;
 		
 		_wasPlaying = true;
 	}
@@ -506,15 +519,18 @@ public class FlxSound extends FlxBasic
 	 */
 	public void resume()
 	{
-		if(_soundId == -1 || (_music != null && !_music.isPlaying()))
+		if(_soundId == 0 || (_music != null && !_music.isPlaying()))
 			return;
 			
 		if(_looped)
 		{
 			if(_sound != null)
 			{
-				_soundId = _sound.loop();
-				if(_soundId == -1)
+				int tryLimit = 50;
+				while (_soundId == 0 && tryLimit-- > 0)
+					_soundId = _sound.loop();
+				
+				if(_soundId == 0)
 					exists = false;
 			}
 			else if(_music != null)
@@ -528,8 +544,11 @@ public class FlxSound extends FlxBasic
 		{
 			if(_sound != null)
 			{
-				_soundId = _sound.play();
-				if(_soundId == -1)
+				int tryLimit = 50;
+				while (_soundId == 0 && tryLimit-- > 0)
+					_soundId = _sound.play();
+				
+				if(_soundId == 0)
 					exists = false;
 			}
 			else if(_music != null)
@@ -540,7 +559,8 @@ public class FlxSound extends FlxBasic
 			}
 		}
 			
-		active = ((_music != null && _music.isPlaying()) || _soundId != -1);
+		active = ((_music != null && _music.isPlaying()) || _soundId != 0);
+		_position = 0;
 	}
 		
 	/**
@@ -548,9 +568,10 @@ public class FlxSound extends FlxBasic
 	 */
 	public void pause()
 	{
-		if(_sound != null && _soundId != -1)
+		if(_sound != null && _soundId != 0)
 		{
 			_sound.stop(_soundId); // TODO: pause of sound. Now it stops it.
+			_position = -1;
 		}
 		else if(_music != null)
 		{
@@ -565,7 +586,7 @@ public class FlxSound extends FlxBasic
 	 */
 	public void stop()
 	{
-		if (_sound != null && _soundId != -1)
+		if (_sound != null && _soundId != 0)
 		{
 			_sound.stop(_soundId);
 			stopped();
@@ -653,7 +674,7 @@ public class FlxSound extends FlxBasic
 	{
 		float volume = (FlxG.mute?0:1)*FlxG.getVolume()*_volume*_volumeAdjust;
 		
-		if (_sound != null && _soundId != -1)
+		if (_sound != null && _soundId != 0)
 			_sound.setPan(_soundId, _panAmount, volume);
 		//TODO: panning for Music
 		else if (_music != null)
@@ -677,7 +698,8 @@ public class FlxSound extends FlxBasic
 	 */
 	protected void stopped()
 	{
-	    _soundId = -1;
+	    _soundId = 0;
+	    _position = -1;
 		active = false;
 		if(autoDestroy)
 			destroy();

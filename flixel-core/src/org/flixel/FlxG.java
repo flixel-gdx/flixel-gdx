@@ -14,6 +14,8 @@ import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.GL10;
@@ -944,8 +946,11 @@ public class FlxG
 	{
 		if((music != null) && (ForceDestroy || !music.survive))
 		{
+			Music gdxMusic = music._music;
+			Sound gdxSound = music._sound;
 			music.destroy();
-			_cache.disposeSound(music._music);
+			_cache.disposeSound(gdxMusic);
+			_cache.disposeSound(gdxSound);
 			music = null;
 		}
 		int i = 0;
@@ -956,8 +961,11 @@ public class FlxG
 			sound = (FlxSound) sounds.members.get(i++);
 			if((sound != null) && (ForceDestroy || !sound.survive))
 			{
+				Music gdxMusic = sound._music;
+				Sound gdxSound = sound._sound;
 				sound.destroy();
-				_cache.disposeSound(sound._sound);
+				_cache.disposeSound(gdxMusic);
+				_cache.disposeSound(gdxSound);
 			}
 		}
 	}
