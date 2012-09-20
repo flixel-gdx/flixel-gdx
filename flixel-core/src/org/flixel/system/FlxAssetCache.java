@@ -1,7 +1,5 @@
 package org.flixel.system;
 
-import org.flixel.FlxG;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
