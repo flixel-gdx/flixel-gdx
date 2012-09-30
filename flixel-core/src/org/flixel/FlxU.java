@@ -844,4 +844,82 @@ public class FlxU
 		float dy = Point1.y - Point2.y;
 		return (float) Math.sqrt(dx * dx + dy * dy);
 	}
+	
+	/**
+	 * Computes and returns the sine of the specified angle in radians.
+	 *
+	 * To calculate a radian, see the overview of the Math class.
+	 * This method is only a fast sine approximation.
+	 *
+	 * @param angleRadians A number that represents an angle measured in radians.
+	 * @return A number from -1.0 to 1.0.
+	 */
+	public static double sin(double angleRadians)
+	{
+		if(angleRadians < -3.14159265)
+		{
+			angleRadians += 6.28318531;
+		}
+		else if(angleRadians > 3.14159265)
+		{
+			angleRadians -= 6.28318531;
+		}
+		angleRadians = (angleRadians < 0.0) ? (1.27323954 * angleRadians + .405284735 * angleRadians * angleRadians) : (1.27323954 * angleRadians - 0.405284735 * angleRadians * angleRadians);
+		return (angleRadians < 0.0) ? (0.225 * (angleRadians * -angleRadians - angleRadians) + angleRadians) : (0.225 * (angleRadians * angleRadians - angleRadians) + angleRadians);
+	}
+
+	/**
+	 * Computes and returns the cosine of the specified angle in radians.
+	 * To calculate a radian, see the overview of the Math class.
+	 * This method is only a fast cosine approximation.
+	 *
+	 * @param angleRadians A number that represents an angle measured in radians.
+	 * @return A number from -1.0 to 1.0.
+	 */
+	public static double cos(double angleRadians)
+	{
+		//
+		// http://lab.polygonal.de/wp-content/articles/fast_trig/fastTrig.as
+		//
+
+		if(angleRadians < -3.14159265)
+		{
+			angleRadians += 6.28318531;
+		}
+		else if(angleRadians > 3.14159265)
+		{
+			angleRadians -= 6.28318531;
+		}
+
+		angleRadians += 1.57079632;
+		if(angleRadians > 3.14159265)
+		{
+			angleRadians -= 6.28318531;
+		}
+
+		angleRadians = (angleRadians < 0.0) ? (1.27323954 * angleRadians + .405284735 * angleRadians * angleRadians) : (1.27323954 * angleRadians - 0.405284735 * angleRadians * angleRadians);
+		return (angleRadians < 0.0) ? (0.225 * (angleRadians * -angleRadians - angleRadians) + angleRadians) : (0.225 * (angleRadians * angleRadians - angleRadians) + angleRadians);
+	}
+
+	/**
+	 * Integer cast with respect to its sign.
+	 * 
+	 * @param value A number.
+	 * @return The number casted to an integer with respect to its sign.
+	 */
+	public static int rint(float value)
+	{
+		if(value > 0.0)
+		{
+			return (int) (value + 0.5);
+		}
+		else if(value < 0.0)
+		{
+			return -(int)(-value + 0.5);
+		}
+		else
+		{
+			return 0;
+		}
+	}
 }

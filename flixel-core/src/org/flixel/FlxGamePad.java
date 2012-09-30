@@ -19,6 +19,7 @@ public class FlxGamePad extends FlxGroup
 	private String ImgButtonUp = "org/flixel/data/pack:button_up";
 	private String ImgButtonRight = "org/flixel/data/pack:button_right";
 	private String ImgButtonDown = "org/flixel/data/pack:button_down";
+	private String ImgCenter = "org/flixel/data/pack:dpad_center";
 	
 	// Button A
 	public FlxButton buttonA;
@@ -72,25 +73,27 @@ public class FlxGamePad extends FlxGroup
 		actions = new FlxGroup();
 		
 		switch(DPad)
-		{
+		{			
 			case FULL:
-				dPad.add(add(buttonUp = createButton(35, FlxG.height-116, 44, 45, ImgButtonUp)));		
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height-81, 44, 45, ImgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(69, FlxG.height-81, 44, 45, ImgButtonRight)));	
-				dPad.add(add(buttonDown = createButton(35, FlxG.height-45, 44, 45, ImgButtonDown)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height-99, 29, 36, ImgButtonUp)));		
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height-64, 35, 29, ImgButtonLeft)));
+				dPad.add(add(buttonRight = createButton(64, FlxG.height-64, 35, 29, ImgButtonRight)));	
+				dPad.add(add(buttonDown = createButton(35, FlxG.height-39, 29, 39, ImgButtonDown)));				
+				dPad.add(add(createCenter(buttonLeft.x+buttonLeft.width, FlxG.height-65, 29, 27, ImgCenter)));
 				break;
 			case UP_DOWN:
-				dPad.add(add(buttonUp = createButton(0, FlxG.height-85, 44, 45, ImgButtonUp)));
-				dPad.add(add(buttonDown = createButton(0, FlxG.height-45, 44, 45, ImgButtonDown)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height-75, 29, 36, ImgButtonUp)));
+				dPad.add(add(buttonDown = createButton(35, FlxG.height-39, 29, 39, ImgButtonDown)));
 				break;
 			case LEFT_RIGHT:
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height-45, 44, 45, ImgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(42, FlxG.height-45, 44, 45, ImgButtonRight)));
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height-44, 35, 29, ImgButtonLeft)));
+				dPad.add(add(buttonRight = createButton(35, FlxG.height-44, 35, 29, ImgButtonRight)));
 				break;
 			case UP_LEFT_RIGHT:
-				dPad.add(add(buttonUp = createButton(35, FlxG.height-81, 44, 45, ImgButtonUp)));
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height-45, 44, 45, ImgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(69, FlxG.height-45, 44, 45, ImgButtonRight)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height-79, 29, 36, ImgButtonUp)));		
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height-44, 35, 29, ImgButtonLeft)));
+				dPad.add(add(buttonRight = createButton(64, FlxG.height-44, 35, 29, ImgButtonRight)));
+				dPad.add(add(createCenter(buttonLeft.x+buttonLeft.width, FlxG.height-45, 29, 27, ImgCenter)));
 				break;
 			default:
 				break;
@@ -99,22 +102,22 @@ public class FlxGamePad extends FlxGroup
 		switch(Action)
 		{
 			case FULL:
-				actions.add(add(buttonY = createButton(FlxG.width-86, FlxG.height-85, 44, 45, ImgButtonY)));		
-				actions.add(add(buttonX = createButton(FlxG.width-44, FlxG.height-85, 44, 45, ImgButtonX)));		
-				actions.add(add(buttonB = createButton(FlxG.width-86, FlxG.height-45, 44, 45, ImgButtonB)));		
-				actions.add(add(buttonA = createButton(FlxG.width-44, FlxG.height-45, 44, 45, ImgButtonA)));
+				actions.add(add(buttonY = createButton(FlxG.width-99, FlxG.height-72, 37, 37, ImgButtonY)));		
+				actions.add(add(buttonX = createButton(FlxG.width-68, FlxG.height-103, 37, 37, ImgButtonX)));		
+				actions.add(add(buttonB = createButton(FlxG.width-68, FlxG.height-41, 37, 37, ImgButtonB)));		
+				actions.add(add(buttonA = createButton(FlxG.width-37, FlxG.height-72, 37, 37, ImgButtonA)));
 				break;
 			case A:
-				actions.add(add(buttonA = createButton(FlxG.width-44, FlxG.height-45, 44, 45, ImgButtonA)));
+				actions.add(add(buttonA = createButton(FlxG.width-50, FlxG.height-68, 37, 37, ImgButtonA)));
 				break;
 			case A_B:
-				actions.add(add(buttonA = createButton(FlxG.width-44, FlxG.height-45, 44, 45, ImgButtonA)));
-				actions.add(add(buttonB = createButton(FlxG.width-86, FlxG.height-45, 44, 45, ImgButtonB)));		
+				actions.add(add(buttonB = createButton(FlxG.width-68, FlxG.height-41, 37, 37, ImgButtonB)));		
+				actions.add(add(buttonA = createButton(FlxG.width-37, FlxG.height-72, 37, 37, ImgButtonA)));	
 				break;
 			case A_B_C:
-				actions.add(add(buttonA = createButton(FlxG.width-128, FlxG.height-45, 44, 45, ImgButtonA)));				
-				actions.add(add(buttonB = createButton(FlxG.width-86, FlxG.height-45, 44, 45, ImgButtonB)));		
-				actions.add(add(buttonC = createButton(FlxG.width-44, FlxG.height-45, 44, 45, ImgButtonC)));
+				actions.add(add(buttonA = createButton(FlxG.width-99, FlxG.height-41, 37, 37, ImgButtonA)));		
+				actions.add(add(buttonB = createButton(FlxG.width-68, FlxG.height-62, 37, 37, ImgButtonB)));	
+				actions.add(add(buttonC = createButton(FlxG.width-37, FlxG.height-83, 37, 37, ImgButtonC)));
 			default:
 				break;
 		}
@@ -156,7 +159,17 @@ public class FlxGamePad extends FlxGroup
 		if(OnClick != null)
 			button.onDown = OnClick;
 		return button;
-	}	
+	}
+	
+	public FlxSprite createCenter(float X, float Y, int Width, int Height, String Image)
+	{
+		FlxSprite center = new FlxSprite(X, Y).loadGraphic(Image, false, false, Width, Height);
+		center.setSolid(false);
+		center.immovable = true;
+		center.ignoreDrawDebug = true;
+		center.scrollFactor.x = center.scrollFactor.y = 0;
+		return center;
+	}
 	
 	/**
 	 * Creates a button
