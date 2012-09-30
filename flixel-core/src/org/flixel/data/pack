@@ -1,116 +1,124 @@
+
 pack.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-logo
+base
   rotate: false
-  xy: 238, 20
-  size: 2, 4
-  orig: 6, 6
-  offset: 2, 1
-  index: -1
-stick
-  rotate: false
-  xy: 136, 104
-  size: 88, 93
-  orig: 88, 93
-  offset: 0, 0
-  index: -1
-button_b
-  rotate: false
-  xy: 2, 49
-  size: 132, 45
-  orig: 132, 45
+  xy: 0, 43
+  size: 84, 84
+  orig: 84, 84
   offset: 0, 0
   index: -1
 button_a
   rotate: false
-  xy: 2, 96
-  size: 132, 45
-  orig: 132, 45
+  xy: 0, 6
+  size: 111, 37
+  orig: 111, 37
   offset: 0, 0
   index: -1
-button_c
+logo
   rotate: false
-  xy: 2, 2
-  size: 132, 45
-  orig: 132, 45
-  offset: 0, 0
-  index: -1
-autotiles
-  rotate: false
-  xy: 2, 435
-  size: 128, 8
-  orig: 128, 8
-  offset: 0, 0
-  index: -1
-button_right
-  rotate: false
-  xy: 2, 284
-  size: 132, 45
-  orig: 132, 45
-  offset: 0, 0
-  index: -1
-autotiles_alt
-  rotate: false
-  xy: 2, 425
-  size: 128, 8
-  orig: 128, 8
-  offset: 0, 0
-  index: -1
-button_up
-  rotate: false
-  xy: 2, 237
-  size: 132, 45
-  orig: 132, 45
-  offset: 0, 0
-  index: -1
-button_x
-  rotate: false
-  xy: 2, 190
-  size: 132, 45
-  orig: 132, 45
+  xy: 0, 0
+  size: 6, 6
+  orig: 6, 6
   offset: 0, 0
   index: -1
 button
   rotate: false
-  xy: 136, 199
+  xy: 84, 67
   size: 80, 60
   orig: 80, 60
   offset: 0, 0
   index: -1
-button_left
+autotiles
   rotate: false
-  xy: 2, 331
-  size: 132, 45
-  orig: 132, 45
+  xy: 84, 59
+  size: 128, 8
+  orig: 128, 8
   offset: 0, 0
   index: -1
-button_y
+autotiles_alt
   rotate: false
-  xy: 2, 143
-  size: 132, 45
-  orig: 132, 45
+  xy: 84, 51
+  size: 128, 8
+  orig: 128, 8
   offset: 0, 0
   index: -1
-base
+button_b
   rotate: false
-  xy: 136, 2
-  size: 100, 100
-  orig: 100, 100
+  xy: 111, 14
+  size: 111, 37
+  orig: 111, 37
   offset: 0, 0
   index: -1
-button_down
+button_c
   rotate: false
-  xy: 2, 378
-  size: 132, 45
-  orig: 132, 45
+  xy: 164, 90
+  size: 111, 37
+  orig: 111, 37
+  offset: 0, 0
+  index: -1
+button_x
+  rotate: false
+  xy: 212, 53
+  size: 111, 37
+  orig: 111, 37
   offset: 0, 0
   index: -1
 default
   rotate: false
-  xy: 238, 2
+  xy: 164, 74
   size: 16, 16
   orig: 16, 16
+  offset: 0, 0
+  index: -1
+button_y
+  rotate: false
+  xy: 275, 90
+  size: 111, 37
+  orig: 111, 37
+  offset: 0, 0
+  index: -1
+button_down
+  rotate: false
+  xy: 222, 14
+  size: 87, 39
+  orig: 87, 39
+  offset: 0, 0
+  index: -1
+button_up
+  rotate: false
+  xy: 309, 17
+  size: 87, 36
+  orig: 87, 36
+  offset: 0, 0
+  index: -1
+button_left
+  rotate: false
+  xy: 323, 61
+  size: 105, 29
+  orig: 105, 29
+  offset: 0, 0
+  index: -1
+button_right
+  rotate: false
+  xy: 386, 98
+  size: 105, 29
+  orig: 105, 29
+  offset: 0, 0
+  index: -1
+stick
+  rotate: false
+  xy: 396, 9
+  size: 52, 52
+  orig: 52, 52
+  offset: 0, 0
+  index: -1
+dpad_center
+  rotate: false
+  xy: 428, 71
+  size: 29, 27
+  orig: 29, 27
   offset: 0, 0
   index: -1
