@@ -574,10 +574,7 @@ public class FlxSprite extends FlxObject
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
 		{ 	//Simple render
 			framePixels.setPosition(_point.x, _point.y);
-//			FlxG.batch.enableBlending();
-//			FlxG.batch.setBlendFunction(0x0302, 0x0303);
-			framePixels.draw(FlxG.batch);
-//			FlxG.batch.disableBlending();
+			framePixels.draw(FlxG.batch);			
 		}
 		else
 		{ 	//Advanced render
@@ -588,23 +585,19 @@ public class FlxSprite extends FlxObject
 			framePixels.setPosition(_point.x, _point.y);
 			if(blend != null)
 			{
-//				FlxG.batch.enableBlending();
-//				FlxG.batch.setBlendFunction(blend[0], blend[1]);
+				FlxG.batch.setBlendFunction(blend[0], blend[1]);
 				framePixels.draw(FlxG.batch);
-//				FlxG.batch.disableBlending();
+				FlxG.batch.setBlendFunction(0x0302, 0x0303);
 			}
 			else
 			{
-//				FlxG.batch.enableBlending();
-//				FlxG.batch.setBlendFunction(0x0302, 0x0303);
 				framePixels.draw(FlxG.batch);
-//				FlxG.batch.disableBlending();
 			}
 		}
 		
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-				drawDebug(camera);		
+				drawDebug(camera);
 	}
 	
 	/**
@@ -613,7 +606,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	Brush		The image you want to use as a brush or stamp or pen or whatever.
 	 * @param	X			The X coordinate of the brush's top left corner on this sprite.
-	 * @param	Y			They Y coordinate of the brush's top left corner on this sprite.
+	 * @param	Y			The Y coordinate of the brush's top left corner on this sprite.
 	 */
 	public void stamp(FlxSprite Brush, int X, int Y)
 	{			

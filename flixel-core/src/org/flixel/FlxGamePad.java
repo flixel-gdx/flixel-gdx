@@ -82,12 +82,14 @@ public class FlxGamePad extends FlxGroup
 				dPad.add(add(createCenter(buttonLeft.x+buttonLeft.width, FlxG.height-65, 29, 27, ImgCenter)));
 				break;
 			case UP_DOWN:
-				dPad.add(add(buttonUp = createButton(35, FlxG.height-75, 29, 36, ImgButtonUp)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height-101, 29, 36, ImgButtonUp)));
 				dPad.add(add(buttonDown = createButton(35, FlxG.height-39, 29, 39, ImgButtonDown)));
+				dPad.add(add(createCenter(35, FlxG.height-66, 29, 27, ImgCenter)));
 				break;
 			case LEFT_RIGHT:
 				dPad.add(add(buttonLeft = createButton(0, FlxG.height-44, 35, 29, ImgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(35, FlxG.height-44, 35, 29, ImgButtonRight)));
+				dPad.add(add(buttonRight = createButton(64, FlxG.height-44, 35, 29, ImgButtonRight)));
+				dPad.add(add(createCenter(buttonLeft.x+buttonLeft.width, FlxG.height-45, 29, 27, ImgCenter)));
 				break;
 			case UP_LEFT_RIGHT:
 				dPad.add(add(buttonUp = createButton(35, FlxG.height-79, 29, 36, ImgButtonUp)));		
