@@ -1,9 +1,8 @@
 package org.flixel;
 
-import org.flixel.event.AFlxButton;
+import org.flixel.event.AFlxAnalog;
 
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 
 /**
  * An analog stick or thumbstick with callbacks. It can easily be customized by 
@@ -36,13 +35,13 @@ public class FlxAnalog extends FlxGroup
 	public float y;
 	
 	// This function is called when the button is released.
-	public AFlxButton onUp;
+	public AFlxAnalog onUp;
 	// This function is called when the button is pressed down.
-	public AFlxButton onDown;
+	public AFlxAnalog onDown;
 	// This function is called when the mouse goes over the button.
-	public AFlxButton onOver;
+	public AFlxAnalog onOver;
 	// This function is called when the button is hold down.
-	public AFlxButton onPressed;
+	public AFlxAnalog onPressed;
 	
 	// The area which the joystick will react.
 	private Circle _zone;
