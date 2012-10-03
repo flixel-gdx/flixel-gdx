@@ -3,6 +3,8 @@ package org.flixel;
 import org.flixel.event.AFlxAnalog;
 
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * An analog stick or thumbstick with callbacks. It can easily be customized by 
@@ -34,6 +36,11 @@ public class FlxAnalog extends FlxGroup
 	// Y position of the upper left corner of this object in world space.
 	public float y;
 	
+	// An list of analogs that are currently active.
+	private static Array<FlxAnalog> _analogs;
+	// The current pointer that's active on the analog.
+	private int _currentPointer;
+	
 	// This function is called when the button is released.
 	public AFlxAnalog onUp;
 	// This function is called when the button is pressed down.
@@ -52,13 +59,14 @@ public class FlxAnalog extends FlxGroup
 	
 	// The radius where the thumb can move.
 	private float _radius;
-	private double _direction;
+	private float _direction;
 	private float _amount;		
 	
 	// How fast the speed of this object is changing.
 	public FlxPoint acceleration;
 	// The speed of easing when the thumb is released.
 	private float _ease;
+	
 		
 	/**
 	 * Constructor
@@ -70,13 +78,18 @@ public class FlxAnalog extends FlxGroup
 	public FlxAnalog(float x, float y, float radius, float ease)
 	{
 		this.x = x;
-		this.y = y;			
+		this.y = y;		
 		_radius = radius;
 		_ease = ease;
+		
+		if(_analogs == null)
+			_analogs = new Array<FlxAnalog>();
+		_analogs.add(this);
 		
 		status = NORMAL;
 		_direction = 0;
 		_amount = 0;
+		_currentPointer = -1;
 		acceleration = new FlxPoint();
 		
 		createBase();
@@ -86,8 +99,8 @@ public class FlxAnalog extends FlxGroup
 	
 	/**
 	 * Constructor
-	 * @param	X		The X-coordinate of the point in space.
- 	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
+ 	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	radius	The radius where the thumb can move. If 0, the background will be use as radius.
 	 */
 	public FlxAnalog(float x, float y, float radius)
@@ -97,8 +110,8 @@ public class FlxAnalog extends FlxGroup
 	
 	/**
 	 * Constructor
-	 * @param	X		The X-coordinate of the point in space.
- 	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
+ 	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
 	 */
 	public FlxAnalog(float x, float y)
 	{
@@ -107,7 +120,7 @@ public class FlxAnalog extends FlxGroup
 	
 	/**
 	 * Constructor
-	 * @param	X		The X-coordinate of the point in space.
+	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
 	 */
 	public FlxAnalog(float x)
 	{
@@ -172,6 +185,9 @@ public class FlxAnalog extends FlxGroup
 	public void destroy()
 	{
 		super.destroy();
+		if(_analogs != null)
+			_analogs.clear();
+		_analogs = null;
 		onUp = onDown = onOver = onPressed = null;
 		acceleration = null;
 		thumb = null;
@@ -182,85 +198,110 @@ public class FlxAnalog extends FlxGroup
 	
 	
 	/**
-	 * Update the behaviour. 
+	 * Update the behavior. 
 	 */
 	@Override
 	public void update()
 	{
+		boolean foundFreePointer = false;
+		int pointerId = 0;		
+		int	totalPointers = FlxG.mouse.activePointers + 1;
+		FlxPoint point;		
 		boolean offAll = true;
 		
-		if(_zone.contains(FlxG.mouse.screenX, FlxG.mouse.screenY) || status == PRESSED)
+		// There is no reason to get into the loop if their is already a pointer on the analog
+		if(_currentPointer > 0)
+			pointerId = _currentPointer;
+		else
 		{
-			offAll = false;				
-			
-			if(FlxG.mouse.pressed())
+			while(pointerId < totalPointers)
+			{			
+				for(int i = 0; i < _analogs.size; i++)
+				{
+					// check whether the pointer is already taken by another analog.
+					if(!_analogs.get(i).equals(this) && _analogs.get(i)._currentPointer != pointerId) 
+					{		
+						foundFreePointer = true;
+						break;
+					}
+				}
+				if(foundFreePointer)
+					break;
+				++pointerId;
+			}
+		}
+		
+		point = FlxG.mouse.getWorldPosition(pointerId);		
+		if(_zone.contains(point.x, point.y) || (status == PRESSED))
+		{
+			offAll = false;			
+			if(FlxG.mouse.pressed(pointerId))
 			{
-				status = PRESSED;	
-				
-				if(FlxG.mouse.justPressed())
+				_currentPointer = pointerId;
+				status = PRESSED;			
+				if(FlxG.mouse.justPressed(pointerId))
 				{
 					if(onDown != null)
 						onDown.callback();
-				}
-							
+				}						
+				
 				if(status == PRESSED)
 				{
 					if(onPressed != null)
 						onPressed.callback();						
 					
-					float dx = FlxG.mouse.screenX-x;
-					float dy = FlxG.mouse.screenY-y;
-	
-					double dist = Math.sqrt(dx * dx + dy * dy); // TODO: replace Math.sqrt, but need to benchmark this in Flash version 11.4.
+					float dx = point.x-x;
+					float dy = point.y-y;
+					
+					double dist = Math.sqrt(dx * dx + dy * dy);
 					if(dist < 1) 
 						dist = 0;
-					_direction = Math.atan2(dy, dx); // TODO: replace Math.atan2, but need to benchmark this in Flash version 11.4.
+					_direction = (float) MathUtils.atan2(dy, dx);
 					_amount = FlxU.min(_radius, (float) dist) / _radius;
-							
-					acceleration.x = (float) (FlxU.cos(_direction) * _amount * _radius);
-					acceleration.y = (float) (FlxU.sin(_direction) * _amount * _radius);			
+					
+					acceleration.x = (float) (MathUtils.cos(_direction) * _amount * _radius);
+					acceleration.y = (float) (MathUtils.sin(_direction) * _amount * _radius);			
 				}					
 			}
-			else if(FlxG.mouse.justReleased() && status == PRESSED)
+			else if(FlxG.mouse.justReleased(pointerId) && status == PRESSED)
 			{				
+				_currentPointer = -1;
 				status = HIGHLIGHT;
 				if(onUp != null)
-					onUp.callback();					
+					onUp.callback();
 				acceleration.x = 0;
 				acceleration.y = 0;
-			}			
+			}					
 			
 			if(status == NORMAL)
 			{
 				status = HIGHLIGHT;
 				if(onOver != null)
 					onOver.callback();
-			}
+			}				
 		}
 		if((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
 		{				
 			_amount *= _ease;
-			if(FlxU.abs(_amount) < 0.1) 
-				_amount = 0;				
-		}					
-		
-		thumb.x = (float) (x + FlxU.cos(_direction) * _amount * _radius - (thumb.width * .5f));
-		thumb.y = (float) (y + FlxU.sin(_direction) * _amount * _radius - (thumb.height * .5f));
-		
+			if(Math.abs(_amount) < 0.1) 
+				_amount = 0;
+		}
+		thumb.x = (float) (x + MathUtils.cos(_direction) * _amount * _radius - (thumb.width * .5f));
+		thumb.y = (float) (y + MathUtils.sin(_direction) * _amount * _radius - (thumb.height * .5f));
 		if(offAll)
 		{
-			status = NORMAL;
+			status = NORMAL;			
 		}
 		super.update();
 	}
 	
 	/**
-	 * returns the angle in degrees.
+	 * Returns the angle in degrees.
 	 * @return	The angle.
 	 */
 	public float getAngle()
 	{
-		return (float) (Math.atan2(acceleration.y,acceleration.x) * DEGREES);
+		return (float) (MathUtils.atan2(acceleration.y,acceleration.x) * DEGREES);
 	}
 	
 	/**
@@ -288,7 +329,7 @@ public class FlxAnalog extends FlxGroup
 	}
 
 	/**
-	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the gamepad.
+	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the analog.
 	 * @param Alpha
 	 */
 	public void setAlpha(float Alpha)
