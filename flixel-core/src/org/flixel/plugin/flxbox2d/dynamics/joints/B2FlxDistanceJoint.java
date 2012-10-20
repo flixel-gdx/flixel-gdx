@@ -1,8 +1,11 @@
 package org.flixel.plugin.flxbox2d.dynamics.joints;
 
+import org.flixel.FlxCamera;
+import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.B2FlxB;
-import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxSprite;
+import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 
 /**
@@ -20,7 +23,7 @@ public class B2FlxDistanceJoint extends B2FlxJoint
 	 * @param spriteB	The second body.
 	 * @param jointDef	The joint definition.
 	 */
-	public B2FlxDistanceJoint(B2FlxSprite spriteA, B2FlxSprite spriteB, DistanceJointDef jointDef)
+	public B2FlxDistanceJoint(B2FlxShape spriteA, B2FlxShape spriteB, DistanceJointDef jointDef)
 	{
 		super(spriteA, spriteB, jointDef);
 	}
@@ -30,7 +33,7 @@ public class B2FlxDistanceJoint extends B2FlxJoint
 	 * @param spriteA	The first body.
 	 * @param spriteB	The second body.
 	 */
-	public B2FlxDistanceJoint(B2FlxSprite spriteA, B2FlxSprite spriteB)
+	public B2FlxDistanceJoint(B2FlxShape spriteA, B2FlxShape spriteB)
 	{
 		this(spriteA, spriteB, null);
 	}
@@ -65,6 +68,18 @@ public class B2FlxDistanceJoint extends B2FlxJoint
 		((DistanceJointDef) jointDef).initialize(bodyA, bodyB, anchorA, anchorB);
 		joint = B2FlxB.world.createJoint(jointDef);
 		return this;
+	}
+	
+	/**
+	 * Draw joint.
+	 */
+	@Override
+	protected void drawJoint(FlxCamera camera, float lineThickness, int lineColor, float lineAlpha)
+	{
+		ShapeRenderer segment = FlxG.flashGfx.getShapeRenderer();
+		FlxG.flashGfx.lineStyle(lineThickness, lineColor, lineAlpha);
+		segment.line(p1.x, p1.y, p2.x, p2.y);
+		
 	}
 	
 	/**

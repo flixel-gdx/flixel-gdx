@@ -22,12 +22,11 @@ public class B2FlxState extends FlxState
 	@Override
 	public void create()
 	{			
-		// Define gravity.
-		Vector2 gravity = new Vector2(0, 9.8f);
-		boolean doSleep = true;
+		// Setup required static variables
+		B2FlxB.init();
 		
 		// Construct a world object.
-		world = B2FlxB.world = new World(gravity, doSleep);
+		world = B2FlxB.world = new World(new Vector2(0, 9.8f), true);
 	}
 		
 	/**

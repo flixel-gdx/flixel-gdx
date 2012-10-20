@@ -1,7 +1,7 @@
 package org.flixel.plugin.flxbox2d.dynamics.joints;
 
 import org.flixel.plugin.flxbox2d.B2FlxB;
-import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxSprite;
+import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.joints.PrismaticJointDef;
@@ -16,7 +16,9 @@ import com.badlogic.gdx.physics.box2d.joints.PrismaticJointDef;
  */
 public class B2FlxPrismaticJoint extends B2FlxJoint
 {
-	// The axis.
+	/**
+	 * The axis.
+	 */
 	private Vector2 _axis;
 
 	/**
@@ -25,7 +27,7 @@ public class B2FlxPrismaticJoint extends B2FlxJoint
 	 * @param spriteB	The second body.
 	 * @param jointDef	The joint definition.
 	 */
-	public B2FlxPrismaticJoint(B2FlxSprite spriteA, B2FlxSprite spriteB, PrismaticJointDef jointDef)
+	public B2FlxPrismaticJoint(B2FlxShape spriteA, B2FlxShape spriteB, PrismaticJointDef jointDef)
 	{
 		super(spriteA, spriteB, jointDef);
 	}
@@ -35,7 +37,7 @@ public class B2FlxPrismaticJoint extends B2FlxJoint
 	 * @param spriteA	The first body.
 	 * @param spriteB	The second body.
 	 */
-	public B2FlxPrismaticJoint(B2FlxSprite spriteA, B2FlxSprite spriteB)
+	public B2FlxPrismaticJoint(B2FlxShape spriteA, B2FlxShape spriteB)
 	{
 		super(spriteA, spriteB, null);
 	}
@@ -44,7 +46,7 @@ public class B2FlxPrismaticJoint extends B2FlxJoint
 	 * Creates a prismatic joint.
 	 * @param spriteA	The first body.
 	 */
-	public B2FlxPrismaticJoint(B2FlxSprite spriteA)
+	public B2FlxPrismaticJoint(B2FlxShape spriteA)
 	{
 		super(spriteA, null, null);
 	}
@@ -82,6 +84,13 @@ public class B2FlxPrismaticJoint extends B2FlxJoint
 		((PrismaticJointDef) jointDef).initialize(bodyA, bodyB, anchorA, _axis);
 		joint = B2FlxB.world.createJoint(jointDef);
 		return this;
+	}
+	
+	@Override
+	public void destroy()
+	{
+		super.destroy();
+		_axis = null;
 	}
 	
 	/**

@@ -15,5 +15,10 @@ public class B2FlxV2 extends Vector2
 	{
 		super(x/B2FlxB.RATIO, y/B2FlxB.RATIO);
 	}
+	
+	public B2FlxV2(float x)
+	{
+		this(x/B2FlxB.RATIO, 0);
+	}
 }
 

@@ -5,8 +5,10 @@ import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.plugin.flxbox2d.B2FlxB;
-import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxSprite;
+import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
+import org.flixel.plugin.flxbox2d.system.debug.B2FlxDebug;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
@@ -14,41 +16,77 @@ import com.badlogic.gdx.physics.box2d.JointDef;
 
 
 /**
- * An abstract class and it must not be initiate.
- * It contains the standard objects which all subclasses also use.
+ * This is an abstract or parent class for all joints except <code>B2FlxMouseJoint</code>.
+ * It contains the required variables for creating joints and drawing lines.
+ * You shouldn't add this to the state unless you want to draw a line in your game.
+ * <code>showLine</code> is set to true at default. The debug drawing is done with
+ * <code>B2FlxDebug</code>. Don't add this to the state if you don't want to draw a line.
  * 
  * @author Ka Wing Chin
  */
 public abstract class B2FlxJoint extends FlxBasic
 {
-	// The ratio of meters to pixel.
-	protected static final float RATIO = B2FlxB.RATIO;
+	/**
+	 * The ratio of meters to pixel.
+	 */
+	static final float RATIO = B2FlxB.RATIO;
 	
-	// This stores the attached bodies and the type of the joint.
+	/**
+	 * This stores the attached bodies and the type of the joint.
+	 */
 	public JointDef jointDef;
-	// The base joint class. Joints are used to constraint two bodies together.
-	public Joint joint;
-	
-	// First body.	
+	/**
+	 * The base joint class. Joints are used to constraint two bodies together.
+	 */
+	public Joint joint;	
+	/**
+	 * First body.	
+	 */
 	public Body bodyA;
-	// Second body.
-	public Body bodyB;
-	
-	// The anchor point of the first body.
+	/**
+	 * Second body.
+	 */
+	public Body bodyB;	
+	/**
+	 * The anchor point of the first body.
+	 */
 	public Vector2 anchorA;	
-	// The anchor point of the second body.
+	/**
+	 * The anchor point of the second body.
+	 */
 	public Vector2 anchorB;	
-	
-	// Whether to draw a line or not.
-	public boolean showLine;
-	
-	// The thickness of the line.
+	/**
+	 * The anchor point of the first body in pixel world. 
+	 */
+	final static Vector2 p1 = new Vector2();
+	/**
+	 * The anchor point of the second body in pixel world.
+	 */
+	final static Vector2 p2 = new Vector2();
+	/**
+	 * The anchor point of the second body in transform in pixel world.
+	 */
+	final static Vector2 x1 = new Vector2();
+	/**
+	 * The anchor point of the second body in transform in pixel world.
+	 */
+	final static Vector2 x2 = new Vector2();	
+	/**
+	 * Whether to draw a line or not.
+	 */
+	public boolean showLine;	
+	/**
+	 * The thickness of the line. This won't work, because ShapeRenderer doesn't support this.
+	 */
 	public float lineThickness;
-	// The color of the line.
-	public int lineColor;
-	// The opacity of the line.
-	public float lineAlpha;
-	
+	/**
+	 * The color of the line.
+	 */
+	public int lineColor = 0x00FFFF;
+	/**
+	 * The opacity of the line.
+	 */
+	public float lineAlpha;	
 	/**
 	 * A point that can store numbers from 0 to 1 (for X and Y independently)
 	 * that governs how much this object is affected by the camera subsystem.
@@ -57,6 +95,7 @@ public abstract class B2FlxJoint extends FlxBasic
 	 * scrollFactor is initialized as (1,1) by default.
 	 */
 	public FlxPoint scrollFactor;
+
 	
 	/**
 	 * Depending on the type of joint there is no need of two bodies. You can safely 
@@ -66,19 +105,27 @@ public abstract class B2FlxJoint extends FlxBasic
 	 * @param spriteB	The second body.
 	 * @param jointDef	The joint definition.
 	 */
-	public B2FlxJoint(B2FlxSprite spriteA, B2FlxSprite spriteB, JointDef jointDef)
+	public B2FlxJoint(B2FlxShape spriteA, B2FlxShape spriteB, JointDef jointDef)
 	{
 		super();
 		
 		if(spriteA != null)
+		{
 			bodyA = spriteA.body;
+			spriteA.joints.add(this);
+		}
 		if(spriteB != null)
+		{
 			bodyB = spriteB.body;
+			spriteB.joints.add(this);
+		}
 		if(bodyA == null && bodyB == null)
 			throw new Error("your jointDef must have b2Body instances for its a and b properties");
 		if(jointDef != null)
 			this.jointDef = jointDef;
+	
 		scrollFactor = new FlxPoint(1.0f,1.0f);
+		B2FlxDebug.addJoint(this);
 		init();
 	}
 	
@@ -88,7 +135,7 @@ public abstract class B2FlxJoint extends FlxBasic
 	 * @param spriteA	The first body.
 	 * @param spriteB	The second body.
 	 */
-	public B2FlxJoint(B2FlxSprite spriteA, B2FlxSprite spriteB)
+	public B2FlxJoint(B2FlxShape spriteA, B2FlxShape spriteB)
 	{
 		this(spriteA, spriteB, null);
 	}
@@ -98,7 +145,7 @@ public abstract class B2FlxJoint extends FlxBasic
 	 * pass a JointDef and reuse it.
 	 * @param spriteA	The first body.
 	 */
-	public B2FlxJoint(B2FlxSprite spriteA)
+	public B2FlxJoint(B2FlxShape spriteA)
 	{
 		this(spriteA, null, null);
 	}
@@ -121,7 +168,7 @@ public abstract class B2FlxJoint extends FlxBasic
 		lineThickness = 1;
 		lineColor = 0xFF0000;
 		lineAlpha = .75f;
-		showLine = false;
+		showLine = true;
 	}
 	
 	/**
@@ -147,18 +194,28 @@ public abstract class B2FlxJoint extends FlxBasic
 	@Override
 	public void kill()
 	{
-		B2FlxB.world.destroyJoint(joint);
+		if(!B2FlxB.world.isLocked() && exists && joint != null)
+		{
+			B2FlxB.world.destroyJoint(joint);
+			joint = null;
+		}
 		super.kill();
 	}
 	
 	/**
 	 * It brings the joint back to life and it connects with the bodies 
-	 * were connected before.
+	 * that were connected before. //TODO: revive joint
 	 */
 	@Override
 	public void revive()
 	{
-		create();
+//		Vector2 a = bodyA.getTransform().getPosition();
+//		Vector2 b = bodyB.getTransform().getPosition();
+//		anchorA.add(a.x/RATIO, a.y/RATIO);
+////		anchorA = a;
+//		anchorB.add(b.x/RATIO, b.y/RATIO);
+//		
+//		create();
 		super.revive();
 	}
 	
@@ -168,42 +225,110 @@ public abstract class B2FlxJoint extends FlxBasic
 	@Override
 	public void destroy()
 	{
-		B2FlxB.world.destroyJoint(joint);
-		joint = null;
-		jointDef = null;
-		super.destroy();
+		if(joint != null && exists)
+		{
+			kill();
+			jointDef = null;
+		}
+		bodyA = null;
+		bodyB = null;
+		anchorA = null;
+		anchorB = null;
+		scrollFactor = null;
 	}
 	
 	/**
-	 * Main loop. Draw the line if showLine is set to true.
+	 * Draw line joint. Only if this joint is added to the state and showLine is set to true. 
 	 */
 	@Override
-	public void update()
+	public void draw()
 	{
-		if(joint != null && showLine)
-			drawLineJoint();
-		super.update();
+		if(joint != null && exists && (showLine || FlxG.visualDebug && !ignoreDrawDebug))
+		{
+			FlxCamera camera = FlxG.getActiveCamera();	
+			if (cameras != null && !cameras.contains(camera, true))
+				return;			
+			if (!onScreen(camera))
+				return;			
+			if(showLine)
+				drawJoint(camera, lineThickness, lineColor, lineAlpha);
+		}
 	}
-
+	
 	/**
-	 * Draw line joint.
+	 * Check and see if this object is currently on screen.
+	 * @param camera	Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @return			Whether the line is on screen or not.
 	 */
-	protected void drawLineJoint()
+	public boolean onScreen(FlxCamera camera)
 	{
-		FlxCamera Camera= FlxG.camera;			
-		Vector2 p1 = joint.getAnchorA();
-		Vector2 p2 = joint.getAnchorB();
-		float x1 = p1.x * RATIO - (int)Camera.scroll.x * scrollFactor.x;
-		float y1 = p1.y * RATIO - (int)Camera.scroll.y * scrollFactor.y;
-		float x2 = p2.x * RATIO - (int)Camera.scroll.x * scrollFactor.x;
-		float y2 = p2.y * RATIO - (int)Camera.scroll.y * scrollFactor.y;
+		if(joint == null)
+			return false;
+		if(camera == null)
+			camera = FlxG.camera;
 		
-		// TODO: draw line
-		// Draw line
-//		var line:Shape = B2FlxB.gfx;
-//		line.graphics.lineStyle(lineThickness, lineColor, lineAlpha);
-//		line.graphics.moveTo(x1, y1);
-//		line.graphics.lineTo(x2, y2);
+		p1.set(joint.getAnchorA().mul(RATIO));
+		p2.set(joint.getAnchorB().mul(RATIO));
+		
+		p1.x -= camera.scroll.x * scrollFactor.x;
+		p1.y -= camera.scroll.y * scrollFactor.y;
+		p2.x -= camera.scroll.x * scrollFactor.x;
+		p2.y -= camera.scroll.y * scrollFactor.y;
+		
+		boolean onScreenX = false;
+		boolean onScreenY = false;
+		if((p1.x <= p2.x) && (p2.x >= 0 && p2.x <= camera.width) || p2.x >= camera.width && p1.x <= camera.width)
+			onScreenX = true;
+		else if((p1.x >= p2.x) && (p1.x >= 0 && p1.x <= camera.width) || p1.x >= camera.width && p2.x <= camera.width)
+			onScreenX = true;
+		if((p1.y <= p2.y) && (p2.y >= 0 && p2.y <= camera.height) || p2.y >= camera.height && p1.y <= camera.height)
+			onScreenY = true;
+		else if((p1.y >= p2.y) && (p1.y >= 0 && p1.y <= camera.height) || p1.y >= camera.height && p2.y <= camera.height)
+			onScreenY = true;
+		return (onScreenX && onScreenY);
+	}
+	
+	/**
+	 * Check and see if this object is currently on screen.
+	 * @return		Whether the line is on screen or not.
+	 */
+	public boolean onScreen()
+	{
+		return onScreen(null);
+	}
+	
+	/**
+	 * Debug-only: draw debug line.
+	 */
+	@Override
+	public void drawDebug()
+	{
+		if(!onScreen())
+			return;
+		if(FlxG.visualDebug && !ignoreDrawDebug)
+			drawJoint(FlxG.getActiveCamera(), 1, B2FlxDebug.JOINT_COLOR, 1);
+	}
+	
+	/**
+	 * Draw joint for Friction, Gear, Prismatic, Revolute, Rope, Weld and Wheel joint.
+	 * @param camera
+	 * @param lineThickness
+	 * @param lineColor
+	 * @param lineAlpha
+	 */
+	protected void drawJoint(FlxCamera camera, float lineThickness, int lineColor, float lineAlpha)
+	{
+		ShapeRenderer segment = FlxG.flashGfx.getShapeRenderer();
+		FlxG.flashGfx.lineStyle(lineThickness, lineColor, lineAlpha);
+		x1.set(bodyA.getTransform().getPosition().mul(RATIO));
+		x2.set(bodyB.getTransform().getPosition().mul(RATIO));
+		x1.x -= camera.scroll.x * scrollFactor.x;
+		x1.y -= camera.scroll.y * scrollFactor.y;
+		x2.x -= camera.scroll.x * scrollFactor.x;
+		x2.y -= camera.scroll.y * scrollFactor.y;
+		segment.line(x1.x, x1.y, p1.x, p1.y);
+		segment.line(p1.x, p1.y, p2.x, p2.y);
+		segment.line(x2.x, x2.y, p2.x, p2.y);
 	}
 	
 	/**

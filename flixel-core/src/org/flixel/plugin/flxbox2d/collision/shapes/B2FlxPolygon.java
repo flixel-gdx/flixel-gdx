@@ -4,7 +4,9 @@ import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Transform;
 
 /**
  * A polygon shape which can be a convex or concave. The vertices
@@ -12,9 +14,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
  * 
  * @author Ka Wing Chin
  */
-public class B2FlxPolygon extends B2FlxSprite
+public class B2FlxPolygon extends B2FlxShape
 {
-	// Holds the vertices.
+	/**
+	 * Holds the vertices.
+	 */
 	private float[][][] _vertices;
 
 	/**
@@ -91,7 +95,7 @@ public class B2FlxPolygon extends B2FlxSprite
 	 * @return This object. Handy for chaining stuff together.
 	 */
 	@Override
-	public B2FlxPolygon create()
+	public void createBody()
 	{	
 		bodyDef.position.x = x / RATIO;
 		bodyDef.position.y = y / RATIO;
@@ -108,12 +112,31 @@ public class B2FlxPolygon extends B2FlxSprite
 			{		
 				vector[j] = new Vector2((float)_vertices[i][j][0] / RATIO, (float)_vertices[i][j][1] / RATIO);					
 			}
-			((PolygonShape)shape).set(vector);			
+			((PolygonShape)shape).set(vector);
 			body.createFixture(fixtureDef);
 		}
 		shape.dispose();
 		shape = null;
-		return this;
+	}
+	
+	@Override
+	public void destroy()
+	{
+		super.destroy();
+		_vertices = null;
+	}
+	
+	@Override
+	protected void drawShape(Fixture fixture, Transform transform, int color)
+	{
+		PolygonShape poly = (PolygonShape) fixture.getShape();
+		int vertexCount = poly.getVertexCount();
+		for(int i = 0; i < vertexCount; i++)
+		{
+			poly.getVertex(i, B2FlxB.vertices[i]);
+			transform.mul(B2FlxB.vertices[i]);
+		}
+		drawSolidPolygon(B2FlxB.vertices, vertexCount, color);
 	}
 	
 	/**

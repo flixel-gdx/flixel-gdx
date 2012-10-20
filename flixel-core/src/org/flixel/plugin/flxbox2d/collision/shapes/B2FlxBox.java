@@ -3,16 +3,20 @@ package org.flixel.plugin.flxbox2d.collision.shapes;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Transform;
 
 /**
  * A box shape.
  * 
  * @author Ka Wing Chin
  */
-public class B2FlxBox extends B2FlxSprite
+public class B2FlxBox extends B2FlxShape
 {
-	// Holds the center of an oriented box.
+	/**
+	 * Holds the center of an oriented box.
+	 */
 	private Vector2 _center;
 	
 	/**
@@ -129,8 +133,8 @@ public class B2FlxBox extends B2FlxSprite
 	 * @return	This object. Handy for chaining stuff together.
 	 */
 	@Override
-	public B2FlxBox create()
-	{		
+	protected void createBody()
+	{
 		bodyDef.position.x = (x + width * .5f) / RATIO;
 		bodyDef.position.y = (y + height * .5f) / RATIO;
 		position = bodyDef.position;
@@ -138,7 +142,14 @@ public class B2FlxBox extends B2FlxSprite
 		fixture = body.createFixture(fixtureDef);
 		shape.dispose();
 		shape = null;
-		return this;
+	}
+	
+	@Override
+	public void revive()
+	{
+		x = x + width * .5f;
+		y = y + height * .5f;
+		super.revive();
 	}
 	
 	@Override
@@ -148,4 +159,16 @@ public class B2FlxBox extends B2FlxSprite
 		_center = null;
 	}
 	
+	@Override
+	protected void drawShape(Fixture fixture, Transform transform, int color)
+	{
+		PolygonShape poly = (PolygonShape) fixture.getShape();
+		int vertexCount = poly.getVertexCount();
+		for(int i = 0; i < vertexCount; i++)
+		{
+			poly.getVertex(i, B2FlxB.vertices[i]);
+			transform.mul(B2FlxB.vertices[i]);
+		}
+		drawSolidPolygon(B2FlxB.vertices, vertexCount, color);
+	}
 }
