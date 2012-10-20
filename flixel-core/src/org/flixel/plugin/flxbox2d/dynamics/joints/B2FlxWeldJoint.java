@@ -1,7 +1,7 @@
 package org.flixel.plugin.flxbox2d.dynamics.joints;
 
 import org.flixel.plugin.flxbox2d.B2FlxB;
-import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxSprite;
+import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 
@@ -20,7 +20,7 @@ public class B2FlxWeldJoint extends B2FlxJoint
 	 * @param spriteB
 	 * @param jointDef
 	 */
-	public B2FlxWeldJoint(B2FlxSprite spriteA, B2FlxSprite spriteB, WeldJointDef jointDef)
+	public B2FlxWeldJoint(B2FlxShape spriteA, B2FlxShape spriteB, WeldJointDef jointDef)
 	{
 		super(spriteA, spriteB, jointDef);
 	}
@@ -30,7 +30,7 @@ public class B2FlxWeldJoint extends B2FlxJoint
 	 * @param spriteA
 	 * @param spriteB
 	 */
-	public B2FlxWeldJoint(B2FlxSprite spriteA, B2FlxSprite spriteB)
+	public B2FlxWeldJoint(B2FlxShape spriteA, B2FlxShape spriteB)
 	{
 		this(spriteA, spriteB, null);
 	}

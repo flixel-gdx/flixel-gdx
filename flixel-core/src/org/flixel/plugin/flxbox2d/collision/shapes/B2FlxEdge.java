@@ -5,17 +5,25 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Transform;
 
 /**
  * A line segment (edge) shape. These can be connected in chains or loops 
  * to other edge shapes. The connectivity information is used to ensure 
  * correct contact normals. 
  * 
+ * It won't draw any graphic on the screen. It's not recommended to load a graphic on this shape, because it's simply
+ * a line without any bounding box. It doesn't check whether the object is on
+ * screen or not. In the B2FlxShape::draw you'll find the if statement that cancels the drawing for this shape.
+ * 
  * @author Ka Wing Chin
  */
-public class B2FlxEdge extends B2FlxSprite
+public class B2FlxEdge extends B2FlxShape
 {
-	// Holds the vertices.
+	/**
+	 * Holds the vertices.
+	 */
 	private float[][] _vertices;
 
 	/**
@@ -96,7 +104,7 @@ public class B2FlxEdge extends B2FlxSprite
 	 * @return This object. Handy for chaining stuff together.
 	 */
 	@Override
-	public B2FlxEdge create()
+	public void createBody()
 	{		
 		bodyDef.position.x = x / RATIO;
 		bodyDef.position.y = y / RATIO;
@@ -115,7 +123,24 @@ public class B2FlxEdge extends B2FlxSprite
 		}
 		shape.dispose();
 		shape = null;
-		return this;
+	}
+	
+	@Override
+	public void destroy()
+	{
+		super.destroy();
+		_vertices = null;
+	}
+	
+	@Override
+	protected void drawShape(Fixture fixture, Transform transform, int color)
+	{
+		EdgeShape edge = (EdgeShape) fixture.getShape();
+		edge.getVertex1(B2FlxB.vertices[0]);
+		edge.getVertex2(B2FlxB.vertices[1]);
+		transform.mul(B2FlxB.vertices[0]);
+		transform.mul(B2FlxB.vertices[1]);
+		drawSolidPolygon(B2FlxB.vertices, 2, color);
 	}
 
 }

@@ -1,9 +1,13 @@
 package org.flixel.plugin.flxbox2d.dynamics.joints;
 
+import org.flixel.FlxCamera;
+import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.B2FlxB;
-import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxSprite;
+import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.joints.PulleyJoint;
 import com.badlogic.gdx.physics.box2d.joints.PulleyJointDef;
 
 /**
@@ -19,11 +23,11 @@ import com.badlogic.gdx.physics.box2d.joints.PulleyJointDef;
 public class B2FlxPulleyJoint extends B2FlxJoint
 {
 	// The first ground anchor in world coordinates. This point never moves.
-	public Vector2 _groundAnchorA;
+	private Vector2 _groundAnchorA;
 	// The second ground anchor in world coordinates. This point never moves.
-	public Vector2 _groundAnchorB;
+	private Vector2 _groundAnchorB;
 	// The pulley ratio, used to simulate a block-and-tackle.
-	public float _ratio;
+	private float _ratio;
 
 	/**
 	 * Creates a pulley joint.
@@ -31,7 +35,7 @@ public class B2FlxPulleyJoint extends B2FlxJoint
 	 * @param spriteB	The second body.
 	 * @param jointDef	The joint definition.
 	 */
-	public B2FlxPulleyJoint(B2FlxSprite spriteA, B2FlxSprite spriteB, PulleyJointDef jointDef)
+	public B2FlxPulleyJoint(B2FlxShape spriteA, B2FlxShape spriteB, PulleyJointDef jointDef)
 	{
 		super(spriteA, spriteB, jointDef);
 		anchorA = bodyA.getWorldCenter();
@@ -43,7 +47,7 @@ public class B2FlxPulleyJoint extends B2FlxJoint
 	 * @param spriteA	The first body.
 	 * @param spriteB	The second body.
 	 */
-	public B2FlxPulleyJoint(B2FlxSprite spriteA, B2FlxSprite spriteB)
+	public B2FlxPulleyJoint(B2FlxShape spriteA, B2FlxShape spriteB)
 	{
 		this(spriteA, spriteB, null);
 	}
@@ -79,6 +83,67 @@ public class B2FlxPulleyJoint extends B2FlxJoint
 		((PulleyJointDef) jointDef).initialize(bodyA, bodyB, _groundAnchorA, _groundAnchorB, anchorA, anchorB, _ratio);
 		joint = B2FlxB.world.createJoint(jointDef);
 		return this;
+	}
+	
+	@Override
+	public void destroy()
+	{
+		super.destroy();
+		_groundAnchorA = null;
+		_groundAnchorB = null;
+	}
+	
+	@Override
+	public boolean onScreen(FlxCamera camera)
+	{
+		if(joint == null)
+			return false;
+		if(camera == null)
+			camera = FlxG.camera;
+		
+		p1.set(joint.getAnchorA().mul(RATIO));
+		p2.set(joint.getAnchorB().mul(RATIO));
+		
+		p1.x -= camera.scroll.x * scrollFactor.x;
+		p1.y -= camera.scroll.y * scrollFactor.y;
+		p2.x -= camera.scroll.x * scrollFactor.x;
+		p2.y -= camera.scroll.y * scrollFactor.y;
+		
+		x1.set(((PulleyJoint)joint).getGroundAnchorA().mul(RATIO));
+		x2.set(((PulleyJoint)joint).getGroundAnchorB().mul(RATIO));
+		x1.x -= (int)camera.scroll.x * scrollFactor.x;
+		x1.y -= (int)camera.scroll.y * scrollFactor.y;
+		x2.x -= (int)camera.scroll.x * scrollFactor.x;
+		x2.y -= (int)camera.scroll.y * scrollFactor.y;
+		
+		boolean onScreenX = false;
+		boolean onScreenY = false;
+		if((p1.x <= p2.x) && (p2.x >= 0 && p2.x <= camera.width) || p2.x >= camera.width && p1.x <= camera.width)
+			onScreenX = true;
+		else if((p1.x >= p2.x) && (p1.x >= 0 && p1.x <= camera.width) || p1.x >= camera.width && p2.x <= camera.width)
+			onScreenX = true;
+		if((p1.y <= p2.y) && (p2.y >= 0 && p2.y <= camera.height) || p2.y >= camera.height && p1.y <= camera.height)
+			onScreenY = true;
+		else if((p1.y >= p2.y) && (p1.y >= 0 && p1.y <= camera.height) || p1.y >= camera.height && p2.y <= camera.height)
+			onScreenY = true;
+		if((x1.y <= x2.y) && (x2.y >= 0 && x2.y <= camera.height) || x2.y >= camera.height && x1.y <= camera.height)
+			onScreenY = true;
+		else if((x1.y >= x2.y) && (x1.y >= 0 && x1.y <= camera.height) || x1.y >= camera.height && x2.y <= camera.height)
+			onScreenY = true;
+		return (onScreenX && onScreenY);
+	}
+	
+	/**
+	 * Draw joint.
+	 */
+	@Override
+	protected void drawJoint(FlxCamera camera, float lineThickness, int lineColor, float lineAlpha)
+	{
+		ShapeRenderer segment = FlxG.flashGfx.getShapeRenderer();
+		FlxG.flashGfx.lineStyle(lineThickness, lineColor, lineAlpha);
+		segment.line(x1.x, x1.y, p1.x, p1.y);
+		segment.line(x2.x, x2.y, p2.x, p2.y);
+		segment.line(x1.x, x1.y, x2.x, x2.y);
 	}
 	
 	public B2FlxPulleyJoint setGroundAnchorA(Vector2 groundAnchorA)

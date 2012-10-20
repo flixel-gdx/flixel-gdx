@@ -1,7 +1,7 @@
 package org.flixel.plugin.flxbox2d.dynamics.joints;
 
 import org.flixel.plugin.flxbox2d.B2FlxB;
-import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxSprite;
+import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.joints.WheelJointDef;
@@ -18,7 +18,9 @@ import com.badlogic.gdx.physics.box2d.joints.WheelJointDef;
 public class B2FlxWheelJoint extends B2FlxJoint 
 {
 	
-	// The axis.
+	/**
+	 * The axis.
+	 */
 	private Vector2 _axis;
 
 	/**
@@ -27,7 +29,7 @@ public class B2FlxWheelJoint extends B2FlxJoint
 	 * @param spriteB	The second body.
 	 * @param jointDef	The joint definition.
 	 */
-	public B2FlxWheelJoint(B2FlxSprite spriteA, B2FlxSprite spriteB, WheelJointDef jointDef)
+	public B2FlxWheelJoint(B2FlxShape spriteA, B2FlxShape spriteB, WheelJointDef jointDef)
 	{
 		super(spriteA, spriteB, jointDef);
 	}
@@ -37,7 +39,7 @@ public class B2FlxWheelJoint extends B2FlxJoint
 	 * @param spriteA	The first body.
 	 * @param spriteB	The second body.
 	 */
-	public B2FlxWheelJoint(B2FlxSprite spriteA, B2FlxSprite spriteB)
+	public B2FlxWheelJoint(B2FlxShape spriteA, B2FlxShape spriteB)
 	{
 		this(spriteA, spriteB, null);
 	}
@@ -78,6 +80,13 @@ public class B2FlxWheelJoint extends B2FlxJoint
 		((WheelJointDef) jointDef).initialize(bodyA, bodyB, anchorA, _axis);
 		joint = B2FlxB.world.createJoint(jointDef);
 		return this;
+	}
+	
+	@Override
+	public void destroy()
+	{		
+		super.destroy();
+		_axis = null;
 	}
 	
 	public B2FlxWheelJoint setAxis(Vector2 axis)

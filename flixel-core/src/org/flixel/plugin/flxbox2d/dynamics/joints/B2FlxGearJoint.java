@@ -2,7 +2,7 @@ package org.flixel.plugin.flxbox2d.dynamics.joints;
 
 import org.flixel.FlxU;
 import org.flixel.plugin.flxbox2d.B2FlxB;
-import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxSprite;
+import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.joints.GearJointDef;
@@ -24,7 +24,7 @@ public class B2FlxGearJoint extends B2FlxJoint
 	 * @param spriteB	The second body.
 	 * @param jointDef	The joint definition.
 	 */
-	public B2FlxGearJoint(B2FlxSprite spriteA, B2FlxSprite spriteB, GearJointDef jointDef)
+	public B2FlxGearJoint(B2FlxShape spriteA, B2FlxShape spriteB, GearJointDef jointDef)
 	{
 		super(spriteA, spriteB, jointDef);
 		
@@ -35,7 +35,7 @@ public class B2FlxGearJoint extends B2FlxJoint
 	 * @param spriteA	The first body.
 	 * @param spriteB	The second body.
 	 */
-	public B2FlxGearJoint(B2FlxSprite spriteA, B2FlxSprite spriteB)
+	public B2FlxGearJoint(B2FlxShape spriteA, B2FlxShape spriteB)
 	{
 		super(spriteA, spriteB, null);
 	}

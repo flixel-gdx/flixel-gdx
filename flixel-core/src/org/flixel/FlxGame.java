@@ -509,6 +509,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			return true;
 		}
 		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
+		stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, X, Y));
 		return true;
 	}
 
@@ -813,7 +814,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.updateCameras();
 
 		// TODO: temporary key for turning on debug, delete when FlxDebugger complete
-		if(FlxG.keys.justPressed(Keys.F2))
+		if(FlxG.keys.justPressed(Keys.F2) && (FlxG.debug || forceDebugger))
 			FlxG.visualDebug = !FlxG.visualDebug;
 		
 		if(_debuggerUp)

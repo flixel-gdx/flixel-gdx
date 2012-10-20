@@ -4,19 +4,25 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Transform;
 
 /**
  * A circle shape.
  * 
  * @author Ka Wing Chin
  */
-public class B2FlxCircle extends B2FlxSprite
+public class B2FlxCircle extends B2FlxShape
 {
-	// The radius in pixel world which is defined in the constructor.
+	/**
+	 * The radius in pixel world which is defined in the constructor.
+	 */
 	private float _radius;
-	// The shape radius in box2d world.
+	/**
+	 * The shape radius in box2d world.
+	 */
 	private float _shapeRadius;
-
+	
 	/**
 	 * This creates a circle.
 	 * @param x			The X-coordinate of the point in space.
@@ -86,7 +92,7 @@ public class B2FlxCircle extends B2FlxSprite
 	 * @return	This object. Handy for chaining stuff together.
 	 */
 	@Override
-	public B2FlxCircle create()
+	protected void createBody()
 	{	
 		bodyDef.position.x = (x + _radius) / RATIO;
 		bodyDef.position.y = (y + _radius) / RATIO;
@@ -95,12 +101,19 @@ public class B2FlxCircle extends B2FlxSprite
 		fixture = body.createFixture(fixtureDef);
 		shape.dispose();
 		shape = null;
-		return this;
+	}
+	
+	@Override
+	protected void drawShape(Fixture fixture, Transform transform, int color)
+	{
+		CircleShape circle = (CircleShape) fixture.getShape();
+		t.set(circle.getPosition());
+		transform.mul(t);
+		drawSolidCircle(t, circle.getRadius(), axis.set(transform.vals[Transform.COS], transform.vals[Transform.SIN]), color);
 	}
 
 	/**
-	 * Returns the radius of the shape in box2d world.
-	 * @return
+	 * @return Returns the radius of the shape in box2d world.
 	 */
 	public float getRadius()
 	{

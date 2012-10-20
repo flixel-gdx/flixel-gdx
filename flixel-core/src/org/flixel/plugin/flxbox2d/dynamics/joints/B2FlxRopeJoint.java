@@ -1,7 +1,7 @@
 package org.flixel.plugin.flxbox2d.dynamics.joints;
 
 import org.flixel.plugin.flxbox2d.B2FlxB;
-import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxSprite;
+import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
@@ -25,7 +25,7 @@ public class B2FlxRopeJoint extends B2FlxJoint
 	 * @param spriteB	The second body.
 	 * @param jointDef	The joint definition.
 	 */
-	public B2FlxRopeJoint(B2FlxSprite spriteA, B2FlxSprite spriteB, RopeJointDef jointDef)
+	public B2FlxRopeJoint(B2FlxShape spriteA, B2FlxShape spriteB, RopeJointDef jointDef)
 	{
 		super(spriteA, spriteB, jointDef);
 	}
@@ -36,7 +36,7 @@ public class B2FlxRopeJoint extends B2FlxJoint
 	 * @param spriteB	The second body.
 	 * @param jointDef	The joint definition.
 	 */
-	public B2FlxRopeJoint(B2FlxSprite spriteA, B2FlxSprite spriteB)
+	public B2FlxRopeJoint(B2FlxShape spriteA, B2FlxShape spriteB)
 	{
 		this(spriteA, spriteB, null);
 	}
