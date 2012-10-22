@@ -111,7 +111,7 @@ public class B2FlxMouseJoint extends FlxBasic
 	@SuppressWarnings("unchecked")
 	private boolean mouseDown()
 	{
-		if(_mouseJoint == null)
+		if(_mouseJoint == null && FlxG.mouse.justPressed())
 		{
 			_hitBody = null;
 			_testPoint.set(_mouseWorldX, _mouseWorldY, 0);
@@ -154,7 +154,7 @@ public class B2FlxMouseJoint extends FlxBasic
 	 */
 	public boolean mouseDrag()
 	{
-		if(_mouseJoint != null)
+		if(_mouseJoint != null && FlxG.mouse.pressed())
 		{	
 			_mouseJoint.setTarget(_mouseTarget.set(_mouseWorldX, _mouseWorldY));
 			return true;
@@ -167,7 +167,10 @@ public class B2FlxMouseJoint extends FlxBasic
 	 */
 	private void mouseUp()
 	{
-		kill();
+		if(FlxG.mouse.justReleased())
+		{
+			kill();
+		}
 	}
 	
 	/**

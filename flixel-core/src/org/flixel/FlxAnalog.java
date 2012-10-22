@@ -14,57 +14,99 @@ import com.badlogic.gdx.utils.Array;
  */
 public class FlxAnalog extends FlxGroup
 {
-	// Base image
+	/**
+	 * Base image
+	 */
 	private final String ImgBase = "org/flixel/data/pack:base";
-	// Stick image
+	/**
+	 * Stick image
+	 */
 	private final String ImgThumb = "org/flixel/data/pack:stick";
 	
-	// From radians to degrees.
+	/**
+	 * From radians to degrees.
+	 */
 	private final double DEGREES = (180 / Math.PI);
 
-	// Used with public variable <code>status</code>, means not highlighted or pressed.
+	/**
+	 * Used with public variable <code>status</code>, means not highlighted or pressed.
+	 */
 	private final int NORMAL = 0;
-	// Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	/**
+	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	 */
 	private final int HIGHLIGHT = 1;
-	// Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	/**
+	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	 */
 	private final int PRESSED = 2;		
-	// Shows the current state of the button.
+	/**
+	 * Shows the current state of the button.
+	 */
 	public int status;
 	
-	// X position of the upper left corner of this object in world space.
+	/**
+	 * X position of the upper left corner of this object in world space.
+	 */
 	public float x;
-	// Y position of the upper left corner of this object in world space.
+	/**
+	 * Y position of the upper left corner of this object in world space.
+	 */
 	public float y;
 	
-	// An list of analogs that are currently active.
+	/**
+	 * An list of analogs that are currently active.
+	 */
 	private static Array<FlxAnalog> _analogs;
-	// The current pointer that's active on the analog.
+	/**
+	 * The current pointer that's active on the analog.
+	 */
 	private int _currentPointer;
 	
-	// This function is called when the button is released.
+	/**
+	 * This function is called when the button is released.
+	 */
 	public AFlxAnalog onUp;
-	// This function is called when the button is pressed down.
+	/**
+	 * This function is called when the button is pressed down.
+	 */
 	public AFlxAnalog onDown;
-	// This function is called when the mouse goes over the button.
+	/**
+	 * This function is called when the mouse goes over the button.
+	 */
 	public AFlxAnalog onOver;
-	// This function is called when the button is hold down.
+	/**
+	 * This function is called when the button is hold down.
+	 */
 	public AFlxAnalog onPressed;
 	
-	// The area which the joystick will react.
+	/**
+	 * The area which the joystick will react.
+	 */
 	private Circle _zone;
-	// The background of the joystick, also known as the base.
+	/**
+	 * The background of the joystick, also known as the base.
+	 */
 	public FlxSprite bg;
-	// The thumb 
+	/**
+	 * The thumb 
+	 */
 	public FlxSprite thumb;
 	
-	// The radius where the thumb can move.
+	/**
+	 * The radius where the thumb can move.
+	 */
 	private float _radius;
 	private float _direction;
 	private float _amount;		
 	
-	// How fast the speed of this object is changing.
+	/**
+	 * How fast the speed of this object is changing.
+	 */
 	public FlxPoint acceleration;
-	// The speed of easing when the thumb is released.
+	/**
+	 * The speed of easing when the thumb is released.
+	 */
 	private float _ease;
 	
 		

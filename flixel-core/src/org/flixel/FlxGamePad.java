@@ -21,45 +21,83 @@ public class FlxGamePad extends FlxGroup
 	private String ImgButtonDown = "org/flixel/data/pack:button_down";
 	private String ImgCenter = "org/flixel/data/pack:dpad_center";
 	
-	// Button A
+	/**
+	 * Button A
+	 */
 	public FlxButton buttonA;
-	// Button B
+	/**
+	 * Button B
+	 */
 	public FlxButton buttonB;
-	// Button C
+	/**
+	 * Button C
+	 */
 	public FlxButton buttonC;
-	// Button Y
+	/**
+	 * Button Y
+	 */
 	public FlxButton buttonY;
-	// Button X
+	/**
+	 * Button X
+	 */
 	public FlxButton buttonX;
-	// Button LEFT DIRECTION
+	/**
+	 * Button LEFT DIRECTION
+	 */
 	public FlxButton buttonLeft;
-	// Button UP DIRECTION
+	/**
+	 * Button UP DIRECTION
+	 */
 	public FlxButton buttonUp;
-	// Button RIGHT DIRECTION
+	/**
+	 * Button RIGHT DIRECTION
+	 */
 	public FlxButton buttonRight;
-	// BUTTON DOWN DIRECTION
+	/**
+	 * BUTTON DOWN DIRECTION
+	 */
 	public FlxButton buttonDown;
 	
-	// Don't use any button.
+	/**
+	 * Don't use any button.
+	 */
 	public static final int NONE = 0;
-	// Use the set of 4 directions or A, B, X, and Y.
+	/**
+	 * Use the set of 4 directions or A, B, X, and Y.
+	 */
 	public static final int FULL = 1;
-	// Use UP and DOWN direction buttons.
+	/**
+	 * Use UP and DOWN direction buttons.
+	 */
 	public static final int UP_DOWN = 2;
-	// Use LEFT and RIGHT direction buttons.
+	/**
+	 * Use LEFT and RIGHT direction buttons.
+	 */
 	public static final int LEFT_RIGHT = 3;
-	// Use UP, LEFT and RIGHT direction buttons.
+	/**
+	 * Use UP, LEFT and RIGHT direction buttons.
+	 */
 	public static final int UP_LEFT_RIGHT = 4;
-	// Use only A button. 
+	/**
+	 * Use only A button. 
+	 */
 	public static final int A = 5;
-	// Use A and B button.
+	/**
+	 * Use A and B button.
+	 */
 	public static final int A_B = 6;
-	// Use A, B and C button.
+	/**
+	 * Use A, B and C button.
+	 */
 	public static final int A_B_C = 7;
 	
-	// Group of directions buttons.
+	/**
+	 * Group of directions buttons.
+	 */
 	public FlxGroup dPad;
-	// Group of action buttons.
+	/**
+	 * Group of action buttons.
+	 */
 	public FlxGroup actions;
 	
 	/**
@@ -198,5 +236,73 @@ public class FlxGamePad extends FlxGroup
 		{
 			((FlxSprite) members.get(i)).setAlpha(Alpha);
 		}
+	}
+	
+	/**
+	 * Set the offset position of the D-PAD.
+	 * @param X	The x-offset
+	 * @param Y The y-offset
+	 */
+	public void setDPadPosition(float X, float Y)
+	{
+		for(int i = 0; i < dPad.members.size; i++)
+		{
+			((FlxSprite)dPad.members.get(i)).x += X;
+			((FlxSprite)dPad.members.get(i)).y += Y;
+		}
+	}
+	
+	/**
+	 * Set the x-offset position of the D-PAD.
+	 * @param X	The x-offset
+	 */
+	public void setDPadPositionX(float X)
+	{
+		for(int i = 0; i < dPad.members.size; i++)
+			((FlxSprite)dPad.members.get(i)).x += X;
+	}
+	
+	/**
+	 * Set the y-offset position of the D-PAD.
+	 * @param Y	The y-offset
+	 */
+	public void setDPadPositionY(float Y)
+	{
+		for(int i = 0; i < dPad.members.size; i++)
+			((FlxSprite)dPad.members.get(i)).y += Y;
+	}
+	
+	/**
+	 * Set the offset position of the action buttons.
+	 * @param X	The x-offset
+	 * @param Y	The y-offset
+	 */
+	public void setActionPosition(float X, float Y)
+	{
+		for(int i = 0; i < actions.members.size; i++)
+		{
+			((FlxSprite)actions.members.get(i)).x += X;
+			((FlxSprite)actions.members.get(i)).y += Y;
+		}
+	}
+	
+	/**
+	 * Set the x-offset position of the action buttons.
+	 * @param X	The x-offset
+	 */
+	public void setActionPositionX(float X)
+	{
+		for(int i = 0; i < actions.members.size; i++)
+			((FlxSprite)actions.members.get(i)).x += X;
+	}
+	
+	/**
+	 * Set the y-offset position of the action buttons.
+	 * @param Y	The y-offset
+	 */
+	public void setActionPositionY(float Y)
+	{
+		for(int i = 0; i < actions.members.size; i++)
+			((FlxSprite)actions.members.get(i)).y += Y;
 	}
 }
