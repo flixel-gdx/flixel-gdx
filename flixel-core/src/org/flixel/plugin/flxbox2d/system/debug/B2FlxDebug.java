@@ -2,6 +2,7 @@ package org.flixel.plugin.flxbox2d.system.debug;
 
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
+import org.flixel.FlxU;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxJoint;
 import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxMouseJoint;
@@ -49,6 +50,10 @@ public class B2FlxDebug extends FlxBasic
 	 * The color for AABB (bounding box).
 	 */
 	public static int AABB_COLOR = 0xFFFF00FF;
+	/**
+	 * The color for contacts.
+	 */
+	public static int CONTACT_COLOR = 0xFF80CCCC;
 	/**
 	 * Whether to draw bodies or not. Default is true.
 	 */
@@ -107,7 +112,6 @@ public class B2FlxDebug extends FlxBasic
 				mouses.get(i).drawDebug();
 			}
 		}
-		
 		if(drawCollisions)
 		{
 			ShapeRenderer renderer = FlxG.flashGfx.getShapeRenderer();
@@ -117,12 +121,14 @@ public class B2FlxDebug extends FlxBasic
 			if(Gdx.gl10 != null)
 				Gdx.gl10.glPointSize(3);
 			renderer.begin(ShapeType.Point);
+			float[] rgba = FlxU.getRGBA(CONTACT_COLOR);
+			renderer.setColor(rgba[0] * 0.00392f, rgba[1] * 0.00392f, rgba[2] * 0.00392f, 1);
 			int length = B2FlxB.world.getContactList().size();
 			for(int i = 0; i < length; i++)
 				drawContact(renderer, B2FlxB.world.getContactList().get(i));
 			renderer.end();
 			if(Gdx.gl10 != null)
-				Gdx.gl10.glPointSize(1);			
+				Gdx.gl10.glPointSize(1);
 		}
 	}
 	

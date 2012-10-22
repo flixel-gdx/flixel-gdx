@@ -7,11 +7,17 @@ import com.badlogic.gdx.utils.Array;
 
 public class FlxU
 {
-	// The value PI as a float. (180 degrees)
+	/**
+	 * The value PI as a float. (180 degrees)
+	 */
 	public static final float PI = 3.1415927f;    
-    // The value 2PI as a float. (360 degrees)
+    /**
+     * The value 2PI as a float. (360 degrees)
+     */
     public static final float TWO_PI = 2.0f * PI;
-    // The value PI/2 as a float. (90 degrees)
+    /**
+     * The value PI/2 as a float. (90 degrees)
+     */
     public static final float HALF_PI = 0.5f * PI;
 
 	
