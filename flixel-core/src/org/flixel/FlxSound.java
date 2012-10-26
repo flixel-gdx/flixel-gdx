@@ -132,6 +132,10 @@ public class FlxSound extends FlxBasic
 	 * Internal helper for detecting when the sound has stopped.
 	 */
 	protected boolean _wasPlaying;
+	/**
+	 * Internal helper for how many times to try playing a sound effect before giving up.
+	 */
+	static protected final int _tryLimit = 5000;
 		
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -461,7 +465,7 @@ public class FlxSound extends FlxBasic
 		{
 			if(_sound != null && _soundId == 0)
 			{
-				int tryLimit = 50;
+				int tryLimit = _tryLimit;
 				while (_soundId == 0 && tryLimit-- > 0)
 					_soundId = _sound.loop();
 				
@@ -481,7 +485,7 @@ public class FlxSound extends FlxBasic
 		{
 			if(_sound != null && _soundId == 0)
 			{
-				int tryLimit = 500;
+				int tryLimit = _tryLimit;
 				while (_soundId == 0 && tryLimit-- > 0)
 					_soundId = _sound.play();
 				
@@ -526,7 +530,7 @@ public class FlxSound extends FlxBasic
 		{
 			if(_sound != null)
 			{
-				int tryLimit = 50;
+				int tryLimit = _tryLimit;
 				while (_soundId == 0 && tryLimit-- > 0)
 					_soundId = _sound.loop();
 				
@@ -544,7 +548,7 @@ public class FlxSound extends FlxBasic
 		{
 			if(_sound != null)
 			{
-				int tryLimit = 50;
+				int tryLimit = _tryLimit;
 				while (_soundId == 0 && tryLimit-- > 0)
 					_soundId = _sound.play();
 				

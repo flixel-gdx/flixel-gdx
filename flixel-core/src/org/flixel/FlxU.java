@@ -1,7 +1,5 @@
 package org.flixel;
 
-import org.flixel.system.FlxApplication;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
@@ -29,7 +27,7 @@ public class FlxU
 	 */
 	static public void openURL(String URL)
 	{
-		((FlxApplication)Gdx.app).getNet().openURI(URL);
+		Gdx.net.openURI(URL);
 	}
 	
 	/**

@@ -2068,7 +2068,14 @@ public class FlxG
 	 */
 	public static void stopVibrate()
 	{
-		Gdx.input.cancelVibrate();
+		try
+		{
+			Gdx.input.cancelVibrate();
+		}
+		catch (Exception e)
+		{
+			FlxG.log(e.getMessage());
+		}
 	}
 	
 	/**
