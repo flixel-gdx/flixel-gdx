@@ -3,7 +3,7 @@ package org.flixel.plugin.flxbox2d;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * It's just an subclass of Vector2. It only do the pixels to meters ratio.
+ * It's just an subclass of Vector2. It only does the pixels to meters ratio.
  *
  * @author Ka Wing Chin
  */
