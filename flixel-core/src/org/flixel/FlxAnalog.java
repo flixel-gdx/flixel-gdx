@@ -247,34 +247,48 @@ public class FlxAnalog extends FlxGroup
 	{
 		boolean foundFreePointer = false;
 		int pointerId = 0;		
-		int	totalPointers = FlxG.mouse.activePointers + 1;
-		FlxPoint point;		
-		boolean offAll = true;
+		int	totalPointers = FlxG.mouse.activePointers + 1;		
 		
-		// There is no reason to get into the loop if their is already a pointer on the analog
-		if(_currentPointer > 0)
-			pointerId = _currentPointer;
-		else
+		if(_analogs.size > 1)  // For multiple analogs.
+		{
+			// There is no reason to get into the loop if their is already a pointer on the analog
+			if(_currentPointer > 0)
+				pointerId = _currentPointer;
+			else
+			{
+				while(pointerId < totalPointers)
+				{			
+					for(int i = 0; i < _analogs.size; i++)
+					{
+						// check whether the pointer is already taken by another analog.
+						if(!_analogs.get(i).equals(this) && _analogs.get(i)._currentPointer != pointerId) 
+						{		
+							foundFreePointer = true;
+							break;
+						}
+					}
+					if(foundFreePointer)
+						break;
+					++pointerId;
+				}
+			}
+			updateAnalog(pointerId);
+		}
+		else // For single analog.
 		{
 			while(pointerId < totalPointers)
-			{			
-				for(int i = 0; i < _analogs.size; i++)
-				{
-					// check whether the pointer is already taken by another analog.
-					if(!_analogs.get(i).equals(this) && _analogs.get(i)._currentPointer != pointerId) 
-					{		
-						foundFreePointer = true;
-						break;
-					}
-				}
-				if(foundFreePointer)
-					break;
+			{	
+				updateAnalog(pointerId);
 				++pointerId;
 			}
 		}
-		if(!foundFreePointer)
-			pointerId = 0;
-		point = FlxG.mouse.getWorldPosition(pointerId);
+		super.update();
+	}
+	
+	protected void updateAnalog(int pointerId)
+	{		
+		boolean offAll = true;
+		FlxPoint point = FlxG.mouse.getWorldPosition(pointerId);
 		if(_zone.contains(point.x, point.y) || (status == PRESSED))
 		{
 			offAll = false;			
@@ -335,7 +349,6 @@ public class FlxAnalog extends FlxGroup
 		{
 			status = NORMAL;			
 		}
-		super.update();
 	}
 	
 	/**
