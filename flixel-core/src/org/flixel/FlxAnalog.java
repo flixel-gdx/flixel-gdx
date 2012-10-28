@@ -26,7 +26,7 @@ public class FlxAnalog extends FlxGroup
 	/**
 	 * From radians to degrees.
 	 */
-	private final double DEGREES = (180 / Math.PI);
+	private final float DEGREES = (float) (180f / Math.PI);
 
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
@@ -272,8 +272,9 @@ public class FlxAnalog extends FlxGroup
 				++pointerId;
 			}
 		}
-		
-		point = FlxG.mouse.getWorldPosition(pointerId);		
+		if(!foundFreePointer)
+			pointerId = 0;
+		point = FlxG.mouse.getWorldPosition(pointerId);
 		if(_zone.contains(point.x, point.y) || (status == PRESSED))
 		{
 			offAll = false;			
@@ -343,7 +344,7 @@ public class FlxAnalog extends FlxGroup
 	 */
 	public float getAngle()
 	{
-		return (float) (MathUtils.atan2(acceleration.y,acceleration.x) * DEGREES);
+		return (MathUtils.atan2(acceleration.y,acceleration.x) * DEGREES);
 	}
 	
 	/**

@@ -82,7 +82,6 @@ public class B2FlxMouseJoint extends FlxBasic
 		_groundBody = B2FlxB.world.createBody(new BodyDef());
 		_testPoint = new Vector3();
 		_mouseTarget = new Vector2();
-		B2FlxDebug.addMouseJoint(this);
 	}
 	
 	/**
@@ -158,7 +157,7 @@ public class B2FlxMouseJoint extends FlxBasic
 		{	
 			_mouseJoint.setTarget(_mouseTarget.set(_mouseWorldX, _mouseWorldY));
 			return true;
-		}		
+		}
 		return false;
 	}
 	
@@ -217,6 +216,12 @@ public class B2FlxMouseJoint extends FlxBasic
 		}
 	};
 
+	@Override
+	public void draw()
+	{
+		if(FlxG.visualDebug && !ignoreDrawDebug)
+			drawDebug();
+	}
 	
 	/**
 	 * Draws the debug line when the mouse drags.

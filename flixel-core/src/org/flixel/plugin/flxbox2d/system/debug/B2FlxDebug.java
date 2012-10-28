@@ -5,7 +5,6 @@ import org.flixel.FlxG;
 import org.flixel.FlxU;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxJoint;
-import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxMouseJoint;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * A plugin for rendering debug shapes. It renders joints and contact points.
+ * A plugin for rendering joints and contact points.
  * 
  * @author Ka Wing Chin
  */
@@ -73,21 +72,15 @@ public class B2FlxDebug extends FlxBasic
 	/**
 	 * Whether to draw contact points or not. Default is true;
 	 */
-	public static boolean drawCollisions;
-	
+	public static boolean drawCollisions;	
 	/**
 	 * An array of joints.
 	 */
 	static Array<B2FlxJoint> joints;
-	/**
-	 * An array of mouses. // TODO: not sure if an array is needed.
-	 */
-	static Array<B2FlxMouseJoint> mouses;
 	
 	public B2FlxDebug()
 	{
 		joints = new Array<B2FlxJoint>();
-		mouses = new Array<B2FlxMouseJoint>();
 		drawBodies = true;
 		drawJoints = true;
 		drawCollisions = true;
@@ -106,10 +99,6 @@ public class B2FlxDebug extends FlxBasic
 			for(int i = 0; i < joints.size; i++)
 			{
 				joints.get(i).drawDebug();
-			}			
-			for(int i = 0; i < mouses.size; i++)
-			{
-				mouses.get(i).drawDebug();
 			}
 		}
 		if(drawCollisions)
@@ -158,15 +147,6 @@ public class B2FlxDebug extends FlxBasic
 	}
 	
 	/**
-	 * Adds a mouse joint to the renderer.
-	 * @param mouse		The mouse joint that needs to be drawn in the debug.
-	 */
-	public static void addMouseJoint(B2FlxMouseJoint mouse)
-	{
-		mouses.add(mouse);
-	}
-	
-	/**
 	 * Cleans up the memory.
 	 */
 	@Override
@@ -174,8 +154,6 @@ public class B2FlxDebug extends FlxBasic
 	{
 		joints.clear();
 		joints = null;
-		mouses.clear();
-		mouses = null;
 	}
 }
 
