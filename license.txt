@@ -6,7 +6,7 @@ libgdx - (code.google.com/p/libgdx/)
 
 ----------------------------------------------------------------------------------
 flixel-android
-Copyright (c) 2011, Ka Wing Chin
+Copyright (c) 2011, Ka Wing Chin and Thomas Weston
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,7 @@ The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 ----------------------------------------------------------------------------------
 libgdx
-Copyright 2011 See AUTHORS file.
+Copyright 2011, Mario Zechner and Nathan Sweet
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
