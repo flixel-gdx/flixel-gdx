@@ -5,8 +5,6 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Transform;
 
 /**
  * A line segment (edge) shape. These can be connected in chains or loops 
@@ -131,16 +129,4 @@ public class B2FlxEdge extends B2FlxShape
 		super.destroy();
 		_vertices = null;
 	}
-	
-	@Override
-	protected void drawShape(Fixture fixture, Transform transform, int color)
-	{
-		EdgeShape edge = (EdgeShape) fixture.getShape();
-		edge.getVertex1(B2FlxB.vertices[0]);
-		edge.getVertex2(B2FlxB.vertices[1]);
-		transform.mul(B2FlxB.vertices[0]);
-		transform.mul(B2FlxB.vertices[1]);
-		drawSolidPolygon(B2FlxB.vertices, 2, color);
-	}
-
 }

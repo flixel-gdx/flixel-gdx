@@ -4,6 +4,7 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 
 /**
@@ -98,4 +99,12 @@ public class B2FlxRopeJoint extends B2FlxJoint
 		return this;
 	}
 
+	/**
+	 * Get the rope joint.
+	 * @return
+	 */
+	public RopeJoint getJoint()
+	{
+		return (RopeJoint)joint;
+	}
 }

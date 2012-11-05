@@ -164,5 +164,13 @@ public class B2FlxPulleyJoint extends B2FlxJoint
 		return this;
 	}
 
+	/**
+	 * Get the pulley joint.
+	 * @return
+	 */
+	public PulleyJoint getJoint()
+	{
+		return (PulleyJoint)joint;
+	}
 }
 

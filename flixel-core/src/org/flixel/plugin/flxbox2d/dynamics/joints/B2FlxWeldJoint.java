@@ -3,6 +3,7 @@ package org.flixel.plugin.flxbox2d.dynamics.joints;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
+import com.badlogic.gdx.physics.box2d.joints.WeldJoint;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 
 /**
@@ -57,4 +58,12 @@ public class B2FlxWeldJoint extends B2FlxJoint
 		return this;
 	}
 
+	/**
+	 * Get the weld joint.
+	 * @return
+	 */
+	public WeldJoint getJoint()
+	{
+		return (WeldJoint)joint;
+	}
 }

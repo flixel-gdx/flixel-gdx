@@ -1,6 +1,6 @@
 package org.flixel.plugin.flxbox2d.collision.shapes;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
@@ -18,7 +18,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -93,11 +95,14 @@ public abstract class B2FlxShape extends FlxSprite
 	 * Holds all joints that are attached to this body.
 	 */
 	public Array<B2FlxJoint> joints;
-
+	/**
+	 * A list of fixtures that are attached to the body.
+	 */
+	private static ArrayList<Fixture> _fixtures;
 	/**
 	 * The fixture that is used for debug drawing.
 	 */
-	private static Fixture _fixtureDebug;
+	private Fixture _fixtureDebug;
 	/**
 	 * Internal, for debug purpose only. Destroying these shouldn't be done in this class.
 	 */
@@ -209,7 +214,7 @@ public abstract class B2FlxShape extends FlxSprite
 			angle = body.getAngle() * B2FlxMath.RADDEG;
 			// TODO: This resets the angle, prevents increase of the angle value. 
 			// sure if setTransform is alright, it breaks the contacts.
-			// This doesn't work with circles that are joined with gear joint.
+			// This doesn't work with shapes that are joined with gear joint.
 			if(angle >= 360 || angle <= -360)
 				body.setTransform(position.x, position.y, 0);
 		}
@@ -252,7 +257,8 @@ public abstract class B2FlxShape extends FlxSprite
 		fixtureDef = null;
 		disposeShape();
 		position = null;
-		userData.clear();
+		if(userData != null)
+			userData.clear();
 		userData = null;
 		_fixtureDebug = null;
 	}
@@ -304,68 +310,78 @@ public abstract class B2FlxShape extends FlxSprite
 	@Override
 	public boolean onScreen(FlxCamera camera)
 	{
-		if(!exists || (body == null && _fixtureDebug == null))
+		if(!exists || (body == null))
 			return false;
 		
 		if(camera == null)
 			camera = FlxG.camera;
-				
-		Vector2[] vertices = B2FlxB.vertices;
-		Transform transform = body.getTransform();
-		if(_fixtureDebug.getType() == Type.Circle)
+		
+		int length = body.getFixtureList().size();
+		_fixtures = body.getFixtureList();
+		boolean onScreen = false;
+		for(int i = 0; i < length; i++)
 		{
-			CircleShape shape = (CircleShape) fixture.getShape();
-			float radius = shape.getRadius();
-			vertices[0].set(shape.getPosition());
-			vertices[0].rotate(transform.getRotation()).add(transform.getPosition());
-			lower.set(vertices[0].x - radius, vertices[0].y - radius);
-			upper.set(vertices[0].x + radius, vertices[0].y + radius);
-		}
-		else if(_fixtureDebug.getType() == Type.Polygon)
-		{
-			PolygonShape shape = (PolygonShape) _fixtureDebug.getShape();
-			int vertexCount = shape.getVertexCount();
-			shape.getVertex(0, vertices[0]);
-			lower.set(transform.mul(vertices[0]));
-			upper.set(lower);
-			for(int i = 1; i < vertexCount; i++)
+			_fixtureDebug = _fixtures.get(i);			
+			if(onScreen == false)
 			{
-				shape.getVertex(i, vertices[i]);
-				transform.mul(vertices[i]);
-				lower.x = FlxU.min(lower.x, vertices[i].x);
-				lower.y = FlxU.min(lower.y, vertices[i].y);
-				upper.x = FlxU.max(upper.x, vertices[i].x);
-				upper.y = FlxU.max(upper.y, vertices[i].y);
+				Vector2[] vertices = B2FlxB.vertices;
+				Transform transform = body.getTransform();
+				if(_fixtureDebug.getType() == Type.Circle)
+				{
+					CircleShape shape = (CircleShape) _fixtureDebug.getShape();
+					float radius = shape.getRadius();
+					vertices[0].set(shape.getPosition());
+					vertices[0].rotate(transform.getRotation()).add(transform.getPosition());
+					lower.set(vertices[0].x - radius, vertices[0].y - radius);
+					upper.set(vertices[0].x + radius, vertices[0].y + radius);
+				}
+				else if(_fixtureDebug.getType() == Type.Polygon)
+				{
+					PolygonShape shape = (PolygonShape) _fixtureDebug.getShape();
+					int vertexCount = shape.getVertexCount();
+					shape.getVertex(0, vertices[0]);
+					lower.set(transform.mul(vertices[0]));
+					upper.set(lower);
+					for(int j = 1; j < vertexCount; j++)
+					{
+						shape.getVertex(j, vertices[j]);
+						transform.mul(vertices[j]);
+						lower.x = FlxU.min(lower.x, vertices[j].x);
+						lower.y = FlxU.min(lower.y, vertices[j].y);
+						upper.x = FlxU.max(upper.x, vertices[j].x);
+						upper.y = FlxU.max(upper.y, vertices[j].y);
+					}
+				}
+				else if (_fixtureDebug.getType() == Type.Edge) 
+				{
+					return true;
+				}
+				else if (_fixtureDebug.getType() == Type.Chain) 
+				{
+					return true;
+				}
+				else
+					return false;
+				
+				lower.mul(RATIO);
+				upper.mul(RATIO);
+				
+				p1.x = lower.x - camera.scroll.x * scrollFactor.x;
+				p1.y = lower.y - camera.scroll.y * scrollFactor.y;
+				p2.x = upper.x - camera.scroll.x * scrollFactor.x;
+				p2.y = upper.y - camera.scroll.y * scrollFactor.y;
+				
+				// Check whether the bounding box are within the camera.
+				if( ((p1.x >= 0 && p1.x <= camera.width) || (p2.x >= 0 && p2.x <= camera.width)) &&
+					((p1.y >= 0 && p1.y <= camera.height) ||(p2.y >= 0 && p2.y <= camera.height)))
+				{
+					onScreen = true;
+				}
 			}
-		}
-		else if (_fixtureDebug.getType() == Type.Edge) 
-		{
-			return true;
-		}
-		else if (_fixtureDebug.getType() == Type.Chain) 
-		{
-			return true;
-		}
-		else
-			return false;
-		
-		lower.mul(RATIO);
-		upper.mul(RATIO);
-		
-		p1.x = lower.x - camera.scroll.x * scrollFactor.x;
-		p1.y = lower.y - camera.scroll.y * scrollFactor.y;
-		p2.x = upper.x - camera.scroll.x * scrollFactor.x;
-		p2.y = upper.y - camera.scroll.y * scrollFactor.y;
-		
-		// Check whether the bounding box are within the camera.
-		if( ((p1.x >= 0 && p1.x <= camera.width) || (p2.x >= 0 && p2.x <= camera.width)) &&
-			((p1.y >= 0 && p1.y <= camera.height) ||(p2.y >= 0 && p2.y <= camera.height)))
-		{
-			return true;
-		}
-		
+		}			
+				
 		// It's out side the camera.
-		return false;
+		return onScreen;
 	}
 	
 	/**
@@ -409,58 +425,49 @@ public abstract class B2FlxShape extends FlxSprite
 		
 		if (cameras != null && !cameras.contains(camera, true))
 			return;
-		
-		int length = body.getFixtureList().size();
-		List<Fixture> fixtures = body.getFixtureList();
-		boolean onScreen = false;
-		for(int i = 0; i < length; i++)
-		{
-			_fixtureDebug = fixtures.get(i);			
-			if(onScreen == false)
-				onScreen = onScreen(camera);
-			if(onScreen)
-			{
-				if(FlxG.visualDebug && !ignoreDrawDebug)
-					drawDebug(camera);
-			}
-		}
-		
-		// Don't draw if it's out side the screen or if the fixture is an edge or a chain.
-		if(!onScreen || (_fixtureDebug.getType() == Type.Edge || _fixtureDebug.getType() == Type.Chain))
+				
+		// Check whether it's outside the screen.
+		if(!onScreen(camera))
 			return;
 		
-		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
-		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
-		_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
-		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
-		
-		//tinting
-		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
-		framePixels.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
-
-		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
-		{ 	//Simple render
-			framePixels.setPosition(_point.x, _point.y);
-			framePixels.draw(FlxG.batch);
-		}
-		else
-		{ 	//Advanced render
-			framePixels.setOrigin(origin.x, origin.y);
-			framePixels.setScale(scale.x, scale.y);
-			if((angle != 0) && (_bakedRotation <= 0))
-				framePixels.setRotation(angle);
-			framePixels.setPosition(_point.x, _point.y);
-			if(blend != null)
-			{
-				FlxG.batch.setBlendFunction(blend[0], blend[1]);
+		// Don't draw if the fixture is an edge or a chain.
+		if(_fixtureDebug.getType() != Type.Edge || _fixtureDebug.getType() != Type.Chain)
+		{
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
+			_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
+			_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
+			
+			//tinting
+			int tintColor = FlxU.multiplyColors(_color, camera.getColor());
+			framePixels.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
+			
+			if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
+			{ 	//Simple render
+				framePixels.setPosition(_point.x, _point.y);
 				framePixels.draw(FlxG.batch);
-				FlxG.batch.setBlendFunction(0x0302, 0x0303);
 			}
 			else
-			{
-				framePixels.draw(FlxG.batch);
-			}
-		}
+			{ 	//Advanced render
+				framePixels.setOrigin(origin.x, origin.y);
+				framePixels.setScale(scale.x, scale.y);
+				if((angle != 0) && (_bakedRotation <= 0))
+					framePixels.setRotation(angle);
+				framePixels.setPosition(_point.x, _point.y);
+				if(blend != null)
+				{
+					FlxG.batch.setBlendFunction(blend[0], blend[1]);
+					framePixels.draw(FlxG.batch);
+					FlxG.batch.setBlendFunction(0x0302, 0x0303);
+				}
+				else
+				{
+					framePixels.draw(FlxG.batch);
+				}
+			}			
+		}		
+		if(FlxG.visualDebug && !ignoreDrawDebug)
+			drawDebug(camera);
 	}
 	
 	/**
@@ -477,22 +484,25 @@ public abstract class B2FlxShape extends FlxSprite
 			Transform transform = body.getTransform();
 			if(B2FlxDebug.drawBodies)
 			{
-				if(body.isActive() == false)
-					drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_NOT_ACTIVE);
-				else if(body.getType() == BodyType.StaticBody)
-					drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_STATIC);
-				else if(body.getType() == BodyType.KinematicBody)
-					drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_KINEMATIC);
-				else if(body.isAwake() == false)
-					drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_NOT_AWAKE);
-				else
-					drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_AWAKE);
-			}
-
-			if(B2FlxDebug.drawAABBs)
-			{
-				if(_fixtureDebug.getType() != Type.Edge && _fixtureDebug.getType() != Type.Chain)
-					drawAABB(_fixtureDebug, transform);
+				for(int i = 0; i < _fixtures.size(); i++)
+				{
+					_fixtureDebug = _fixtures.get(i);
+					if(body.isActive() == false)
+						drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_NOT_ACTIVE);
+					else if(body.getType() == BodyType.StaticBody)
+						drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_STATIC);
+					else if(body.getType() == BodyType.KinematicBody)
+						drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_KINEMATIC);
+					else if(body.isAwake() == false)
+						drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_NOT_AWAKE);
+					else
+						drawShape(_fixtureDebug, transform, B2FlxDebug.SHAPE_AWAKE);
+					if(B2FlxDebug.drawAABBs)
+					{
+						if(_fixtureDebug.getType() != Type.Edge && _fixtureDebug.getType() != Type.Chain)
+							drawAABB(_fixtureDebug, transform);
+					}
+				}
 			}
 		}
 	}
@@ -503,7 +513,47 @@ public abstract class B2FlxShape extends FlxSprite
 	 * @param transform
 	 * @param color
 	 */
-	abstract protected void drawShape(Fixture fixture, Transform transform, int color);
+	protected void drawShape(Fixture fixture, Transform transform, int color)
+	{
+		if(fixture.getType() == Type.Circle)
+		{
+			CircleShape circle = (CircleShape) fixture.getShape();
+			t.set(circle.getPosition());
+			transform.mul(t);
+			drawSolidCircle(t, circle.getRadius(), axis.set(transform.vals[Transform.COS], transform.vals[Transform.SIN]), color);			
+		}
+		else if(fixture.getType() == Type.Polygon)
+		{
+			PolygonShape poly = (PolygonShape) fixture.getShape();
+			int vertexCount = poly.getVertexCount();
+			for(int i = 0; i < vertexCount; i++)
+			{
+				poly.getVertex(i, B2FlxB.vertices[i]);
+				transform.mul(B2FlxB.vertices[i]);
+			}
+			drawSolidPolygon(B2FlxB.vertices, vertexCount, color);
+		}
+		else if(fixture.getType() == Type.Edge)
+		{
+			EdgeShape edge = (EdgeShape) fixture.getShape();
+			edge.getVertex1(B2FlxB.vertices[0]);
+			edge.getVertex2(B2FlxB.vertices[1]);
+			transform.mul(B2FlxB.vertices[0]);
+			transform.mul(B2FlxB.vertices[1]);
+			drawSolidPolygon(B2FlxB.vertices, 2, color);
+		}
+		else if(fixture.getType() == Type.Chain)
+		{
+			ChainShape chain = (ChainShape) fixture.getShape();
+			int vertexCount = chain.getVertexCount();
+			for(int i = 0; i < vertexCount; i++)
+			{
+				chain.getVertex(i, B2FlxB.vertices[i]);
+				transform.mul(B2FlxB.vertices[i]);
+			}
+			drawSolidPolygon(B2FlxB.vertices, vertexCount, color);
+		}
+	}
 	
 	/**
 	 * Debug-only: draws the AABB (bounding box).
@@ -681,13 +731,25 @@ public abstract class B2FlxShape extends FlxSprite
 	}
 	
 	/**
-	 * Creates a fixture and attach to this body. 
+	 * Creates a fixture and attach to this body.
 	 * @param fixutreDef The fixtureDef which contains a shape.
+	 * @return	The fixture that was created.
+	 */
+	public Fixture createFixture(FixtureDef fixtureDef, boolean dispose)
+	{
+		fixture = body.createFixture(fixtureDef);
+		if(dispose)
+			disposeShape();
+		return fixture;
+	}
+	
+	/**
+	 * Creates a fixture and attach to this body.
 	 * @return	The fixture that was created.
 	 */
 	public Fixture createFixture(FixtureDef fixtureDef)
 	{
-		return fixture = body.createFixture(fixtureDef);
+		return createFixture(fixtureDef, false);
 	}
 
 	/**

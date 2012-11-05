@@ -4,6 +4,7 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.joints.WheelJoint;
 import com.badlogic.gdx.physics.box2d.joints.WheelJointDef;
 
 /**
@@ -123,6 +124,15 @@ public class B2FlxWheelJoint extends B2FlxJoint
 	{
 		((WheelJointDef)jointDef).dampingRatio = dampingRatio;
 		return this;
+	}
+	
+	/**
+	 * Get the wheel joint.
+	 * @return
+	 */
+	public WheelJoint getJoint()
+	{
+		return (WheelJoint)joint;
 	}
 }
 

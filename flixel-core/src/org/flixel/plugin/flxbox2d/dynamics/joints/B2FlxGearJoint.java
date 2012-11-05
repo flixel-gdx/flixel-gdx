@@ -5,6 +5,7 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.joints.GearJoint;
 import com.badlogic.gdx.physics.box2d.joints.GearJointDef;
 
 /**
@@ -100,4 +101,12 @@ public class B2FlxGearJoint extends B2FlxJoint
 		return this;
 	}
 
+	/**
+	 * Get the gear joint.
+	 * @return
+	 */
+	public GearJoint getJoint()
+	{
+		return (GearJoint)joint;
+	}
 }

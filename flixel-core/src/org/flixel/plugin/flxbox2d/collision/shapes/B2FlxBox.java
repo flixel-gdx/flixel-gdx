@@ -1,11 +1,10 @@
 package org.flixel.plugin.flxbox2d.collision.shapes;
 
+import org.flixel.FlxPoint;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Transform;
 
 /**
  * A box shape.
@@ -36,6 +35,7 @@ public class B2FlxBox extends B2FlxShape
 			this.width = width;
 		if(height > 0)
 			this.height = height;
+		this.center = new FlxPoint(width*.5f, height*.5f);
 		_center = center;
 		setAngle(angle);
 		createShape();
@@ -157,18 +157,5 @@ public class B2FlxBox extends B2FlxShape
 	{
 		super.destroy();
 		_center = null;
-	}
-	
-	@Override
-	protected void drawShape(Fixture fixture, Transform transform, int color)
-	{
-		PolygonShape poly = (PolygonShape) fixture.getShape();
-		int vertexCount = poly.getVertexCount();
-		for(int i = 0; i < vertexCount; i++)
-		{
-			poly.getVertex(i, B2FlxB.vertices[i]);
-			transform.mul(B2FlxB.vertices[i]);
-		}
-		drawSolidPolygon(B2FlxB.vertices, vertexCount, color);
 	}
 }
