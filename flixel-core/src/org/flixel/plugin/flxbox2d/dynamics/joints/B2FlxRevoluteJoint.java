@@ -4,6 +4,7 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 import org.flixel.plugin.flxbox2d.common.math.B2FlxMath;
 
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 /**
@@ -83,7 +84,7 @@ public class B2FlxRevoluteJoint extends B2FlxJoint
 		joint = B2FlxB.world.createJoint(jointDef);
 		return this;
 	}
-	
+		
 	public B2FlxRevoluteJoint setEnableLimit(boolean enableLimit)
 	{
 		((RevoluteJointDef)jointDef).enableLimit = enableLimit;
@@ -118,5 +119,14 @@ public class B2FlxRevoluteJoint extends B2FlxJoint
 	{
 		((RevoluteJointDef)jointDef).lowerAngle = lowerAngle * B2FlxMath.DEGRAD;
 		return this;
+	}
+	
+	/**
+	 * Get the revolute joint.
+	 * @return
+	 */
+	public RevoluteJoint getJoint()
+	{
+		return (RevoluteJoint)joint;
 	}
 }

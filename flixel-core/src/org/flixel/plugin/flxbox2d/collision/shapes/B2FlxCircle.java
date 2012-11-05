@@ -1,11 +1,10 @@
 package org.flixel.plugin.flxbox2d.collision.shapes;
 
+import org.flixel.FlxPoint;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Transform;
 
 /**
  * A circle shape.
@@ -34,6 +33,7 @@ public class B2FlxCircle extends B2FlxShape
 		super(x, y);
 		if(radius > 0)
 			_radius = radius;
+		center = new FlxPoint(radius, radius);
 		createShape();
 	}
 	
@@ -101,15 +101,6 @@ public class B2FlxCircle extends B2FlxShape
 		fixture = body.createFixture(fixtureDef);
 		shape.dispose();
 		shape = null;
-	}
-	
-	@Override
-	protected void drawShape(Fixture fixture, Transform transform, int color)
-	{
-		CircleShape circle = (CircleShape) fixture.getShape();
-		t.set(circle.getPosition());
-		transform.mul(t);
-		drawSolidCircle(t, circle.getRadius(), axis.set(transform.vals[Transform.COS], transform.vals[Transform.SIN]), color);
 	}
 
 	/**

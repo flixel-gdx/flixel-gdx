@@ -3,6 +3,7 @@ package org.flixel.plugin.flxbox2d.dynamics.joints;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
+import com.badlogic.gdx.physics.box2d.joints.FrictionJoint;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 
 /**
@@ -98,5 +99,14 @@ public class B2FlxFrictionJoint extends B2FlxJoint
 	{
 		((FrictionJointDef)jointDef).maxTorque = maxTorque;
 		return this;
+	}
+	
+	/**
+	 * Get the friction joint.
+	 * @return
+	 */
+	public FrictionJoint getJoint()
+	{
+		return (FrictionJoint)joint;
 	}
 }

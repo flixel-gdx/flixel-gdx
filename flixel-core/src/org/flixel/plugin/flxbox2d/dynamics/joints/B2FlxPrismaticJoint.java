@@ -4,6 +4,7 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.joints.PrismaticJoint;
 import com.badlogic.gdx.physics.box2d.joints.PrismaticJointDef;
 
 /**
@@ -138,6 +139,15 @@ public class B2FlxPrismaticJoint extends B2FlxJoint
 	{
 		((PrismaticJointDef)jointDef).lowerTranslation = lowerTranslation;
 		return this;
+	}
+	
+	/**
+	 * Get the prismatic joint.
+	 * @return
+	 */
+	public PrismaticJoint getJoint()
+	{
+		return (PrismaticJoint)joint;
 	}
 
 }

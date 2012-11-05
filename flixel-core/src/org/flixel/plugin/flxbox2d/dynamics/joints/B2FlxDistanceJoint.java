@@ -6,6 +6,7 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 
 /**
@@ -102,5 +103,14 @@ public class B2FlxDistanceJoint extends B2FlxJoint
 	{
 		((DistanceJointDef) jointDef).dampingRatio = dampingRatio;
 		return this;
+	}
+	
+	/**
+	 * Get the distance joint.
+	 * @return
+	 */
+	public DistanceJoint getJoint()
+	{
+		return (DistanceJoint)joint;
 	}
 }

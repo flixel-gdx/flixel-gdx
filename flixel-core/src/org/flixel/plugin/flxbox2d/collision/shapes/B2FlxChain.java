@@ -5,8 +5,6 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -174,19 +172,6 @@ public class B2FlxChain extends B2FlxShape
 		shape = null;
 	}
 	
-	@Override
-	protected void drawShape(Fixture fixture, Transform transform, int color)
-	{
-		ChainShape chain = (ChainShape) fixture.getShape();
-		int vertexCount = chain.getVertexCount();
-		for(int i = 0; i < vertexCount; i++)
-		{
-			chain.getVertex(i, B2FlxB.vertices[i]);
-			transform.mul(B2FlxB.vertices[i]);
-		}
-		drawSolidPolygon(B2FlxB.vertices, vertexCount, color);
-	}
-
 	/**
 	 * Establish connectivity to a vertex that precedes the first vertex. 
 	 * Don't call this for loops. Needs to be called before create().
