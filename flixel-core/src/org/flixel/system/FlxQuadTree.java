@@ -634,9 +634,11 @@ public class FlxQuadTree extends FlxRect
 			{
 				//Execute callback functions if they exist
 				if((_processingCallback == null) || _processingCallback.callback(_object,checkObject))
+				{
 					overlapProcessed = true;
-				if(overlapProcessed && (_notifyCallback != null))
-					_notifyCallback.callback(_object,checkObject);
+					if(_notifyCallback != null)
+						_notifyCallback.callback(_object,checkObject);
+				}
 				
 			}
 			_iterator = _iterator.next;

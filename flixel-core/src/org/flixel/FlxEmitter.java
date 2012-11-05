@@ -122,7 +122,7 @@ public class FlxEmitter extends FlxGroup
 		minRotation = -360;
 		maxRotation = 360;
 		gravity = 0;
-		particleClass = null;
+		particleClass = FlxParticle.class;
 		particleDrag = new FlxPoint();
 		frequency = 0.1f;
 		lifespan = 3;
@@ -209,17 +209,10 @@ public class FlxEmitter extends FlxGroup
 		int i = 0;
 		while(i < Quantity)
 		{	
-			if(particleClass == null)
-			{
-				particle = new FlxParticle();
-			}
-			else
-			{
-				try {
-					particle = particleClass.newInstance();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+			try {
+				particle = particleClass.newInstance();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 			if(Multiple)
 			{
@@ -427,7 +420,7 @@ public class FlxEmitter extends FlxGroup
 	 */
 	public void emitParticle()
 	{			
-		FlxParticle	particle = (FlxParticle) recycle(FlxParticle.class);
+		FlxParticle	particle = (FlxParticle) recycle(particleClass);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
 		particle.reset(x - ((int)particle.width>>1) + FlxG.random()*width, y - ((int)particle.height>>1) + FlxG.random()*height);

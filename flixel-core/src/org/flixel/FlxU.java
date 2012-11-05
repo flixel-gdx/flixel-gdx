@@ -18,7 +18,6 @@ public class FlxU
      */
     public static final float HALF_PI = 0.5f * PI;
 
-	
 	/**
 	 * Opens a web page in a new tab or window.
 	 * MUST be called from the UI thread or else badness.

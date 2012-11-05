@@ -94,6 +94,7 @@ public class FlxGroup extends FlxBasic
 			members = null;
 		}
 		_sortIndex = null;
+		super.destroy();
 	}
 	
 	/**

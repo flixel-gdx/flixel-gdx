@@ -31,6 +31,7 @@ public class TimerManager extends FlxBasic
 	{
 		clear();
 		_timers = null;
+		super.destroy();
 	}
 	
 	/**
