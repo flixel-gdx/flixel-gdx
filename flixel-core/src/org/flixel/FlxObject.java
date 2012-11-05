@@ -198,7 +198,7 @@ public class FlxObject extends FlxBasic
 	/**
 	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
 	 * FlxObject and FlxSprite default to true.
-	 * FlxText, FlxTileblock, FlxTilemap and FlxSound default to false.
+	 * FlxText, FlxTileblock and FlxTilemap default to false.
 	 */
 	public boolean moves;
 	/**
@@ -359,8 +359,6 @@ public class FlxObject extends FlxBasic
 	@Override
 	public void destroy()
 	{
-		super.destroy();
-		
 		velocity = null;
 		acceleration = null;
 		drag = null;
@@ -373,6 +371,7 @@ public class FlxObject extends FlxBasic
 		if(path != null)
 			path.destroy();
 		path = null;
+		super.destroy();
 	}
 	
 	/**
@@ -782,13 +781,18 @@ public class FlxObject extends FlxBasic
 		if(ObjectOrGroup instanceof FlxGroup)
 		{
 			boolean results = false;
+			FlxBasic basic = null;
 			int i = 0;
 			Array<FlxBasic> members = ((FlxGroup)ObjectOrGroup).members;
-			int length = members.size;
+			int length = ((FlxGroup)ObjectOrGroup).length;
 			while(i < length)
 			{
-				if(overlaps(members.get(i++),InScreenSpace,Camera))
-					results = true;
+				basic = members.get(i++);
+				if((basic != null) && basic.exists)
+				{
+					if(overlaps(basic,InScreenSpace,Camera))
+						results = true;
+				}
 			}
 			return results;
 		}
@@ -862,13 +866,18 @@ public class FlxObject extends FlxBasic
 		if(ObjectOrGroup instanceof FlxGroup)
 		{
 			boolean results = false;
+			FlxBasic basic = null;
 			int i = 0;
 			Array<FlxBasic> members = ((FlxGroup)(ObjectOrGroup)).members;
-			int length = members.size;
+			int length = ((FlxGroup)(ObjectOrGroup)).length;
 			while(i < length)
 			{
-				if(overlapsAt(X, Y, members.get(i++),InScreenSpace,Camera))
-					results = true;
+				basic = members.get(i++);
+				if((basic != null) && basic.exists)
+				{
+					if(overlapsAt(X, Y, basic,InScreenSpace,Camera))
+						results = true;
+				}
 			}
 			return results;
 		}

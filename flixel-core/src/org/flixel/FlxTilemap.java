@@ -128,6 +128,7 @@ public class FlxTilemap extends FlxObject
 		_tiles = null;
 		_tileObjects = null;
 		immovable = true;
+		moves = false;
 		cameras = null;
 		_lastVisualDebug = FlxG.visualDebug;
 		_startingIndex = 0;
@@ -154,7 +155,6 @@ public class FlxTilemap extends FlxObject
 		_buffers = null;
 		_data = null;
 		_regions = null;
-
 		super.destroy();
 	}
 	
@@ -224,8 +224,7 @@ public class FlxTilemap extends FlxObject
 		//create some tile objects that we'll use for overlap checks (one for each tile)
 		i = 0;
 		int l = (int) ((_tiles.getRegionWidth() / (float) _tileWidth) * (_tiles.getRegionHeight() / (float) _tileHeight)) + _startingIndex;
-		if(auto > OFF)
-			l++;
+		
 		_tileObjects = new Array<FlxTile>(l);
 		
 		while(i < l)
@@ -934,22 +933,25 @@ public class FlxTilemap extends FlxObject
 		if(ObjectOrGroup instanceof FlxGroup)
 		{
 			boolean results = false;
-			FlxBasic basic;
-			int i  = 0;
+			FlxBasic basic = null;
+			int i = 0;
 			Array<FlxBasic> members = ((FlxGroup)ObjectOrGroup).members;
-			int length = members.size;
+			int length = ((FlxGroup)ObjectOrGroup).length;
 			while(i < length)
 			{
 				basic = members.get(i++);
-				if(basic instanceof FlxObject)
+				if((basic != null) && basic.exists)
 				{
-					if(overlapsWithCallback((FlxObject)basic))
+					if(basic instanceof FlxObject)
+					{
+						if(overlapsWithCallback((FlxObject)basic))
+							results = true;
+					}
+					else
+					{
+						if(overlaps(basic,InScreenSpace,Camera))
 						results = true;
-				}
-				else
-				{
-					if(overlaps(basic,InScreenSpace,Camera))
-						results = true;
+					}
 				}
 			}
 			return results;
@@ -978,24 +980,27 @@ public class FlxTilemap extends FlxObject
 		if(ObjectOrGroup instanceof FlxGroup)
 		{
 			boolean results = false;
-			FlxBasic basic;
+			FlxBasic basic = null;
 			int i = 0;
 			Array<FlxBasic> members = ((FlxGroup)ObjectOrGroup).members;
-			int length = members.size;
+			int length = ((FlxGroup)ObjectOrGroup).length;
 			while(i < length)
 			{
 				basic = members.get(i++);
-				if(basic instanceof FlxObject)
+				if((basic != null) && basic.exists)
 				{
-					_point.x = X;
-					_point.y = Y;
-					if(overlapsWithCallback((FlxObject)basic,null,false,_point))
-						results = true;
-				}
-				else
-				{
-					if(overlapsAt(X,Y,basic,InScreenSpace,Camera))
-						results = true;
+					if(basic instanceof FlxObject)
+					{
+						_point.x = X;
+						_point.y = Y;
+						if(overlapsWithCallback((FlxObject)basic,null,false,_point))
+							results = true;
+					}
+					else
+					{
+						if(overlapsAt(X,Y,basic,InScreenSpace,Camera))
+							results = true;
+					}
 				}
 			}
 			return results;
@@ -1571,10 +1576,11 @@ public class FlxTilemap extends FlxObject
 				ry = ly + stepY*((q-lx)/stepX);
 				if((ry > tileY) && (ry < tileY + _tileHeight))
 				{
-					if(Result == null)
-						Result = new FlxPoint();
-					Result.x = rx;
-					Result.y = ry;
+					if(Result != null)
+					{
+						Result.x = rx;
+						Result.y = ry;
+					}
 					return false;
 				}
 				
@@ -1586,10 +1592,11 @@ public class FlxTilemap extends FlxObject
 				ry = q;
 				if((rx > tileX) && (rx < tileX + _tileWidth))
 				{
-					if(Result == null)
-						Result = new FlxPoint();
-					Result.x = rx;
-					Result.y = ry;
+					if(Result != null)
+					{
+						Result.x = rx;
+						Result.y = ry;
+					}
 					return false;
 				}
 				return true;

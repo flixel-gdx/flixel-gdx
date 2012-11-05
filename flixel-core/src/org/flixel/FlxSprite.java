@@ -212,8 +212,6 @@ public class FlxSprite extends FlxObject
 	@Override
 	public void destroy()
 	{
-		super.destroy();
-		
 		if(_animations != null)
 		{
 			FlxAnim a;
@@ -235,6 +233,7 @@ public class FlxSprite extends FlxObject
 		_callback = null;
 		_newTextureData = null;
 		framePixels = null;
+		super.destroy();
 	}
 	
 	/**

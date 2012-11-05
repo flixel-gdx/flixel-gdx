@@ -25,6 +25,7 @@ public class FlxTileblock extends FlxSprite
 		makeGraphic(Width,Height,0,true);
 		active = false;
 		immovable = true;
+		moves = false;
 	}
 	
 	/**

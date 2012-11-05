@@ -261,6 +261,7 @@ public class FlxCamera extends FlxBasic
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
 		_fxShakeOffset = null;
+		super.destroy();
 	}
 	
 	/**

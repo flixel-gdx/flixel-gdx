@@ -211,13 +211,13 @@ public class FlxSound extends FlxBasic
 		//Distance-based volume control
 		if(_target != null)
 		{
-			radial = FlxU.getDistance(new FlxPoint(_target.x,_target.y),new FlxPoint(x,y))/_radius;
+			radial = 1 - FlxU.getDistance(new FlxPoint(_target.x,_target.y),new FlxPoint(x,y))/_radius;
 			if(radial < 0) radial = 0;
 			if(radial > 1) radial = 1;
 			
 			if(_pan)
 			{
-				float d = (_target.x-x)/_radius;
+				float d = (x - _target.x)/_radius;
 				if(d < -1) d = -1;
 				else if(d > 1) d = 1;
 				_panAmount = d;
