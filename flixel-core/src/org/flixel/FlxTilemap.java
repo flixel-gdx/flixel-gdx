@@ -1,7 +1,7 @@
 package org.flixel;
 
-import org.flixel.event.AFlxObject;
-import org.flixel.event.AFlxTile;
+import org.flixel.event.IFlxObject;
+import org.flixel.event.IFlxTile;
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
@@ -1026,7 +1026,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	public boolean overlapsWithCallback(FlxObject Object, AFlxObject Callback,boolean FlipCallbackParams,FlxPoint Position)
+	public boolean overlapsWithCallback(FlxObject Object, IFlxObject Callback,boolean FlipCallbackParams,FlxPoint Position)
 	{		
 		boolean results = false;
 		
@@ -1119,7 +1119,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	public boolean overlapsWithCallback(FlxObject Object, AFlxObject Callback, boolean FlipCallbackParams)
+	public boolean overlapsWithCallback(FlxObject Object, IFlxObject Callback, boolean FlipCallbackParams)
 	{
 		return overlapsWithCallback(Object, Callback, FlipCallbackParams, null);
 	}
@@ -1134,7 +1134,7 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	public boolean overlapsWithCallback(FlxObject Object, AFlxObject Callback)
+	public boolean overlapsWithCallback(FlxObject Object, IFlxObject Callback)
 	{
 		return overlapsWithCallback(Object, Callback, false, null);
 	}
@@ -1384,7 +1384,7 @@ public class FlxTilemap extends FlxObject
 	 * @param	CallbackFilter	If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
 	 * @param	Range			If you want this callback to work for a bunch of different tiles, input the range here.  Default value is 1.
 	 */
-	public void setTileProperties(int Tile,int AllowCollisions,AFlxTile Callback,Class<? extends FlxObject> CallbackFilter,int Range)
+	public void setTileProperties(int Tile,int AllowCollisions,IFlxTile Callback,Class<? extends FlxObject> CallbackFilter,int Range)
 	{
 		if(Range <= 0)
 			Range = 1;
@@ -1409,7 +1409,7 @@ public class FlxTilemap extends FlxObject
 	 * @param	Callback		The function to trigger, e.g. <code>lavaCallback(Tile:FlxTile, Object:FlxObject)</code>.
 	 * @param	CallbackFilter	If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
 	 */
-	public void setTileProperties(int Tile,int AllowCollisions,AFlxTile Callback,Class<? extends FlxObject> CallbackFilter)
+	public void setTileProperties(int Tile,int AllowCollisions,IFlxTile Callback,Class<? extends FlxObject> CallbackFilter)
 	{
 		setTileProperties(Tile, AllowCollisions, Callback, CallbackFilter, 1);
 	}
@@ -1422,7 +1422,7 @@ public class FlxTilemap extends FlxObject
 	 * @param	AllowCollisions	Modify the tile or tiles to only allow collisions from certain directions, use FlxObject constants NONE, ANY, LEFT, RIGHT, etc.  Default is "ANY".
 	 * @param	Callback		The function to trigger, e.g. <code>lavaCallback(Tile:FlxTile, Object:FlxObject)</code>.
 	 */
-	public void setTileProperties(int Tile,int AllowCollisions,AFlxTile Callback)
+	public void setTileProperties(int Tile,int AllowCollisions,IFlxTile Callback)
 	{
 		setTileProperties(Tile, AllowCollisions, Callback, null, 1);
 	}

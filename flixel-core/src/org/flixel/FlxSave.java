@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxSave;
+import org.flixel.event.IFlxSave;
 import org.flixel.system.FlxSaveData;
 
 import com.badlogic.gdx.Gdx;
@@ -38,7 +38,7 @@ public class FlxSave
 	/**
 	 * Internal tracker for callback function in case save takes too long.
 	 */
-	protected AFlxSave _onComplete;
+	protected IFlxSave _onComplete;
 	/**
 	 * Internal tracker for save object close request.
 	 */
@@ -99,7 +99,7 @@ public class FlxSave
 	 *
 	 * @return	The result of result of the <code>flush()</code> call (see below for more details).
 	 */
-	public boolean close(int MinFileSize, AFlxSave OnComplete)
+	public boolean close(int MinFileSize, IFlxSave OnComplete)
 	{
 		_closeRequested = true;
 		return flush(MinFileSize,OnComplete);
@@ -139,7 +139,7 @@ public class FlxSave
 	 *
 	 * @return	Whether or not the data was written immediately.  False could be an error OR a storage request popup.
 	 */
-	public boolean flush(int MinFileSize, AFlxSave OnComplete)
+	public boolean flush(int MinFileSize, IFlxSave OnComplete)
 	{
 		if(!checkBinding())
 			return false;

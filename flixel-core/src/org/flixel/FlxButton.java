@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxButton;
+import org.flixel.event.IFlxButton;
 
 import flash.events.Event;
 import flash.events.Listener;
@@ -41,19 +41,19 @@ public class FlxButton extends FlxSprite
 	 * We recommend assigning your main button behavior to this function
 	 * via the <code>FlxButton</code> constructor.
 	 */
-	public AFlxButton onUp;
+	public IFlxButton onUp;
 	/**
 	 * This function is called when the button is pressed down.
 	 */
-	public AFlxButton onDown;
+	public IFlxButton onDown;
 	/**
 	 * This function is called when the mouse goes over the button.
 	 */
-	public AFlxButton onOver;
+	public IFlxButton onOver;
 	/**
 	 * This function is called when the mouse leaves the button area.
 	 */
-	public AFlxButton onOut;
+	public IFlxButton onOut;
 	/**
 	 * Shows the current state of the button.
 	 */
@@ -102,7 +102,7 @@ public class FlxButton extends FlxSprite
 	 * @param	Label		The text that you want to appear on the button.
 	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public FlxButton(float X, float Y, String Label, AFlxButton onClick)
+	public FlxButton(float X, float Y, String Label, IFlxButton onClick)
 	{
 		super(X,Y);
 		if(Label != null)

@@ -1,6 +1,6 @@
 package org.flixel.event;
 
-public interface AFlxReplay
+public interface IFlxAnalog
 {
 	public void callback();
 }

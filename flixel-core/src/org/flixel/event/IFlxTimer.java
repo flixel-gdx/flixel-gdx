@@ -2,7 +2,7 @@ package org.flixel.event;
 
 import org.flixel.FlxTimer;
 
-public interface AFlxTimer
+public interface IFlxTimer
 {
 	public void callback(FlxTimer Timer);
 }

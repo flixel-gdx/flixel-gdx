@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxObject;
+import org.flixel.event.IFlxObject;
 
 import com.badlogic.gdx.utils.Array;
 
@@ -1433,7 +1433,7 @@ public class FlxObject extends FlxBasic
 	/**
 	 * Internal callback function for collision.
 	 */
-	protected static AFlxObject separateX = new AFlxObject()
+	protected static IFlxObject separateX = new IFlxObject()
 	{
 		@Override
 		public boolean callback(FlxObject Object1, FlxObject Object2)
@@ -1445,7 +1445,7 @@ public class FlxObject extends FlxBasic
 	/**
 	 * Internal callback function for collision.
 	 */
-	protected static AFlxObject separateY = new AFlxObject()
+	protected static IFlxObject separateY = new IFlxObject()
 	{
 		@Override
 		public boolean callback(FlxObject Object1, FlxObject Object2)

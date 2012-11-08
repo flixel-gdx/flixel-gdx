@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxCamera;
+import org.flixel.event.IFlxCamera;
 
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -134,7 +134,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	protected AFlxCamera _fxFlashComplete;
+	protected IFlxCamera _fxFlashComplete;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -150,7 +150,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	protected AFlxCamera _fxFadeComplete;
+	protected IFlxCamera _fxFadeComplete;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -166,7 +166,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	protected AFlxCamera _fxShakeComplete;
+	protected IFlxCamera _fxShakeComplete;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
@@ -488,7 +488,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public void flash(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	public void flash(int Color, float Duration, IFlxCamera OnComplete, boolean Force)
 	{
 		if(!Force && (_fxFlashAlpha > 0.0f))
 			return;
@@ -507,7 +507,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Duration	How long it takes for the flash to fade.
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 */
-	public void flash(int Color, float Duration, AFlxCamera OnComplete)
+	public void flash(int Color, float Duration, IFlxCamera OnComplete)
 	{
 		flash(Color, Duration, OnComplete, false);
 	}
@@ -549,7 +549,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public void fade(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	public void fade(int Color, float Duration, IFlxCamera OnComplete, boolean Force)
 	{
 		if(!Force && (_fxFadeAlpha > 0.0f))
 			return;
@@ -568,7 +568,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Duration	How long it takes for the fade to finish.
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 */
-	public void fade(int Color, float Duration, AFlxCamera OnComplete)
+	public void fade(int Color, float Duration, IFlxCamera OnComplete)
 	{
 		fade(Color, Duration, OnComplete, false);
 	}
@@ -611,7 +611,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
 	 */
-	public void shake(float Intensity, float Duration, AFlxCamera OnComplete, boolean Force, int Direction)
+	public void shake(float Intensity, float Duration, IFlxCamera OnComplete, boolean Force, int Direction)
 	{
 		if(!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 			return;
@@ -630,7 +630,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 */
-	public void shake(float Intensity, float Duration, AFlxCamera OnComplete, boolean Force)
+	public void shake(float Intensity, float Duration, IFlxCamera OnComplete, boolean Force)
 	{
 		shake(Intensity, Duration, OnComplete, Force, SHAKE_BOTH_AXES);
 	}
@@ -642,7 +642,7 @@ public class FlxCamera extends FlxBasic
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 */
-	public void shake(float Intensity, float Duration, AFlxCamera OnComplete)
+	public void shake(float Intensity, float Duration, IFlxCamera OnComplete)
 	{
 		shake(Intensity, Duration, OnComplete, true, SHAKE_BOTH_AXES);
 	}

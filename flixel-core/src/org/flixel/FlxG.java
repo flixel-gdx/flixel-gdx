@@ -1,10 +1,10 @@
 package org.flixel;
 
-import org.flixel.event.AFlxCamera;
-import org.flixel.event.AFlxCollision;
-import org.flixel.event.AFlxObject;
-import org.flixel.event.AFlxReplay;
-import org.flixel.event.AFlxVolume;
+import org.flixel.event.IFlxCamera;
+import org.flixel.event.IFlxCollision;
+import org.flixel.event.IFlxObject;
+import org.flixel.event.IFlxReplay;
+import org.flixel.event.IFlxVolume;
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxAssetCache;
@@ -250,7 +250,7 @@ public class FlxG
 	  * Set this hook to get a callback whenever the volume changes.
 	  * Function should take the form <code>myVolumeHandler(Volume:Number)</code>.
 	  */
-	static public AFlxVolume volumeHandler;
+	static public IFlxVolume volumeHandler;
 	 
 	/**
 	 * Useful helper objects for doing Flash-specific rendering.
@@ -507,7 +507,7 @@ public class FlxG
 	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
 	 * @param	Callback	Optional parameter: if set, called when the replay finishes.  Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
 	 */
-	static public void loadReplay(String Data,FlxState State,String[] CancelKeys,float Timeout,AFlxReplay Callback)
+	static public void loadReplay(String Data,FlxState State,String[] CancelKeys,float Timeout,IFlxReplay Callback)
 	{
 		_game._replay.load(Data);
 		if(State == null)
@@ -1378,7 +1378,7 @@ public class FlxG
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public void flash(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	static public void flash(int Color, float Duration, IFlxCamera OnComplete, boolean Force)
 	{
 		int i = 0;
 		int l = FlxG.cameras.size;
@@ -1393,7 +1393,7 @@ public class FlxG
 	 * @param	Duration	How long it takes for the flash to fade.
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 */
-	static public void flash(int Color, float Duration, AFlxCamera OnComplete)
+	static public void flash(int Color, float Duration, IFlxCamera OnComplete)
 	{
 		flash(Color, Duration, OnComplete, false);
 	}
@@ -1435,7 +1435,7 @@ public class FlxG
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public void fade(int Color, float Duration, AFlxCamera OnComplete, boolean Force)
+	static public void fade(int Color, float Duration, IFlxCamera OnComplete, boolean Force)
 	{
 		int i = 0;
 		int l = FlxG.cameras.size;
@@ -1450,7 +1450,7 @@ public class FlxG
 	 * @param	Duration	How long it takes for the fade to finish.
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 */
-	static public void fade(int Color, float Duration, AFlxCamera OnComplete)
+	static public void fade(int Color, float Duration, IFlxCamera OnComplete)
 	{
 		fade(Color,Duration,OnComplete,false);
 	}
@@ -1493,7 +1493,7 @@ public class FlxG
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).  Default value is SHAKE_BOTH_AXES (0).
 	 */
-	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete, boolean Force, int Direction)
+	static public void shake(float Intensity, float Duration, IFlxCamera OnComplete, boolean Force, int Direction)
 	{
 		int i = 0;
 		int l = FlxG.cameras.size;
@@ -1509,7 +1509,7 @@ public class FlxG
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 */
-	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete, boolean Force)
+	static public void shake(float Intensity, float Duration, IFlxCamera OnComplete, boolean Force)
 	{
 		shake(Intensity,Duration,OnComplete,Force,0);
 	}
@@ -1521,7 +1521,7 @@ public class FlxG
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 */
-	static public void shake(float Intensity, float Duration, AFlxCamera OnComplete)
+	static public void shake(float Intensity, float Duration, IFlxCamera OnComplete)
 	{
 		shake(Intensity,Duration,OnComplete,true,0);
 	}
@@ -1591,7 +1591,7 @@ public class FlxG
 	 * 
 	 * @return	Whether any overlaps were detected.
 	 */
-	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback, AFlxObject ProcessCallback)
+	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, IFlxCollision NotifyCallback, IFlxObject ProcessCallback)
 	{
 		if(ObjectOrGroup1 == null)
 			ObjectOrGroup1 = FlxG.getState();
@@ -1619,7 +1619,7 @@ public class FlxG
 	 * 
 	 * @return	Whether any oevrlaps were detected.
 	 */
-	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback)
+	static public boolean overlap(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, IFlxCollision NotifyCallback)
 	{
 		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, null);
 	}
@@ -1691,7 +1691,7 @@ public class FlxG
 	 * 
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
-	static public boolean collide(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback)
+	static public boolean collide(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, IFlxCollision NotifyCallback)
 	{		
 		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, separate);
 	}
@@ -2081,7 +2081,7 @@ public class FlxG
 	/**
 	 * Internal callback function for collision.
 	 */
-	protected static AFlxObject separate = new AFlxObject()
+	protected static IFlxObject separate = new IFlxObject()
 	{				
 		@Override
 		public boolean callback(FlxObject Object1, FlxObject Object2)
