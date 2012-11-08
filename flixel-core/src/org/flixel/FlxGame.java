@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxReplay;
+import org.flixel.event.IFlxReplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxReplay;
@@ -174,7 +174,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	/**
 	 * This function, if set, is triggered when the callback stops playing.
 	 */
-	AFlxReplay _replayCallback;
+	IFlxReplay _replayCallback;
 	/**
 	 * How flixel deals with different display sizes.
 	 */

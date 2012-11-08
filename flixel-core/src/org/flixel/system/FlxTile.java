@@ -2,7 +2,7 @@ package org.flixel.system;
 
 import org.flixel.FlxObject;
 import org.flixel.FlxTilemap;
-import org.flixel.event.AFlxTile;
+import org.flixel.event.IFlxTile;
 
 public class FlxTile extends FlxObject
 {
@@ -11,7 +11,7 @@ public class FlxTile extends FlxObject
 	 * This function should take the form <code>myFunction(Tile:FlxTile,Object:FlxObject):void</code>.
 	 * Defaults to null, set through <code>FlxTilemap.setTileProperties()</code>.
 	 */
-	public AFlxTile callback;
+	public IFlxTile callback;
 	/**
 	 * Each tile can store its own filter class for their callback functions.
 	 * That is, the callback will only be triggered if an object with a class

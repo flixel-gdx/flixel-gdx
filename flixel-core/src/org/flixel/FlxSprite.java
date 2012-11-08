@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxAnim;
+import org.flixel.event.IFlxAnim;
 import org.flixel.system.FlxAnim;
 
 import com.badlogic.gdx.graphics.ManagedTextureData;
@@ -109,7 +109,7 @@ public class FlxSprite extends FlxObject
 	 * If assigned, will be called each time the current frame changes.
 	 * A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
 	 */
-	protected AFlxAnim _callback;
+	protected IFlxAnim _callback;
 	/**
 	 * Internal tracker for what direction the sprite is currently facing, used with Flash getter/setter.
 	 */
@@ -858,7 +858,7 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	AnimationCallback		A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
 	 */
-	public void addAnimationCallback(AFlxAnim AnimationCallback)
+	public void addAnimationCallback(IFlxAnim AnimationCallback)
 	{
 		_callback = AnimationCallback;
 	}

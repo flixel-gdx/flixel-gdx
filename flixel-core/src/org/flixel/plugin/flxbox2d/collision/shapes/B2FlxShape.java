@@ -128,6 +128,8 @@ public abstract class B2FlxShape extends FlxSprite
 		center = new FlxPoint(width*.5f, height*.5f);
 		
 		userData = new ObjectMap<String, Object>();
+		userData.put("shape", this);
+		
 		userData.put("draggable", _draggable);
 		
 		joints = new Array<B2FlxJoint>();
@@ -750,6 +752,20 @@ public abstract class B2FlxShape extends FlxSprite
 	public Fixture createFixture(FixtureDef fixtureDef)
 	{
 		return createFixture(fixtureDef, false);
+	}
+	
+	/**
+	 * Set the sensor during run time, when the body is already created!
+	 * @param sensor	Whether the fixtures needs to be set as sensor or not.
+	 */
+	public void isSensor(boolean sensor)
+	{
+		ArrayList<Fixture> f =  body.getFixtureList();
+		int length = f.size();
+		for(int i = 0; i < length; i++)
+		{
+			f.get(i).setSensor(sensor);
+		}
 	}
 
 	/**

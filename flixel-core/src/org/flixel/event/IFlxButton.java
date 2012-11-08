@@ -1,6 +1,6 @@
 package org.flixel.event;
 
-public interface AFlxButton
+public interface IFlxButton
 {
 	public void callback();
 }

@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxAnalog;
+import org.flixel.event.IFlxAnalog;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
@@ -66,19 +66,19 @@ public class FlxAnalog extends FlxGroup
 	/**
 	 * This function is called when the button is released.
 	 */
-	public AFlxAnalog onUp;
+	public IFlxAnalog onUp;
 	/**
 	 * This function is called when the button is pressed down.
 	 */
-	public AFlxAnalog onDown;
+	public IFlxAnalog onDown;
 	/**
 	 * This function is called when the mouse goes over the button.
 	 */
-	public AFlxAnalog onOver;
+	public IFlxAnalog onOver;
 	/**
 	 * This function is called when the button is hold down.
 	 */
-	public AFlxAnalog onPressed;
+	public IFlxAnalog onPressed;
 	
 	/**
 	 * The area which the joystick will react.

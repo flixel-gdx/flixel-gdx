@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxButton;
+import org.flixel.event.IFlxButton;
 
 /**
  * A gamepad which contains 4 directional buttons and 4 action buttons.
@@ -188,7 +188,7 @@ public class FlxGamePad extends FlxGroup
 	 * @param Callback	The callback for the button.
 	 * @return			The button.
 	 */
-	public FlxButton createButton(float X, float Y, int Width, int Height, String Image, AFlxButton OnClick)
+	public FlxButton createButton(float X, float Y, int Width, int Height, String Image, IFlxButton OnClick)
 	{
 		FlxButton button = new FlxButton(X, Y);
 		button.loadGraphic(Image, true, false, Width, Height);

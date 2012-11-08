@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.event.AFlxTimer;
+import org.flixel.event.IFlxTimer;
 import org.flixel.plugin.TimerManager;
 
 /**
@@ -34,7 +34,7 @@ public class FlxTimer
 	 * Internal tracker for the time's-up callback function.
 	 * Callback should be formed "onTimer(Timer:FlxTimer);"
 	 */
-	protected AFlxTimer _callback;
+	protected IFlxTimer _callback;
 	/**
 	 * Internal tracker for the actual timer counting up.
 	 */
@@ -101,7 +101,7 @@ public class FlxTimer
 	 * 
 	 * @return	A reference to itself (handy for chaining or whatever).
 	 */
-	public FlxTimer start(float Time, int Loops, AFlxTimer Callback)
+	public FlxTimer start(float Time, int Loops, IFlxTimer Callback)
 	{
 		TimerManager timerManager = getManager();
 		if(timerManager != null)

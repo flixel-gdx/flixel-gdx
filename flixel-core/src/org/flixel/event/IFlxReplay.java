@@ -1,6 +1,6 @@
 package org.flixel.event;
 
-public interface AFlxCamera
+public interface IFlxReplay
 {
 	public void callback();
 }

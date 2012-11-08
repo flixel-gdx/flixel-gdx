@@ -4,8 +4,8 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxRect;
-import org.flixel.event.AFlxCollision;
-import org.flixel.event.AFlxObject;
+import org.flixel.event.IFlxCollision;
+import org.flixel.event.IFlxObject;
 
 import com.badlogic.gdx.utils.Array;
 
@@ -145,11 +145,11 @@ public class FlxQuadTree extends FlxRect
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static protected AFlxObject _processingCallback;
+	static protected IFlxObject _processingCallback;
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static protected AFlxCollision _notifyCallback;
+	static protected IFlxCollision _notifyCallback;
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
@@ -341,7 +341,7 @@ public class FlxQuadTree extends FlxRect
 	 * @param NotifyCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):void</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
 	 * @param ProcessCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):Boolean</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See FlxObject.separate(). 
 	 */
-	public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback, AFlxObject ProcessCallback)
+	public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, IFlxCollision NotifyCallback, IFlxObject ProcessCallback)
 	{
 		add(ObjectOrGroup1, A_LIST);
 		if(ObjectOrGroup2 != null)
@@ -362,7 +362,7 @@ public class FlxQuadTree extends FlxRect
 	 * @param ObjectOrGroup2	Any object that is or extends FlxObject or FlxGroup.  If null, the first parameter will be checked against itself.
 	 * @param NotifyCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):void</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.  
 	 */
-	public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, AFlxCollision NotifyCallback)
+	public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, IFlxCollision NotifyCallback)
 	{
 		load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, null);
 	}
