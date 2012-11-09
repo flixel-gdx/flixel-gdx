@@ -76,6 +76,19 @@ public abstract class B2FlxShape extends FlxSprite
 	 */
 	public Body body;
 	/**
+	 * The collision category bits. Normally you would just set one bit.
+	 */
+	public short categoryBits = 0x0001;
+	/**
+	 * The collision mask bits. This states the categories that this shape would accept for collision.
+	 */
+	public short maskBits = -1;
+	/**
+	 * Collision groups allow a certain group of objects to never collide (negative) or always collide (positive). Zero means no
+	 * collision group. Non-zero group filtering always wins against the mask bits.
+	 */
+	public short groupIndex = 0;
+	/**
 	 * The position in box2d world where the body is located.
 	 */
 	public Vector2 position;
@@ -239,6 +252,8 @@ public abstract class B2FlxShape extends FlxSprite
 			super.kill();
 			userData.put("exists", exists);
 		}
+		else
+			B2FlxB.scheduledForRemoval.add(this);
 	}
 	
 	/**
@@ -753,20 +768,6 @@ public abstract class B2FlxShape extends FlxSprite
 	{
 		return createFixture(fixtureDef, false);
 	}
-	
-	/**
-	 * Set the sensor during run time, when the body is already created!
-	 * @param sensor	Whether the fixtures needs to be set as sensor or not.
-	 */
-	public void isSensor(boolean sensor)
-	{
-		ArrayList<Fixture> f =  body.getFixtureList();
-		int length = f.size();
-		for(int i = 0; i < length; i++)
-		{
-			f.get(i).setSensor(sensor);
-		}
-	}
 
 	/**
 	 * Set user data. It can be any object.
@@ -911,19 +912,19 @@ public abstract class B2FlxShape extends FlxSprite
 	
 	public B2FlxShape setMaskBits(short maskBits)
 	{
-		fixtureDef.filter.maskBits = maskBits;
+		this.maskBits = fixtureDef.filter.maskBits = maskBits;
 		return this;
 	}
 	
 	public B2FlxShape setCategoryBits(short categoryBits)
 	{
-		fixtureDef.filter.categoryBits = categoryBits;
+		this.categoryBits = fixtureDef.filter.categoryBits = categoryBits;
 		return this;
 	}
 	
 	public B2FlxShape setGroupIndex(short groupIndex)
 	{
-		fixtureDef.filter.groupIndex = groupIndex;
+		this.groupIndex = fixtureDef.filter.groupIndex = groupIndex;
 		return this;
 	}
 	

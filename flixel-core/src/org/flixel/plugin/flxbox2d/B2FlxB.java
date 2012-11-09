@@ -1,9 +1,12 @@
 package org.flixel.plugin.flxbox2d;
 
+import org.flixel.FlxBasic;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * This is a global helper class for Box2D.
@@ -20,15 +23,22 @@ public class B2FlxB
 	 */
 	public static World world;
 	/**
+	 * A list for shapes that didn't got killed due the world got locked.
+	 */
+	public static Array<FlxBasic> scheduledForRemoval;
+	/**
 	 * Vertices for polygon rendering.
 	 */
 	public static Vector2[] vertices;
+	
 	
 	/**
 	 * Called by <code>B2FlxState</code> to setup the vertices.
 	 */
 	public static void init()
 	{
+		scheduledForRemoval = new Array<FlxBasic>();
+		
 		if(vertices == null)
 		{
 			vertices = new Vector2[1000];
@@ -44,6 +54,9 @@ public class B2FlxB
 	{
 		world = null;
 		vertices = null;
+		destroyBodies();
+		scheduledForRemoval.clear();
+		scheduledForRemoval = null;
 	}
 
 	/**
@@ -66,5 +79,29 @@ public class B2FlxB
 	public static Body getGroundBody()
 	{
 		return getGroundBody(new Vector2());
+	}
+
+	/**
+	 * Internal: Safely remove bodies which couldn't deleted by calling kill().
+	 * This will be called after World::step().
+	 */
+	static void safelyRemoveBodies()
+	{
+		int length = scheduledForRemoval.size;
+		for(int i = 0; i < length; i++)
+		{
+			scheduledForRemoval.get(i).kill();
+		}
+		scheduledForRemoval.clear();
+	}
+	
+	private static void destroyBodies()
+	{
+		int length = scheduledForRemoval.size;
+		for(int i = 0; i < length; i++)
+		{
+			scheduledForRemoval.get(i).destroy();
+		}
+		scheduledForRemoval.clear();
 	}
 }

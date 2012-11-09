@@ -198,8 +198,10 @@ public abstract class B2FlxJoint extends FlxBasic
 		{
 			B2FlxB.world.destroyJoint(joint);
 			joint = null;
+			super.kill();
 		}
-		super.kill();
+		else
+			B2FlxB.scheduledForRemoval.add(this);
 	}
 	
 	/**

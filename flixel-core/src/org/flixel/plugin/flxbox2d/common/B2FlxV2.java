@@ -1,4 +1,6 @@
-package org.flixel.plugin.flxbox2d;
+package org.flixel.plugin.flxbox2d.common;
+
+import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
 
