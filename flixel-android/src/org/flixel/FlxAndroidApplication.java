@@ -15,6 +15,8 @@ public class FlxAndroidApplication extends AndroidApplication
 	{
 		_game = Game;
 		cfg = new AndroidApplicationConfiguration();
+		cfg.useAccelerometer = false;
+		cfg.useCompass = false;
 	}
 		
 	@Override

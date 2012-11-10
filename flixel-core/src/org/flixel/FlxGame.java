@@ -866,9 +866,18 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_total = System.currentTimeMillis();
 		
 		//Set up OpenGL
-		FlxG._gl = Gdx.gl10;
+		if(Gdx.graphics.isGL20Available())
+		{
+			FlxG._gl = Gdx.gl20;
+		}
+		else if(Gdx.graphics.isGL11Available())
+		{
+			FlxG._gl = Gdx.gl11;
+		}
+		// Common OpenGL
+		if(!Gdx.graphics.isGL20Available())
+			((GL10) FlxG._gl).glShadeModel(GL10.GL_FLAT);		
 		FlxG._gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
-        FlxG._gl.glShadeModel(GL10.GL_FLAT);
 		FlxG._gl.glDisable(GL10.GL_CULL_FACE);
         FlxG._gl.glDisable(GL10.GL_DITHER);
         FlxG._gl.glDisable(GL10.GL_LIGHTING);

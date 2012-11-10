@@ -16,15 +16,17 @@ import org.flixel.system.input.Sensor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+
 import flash.display.Graphics;
 import flash.display.Stage;
 
@@ -270,7 +272,7 @@ public class FlxG
 	/**
 	 * Internal reference to OpenGL.
 	 */
-	static GL10 _gl;
+	static GLCommon _gl;
 	/**
 	 * The camera currently being drawn.
 	 */
