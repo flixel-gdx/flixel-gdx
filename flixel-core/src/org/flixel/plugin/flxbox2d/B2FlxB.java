@@ -54,7 +54,6 @@ public class B2FlxB
 	{
 		world = null;
 		vertices = null;
-		destroyBodies();
 		scheduledForRemoval.clear();
 		scheduledForRemoval = null;
 	}
@@ -80,6 +79,17 @@ public class B2FlxB
 	{
 		return getGroundBody(new Vector2());
 	}
+	
+	public static void addSafelyRemove(FlxBasic value)
+	{
+		int length = scheduledForRemoval.size;
+		for(int i = 0; i < length; i++)
+		{
+			if(scheduledForRemoval.get(i) == value)
+				return;
+		}
+		scheduledForRemoval.add(value);
+	}
 
 	/**
 	 * Internal: Safely remove bodies which couldn't deleted by calling kill().
@@ -91,16 +101,6 @@ public class B2FlxB
 		for(int i = 0; i < length; i++)
 		{
 			scheduledForRemoval.get(i).kill();
-		}
-		scheduledForRemoval.clear();
-	}
-	
-	private static void destroyBodies()
-	{
-		int length = scheduledForRemoval.size;
-		for(int i = 0; i < length; i++)
-		{
-			scheduledForRemoval.get(i).destroy();
 		}
 		scheduledForRemoval.clear();
 	}

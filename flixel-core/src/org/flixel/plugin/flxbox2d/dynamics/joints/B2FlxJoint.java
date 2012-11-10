@@ -200,8 +200,8 @@ public abstract class B2FlxJoint extends FlxBasic
 			joint = null;
 			super.kill();
 		}
-		else
-			B2FlxB.scheduledForRemoval.add(this);
+		else if(B2FlxB.world.isLocked())
+			B2FlxB.addSafelyRemove(this);
 	}
 	
 	/**
@@ -249,7 +249,7 @@ public abstract class B2FlxJoint extends FlxBasic
 		{
 			FlxCamera camera = FlxG.getActiveCamera();	
 			if (cameras != null && !cameras.contains(camera, true))
-				return;			
+				return;
 			if (!onScreen(camera))
 				return;			
 			if(showLine)

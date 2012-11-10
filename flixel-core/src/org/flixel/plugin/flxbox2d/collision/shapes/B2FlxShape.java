@@ -2,6 +2,7 @@ package org.flixel.plugin.flxbox2d.collision.shapes;
 
 import java.util.ArrayList;
 
+import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
@@ -230,8 +231,8 @@ public abstract class B2FlxShape extends FlxSprite
 			// TODO: This resets the angle, prevents increase of the angle value. 
 			// sure if setTransform is alright, it breaks the contacts.
 			// This doesn't work with shapes that are joined with gear joint.
-			if(angle >= 360 || angle <= -360)
-				body.setTransform(position.x, position.y, 0);
+//			if(angle >= 360 || angle <= -360)
+//				body.setTransform(position.x, position.y, 0);
 		}
 	}
 
@@ -252,8 +253,12 @@ public abstract class B2FlxShape extends FlxSprite
 			super.kill();
 			userData.put("exists", exists);
 		}
-		else
-			B2FlxB.scheduledForRemoval.add(this);
+		else if(B2FlxB.world.isLocked())
+		{
+			B2FlxB.addSafelyRemove(this);
+			if(userData.get("mouseJoint") != null)
+				((FlxBasic)userData.get("mouseJoint")).kill();
+		}
 	}
 	
 	/**

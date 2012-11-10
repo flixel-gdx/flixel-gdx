@@ -66,6 +66,7 @@ public class B2FlxMouseJoint extends FlxBasic
 	 * The userdata of the current body that got pressed.
 	 */
 	private ObjectMap<String, Object> _userData;
+	private boolean _removeBySchedule;
 	/**
 	 * The maximum constraint force that can be exerted to move the candidate body. 
 	 */
@@ -82,6 +83,7 @@ public class B2FlxMouseJoint extends FlxBasic
 		_groundBody = B2FlxB.world.createBody(new BodyDef());
 		_testPoint = new Vector3();
 		_mouseTarget = new Vector2();
+		_removeBySchedule = false;
 	}
 	
 	/**
@@ -137,10 +139,11 @@ public class B2FlxMouseJoint extends FlxBasic
 				_mouseJointDef.collideConnected = true;
 				_mouseJointDef.target.set(_testPoint.x, _testPoint.y);
 				_mouseJointDef.maxForce = maxForce * _hitBody.getMass();
-				
 				if(_mouseJoint == null)
 					_mouseJoint = (MouseJoint)B2FlxB.world.createJoint(_mouseJointDef);
 				_hitBody.setAwake(true);
+				_userData.put("mouseJoint", this);
+				_removeBySchedule = false;
 				return true;
 			}
 		}
@@ -179,12 +182,22 @@ public class B2FlxMouseJoint extends FlxBasic
 	@Override
 	public void kill()
 	{
-		if(!B2FlxB.world.isLocked() && !FlxG.mouse.pressed() && _mouseJoint != null)
+		if((!B2FlxB.world.isLocked() && !FlxG.mouse.pressed() && _mouseJoint != null) || _removeBySchedule)
 		{
 			_userData = (ObjectMap<String, Object>) _hitBody.getUserData();
 			if(_userData != null && (Boolean)_userData.get("exists"))
-				B2FlxB.world.destroyJoint(_mouseJoint);
+			{
+				if(_mouseJoint != null)
+					B2FlxB.world.destroyJoint(_mouseJoint);
+				_userData.put("mouseJoint", null);
+			}
 			_mouseJoint = null;
+			_removeBySchedule = false;
+		}
+		else if(B2FlxB.world.isLocked())
+		{
+			_removeBySchedule = true;
+			B2FlxB.addSafelyRemove(this);
 		}
 	}
 	
