@@ -194,14 +194,25 @@ public abstract class B2FlxJoint extends FlxBasic
 	@Override
 	public void kill()
 	{
+		if(killJoint())
+			super.kill();
+	}
+	
+	/**
+	 * Kill the joint.
+	 * @return	Whether killing the joint was a succes or not.
+	 */
+	protected boolean killJoint()
+	{
 		if(!B2FlxB.world.isLocked() && exists && joint != null)
 		{
 			B2FlxB.world.destroyJoint(joint);
 			joint = null;
-			super.kill();
+			return true;
 		}
 		else if(B2FlxB.world.isLocked())
 			B2FlxB.addSafelyRemove(this);
+		return false;
 	}
 	
 	/**
@@ -229,7 +240,7 @@ public abstract class B2FlxJoint extends FlxBasic
 	{
 		if(joint != null && exists)
 		{
-			kill();
+			killJoint();
 			jointDef = null;
 		}
 		bodyA = null;
