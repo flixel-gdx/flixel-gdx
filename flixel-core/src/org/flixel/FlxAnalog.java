@@ -62,7 +62,10 @@ public class FlxAnalog extends FlxGroup
 	 * The current pointer that's active on the analog.
 	 */
 	private int _currentPointer;
-	
+	/**
+	 * This is just a pre-allocated x-y point container to be used however you like
+	 */
+	protected FlxPoint _point;
 	/**
 	 * This function is called when the button is released.
 	 */
@@ -133,6 +136,7 @@ public class FlxAnalog extends FlxGroup
 		_amount = 0;
 		_currentPointer = -1;
 		acceleration = new FlxPoint();
+		_point = new FlxPoint();
 		
 		createBase();
 		createThumb();
@@ -232,6 +236,7 @@ public class FlxAnalog extends FlxGroup
 		_analogs = null;
 		onUp = onDown = onOver = onPressed = null;
 		acceleration = null;
+		_point = null;
 		thumb = null;
 		_zone = null;
 		bg = null;
@@ -261,8 +266,8 @@ public class FlxAnalog extends FlxGroup
 					for(int i = 0; i < _analogs.size; i++)
 					{
 						// check whether the pointer is already taken by another analog.
-						if(!_analogs.get(i).equals(this) && _analogs.get(i)._currentPointer != pointerId) 
-						{		
+						if(_analogs.get(i) != this && _analogs.get(i)._currentPointer != pointerId) 
+						{
 							foundFreePointer = true;
 							break;
 						}
@@ -288,10 +293,10 @@ public class FlxAnalog extends FlxGroup
 	protected void updateAnalog(int pointerId)
 	{		
 		boolean offAll = true;
-		FlxPoint point = FlxG.mouse.getWorldPosition(pointerId);
-		if(_zone.contains(point.x, point.y) || (status == PRESSED))
+		FlxG.mouse.getWorldPosition(pointerId, null, _point);
+		if(_zone.contains(_point.x, _point.y) || (status == PRESSED))
 		{
-			offAll = false;			
+			offAll = false;	
 			if(FlxG.mouse.pressed(pointerId))
 			{
 				_currentPointer = pointerId;
@@ -307,8 +312,8 @@ public class FlxAnalog extends FlxGroup
 					if(onPressed != null)
 						onPressed.callback();						
 					
-					float dx = point.x-x;
-					float dy = point.y-y;
+					float dx = _point.x-x;
+					float dy = _point.y-y;
 					
 					double dist = Math.sqrt(dx * dx + dy * dy);
 					if(dist < 1) 
@@ -347,7 +352,8 @@ public class FlxAnalog extends FlxGroup
 		thumb.y = (float) (y + MathUtils.sin(_direction) * _amount * _radius - (thumb.height * .5f));
 		if(offAll)
 		{
-			status = NORMAL;			
+			status = NORMAL;
+			_currentPointer = -1;
 		}
 	}
 	

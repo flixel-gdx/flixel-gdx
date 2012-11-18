@@ -102,6 +102,11 @@ public abstract class B2FlxShape extends FlxSprite
 	 */
 	private boolean _draggable;
 	/**
+	 * Set the angle to 0 when it reaches 360 or -360 to prevent overflow. 
+	 * It doesn't always work for joints. Default is true.
+	 */
+	private boolean resetAngle;
+	/**
 	 * Holds the user data.
 	 */
 	public ObjectMap<String, Object>userData;
@@ -140,6 +145,8 @@ public abstract class B2FlxShape extends FlxSprite
 		super(x, y);
 		init();
 		center = new FlxPoint(width*.5f, height*.5f);
+		
+		resetAngle = true;
 		
 		userData = new ObjectMap<String, Object>();
 		userData.put("shape", this);
@@ -209,6 +216,9 @@ public abstract class B2FlxShape extends FlxSprite
 	public B2FlxShape create()
 	{
 		createBody();
+		categoryBits = fixtureDef.filter.categoryBits;
+		maskBits = fixtureDef.filter.maskBits;
+		groupIndex = fixtureDef.filter.groupIndex;
 		userData.put("exists", exists);
 		body.setUserData(userData);
 		_fixtureDebug = fixture;
@@ -216,7 +226,7 @@ public abstract class B2FlxShape extends FlxSprite
 	}
 	
 	/**
-	 * Main loop. Calculates the position and angle, and updates the mouse joint if it is used.
+	 * Main loop. Calculates the position and angle.
 	 */
 	@Override
 	public void update()
@@ -228,11 +238,11 @@ public abstract class B2FlxShape extends FlxSprite
 			y = position.y * RATIO - height * .5f;			
 			
 			angle = body.getAngle() * B2FlxMath.RADDEG;
-			// TODO: This resets the angle, prevents increase of the angle value. 
-			// sure if setTransform is alright, it breaks the contacts.
-			// This doesn't work with shapes that are joined with gear joint.
-//			if(angle >= 360 || angle <= -360)
-//				body.setTransform(position.x, position.y, 0);
+			if(resetAngle)
+			{
+				if(angle >= 360 || angle <= -360)
+					body.setTransform(position.x, position.y, 0);				
+			}
 		}
 	}
 
@@ -242,6 +252,16 @@ public abstract class B2FlxShape extends FlxSprite
 	@Override
 	public void kill()
 	{
+		if(killBody())
+			super.kill();
+	}
+	
+	/**
+	 * Kill the body.
+	 * @return	Whether killing the body was a success or not.
+	 */
+	protected boolean killBody()
+	{
 		if(!B2FlxB.world.isLocked() && exists && body != null)
 		{
 			for(int i = 0; i < joints.size; i++)
@@ -250,8 +270,8 @@ public abstract class B2FlxShape extends FlxSprite
 			}
 			B2FlxB.world.destroyBody(body);
 			body = null;
-			super.kill();
 			userData.put("exists", exists);
+			return true;
 		}
 		else if(B2FlxB.world.isLocked())
 		{
@@ -259,6 +279,7 @@ public abstract class B2FlxShape extends FlxSprite
 			if(userData.get("mouseJoint") != null)
 				((FlxBasic)userData.get("mouseJoint")).kill();
 		}
+		return false;
 	}
 	
 	/**
@@ -270,7 +291,7 @@ public abstract class B2FlxShape extends FlxSprite
 		super.destroy();
 		if(body != null)
 		{
-			kill();
+			killBody();
 		}
 		joints.clear();
 		body = null;		
@@ -936,6 +957,12 @@ public abstract class B2FlxShape extends FlxSprite
 	public B2FlxShape setSensor(boolean sensor)
 	{
 		fixtureDef.isSensor = sensor;
+		return this;
+	}
+	
+	public B2FlxShape setResetAngle(boolean resetAngle)
+	{
+		this.resetAngle = resetAngle;
 		return this;
 	}
 

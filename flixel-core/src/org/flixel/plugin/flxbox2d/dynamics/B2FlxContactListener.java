@@ -8,14 +8,12 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.ObjectMap;
 
-import flash.events.EventDispatcher;
-
 /**
  * Collision event for FlxBox2D collision handling.
  * 
  * @author Ka Wing Chin
  */
-public class B2FlxContactListener extends EventDispatcher implements ContactListener
+public class B2FlxContactListener extends B2FlxEventDispatcher implements ContactListener
 {	
 	private B2FlxContactEvent _event;
 

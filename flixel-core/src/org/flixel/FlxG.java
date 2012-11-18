@@ -1795,7 +1795,7 @@ public class FlxG
 		int l = pluginList.size;
 		while(i < l)
 		{
-			if(ClassType.isInstance(pluginList.get(i).getClass()))
+			if(pluginList.get(i).getClass().equals(ClassType))
 				return plugins.get(i);
 			i++;
 		}
