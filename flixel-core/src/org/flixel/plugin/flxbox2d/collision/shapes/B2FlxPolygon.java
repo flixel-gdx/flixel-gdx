@@ -4,9 +4,7 @@ import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Transform;
 
 /**
  * A polygon shape which can be a convex or concave. The vertices
@@ -124,19 +122,6 @@ public class B2FlxPolygon extends B2FlxShape
 	{
 		super.destroy();
 		_vertices = null;
-	}
-	
-	@Override
-	protected void drawShape(Fixture fixture, Transform transform, int color)
-	{
-		PolygonShape poly = (PolygonShape) fixture.getShape();
-		int vertexCount = poly.getVertexCount();
-		for(int i = 0; i < vertexCount; i++)
-		{
-			poly.getVertex(i, B2FlxB.vertices[i]);
-			transform.mul(B2FlxB.vertices[i]);
-		}
-		drawSolidPolygon(B2FlxB.vertices, vertexCount, color);
 	}
 	
 	/**
