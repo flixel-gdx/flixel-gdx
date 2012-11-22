@@ -906,6 +906,18 @@ public abstract class B2FlxShape extends FlxSprite
 		return this;
 	}
 	
+	public B2FlxShape setActive(boolean active)
+	{
+		bodyDef.active = active;
+		return this;
+	}
+	
+	public B2FlxShape setAwake(boolean awake)
+	{
+		bodyDef.awake = awake;
+		return this;
+	}
+	
 	public B2FlxShape setDensity(float density)
 	{
 		fixtureDef.density = density;
