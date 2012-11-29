@@ -102,6 +102,13 @@ public class Keyboard extends Input
 	public boolean DOWN;
 	public boolean LEFT;
 	public boolean RIGHT;
+	public boolean APP_SWITCH;
+	public boolean BACK;
+	public boolean MENU;
+	public boolean POWER;
+	public boolean SEARCH;
+	public boolean VOLUME_DOWN;
+	public boolean VOLUME_UP;
 	
 	public Keyboard()
 	{
@@ -196,6 +203,15 @@ public class Keyboard extends Input
 		addKey("LEFT",Keys.LEFT);
 		addKey("RIGHT",Keys.RIGHT);
 		addKey("TAB",Keys.TAB);
+		
+		// MOBILE KEYS
+		addKey("APP_SWITCH", 187);
+		addKey("BACK", Keys.BACK);
+		addKey("MENU", Keys.MENU);
+		addKey("POWER", Keys.POWER);
+		addKey("SEARCH", Keys.SEARCH);
+		addKey("VOLUME_DOWN", Keys.VOLUME_DOWN);
+		addKey("VOLUME_UP", Keys.VOLUME_UP);		
 	}
 		
 	/**
