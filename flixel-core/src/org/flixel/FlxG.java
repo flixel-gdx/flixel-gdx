@@ -158,14 +158,7 @@ public class FlxG
 	 * The height in pixels of the display surface.
 	 */
 	static public int screenHeight;
-	/**
-	 * The stage width divided by the screen width.
-	 */
-	static public float diffWidth;
-	/**
-	 * The stage height divided by the screen height.
-	 */
-	static public float diffHeight;
+	
 	/**
 	 * Whether to show visual debug displays or not.
 	 * Default = false.
@@ -1083,7 +1076,7 @@ public class FlxG
 			
 			_cache.loadTexture(Key, pixmap, Width, Height);
 		}
-		return _cache.loadTexture(Key);
+		return _cache.getTexture(Key);
 	}
 	
 	/**
@@ -1146,21 +1139,28 @@ public class FlxG
 			}
 		}
 		
+		TextureRegion textureRegion = null;
 		String[] split = Graphic.split(":");
 		
-		if (split.length != 2)
-			throw new IllegalArgumentException("Invalid path: " + Graphic + ". Use format packfile:region.");
+		if (split.length == 1)
+		{
+			textureRegion = _cache.loadTexture(Graphic);
+		}
+		else if (split.length == 2)
+		{
+			String fileName = split[0];
+			String regionName = split[1];
 		
-		String fileName = split[0];
-		String regionName = split[1];
+			textureRegion = _cache.loadTexture(fileName, regionName);
 		
-		TextureRegion textureRegion = _cache.loadTexture(fileName, regionName);
-		
-		if (textureRegion == null)
-			throw new RuntimeException("Could not find region " + regionName + " in " + fileName);
+			if (textureRegion == null)
+				throw new RuntimeException("Could not find region " + regionName + " in " + fileName);
+		}
 		else
-			textureRegion = new TextureRegion(textureRegion);
-			
+		{
+			throw new IllegalArgumentException("Invalid path: " + Graphic + ".");
+		}
+		
 		if (Unique && !checkBitmapCache(Key))
 		{
 			TextureData textureData = textureRegion.getTexture().getTextureData();
@@ -1184,7 +1184,7 @@ public class FlxG
 		}
 		else if (Unique)
 		{
-			textureRegion = _cache.loadTexture(Key);
+			textureRegion = _cache.getTexture(Key);
 		}
 		
 		return textureRegion;
@@ -1851,7 +1851,7 @@ public class FlxG
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
-	static void init(FlxGame Game, int Width, int Height, float Zoom)
+	static void init(FlxGame Game, int Width, int Height, float Zoom, int ScaleMode)
 	{
 		FlxG._game = Game;
 		FlxG.width = Width;
@@ -1867,6 +1867,7 @@ public class FlxG
 		_cache = new FlxAssetCache();
 		
 		FlxCamera.defaultZoom = Zoom;
+		FlxCamera.defaultScaleMode = ScaleMode;
 		FlxG.cameras = new Array<FlxCamera>();
 		FlxG.camera = null;
 		useBufferLocking = false;
@@ -1928,17 +1929,18 @@ public class FlxG
 		FlxCamera camera = FlxG._activeCamera;
 		
 		//Set the drawing area		
-		int scissorWidth = (int) FlxU.ceil(camera.width / FlxG.diffWidth * camera.getZoom());
-		int scissorHeight = (int) FlxU.ceil(camera.height / FlxG.diffHeight * camera.getZoom());
-		int scissorX = (int) (camera.x / FlxG.diffWidth);
-		int scissorY = (int) (FlxG.screenHeight - ((camera.y / FlxG.diffHeight) + scissorHeight));
+		int scissorWidth = FlxU.ceil(camera.width * camera._screenScaleFactorX * camera.getZoom());
+		int scissorHeight = FlxU.ceil(camera.height * camera._screenScaleFactorY * camera.getZoom());
+		int scissorX = (int) (camera.x * camera._screenScaleFactorX);
+		int scissorY = (int) (FlxG.screenHeight - ((camera.y * camera._screenScaleFactorY) + scissorHeight));
 		_gl.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
-
+		
 		//Clear the camera
 		if(((camera.bgColor >> 24) & 0xff) == 0xff)
 		{
 			int color = FlxU.multiplyColors(camera.bgColor, camera.getColor());
-			_gl.glClearColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((color >> 24) & 0xFF) * 0.00392f);
+			_floatArray = FlxU.getRGBA(color, _floatArray);
+			_gl.glClearColor(_floatArray[0] * 0.00392f, _floatArray[1] * 0.00392f, _floatArray[2] * 0.00392f, 1.0f);
 			_gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		}
 		else

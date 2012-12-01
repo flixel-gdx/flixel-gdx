@@ -46,12 +46,36 @@ public class FlxCamera extends FlxBasic
 	 * Camera "shake" effect preset: shake camera on the Y axis only.
 	 */
 	static public final int SHAKE_VERTICAL_ONLY = 2;
+	/**
+	 * Camera "scale" mode preset: The game is not scaled.
+	 */
+	public static final int NO_SCALE = 0;
+	/**
+	 * Camera "scale" mode preset: Scales the stage to fill the display
+	 * in the x direction without stretching. 
+	 */
+	public static final int FILL_X = 1;
+	/**
+	 * Camera "scale" mode preset: Scales the stage to fill the display
+	 * in the y direction without stretching.
+	 */
+	public static final int FILL_Y = 2;
+	/**
+	 * Camera "scale" mode preset: Stretches the game to fill the entire screen.
+	 */
+	public static final int STRETCH = 3;
 	
 	/**
 	 * While you can alter the zoom of each camera after the fact,
 	 * this variable determines what value the camera will start at when created.
 	 */
 	static public float defaultZoom;
+	
+	/**
+	 * While you can alter the scale mode of each camera after the fact,
+	 * this variable determines what value the camera will start at when created.
+	 */
+	static public int defaultScaleMode;
 	
 	/**
 	 * The X position of this camera's display.  Zoom does NOT affect this number.
@@ -106,6 +130,14 @@ public class FlxCamera extends FlxBasic
 	 * Indicates how far the camera is zoomed in.
 	 */
 	protected float _zoom;
+	/**
+	 * Decides how flixel handles different screen sizes.
+	 */
+	protected int _scaleMode;
+	public float _screenScaleFactorX;
+	public float _screenScaleFactorY;
+	public int viewportWidth;
+	public int viewportHeight;
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */
@@ -192,8 +224,9 @@ public class FlxCamera extends FlxBasic
 	 * @param Width		The width of the camera display in pixels.
 	 * @param Height	The height of the camera display in pixels.
 	 * @param Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
+	 * @param ScaleMode	The initial scale mode of the camera.
 	 */
-	public FlxCamera(int X, int Y, int Width, int Height, float Zoom)
+	public FlxCamera(int X, int Y, int Width, int Height, float Zoom, int ScaleMode)
 	{
 		x = X;
 		y = Y;
@@ -209,6 +242,7 @@ public class FlxCamera extends FlxBasic
 		_color = 0xFFFFFF;
 		_alpha = 1.0f;
 		
+		setScaleMode(ScaleMode);
 		setZoom(Zoom); //sets the scale of flash sprite, which in turn loads flashoffset values
 		_flashOffsetX = _glCamera.position.x;
 		_flashOffsetY = _glCamera.position.y;
@@ -240,12 +274,26 @@ public class FlxCamera extends FlxBasic
 	 * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
 	 * @param Width		The width of the camera display in pixels.
 	 * @param Height	The height of the camera display in pixels.
+	 * @param Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
+	 */
+	public FlxCamera(int X, int Y, int Width, int Height, float Zoom)
+	{
+		this(X, Y, Width, Height, Zoom, 0);
+	}
+		
+	/**
+	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
+	 * 
+	 * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param Width		The width of the camera display in pixels.
+	 * @param Height	The height of the camera display in pixels.
 	 */
 	public FlxCamera(int X, int Y, int Width, int Height)
 	{
-		this(X, Y, Width, Height, 0);
+		this(X, Y, Width, Height, 0, 0);
 	}
-		
+	
 	/**
 	 * Clean up memory.
 	 */
@@ -743,6 +791,26 @@ public class FlxCamera extends FlxBasic
 	}
 	
 	/**
+	 * The scale mode of this camera.
+	 */
+	public int getScaleMode()
+	{
+		return _scaleMode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public void setScaleMode(int ScaleMode)
+	{
+		if(ScaleMode == 0)
+			_scaleMode = defaultScaleMode;
+		else
+			_scaleMode = ScaleMode;
+		setScale(_zoom, _zoom);
+	}
+	
+	/**
 	 * The alpha value of this camera display (a Number between 0.0 and 1.0).
 	 */
 	public float getAlpha()
@@ -827,7 +895,43 @@ public class FlxCamera extends FlxBasic
 	public void setScale(float X, float Y)
 	{
 		Stage stage = FlxG.getStage();
-		_glCamera.setToOrtho(true, (float)stage.stageWidth/X, (float)stage.stageHeight/Y);
+		float screenAspectRatio = FlxG.screenWidth / (float)FlxG.screenHeight;
+		
+		switch(_scaleMode)
+		{
+			case NO_SCALE:
+				_screenScaleFactorY = 1;
+				_screenScaleFactorX = 1;
+				viewportWidth = (int) (FlxG.screenWidth/X);
+				viewportHeight = (int) (FlxG.screenHeight/Y);
+				break;
+				
+			default:	
+			case STRETCH:
+				_screenScaleFactorY = (float)FlxG.screenHeight / stage.stageHeight;
+				_screenScaleFactorX = (float)FlxG.screenWidth / stage.stageWidth;
+				viewportWidth = (int) (stage.stageWidth/X);
+				viewportHeight = (int) (stage.stageHeight/Y);
+				break;
+				
+			case FILL_X:
+				_screenScaleFactorX = (float)FlxG.screenWidth / (stage.stageHeight * screenAspectRatio);
+				_screenScaleFactorY = (float)FlxG.screenHeight / stage.stageHeight;
+				viewportWidth = (int) ((stage.stageHeight * screenAspectRatio)/X);
+				viewportHeight = (int) (stage.stageHeight/Y);
+				break;
+				
+			case FILL_Y:
+				_screenScaleFactorX = (float)FlxG.screenWidth / stage.stageWidth;
+				_screenScaleFactorY = (float)FlxG.screenHeight / (stage.stageWidth / screenAspectRatio);
+				viewportWidth = (int) (stage.stageWidth/X);
+				viewportHeight = (int) ((stage.stageWidth / screenAspectRatio)/Y);
+				break;
+		}
+
+		_glCamera.setToOrtho(true, viewportWidth, viewportHeight);
+		_flashOffsetX = _glCamera.position.x;
+		_flashOffsetY = _glCamera.position.y;	
 	}
 	
 	/**

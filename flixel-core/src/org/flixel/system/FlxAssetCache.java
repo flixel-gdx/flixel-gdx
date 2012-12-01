@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -24,16 +23,32 @@ import com.badlogic.gdx.utils.ObjectMap;
  */
 public class FlxAssetCache 
 {
-	protected ObjectMap<String, Disposable> _atlases;
+	protected ObjectMap<String, Disposable> _textures;
 	protected ObjectMap<String, TextureRegion> _textureRegions;
 	protected ObjectMap<String, Disposable> _sounds;
-	protected PixmapPacker _pixmapPacker;
 	
 	public FlxAssetCache()
 	{		
-		_atlases = new ObjectMap<String, Disposable>();
+		_textures = new ObjectMap<String, Disposable>();
 		_textureRegions = new ObjectMap<String, TextureRegion>();
 		_sounds = new ObjectMap<String, Disposable>();
+	}
+	
+	/**
+	 * Loads a <code>TextureRegion</code> from an image file.
+	 * 
+	 * @param Path		The path to the image file.
+	 * @return			The <code>TextureRegion</code> if found.
+	 */
+	public TextureRegion loadTexture(String Path)
+	{
+		if (!_textureRegions.containsKey(Path))
+		{
+			Texture texture = new Texture(getFileHandle(Path));
+			_textures.put(Path, texture);
+			_textureRegions.put(Path, new TextureRegion(texture));
+		}
+		return getTexture(Path);
 	}
 	
 	/**
@@ -46,15 +61,15 @@ public class FlxAssetCache
 	public TextureRegion loadTexture(String Path, String Region)
 	{
 		String Key = Path + ":" + Region;
-		if (!_atlases.containsKey(Key))
+		if (!_textureRegions.containsKey(Key))
 		{
-			if (!_atlases.containsKey(Path))
+			if (!_textures.containsKey(Path))
 			{		
-				_atlases.put(Path, new TextureAtlas(getFileHandle(Path)));
+				_textures.put(Path, new TextureAtlas(getFileHandle(Path)));
 			}
-			_textureRegions.put(Key, ((TextureAtlas) _atlases.get(Path)).findRegion(Region));
+			_textureRegions.put(Key, ((TextureAtlas) _textures.get(Path)).findRegion(Region));
 		}
-		return loadTexture(Key);
+		return getTexture(Key);
 	}
 	
 	/**
@@ -72,16 +87,16 @@ public class FlxAssetCache
 		{
 			_textureRegions.put(Key, new TextureRegion(new Texture(new ManagedTextureData(Image)), 0, 0, Width, Height));
 		}
-		return loadTexture(Key);
+		return getTexture(Key);
 	}
 	
 	/**
 	 * Loads a stored <code>TextureRegion</code>.
 	 * 
 	 * @param Key	The Key that was used to store this <code>TextureRegion</code>.
-	 * @return
+	 * @return		The <code>TextureRegion</code>
 	 */
-	public TextureRegion loadTexture(String Key)
+	public TextureRegion getTexture(String Key)
 	{
 		return new TextureRegion(_textureRegions.get(Key));
 	}
@@ -117,15 +132,15 @@ public class FlxAssetCache
 	 */
 	public BitmapFont loadFont(String Path, int Size)
 	{
-		if (!_atlases.containsKey(Path + Size))
+		if (!_textures.containsKey(Path + Size))
 		{
 			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(getFileHandle(Path));
 			FreeTypeBitmapFontData data = generator.generateData(Size, FreeTypeFontGenerator.DEFAULT_CHARS, true);
 			generator.dispose();
-			_atlases.put(Path + Size, new BitmapFont(data, data.getTextureRegion(), true));
+			_textures.put(Path + Size, new BitmapFont(data, data.getTextureRegion(), true));
 		}
 		
-		return (BitmapFont) _atlases.get(Path + Size);
+		return (BitmapFont) _textures.get(Path + Size);
 	}
 	
 	/**
@@ -163,10 +178,10 @@ public class FlxAssetCache
 	 */
 	public void disposeTextures()
 	{
-		for (Disposable atlas : _atlases.values())
+		for (Disposable atlas : _textures.values())
 			atlas.dispose();
 		
-		_atlases.clear();
+		_textures.clear();
 		_textureRegions.clear();
 	}
 	

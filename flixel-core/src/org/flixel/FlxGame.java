@@ -29,24 +29,7 @@ import flash.events.MouseEvent;
  * @author	Thomas Weston
  */
 public class FlxGame implements ApplicationListener, InputProcessor
-{
-	/**
-	 * The game is not scaled. The stage will be set to the same dimensions as the display.
-	 */
-	public static final int NONE = 0;
-	/**
-	 * Scales the stage to fill the display in the x direction without stretching. 
-	 */
-	public static final int FILL_X = 1;
-	/**
-	 * Scales the stage to fill the display in the y direction without stretching.
-	 */
-	public static final int FILL_Y = 2;
-	/**
-	 * Stretches the game to fill the entire screen.
-	 */
-	public static final int STRETCH = 3;
-	
+{	
 	/**
 	 * Sets 0, -, and + to control the global volume sound volume.
 	 * @default true
@@ -175,10 +158,6 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 * This function, if set, is triggered when the callback stops playing.
 	 */
 	IFlxReplay _replayCallback;
-	/**
-	 * How flixel deals with different display sizes.
-	 */
-	protected int _scaleMode;
 	
 	/**
 	 * Temporary font to display the fps.
@@ -210,7 +189,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_lostFocus = false;
 		
 		// basic display and update setup stuff
-		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
+		FlxG.init(this, GameSizeX, GameSizeY, Zoom, ScaleMode);
 		FlxG.setFramerate(GameFramerate);
 		FlxG.setFlashFramerate(FlashFramerate);
 		
@@ -222,8 +201,6 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		}
 			
 		stage = new Stage(StageSizeX, StageSizeY);
-		
-		_scaleMode = ScaleMode;
 		
 		_accumulator = (int) _step;
 		_total = 0;
@@ -264,7 +241,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor, int StageSizeX, int StageSizeY)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, UseSystemCursor, StageSizeX, StageSizeY, STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, UseSystemCursor, StageSizeX, StageSizeY, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -280,7 +257,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false, 0, 0, STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false, 0, 0, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -295,7 +272,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false, 0, 0, STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false, 0, 0, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -309,7 +286,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, 30, false, 0, 0, STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, 30, false, 0, 0, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -322,7 +299,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, 30, 30, false, 0, 0, STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, Zoom, 30, 30, false, 0, 0, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -334,7 +311,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState)
 	{
-		this(GameSizeX, GameSizeY, InitialState, 1, 30, 30, false, 0, 0, STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, 1, 30, 30, false, 0, 0, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -891,7 +868,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		//Add basic input event listeners and mouse container
 		Gdx.input.setInputProcessor(this);		
 		
-		//Detect whether on not we're running on a mobile
+		//Detect whether or not we're running on a mobile device
 		FlxG.mobile = (Gdx.app.getType() != ApplicationType.Desktop);
 		
 		//Let mobile devs opt out of unnecessary overlays.
@@ -900,7 +877,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			//Debugger overlay
 			if(FlxG.debug || forceDebugger)
 			{
-				_debugger = new FlxDebugger(FlxG.width*FlxCamera.defaultZoom,FlxG.height*FlxCamera.defaultZoom);
+				//_debugger = new FlxDebugger(FlxG.width*FlxCamera.defaultZoom,FlxG.height*FlxCamera.defaultZoom);
 				//addChild(_debugger);
 			}
 
@@ -1016,32 +993,14 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	}
 
 	@Override
-	//TODO: This should be in FlxCamera. Different cameras should be able to be set to different scale modes.
-	public void resize(int width, int height)
+	public void resize(int Width, int Height)
 	{		
-		FlxG.screenWidth = width;
-		FlxG.screenHeight = height;
+		FlxG.screenWidth = Width;
+		FlxG.screenHeight = Height;
 		
-		switch(_scaleMode)
-		{
-			case NONE:
-				stage.stageWidth = FlxG.screenWidth;
-				stage.stageHeight = FlxG.screenHeight;
-				break;
-				
-			case FILL_X:
-				FlxG.diffWidth = ((float)stage.stageWidth / FlxG.screenWidth);
-				stage.stageHeight = (int) (FlxG.diffWidth * FlxG.screenHeight);
-				break;
-				
-			case FILL_Y:
-				FlxG.diffHeight = ((float)stage.stageHeight / FlxG.screenHeight);
-				stage.stageWidth = (int) (FlxG.diffHeight * FlxG.screenWidth);
-				break;
-		}	
-		
-		FlxG.diffWidth = ((float)stage.stageWidth / FlxG.screenWidth);
-		FlxG.diffHeight = ((float)stage.stageHeight / FlxG.screenHeight);
+		//reset all the cameras 
+		for (FlxCamera camera : FlxG.cameras)
+			camera.setScaleMode(camera.getScaleMode());
 	}	
 		
 	@Override
