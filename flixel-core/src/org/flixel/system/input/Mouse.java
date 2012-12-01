@@ -244,8 +244,8 @@ public class Mouse extends FlxPoint
 		{
 			o = _pointers.get(i);
 			
-			o.screenPosition.x = (float) Gdx.input.getX(i) * FlxG.diffWidth;
-			o.screenPosition.y = (float) Gdx.input.getY(i) * FlxG.diffHeight;
+			o.screenPosition.x = (float) Gdx.input.getX(i);
+			o.screenPosition.y = (float) Gdx.input.getY(i);
 			
 			if((o.last == -1) && (o.current == -1))
 				o.current = 0;
@@ -273,8 +273,8 @@ public class Mouse extends FlxPoint
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
 		FlxCamera camera = FlxG.camera;
-		screenX = (int) ((o.screenPosition.x - camera.x)/camera.getZoom());
-		screenY = (int) ((o.screenPosition.y - camera.y)/camera.getZoom());
+		screenX = (int) ((o.screenPosition.x - camera.x)/(camera.getZoom() * camera._screenScaleFactorX));
+		screenY = (int) ((o.screenPosition.y - camera.y)/(camera.getZoom() * camera._screenScaleFactorY));
 		x = screenX + camera.scroll.x;
 		y = screenY + camera.scroll.y;
 	}
@@ -385,8 +385,8 @@ public class Mouse extends FlxPoint
 		
 		Pointer o = _pointers.get(Pointer);
 		
-		Point.x = (o.screenPosition.x - Camera.x)/Camera.getZoom();
-		Point.y = (o.screenPosition.y - Camera.y)/Camera.getZoom();
+		Point.x = (o.screenPosition.x - Camera.x)/(Camera.getZoom() * Camera._screenScaleFactorX);
+		Point.y = (o.screenPosition.y - Camera.y)/(Camera.getZoom() * Camera._screenScaleFactorY);
 		
 		return Point;
 	}
@@ -562,7 +562,6 @@ public class Mouse extends FlxPoint
 		
 		activePointers--;
 	}
-	
 	
 	/**
 	 * Event handler so FlxGame can update the pointer.

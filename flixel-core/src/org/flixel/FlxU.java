@@ -48,9 +48,9 @@ public class FlxU
 	 * 
 	 * @return	The rounded value of that number.
 	 */
-	static public float floor(float Value)
+	static public int floor(float Value)
 	{
-		float number = (int)Value;
+		int number = (int)Value;
 		return (Value>0)?(number):((number!=Value)?(number-1):(number));
 	}
 	
@@ -61,9 +61,9 @@ public class FlxU
 	 * 
 	 * @return	The rounded value of that number.
 	 */
-	static public float ceil(float Value)
+	static public int ceil(float Value)
 	{
-		float number = (int)Value;
+		int number = (int)Value;
 		return (Value>0)?((number!=Value)?(number+1):(number)):(number);
 	}
 	
@@ -74,7 +74,7 @@ public class FlxU
 	 * 
 	 * @return	The rounded value of that number.
 	 */
-	static public float round(float Value)
+	static public int round(float Value)
 	{
 		return (int)(Value+((Value>0)?0.5f:-0.5f));
 	}
