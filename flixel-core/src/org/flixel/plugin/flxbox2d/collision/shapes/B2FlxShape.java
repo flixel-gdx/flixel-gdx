@@ -738,22 +738,36 @@ public abstract class B2FlxShape extends FlxSprite
 	
 	
 	/**
-	 * Creates a fixture and attach to this body. 
+	 * Creates a fixture and attach to this body. The fixture definition isn't applied. 
 	 * @param sprite	The sprite which contains a shape.
 	 * @param density	The density of the fixture.
 	 * @param dispose	Whether the shape needs to be dispose after creating the fixture.
 	 * @return	The fixture that was created.
 	 */
 	public Fixture createFixture(B2FlxShape sprite, float density, boolean dispose)
-	{
-		fixture = body.createFixture(sprite.fixtureDef.shape, density);
-		if(dispose)
-			disposeShape();
+	{		
+		if(sprite.getClass() == B2FlxPolygon.class)
+		{
+			PolygonShape[] shapes = ((B2FlxPolygon)sprite).shapes;
+			for(int i = 0; i < shapes.length; i++)
+			{
+				sprite.fixtureDef.shape = shapes[i];
+				body.createFixture(sprite.fixtureDef.shape, density);
+				if(dispose)
+					shapes[i].dispose();
+			}
+		}
+		else
+		{
+			fixture = body.createFixture(sprite.fixtureDef.shape, density);
+			if(dispose)
+				sprite.disposeShape();			
+		}
 		return fixture;
 	}
 	
 	/**
-	 * Creates a fixture and attach to this body. 
+	 * Creates a fixture and attach to this body. The fixture definition isn't applied. 
 	 * @param sprite	The sprite which contains a shape.
 	 * @param density	The density of the fixture.
 	 * @return	The fixture that was created.
@@ -764,7 +778,7 @@ public abstract class B2FlxShape extends FlxSprite
 	}
 	
 	/**
-	 * Creates a fixture and attach to this body. 
+	 * Creates a fixture and attach to this body. The fixture definition isn't applied. 
 	 * @param sprite	The sprite which contains a shape.
 	 * @return	The fixture that was created.
 	 */
@@ -774,7 +788,7 @@ public abstract class B2FlxShape extends FlxSprite
 	}
 	
 	/**
-	 * Creates a fixture and attach to this body.
+	 * Creates a fixture and attach to this body. The fixture definition is applied.
 	 * @param fixutreDef The fixtureDef which contains a shape.
 	 * @return	The fixture that was created.
 	 */
@@ -782,17 +796,49 @@ public abstract class B2FlxShape extends FlxSprite
 	{
 		fixture = body.createFixture(fixtureDef);
 		if(dispose)
-			disposeShape();
+			fixtureDef.shape.dispose();
 		return fixture;
 	}
 	
 	/**
-	 * Creates a fixture and attach to this body.
+	 * Creates a fixture and attach to this body. The fixture definition is applied.
 	 * @return	The fixture that was created.
 	 */
 	public Fixture createFixture(FixtureDef fixtureDef)
 	{
 		return createFixture(fixtureDef, false);
+	}
+	
+	/**
+	 * Creates a fixture and attach to this body. The fixture definition is applied. 
+	 * Use this only for PolygonShape.
+	 * @param dispose	Whether the shape needs to be dispose after creating fixtures.
+	 * @return	A bunch of fixtures that was created.
+	 */
+	public Fixture[] createFixtureFromPolygon(B2FlxPolygon sprite, boolean dispose)
+	{
+		PolygonShape[] shapes = sprite.shapes;
+		Fixture[] fixtures = new Fixture[shapes.length];
+		FixtureDef def;
+		for(int i = 0; i < shapes.length; i++)
+		{
+			def = sprite.fixtureDef;
+			def.shape = shapes[i];
+			fixtures[i] = body.createFixture(def);
+			if(dispose)
+				shapes[i].dispose();
+		}		
+		return fixtures;
+	}
+	
+	/**
+	 * Creates a fixture and attach to this body. The fixture definition is applied. 
+	 * Use this only for PolygonShape.
+	 * @return	A bunch of fixtures that was created.
+	 */
+	public Fixture[] createFixtureFromPolygon(B2FlxPolygon sprite)
+	{
+		return createFixtureFromPolygon(sprite, false);
 	}
 
 	/**
@@ -894,6 +940,8 @@ public abstract class B2FlxShape extends FlxSprite
 		return this;
 	}
 	
+	// TODO: change body during runtime and needs to check whether the world is locked.
+	
 	public B2FlxShape setFixedRotation(boolean fixedRotation)
 	{
 		bodyDef.fixedRotation = fixedRotation;
@@ -909,6 +957,9 @@ public abstract class B2FlxShape extends FlxSprite
 	public B2FlxShape setActive(boolean active)
 	{
 		bodyDef.active = active;
+		this.active = active;
+		if(body != null && !B2FlxB.world.isLocked())
+			body.setActive(active);
 		return this;
 	}
 	

@@ -23,6 +23,10 @@ public class B2FlxEdge extends B2FlxShape
 	 * Holds the vertices.
 	 */
 	private float[][] _vertices;
+	/**
+	 * Holds the shapes.
+	 */
+	public EdgeShape[] shapes;
 
 	/**
 	 * This creates an edge.
@@ -92,9 +96,20 @@ public class B2FlxEdge extends B2FlxShape
 	 */
 	@Override
 	public void createShape()
-	{
-		shape = new EdgeShape();
+	{		
 		fixtureDef.shape = shape;
+		int length = _vertices.length - 1;
+		shapes = new EdgeShape[length];
+		Vector2 startPoint;
+		Vector2 endPoint;
+		for (int i = 0; i < length; i++) 
+		{
+			startPoint = new Vector2(_vertices[i][0]/RATIO, _vertices[i][1]/RATIO);
+			endPoint= new Vector2(_vertices[i+1][0]/RATIO, _vertices[i+1][1]/RATIO);
+			shape = new EdgeShape();
+			((EdgeShape)shape).set(startPoint, endPoint);
+			shapes[i] = ((EdgeShape)shape);
+		}
 	}
 	
 	/**
@@ -108,18 +123,15 @@ public class B2FlxEdge extends B2FlxShape
 		bodyDef.position.y = y / RATIO;
 		position = bodyDef.position;
 		body = B2FlxB.world.createBody(bodyDef);
-		
-		int length = _vertices.length - 1;			
-		Vector2 startPoint;
-		Vector2 endPoint;
-		for (int i = 0; i < length; i++) 
-		{
-			startPoint = new Vector2(_vertices[i][0]/RATIO, _vertices[i][1]/RATIO);
-			endPoint= new Vector2(_vertices[i+1][0]/RATIO, _vertices[i+1][1]/RATIO);
-			((EdgeShape)shape).set(startPoint, endPoint);
+		EdgeShape s;
+		for(int i = 0; i < shapes.length; i++)
+		{	
+			s = shapes[i];
+			fixtureDef.shape = s;
 			body.createFixture(fixtureDef);
+			s.dispose();
+			s = null;
 		}
-		shape.dispose();
 		shape = null;
 	}
 	
@@ -128,5 +140,6 @@ public class B2FlxEdge extends B2FlxShape
 	{
 		super.destroy();
 		_vertices = null;
+		shapes = null;
 	}
 }

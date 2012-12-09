@@ -18,6 +18,10 @@ public class B2FlxPolygon extends B2FlxShape
 	 * Holds the vertices.
 	 */
 	private float[][][] _vertices;
+	/**
+	 * Holds the shapes. Needed for createFixture and createFixtureFromPolygon.
+	 */
+	public PolygonShape[] shapes;
 
 	/**
 	 * This creates an polygon.
@@ -83,9 +87,25 @@ public class B2FlxPolygon extends B2FlxShape
 	 */
 	@Override
 	public void createShape()
-	{
-		shape = new PolygonShape();
-		fixtureDef.shape = shape;
+	{		
+		Vector2[] vector;
+		int vertexCount = 0;
+		int indicesCount = _vertices.length;
+		shapes = new PolygonShape[indicesCount];
+		for(int i = 0; i < indicesCount; i++) 
+		{
+			vertexCount = _vertices[i].length;
+			if(vertexCount < 3 || vertexCount > 8)
+				throw new Error("vertexCount < 3 || vertexCount > 8");
+			vector = new Vector2[vertexCount];
+			for (int j = 0; j < vertexCount; j++) 
+			{		
+				vector[j] = new Vector2((float)_vertices[i][j][0] / RATIO, (float)_vertices[i][j][1] / RATIO);					
+			}
+			shape = new PolygonShape();
+			((PolygonShape)shape).set(vector);
+			shapes[i] = (PolygonShape) shape;
+		}
 	}
 
 	/**
@@ -99,21 +119,15 @@ public class B2FlxPolygon extends B2FlxShape
 		bodyDef.position.y = y / RATIO;
 		position = bodyDef.position;
 		body = B2FlxB.world.createBody(bodyDef);
-		Vector2[] vector;
-		int vertexCount = 0;
-		int indicesCount = _vertices.length;
-		for(int i = 0; i < indicesCount; i++) 
-		{
-			vertexCount = _vertices[i].length;
-			vector = new Vector2[vertexCount];
-			for (int j = 0; j < vertexCount; j++) 
-			{		
-				vector[j] = new Vector2((float)_vertices[i][j][0] / RATIO, (float)_vertices[i][j][1] / RATIO);					
-			}
-			((PolygonShape)shape).set(vector);
+		PolygonShape s;
+		for(int i = 0; i < shapes.length; i++)
+		{			
+			s = shapes[i];
+			fixtureDef.shape = s;
 			body.createFixture(fixtureDef);
+			s.dispose();
+			s = null;
 		}
-		shape.dispose();
 		shape = null;
 	}
 	
@@ -122,6 +136,7 @@ public class B2FlxPolygon extends B2FlxShape
 	{
 		super.destroy();
 		_vertices = null;
+		shapes = null;
 	}
 	
 	/**
