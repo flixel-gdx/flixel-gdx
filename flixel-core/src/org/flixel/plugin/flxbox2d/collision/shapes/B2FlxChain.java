@@ -134,21 +134,6 @@ public class B2FlxChain extends B2FlxShape
 	{
 		shape = new ChainShape();
 		fixtureDef.shape = shape;
-		
-	}
-	
-	/**
-	 * Creates the body.
-	 * @return This object. Handy for chaining stuff together.
-	 */
-	@Override
-	protected void createBody()
-	{
-		bodyDef.position.x = x / RATIO;
-		bodyDef.position.y = y / RATIO;
-		position = bodyDef.position;
-		body = B2FlxB.world.createBody(bodyDef);
-		
 		int length = _vertices.size;
 		Vector2[] v = new Vector2[length];
 		for(int i = 0; i < length; i++)
@@ -166,7 +151,19 @@ public class B2FlxChain extends B2FlxShape
 			if(_nextVertex != null)
 				((ChainShape)shape).setNextVertex(_nextVertex);			
 		}
-		
+	}
+	
+	/**
+	 * Creates the body.
+	 * @return This object. Handy for chaining stuff together.
+	 */
+	@Override
+	protected void createBody()
+	{
+		bodyDef.position.x = x / RATIO;
+		bodyDef.position.y = y / RATIO;
+		position = bodyDef.position;
+		body = B2FlxB.world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
 		shape.dispose();
 		shape = null;
