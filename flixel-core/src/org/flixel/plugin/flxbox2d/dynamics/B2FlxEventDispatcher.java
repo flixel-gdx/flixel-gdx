@@ -56,7 +56,7 @@ public class B2FlxEventDispatcher
 	}
 	
 	public void removeAllListeners()
-	{		
+	{
 		_listeners.clear();
 	}
 	

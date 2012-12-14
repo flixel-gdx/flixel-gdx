@@ -1,6 +1,7 @@
 package org.flixel.plugin.flxbox2d;
 
 import org.flixel.FlxBasic;
+import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -27,6 +28,14 @@ public class B2FlxB
 	 */
 	public static Array<FlxBasic> scheduledForRemoval;
 	/**
+	 * A list for shapes that didn't got inactive due the world got locked.
+	 */
+	public static Array<FlxBasic> scheduledForInActive;
+	/**
+	 * A list for shapes that didn't got active due the world got locked.
+	 */
+	public static Array<FlxBasic> scheduledForActive;
+	/**
 	 * Vertices for polygon rendering.
 	 */
 	public static Vector2[] vertices;
@@ -38,6 +47,8 @@ public class B2FlxB
 	public static void init()
 	{
 		scheduledForRemoval = new Array<FlxBasic>();
+		scheduledForInActive = new Array<FlxBasic>();
+		scheduledForActive = new Array<FlxBasic>();
 		
 		if(vertices == null)
 		{
@@ -103,5 +114,47 @@ public class B2FlxB
 			scheduledForRemoval.get(i).kill();
 		}
 		scheduledForRemoval.clear();
+	}
+	
+	public static void addInActive(FlxBasic value)
+	{
+		int length = scheduledForInActive.size;
+		for(int i = 0; i < length; i++)
+		{
+			if(scheduledForInActive.get(i) == value)
+				return;
+		}
+		scheduledForInActive.add(value);
+	}
+	
+	static void safelyDeactivateBodies()
+	{
+		int length = scheduledForInActive.size;
+		for(int i = 0; i < length; i++)
+		{
+			((B2FlxShape)scheduledForInActive.get(i)).setActive(false);
+		}
+		scheduledForInActive.clear();
+	}
+
+	public static void addActive(FlxBasic value)
+	{
+		int length = scheduledForActive.size;
+		for(int i = 0; i < length; i++)
+		{
+			if(scheduledForActive.get(i) == value)
+				return;
+		}
+		scheduledForActive.add(value);
+	}
+
+	static void safelyActivateBodies()
+	{
+		int length = scheduledForActive.size;
+		for(int i = 0; i < length; i++)
+		{
+			((B2FlxShape)scheduledForActive.get(i)).setActive(true);
+		}
+		scheduledForActive.clear();
 	}
 }

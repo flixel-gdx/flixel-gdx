@@ -48,7 +48,12 @@ public class B2FlxState extends FlxState
 	{
 		world.step(FlxG.elapsed, velocityIterations, Iterations);
 		world.clearForces();
-		B2FlxB.safelyRemoveBodies();
+		if(B2FlxB.scheduledForActive.size > 0)
+			B2FlxB.safelyActivateBodies();
+		if(B2FlxB.scheduledForInActive.size > 0)
+			B2FlxB.safelyDeactivateBodies();
+		if(B2FlxB.scheduledForRemoval.size > 0)
+			B2FlxB.safelyRemoveBodies();
 		super.update();
 	}
 	

@@ -233,7 +233,7 @@ public abstract class B2FlxShape extends FlxSprite
 	{
 		if(body != null)
 		{
-			Vector2 position = body.getPosition();
+			position = body.getPosition();
 			x = position.x * RATIO - width * .5f;
 			y = position.y * RATIO - height * .5f;			
 			
@@ -264,10 +264,7 @@ public abstract class B2FlxShape extends FlxSprite
 	{
 		if(!B2FlxB.world.isLocked() && exists && body != null)
 		{
-			for(int i = 0; i < joints.size; i++)
-			{
-				joints.get(i).kill();
-			}
+			killJoints();
 			B2FlxB.world.destroyBody(body);
 			body = null;
 			userData.put("exists", exists);
@@ -280,6 +277,17 @@ public abstract class B2FlxShape extends FlxSprite
 				((FlxBasic)userData.get("mouseJoint")).kill();
 		}
 		return false;
+	}
+	
+	/**
+	 * Kill a joints that are attached to this body.
+	 */
+	public void killJoints()
+	{
+		for(int i = 0; i < joints.size; i++)
+		{
+			joints.get(i).kill();
+		}
 	}
 	
 	/**
@@ -958,7 +966,14 @@ public abstract class B2FlxShape extends FlxSprite
 	{
 		bodyDef.active = active;
 		this.active = active;
-		if(body != null && !B2FlxB.world.isLocked())
+		if(body != null && B2FlxB.world.isLocked())
+		{
+			if(!active)
+				B2FlxB.addInActive(this);
+			else
+				B2FlxB.addActive(this);
+		}
+		else if(body != null)
 			body.setActive(active);
 		return this;
 	}
@@ -996,6 +1011,8 @@ public abstract class B2FlxShape extends FlxSprite
 	public B2FlxShape setGravityScale(float gravityScale)
 	{
 		bodyDef.gravityScale = gravityScale;
+		if(body != null)
+			body.setGravityScale(gravityScale);
 		return this;
 	}
 	

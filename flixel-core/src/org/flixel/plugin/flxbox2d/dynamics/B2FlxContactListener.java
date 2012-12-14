@@ -86,8 +86,11 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	/**
 	 * Clean up the memory.
 	 */
+	@Override
 	public void destroy()
 	{
+		super.destroy();
+		_event.destroy();
 		_event = null;
 	}
 }

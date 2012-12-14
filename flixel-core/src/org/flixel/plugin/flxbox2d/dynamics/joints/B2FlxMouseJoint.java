@@ -63,9 +63,8 @@ public class B2FlxMouseJoint extends FlxBasic
 	 */
 	private float _mouseWorldY;
 	/**
-	 * The userdata of the current body that got pressed.
+	 * Flag for destroy when world got locked.
 	 */
-	private ObjectMap<String, Object> _userData;
 	private boolean _removeBySchedule;
 	/**
 	 * The maximum constraint force that can be exerted to move the candidate body. 
@@ -121,12 +120,12 @@ public class B2FlxMouseJoint extends FlxBasic
 			if (_hitBody == _groundBody || _hitBody == null)
 				return false;
 			
-			_userData = (ObjectMap<String, Object>) _hitBody.getUserData();
-			if(_userData == null)
+			ObjectMap<String, Object> userData = (ObjectMap<String, Object>) _hitBody.getUserData();
+			if(userData == null)
 				return false;
 			
 			// ignore kinematic bodies, they don't work with the mouse joint
-			if (_hitBody != null && _hitBody.getType() == BodyType.KinematicBody || !(Boolean)_userData.get("draggable")) 
+			if (_hitBody != null && _hitBody.getType() == BodyType.KinematicBody || !(Boolean)userData.get("draggable")) 
 				return false;
 			
 			// if we hit something we create a new mouse joint
@@ -142,7 +141,7 @@ public class B2FlxMouseJoint extends FlxBasic
 				if(_mouseJoint == null)
 					_mouseJoint = (MouseJoint)B2FlxB.world.createJoint(_mouseJointDef);
 				_hitBody.setAwake(true);
-				_userData.put("mouseJoint", this);
+				userData.put("mouseJoint", this);
 				_removeBySchedule = false;
 				return true;
 			}
@@ -184,12 +183,12 @@ public class B2FlxMouseJoint extends FlxBasic
 	{
 		if((!B2FlxB.world.isLocked() && !FlxG.mouse.pressed() && _mouseJoint != null) || _removeBySchedule)
 		{
-			_userData = (ObjectMap<String, Object>) _hitBody.getUserData();
-			if(_userData != null && (Boolean)_userData.get("exists"))
+			ObjectMap<String, Object> userData = (ObjectMap<String, Object>) _hitBody.getUserData();
+			if(userData != null && (Boolean)userData.get("exists"))
 			{
 				if(_mouseJoint != null)
 					B2FlxB.world.destroyJoint(_mouseJoint);
-				_userData.put("mouseJoint", null);
+				userData.put("mouseJoint", null);
 			}
 			_mouseJoint = null;
 			_removeBySchedule = false;
@@ -202,11 +201,16 @@ public class B2FlxMouseJoint extends FlxBasic
 	}
 	
 	/**
-	 * It calls <code>kill()</code>.
+	 * Clean up the memory. This is an internal method. Do not use it!
 	 */
 	public void destroy()
 	{
-		kill();
+		_mouseJoint = null;
+		_mouseJointDef = null;
+		_hitBody = null;
+		_groundBody = null;
+		_testPoint = null;
+		_mouseTarget = null;
 	}
 	
 	/** 
