@@ -138,15 +138,4 @@ public class B2FlxPolygon extends B2FlxShape
 		_vertices = null;
 		shapes = null;
 	}
-	
-	/**
-	 * Set vertices, call create after this to create the body.
-	 * @param vertices
-	 * @return	This object. Handy for chaining stuff together.
-	 */
-	public B2FlxPolygon setVertices(float[][][] vertices)
-	{
-		_vertices = vertices;
-		return this;
-	}
 }

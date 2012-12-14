@@ -56,7 +56,7 @@ public class Input
 	{
 		for(KeyState o : _map)
 		{
-			if (o.name.isEmpty())
+			if (o.name.length() == 0)
 				continue;
 			
 			try {

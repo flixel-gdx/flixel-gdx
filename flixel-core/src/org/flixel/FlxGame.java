@@ -851,6 +851,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		{
 			FlxG._gl = Gdx.gl11;
 		}
+		else
+			FlxG._gl = Gdx.gl10;
 		// Common OpenGL
 		if(!Gdx.graphics.isGL20Available())
 			((GL10) FlxG._gl).glShadeModel(GL10.GL_FLAT);		

@@ -222,7 +222,7 @@ public class Keyboard extends Input
 	public void handleKeyDown(int KeyCode)
 	{
 		KeyState o = _map.get(KeyCode);
-		if(o.name.isEmpty())
+		if(o.name.length() == 0)
 			return;
 		
 		if(o.current > 0)
@@ -245,7 +245,7 @@ public class Keyboard extends Input
 	public void handleKeyUp(int KeyCode)
 	{
 		KeyState o = _map.get(KeyCode);
-		if(o.name.isEmpty())
+		if(o.name.length() == 0)
 			return;
 		
 		if(o.current > 0)
