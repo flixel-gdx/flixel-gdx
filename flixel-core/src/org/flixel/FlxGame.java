@@ -168,6 +168,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 * Represents the Flash stage.
 	 */
 	public Stage stage;
+	/**
+	 * Internal, a pre-allocated <code>MouseEvent</code> to prevent <code>new</code> calls.
+	 */
+	private MouseEvent _mouseEvent;
 		
 	/**
 	 * Instantiate a new game object.
@@ -486,7 +490,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			return true;
 		}
 		FlxG.mouse.handleMouseDown(X, Y, Pointer, Button);
-		stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, X, Y));
+		_mouseEvent.type = MouseEvent.MOUSE_DOWN;
+		_mouseEvent.stageX = X;
+		_mouseEvent.stageY = Y;
+		stage.dispatchEvent(_mouseEvent);
 		return true;
 	}
 
@@ -499,7 +506,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		if((_debuggerUp && _debugger.hasMouse) || _replaying)
 			return true;
 		FlxG.mouse.handleMouseUp(X, Y, Pointer, Button);
-		stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, X, Y));
+		_mouseEvent.type = MouseEvent.MOUSE_UP;
+		_mouseEvent.stageX = X;
+		_mouseEvent.stageY = Y;
+		stage.dispatchEvent(_mouseEvent);
 		return true;
 	}
 
@@ -642,8 +652,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		
 		//Destroy the old state (if there is an old state)
 		if(_state != null)
+		{
 			_state.destroy();
-		
+			_state = null;			
+		}
 		//Finally assign and create the new state
 		_state = _requestedState;
 		_state.create();
@@ -868,7 +880,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.flashGfx = new Graphics();
 		
 		//Add basic input event listeners and mouse container
-		Gdx.input.setInputProcessor(this);		
+		Gdx.input.setInputProcessor(this);
+		_mouseEvent = new MouseEvent(null, 0, 0);
 		
 		//Detect whether or not we're running on a mobile device
 		FlxG.mobile = (Gdx.app.getType() != ApplicationType.Desktop);
@@ -1008,9 +1021,12 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	@Override
 	public void dispose()
 	{
+		font.dispose();
 		_state.destroy();
+		_mouseEvent = null;
 		FlxG.reset();
 		FlxG._cache.dispose();
+		FlxG.batch.dispose();
 		FlxG.flashGfx.dispose();
 	}
 }

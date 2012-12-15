@@ -147,11 +147,13 @@ public class FlxTilemap extends FlxObject
 		int l = _tileObjects.size;
 		while(i < l)
 			_tileObjects.get(i++).destroy();
+		_tileObjects.clear();
 		_tileObjects = null;
 		i = 0;
 		l = _buffers.size;
 		while(i < l)
 			_buffers.get(i++).destroy();
+		_buffers.clear();
 		_buffers = null;
 		_data = null;
 		_regions = null;

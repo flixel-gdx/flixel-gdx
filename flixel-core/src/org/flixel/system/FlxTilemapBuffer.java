@@ -5,7 +5,6 @@ import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxU;
 
-import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -45,7 +44,6 @@ public class FlxTilemapBuffer
 	 */
 	public int columns;
 
-	protected SpriteCache _cache;
 	protected int _cacheId;
 
 	/**
