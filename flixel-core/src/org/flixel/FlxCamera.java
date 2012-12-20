@@ -247,8 +247,8 @@ public class FlxCamera extends FlxBasic
 		_flashOffsetX = _glCamera.position.x;
 		_flashOffsetY = _glCamera.position.y;
 		
-		_glCamera.position.x = -x + _flashOffsetX;
-		_glCamera.position.y = -y + _flashOffsetY;	
+		_glCamera.position.x = _flashOffsetX - (x / getZoom());
+		_glCamera.position.y = _flashOffsetY - (y / getZoom());	
 		
 		_fxFlashColor = 0;
 		_fxFlashDuration = 0.0f;
@@ -734,8 +734,8 @@ public class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0f;
 		_fxFadeAlpha = 0.0f;
 		_fxShakeDuration = 0;
-		_glCamera.position.x = -x + _flashOffsetX;
-		_glCamera.position.y = -y + _flashOffsetY;
+		_glCamera.position.x = _flashOffsetX - (x / getZoom());
+		_glCamera.position.y = _flashOffsetY - (y / getZoom());
 	}
 	
 	/**
@@ -992,8 +992,8 @@ public class FlxCamera extends FlxBasic
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
-			_glCamera.position.x = x + _flashOffsetX + _fxShakeOffset.x;
-			_glCamera.position.y = y + _flashOffsetY + _fxShakeOffset.y;
+			_glCamera.position.x = _flashOffsetX - (x / getZoom()) + _fxShakeOffset.x;
+			_glCamera.position.y = _flashOffsetY - (y / getZoom()) + _fxShakeOffset.y;
 		}
 	}	
 }
