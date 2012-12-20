@@ -11,6 +11,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -162,7 +163,11 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	/**
 	 * Temporary font to display the fps.
 	 */
-	private BitmapFont font;
+	private BitmapFont _font;
+	/**
+	 * Temporary camera to display the fps.
+	 */
+	private OrthographicCamera _fontCamera;
 	
 	/**
 	 * Represents the Flash stage.
@@ -183,11 +188,9 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
-	 * @param	StageSizeX		The width of your game in actual pixels. In AS3, this would be in the SWF meta tag.
-	 * @param	StageSizeY		The height of your game in actual pixels. In AS3, this would be in the SWF meta tag.
 	 * @param	ScaleMode		How to scale the stage to fit the display (default is stretch).
 	 */
-	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor, int StageSizeX, int StageSizeY, int ScaleMode)
+	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor, int ScaleMode)
 	{
 		//super high priority init stuff (focus, mouse, etc)
 		_lostFocus = false;
@@ -196,15 +199,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom, ScaleMode);
 		FlxG.setFramerate(GameFramerate);
 		FlxG.setFlashFramerate(FlashFramerate);
-		
-		// if no stage size has been specified, set it to the game size
-		if (StageSizeX == 0 && StageSizeY == 0)
-		{
-			StageSizeX = (int) (GameSizeX * Zoom);
-			StageSizeY = (int) (GameSizeY * Zoom);
-		}
 			
-		stage = new Stage(StageSizeX, StageSizeY);
+		stage = new Stage((int)(GameSizeX * Zoom), (int)(GameSizeY * Zoom));
 		
 		_accumulator = (int) _step;
 		_total = 0;
@@ -240,28 +236,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
-	 * @param	StageSizeX		The width of your game in actual pixels. In AS3, this would be in the SWF meta tag.
-	 * @param	StageSizeY		The height of your game in actual pixels. In AS3, this would be in the SWF meta tag
-	 */
-	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor, int StageSizeX, int StageSizeY)
-	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, UseSystemCursor, StageSizeX, StageSizeY, FlxCamera.STRETCH);
-	}
-	
-	/**
-	 * Instantiate a new game object.
-	 * 
-	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
-	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
-	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
-	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
-	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
-	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
-	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false, 0, 0, FlxCamera.STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, UseSystemCursor, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -276,7 +254,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false, 0, 0, FlxCamera.STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -290,7 +268,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, 30, false, 0, 0, FlxCamera.STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, 30, false, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -303,7 +281,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, 30, 30, false, 0, 0, FlxCamera.STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, Zoom, 30, 30, false, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -315,7 +293,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState)
 	{
-		this(GameSizeX, GameSizeY, InitialState, 1, 30, 30, false, 0, 0, FlxCamera.STRETCH);
+		this(GameSizeX, GameSizeY, InitialState, 1, 30, 30, false, FlxCamera.STRETCH);
 	}
 	
 	/**
@@ -833,10 +811,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		//Draw fps display TODO: needs to be deleted some day.
 		if(FlxG.debug)
 		{	
+			FlxG.batch.setProjectionMatrix(_fontCamera.combined);
 			FlxG.batch.begin();
-			FlxG.batch.setProjectionMatrix(FlxG.camera._glCamera.combined);
 			FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), FlxG.width - 45, 0);
+			_font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), Gdx.graphics.getWidth() - 80, 0);
 			FlxG.batch.end();
 		}
 		if(_debuggerUp)
@@ -865,6 +843,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		}
 		else
 			FlxG._gl = Gdx.gl10;
+		
 		// Common OpenGL
 		if(!Gdx.graphics.isGL20Available())
 			((GL10) FlxG._gl).glShadeModel(GL10.GL_FLAT);		
@@ -905,7 +884,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		
 		_created = true;
 		
-		font = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
+		_font = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
+		_font.setScale(2);
+		_fontCamera = new OrthographicCamera();
+		_fontCamera.setToOrtho(true);
 	}
 	
 	/**
@@ -1021,7 +1003,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	@Override
 	public void dispose()
 	{
-		font.dispose();
+		_font.dispose();
 		_state.destroy();
 		_mouseEvent = null;
 		FlxG.reset();

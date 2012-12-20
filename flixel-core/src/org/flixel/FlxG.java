@@ -1990,8 +1990,8 @@ public class FlxG
 			{
 				if(cam.active)
 					cam.update();
-				cam._glCamera.position.x = -cam.x + cam._flashOffsetX;
-				cam._glCamera.position.y = -cam.y + cam._flashOffsetY;
+				cam._glCamera.position.x = cam._flashOffsetX - (cam.x / cam.getZoom());
+				cam._glCamera.position.y = cam._flashOffsetY - (cam.y / cam.getZoom());
 			}
 		}
 	}
