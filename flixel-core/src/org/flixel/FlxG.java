@@ -223,6 +223,11 @@ public class FlxG
 	 */
 	static public Array<FlxCamera> cameras;
 	/**
+	 * Internal, keeps track of all the cameras that would have been added
+	 * to the stage in Flash.
+	 */
+	static Array<FlxCamera> _displayList;
+	/**
 	 * By default this just refers to the first entry in the cameras array
 	 * declared above, but you can do what you like with it.
 	 */
@@ -1312,6 +1317,7 @@ public class FlxG
 	 */
 	static public FlxCamera addCamera(FlxCamera NewCamera)
 	{			
+		FlxG._displayList.add(NewCamera);
 		FlxG.cameras.add(NewCamera);
 		return NewCamera;
 	}
@@ -1324,8 +1330,9 @@ public class FlxG
 	 */
 	static public void removeCamera(FlxCamera Camera, boolean Destroy)
 	{
-		if(!cameras.removeValue(Camera, true))
+		if(!FlxG._displayList.removeValue(Camera, true))
 			FlxG.log("Error removing camera, not part of game.");
+		FlxG.cameras.removeValue(Camera, true);
 		if(Destroy)
 			Camera.destroy();
 	}
@@ -1354,9 +1361,8 @@ public class FlxG
 		while(i < l)
 		{
 			cam = FlxG.cameras.get(i++);
-			cam.destroy();
+			FlxG.removeCamera(cam, true);
 		}
-		FlxG.cameras.clear();
 		
 		if(NewCamera == null)
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
@@ -1869,6 +1875,7 @@ public class FlxG
 		FlxCamera.defaultZoom = Zoom;
 		FlxCamera.defaultScaleMode = ScaleMode;
 		FlxG.cameras = new Array<FlxCamera>();
+		FlxG._displayList = new Array<FlxCamera>();
 		FlxG.camera = null;
 		useBufferLocking = false;
 		

@@ -45,7 +45,10 @@ public class DebugPathDisplay extends FlxBasic
 	{		
 		FlxCamera camera = FlxG.getActiveCamera();
 		
-		if (cameras != null && !cameras.contains(camera, true))
+		if (cameras == null)
+			cameras = FlxG.cameras;
+		
+		if (!cameras.contains(camera, true))
 			return;
 		
 		if(FlxG.visualDebug && !ignoreDrawDebug)
