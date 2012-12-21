@@ -794,12 +794,12 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	private void draw()
 	{
 		long mark = System.currentTimeMillis();
-		
+
 		int i = 0;
-		int l = FlxG.cameras.size;
+		int l = FlxG._displayList.size;
 		while (i < l)
 		{
-			FlxG._activeCamera = FlxG.cameras.get(i++);
+			FlxG._activeCamera = FlxG._displayList.get(i++);
 			
 			FlxG.lockCameras();
 			_state.draw();
