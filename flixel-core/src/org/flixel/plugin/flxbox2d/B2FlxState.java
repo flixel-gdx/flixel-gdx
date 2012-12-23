@@ -54,6 +54,8 @@ public class B2FlxState extends FlxState
 			B2FlxB.safelyDeactivateBodies();
 		if(B2FlxB.scheduledForRemoval.size > 0)
 			B2FlxB.safelyRemoveBodies();
+		if(B2FlxB.scheduledForMove.size > 0)
+			B2FlxB.safelyMoveBodies();
 		super.update();
 	}
 	

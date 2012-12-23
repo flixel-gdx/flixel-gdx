@@ -24,17 +24,21 @@ public class B2FlxB
 	 */
 	public static World world;
 	/**
-	 * A list for shapes that didn't got killed due the world got locked.
+	 * A list for shapes and joints that didn't get killed due the world got locked.
 	 */
 	public static Array<FlxBasic> scheduledForRemoval;
 	/**
-	 * A list for shapes that didn't got inactive due the world got locked.
+	 * A list for shapes that didn't get inactive due the world got locked.
 	 */
-	public static Array<FlxBasic> scheduledForInActive;
+	public static Array<B2FlxShape> scheduledForInActive;
 	/**
-	 * A list for shapes that didn't got active due the world got locked.
+	 * A list for shapes that didn't get active due the world got locked.
 	 */
-	public static Array<FlxBasic> scheduledForActive;
+	public static Array<B2FlxShape> scheduledForActive;
+	/**
+	 * A list for shapes that didn't get moved due the world got locked.
+	 */
+	public static Array<B2FlxShape> scheduledForMove;
 	/**
 	 * Vertices for polygon rendering.
 	 */
@@ -47,8 +51,9 @@ public class B2FlxB
 	public static void init()
 	{
 		scheduledForRemoval = new Array<FlxBasic>();
-		scheduledForInActive = new Array<FlxBasic>();
-		scheduledForActive = new Array<FlxBasic>();
+		scheduledForInActive = new Array<B2FlxShape>();
+		scheduledForActive = new Array<B2FlxShape>();
+		scheduledForMove = new Array<B2FlxShape>();
 		
 		if(vertices == null)
 		{
@@ -67,6 +72,12 @@ public class B2FlxB
 		vertices = null;
 		scheduledForRemoval.clear();
 		scheduledForRemoval = null;
+		scheduledForActive.clear();
+		scheduledForActive = null;
+		scheduledForInActive.clear();
+		scheduledForInActive = null;
+		scheduledForMove.clear();
+		scheduledForMove = null;
 	}
 
 	/**
@@ -116,7 +127,7 @@ public class B2FlxB
 		scheduledForRemoval.clear();
 	}
 	
-	public static void addInActive(FlxBasic value)
+	public static void addInActive(B2FlxShape value)
 	{
 		int length = scheduledForInActive.size;
 		for(int i = 0; i < length; i++)
@@ -132,12 +143,12 @@ public class B2FlxB
 		int length = scheduledForInActive.size;
 		for(int i = 0; i < length; i++)
 		{
-			((B2FlxShape)scheduledForInActive.get(i)).setActive(false);
+			scheduledForInActive.get(i).setActive(false);
 		}
 		scheduledForInActive.clear();
 	}
 
-	public static void addActive(FlxBasic value)
+	public static void addActive(B2FlxShape value)
 	{
 		int length = scheduledForActive.size;
 		for(int i = 0; i < length; i++)
@@ -153,8 +164,29 @@ public class B2FlxB
 		int length = scheduledForActive.size;
 		for(int i = 0; i < length; i++)
 		{
-			((B2FlxShape)scheduledForActive.get(i)).setActive(true);
+			scheduledForActive.get(i).setActive(true);
 		}
 		scheduledForActive.clear();
+	}
+	
+	public static void addMove(B2FlxShape value)
+	{
+		int length = scheduledForMove.size;
+		for(int i = 0; i < length; i++)
+		{
+			if(scheduledForMove.get(i) == value)
+				return;
+		}
+		scheduledForMove.add(value);
+	}
+	
+	static void safelyMoveBodies()
+	{
+		int length = scheduledForMove.size;
+		for(int i = 0; i < length; i++)
+		{
+			scheduledForMove.get(i).body.setTransform(scheduledForMove.get(i).position, scheduledForMove.get(i).angle);
+		}
+		scheduledForMove.clear();
 	}
 }

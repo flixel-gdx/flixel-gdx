@@ -872,11 +872,15 @@ public class FlxSprite extends FlxObject
 	 * 
 	 * @param	AnimName	The string name of the animation you want to play.
 	 * @param	Force		Whether to force the animation to restart.
+	 * @param	StartFrame	Which frame of the animation to start from if possible.
 	 */
-	public void play(String AnimName, boolean Force)
+	public void play(String AnimName, boolean Force, int StartFrame)
 	{
 		if(!Force && (_curAnim != null) && (AnimName.equals(_curAnim.name)) && (_curAnim.looped || !finished)) return;
-		_curFrame = 0;
+		if(StartFrame <= _animations.size)
+			_curFrame = StartFrame;
+		else
+			_curFrame = 0;
 		_curIndex = 0;
 		_frameTimer = 0;
 		int i = 0;
@@ -904,10 +908,22 @@ public class FlxSprite extends FlxObject
 	 * If you call an animation that is already playing it will be ignored.
 	 * 
 	 * @param	AnimName	The string name of the animation you want to play.
+	 * @param	Force		Whether to force the animation to restart.
+	 */
+	public void play(String AnimName, boolean Force)
+	{
+		play(AnimName, Force, 0);
+	}
+	
+	/**
+	 * Plays an existing animation (e.g. "run").
+	 * If you call an animation that is already playing it will be ignored.
+	 * 
+	 * @param	AnimName	The string name of the animation you want to play.
 	 */
 	public void play(String AnimName)
 	{
-		play(AnimName, false);
+		play(AnimName, false, 0);
 	}
 	
 	/**
