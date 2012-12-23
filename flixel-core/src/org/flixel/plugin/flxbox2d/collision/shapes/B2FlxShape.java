@@ -330,7 +330,11 @@ public abstract class B2FlxShape extends FlxSprite
 		framePixels.setRotation(angle);
 		body.setLinearVelocity(new Vector2(0,0));
 		body.setAngularVelocity(0);
-		body.setTransform(x/RATIO, y/RATIO, angle);
+		position.set(x / RATIO, y / RATIO);
+		if(B2FlxB.world.isLocked())
+			B2FlxB.addMove(this);
+		else	
+			body.setTransform(position, angle);
 		exists = alive = true;
 		userData.put("exists", exists);
 	}
