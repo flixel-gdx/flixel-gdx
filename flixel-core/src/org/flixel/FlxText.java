@@ -33,7 +33,7 @@ public class FlxText extends FlxSprite
 	/**
 	 * Internal reference to the text to be drawn.
 	 */
-	protected String _text;
+	protected CharSequence _text;
 	/**
 	 * Internal helper for rotation.
 	 */
@@ -209,17 +209,18 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * The text being displayed.
+	 * The text being displayed.<br>
+	 * Becare it's consuming memory.
 	 */
 	public String getText()
 	{
-		return _text;
+		return _text.toString();
 	}
 
 	/**
 	 * @private
 	 */
-	public void setText(String Text)
+	public void setText(CharSequence Text)
 	{		
 		_text = Text;
 		calcFrame();
