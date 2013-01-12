@@ -577,7 +577,7 @@ public class FlxGroup extends FlxBasic
 		int i = 0;
 		while(i < length)
 		{
-			basic = members.get(i);
+			basic = members.get(i++);
 			if((basic != null) && basic.exists && basic.alive)
 				return basic;
 		}
