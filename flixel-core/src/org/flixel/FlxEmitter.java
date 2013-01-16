@@ -80,7 +80,7 @@ public class FlxEmitter extends FlxGroup
 	 * Set your own particle class type here.
 	 * Default is <code>FlxParticle</code>.
 	 */
-	public Class<FlxParticle> particleClass;
+	public Class<? extends FlxParticle> particleClass;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
@@ -446,6 +446,11 @@ public class FlxEmitter extends FlxGroup
 		particle.drag.x = particleDrag.x;
 		particle.drag.y = particleDrag.y;
 		particle.onEmit();
+	}
+
+	public void setParticleClass(Class <?extends FlxParticle> particleClass) 
+	{
+		this.particleClass = particleClass;
 	}
 	
 	/**
