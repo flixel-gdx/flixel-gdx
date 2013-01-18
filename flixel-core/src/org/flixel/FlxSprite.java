@@ -538,17 +538,6 @@ public class FlxSprite extends FlxObject
 	@Override
 	public void draw()
 	{
-		FlxCamera camera = FlxG._activeCamera;
-		
-		if (cameras == null)
-			cameras = FlxG.cameras;
-		
-		if (!cameras.contains(camera, true))
-			return;
-		
-		if (!onScreen(camera))
-			return;
-		
 		if(_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -565,6 +554,16 @@ public class FlxSprite extends FlxObject
 			_newTextureData = null;
 		}
 		
+		FlxCamera camera = FlxG._activeCamera;
+		
+		if (cameras == null)
+			cameras = FlxG.cameras;
+		
+		if (!cameras.contains(camera, true))
+			return;
+		
+		if (!onScreen(camera))
+			return;
 		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
 		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
