@@ -323,8 +323,13 @@ public abstract class B2FlxShape extends FlxSprite
 	{
 		if(body == null)
 		{
+			if(B2FlxB.world.isLocked())
+			{
+				B2FlxB.addSafelyRevive(this);
+				return;
+			}			
 			createShape();
-			create();			
+			create();
 		}
 		angle = 0;
 		framePixels.setRotation(angle);
