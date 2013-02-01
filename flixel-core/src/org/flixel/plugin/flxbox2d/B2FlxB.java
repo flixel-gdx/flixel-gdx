@@ -28,6 +28,10 @@ public class B2FlxB
 	 */
 	public static Array<FlxBasic> scheduledForRemoval;
 	/**
+	 * A list of shapes and joints that didn't get revived due the world got locked.
+	 */
+	public static Array<FlxBasic> scheduledForRevival;
+	/**
 	 * A list for shapes that didn't get inactive due the world got locked.
 	 */
 	public static Array<B2FlxShape> scheduledForInActive;
@@ -51,6 +55,7 @@ public class B2FlxB
 	public static void init()
 	{
 		scheduledForRemoval = new Array<FlxBasic>();
+		scheduledForRevival = new Array<FlxBasic>();
 		scheduledForInActive = new Array<B2FlxShape>();
 		scheduledForActive = new Array<B2FlxShape>();
 		scheduledForMove = new Array<B2FlxShape>();
@@ -102,6 +107,10 @@ public class B2FlxB
 		return getGroundBody(new Vector2());
 	}
 	
+	/**
+	 * Shapes or joints that didn't got removed will be scheduled.
+	 * @param value		The shape or joint that needs to be removed.
+	 */
 	public static void addSafelyRemove(FlxBasic value)
 	{
 		int length = scheduledForRemoval.size;
@@ -114,7 +123,7 @@ public class B2FlxB
 	}
 
 	/**
-	 * Internal: Safely remove bodies which couldn't deleted by calling kill().
+	 * Internal: Safely remove bodies which couldn't be deleted by calling kill().
 	 * This will be called after World::step().
 	 */
 	static void safelyRemoveBodies()
@@ -127,6 +136,39 @@ public class B2FlxB
 		scheduledForRemoval.clear();
 	}
 	
+	/**
+	 * Shapes or joints that didn't got revived will be scheduled.
+	 * @param value		The shape or joint that needs to be revived.
+	 */
+	public static void addSafelyRevive(FlxBasic value)
+	{
+		int length = scheduledForRevival.size;
+		for(int i = 0; i < length; i++)
+		{
+			if(scheduledForRevival.get(i) == value)
+				return;
+		}
+		scheduledForRevival.add(value);
+	}
+
+	/**
+	 * Internal: Safely revive bodies which couldn't be revived by calling revive().
+	 * This will be called after World::step().
+	 */
+	static void safelyReviveBodies()
+	{
+		int length = scheduledForRevival.size;
+		for(int i = 0; i < length; i++)
+		{
+			scheduledForRevival.get(i).revive();
+		}
+		scheduledForRevival.clear();
+	}
+	
+	/**
+	 * Shapes that didn't got deactivated will be scheduled.
+	 * @param value		The shape that needs to be deactivated.
+	 */
 	public static void addInActive(B2FlxShape value)
 	{
 		int length = scheduledForInActive.size;
@@ -138,6 +180,10 @@ public class B2FlxB
 		scheduledForInActive.add(value);
 	}
 	
+	/**
+	 * Internal: Safely deactivate bodies which couldn't be deactivated by calling setActive(false).
+	 * This will be called after World::step().
+	 */
 	static void safelyDeactivateBodies()
 	{
 		int length = scheduledForInActive.size;
@@ -148,6 +194,10 @@ public class B2FlxB
 		scheduledForInActive.clear();
 	}
 
+	/**
+	 * Shapes that didn't got activated will be scheduled.
+	 * @param value		The shape that needs to be activated.
+	 */
 	public static void addActive(B2FlxShape value)
 	{
 		int length = scheduledForActive.size;
@@ -159,6 +209,10 @@ public class B2FlxB
 		scheduledForActive.add(value);
 	}
 
+	/**
+	 * Internal: Safely activate bodies which couldn't be activated by calling setActive(true).
+	 * This will be called after World::step().
+	 */
 	static void safelyActivateBodies()
 	{
 		int length = scheduledForActive.size;
@@ -169,6 +223,10 @@ public class B2FlxB
 		scheduledForActive.clear();
 	}
 	
+	/**
+	 * Shapes that didn't got moved will be scheduled.
+	 * @param value		The shape that needs to be moved.
+	 */
 	public static void addMove(B2FlxShape value)
 	{
 		int length = scheduledForMove.size;
@@ -180,6 +238,10 @@ public class B2FlxB
 		scheduledForMove.add(value);
 	}
 	
+	/**
+	 * Internal: Safely move bodies which couldn't be moved during the revive().
+	 * This will be called after World::step().
+	 */
 	static void safelyMoveBodies()
 	{
 		int length = scheduledForMove.size;

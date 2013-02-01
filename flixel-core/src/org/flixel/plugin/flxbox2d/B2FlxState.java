@@ -15,13 +15,21 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class B2FlxState extends FlxState
 {	
-	// The world where the object lives.
+	/**
+	 * The world where the object lives.
+	 */
 	public World world;
-	// Velocity iterations for the velocity constraint solver.
+	/**
+	 * Velocity iterations for the velocity constraint solver.
+	 */
 	protected int velocityIterations = 10; 
-	// Position iterations for the position constraint solver. 
+	/**
+	 * Position iterations for the position constraint solver. 
+	 */
 	protected int Iterations = 10;
-	
+	/**
+	 * Handle the collision.
+	 */
 	protected B2FlxContactListener contactListener;
 	
 	
@@ -54,6 +62,8 @@ public class B2FlxState extends FlxState
 			B2FlxB.safelyDeactivateBodies();
 		if(B2FlxB.scheduledForRemoval.size > 0)
 			B2FlxB.safelyRemoveBodies();
+		if(B2FlxB.scheduledForRevival.size > 0)
+			B2FlxB.safelyReviveBodies();
 		if(B2FlxB.scheduledForMove.size > 0)
 			B2FlxB.safelyMoveBodies();
 		super.update();
