@@ -1011,6 +1011,12 @@ public abstract class B2FlxShape extends FlxSprite
 		return this;
 	}
 	
+	public B2FlxShape setPosition(Vector2 position)
+	{
+		bodyDef.position.set(position);
+		return this;
+	}
+	
 	public B2FlxShape setAngle(float angle)
 	{
 		bodyDef.angle = angle * B2FlxMath.DEGRAD;

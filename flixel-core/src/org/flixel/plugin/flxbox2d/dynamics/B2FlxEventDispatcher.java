@@ -15,6 +15,9 @@ public class B2FlxEventDispatcher
 	 */
 	protected Array<B2FlxListener> _listeners;
 	
+	/**
+	 * Constructor
+	 */
 	public B2FlxEventDispatcher()
 	{
 		_listeners = new Array<B2FlxListener>();
@@ -26,15 +29,18 @@ public class B2FlxEventDispatcher
 		_listeners.add(listener);
 	}
 
-
 	public boolean dispatchEvent(B2FlxContactEvent event)
 	{
 		for(B2FlxListener listener : _listeners)
-		{
-			if(event.type.equals(listener.type))
-			{
-				listener.onContact(event.sprite1, event.sprite2, event.contact);
-			}
+		{			
+			if(event.type.equals(B2FlxContactEvent.BEGIN))
+				listener.beginContact(event.sprite1, event.sprite2, event.contact);
+			else if(event.type.equals(B2FlxContactEvent.END))
+				listener.endContact(event.sprite1, event.sprite2, event.contact);
+			else if(event.type.equals(B2FlxContactEvent.PRESOLVE))
+				listener.preSolve(event.sprite1, event.sprite2, event.contact, event.oldManifold);
+			else if(event.type.equals(B2FlxContactEvent.POSTSOLVE))
+				listener.postSolve(event.sprite1, event.sprite2, event.contact, event.impulse);
 		}
 		return true;
 	}
