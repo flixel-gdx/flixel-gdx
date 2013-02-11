@@ -53,7 +53,7 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold)
 	{
-		dispatch(contact, B2FlxContactEvent.PRESOLVE);
+		dispatch(contact, oldManifold, B2FlxContactEvent.PRESOLVE);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
-		dispatch(contact, B2FlxContactEvent.POSTSOLVE);
+		dispatch(contact, impulse, B2FlxContactEvent.POSTSOLVE);
 	}
 	
 	/**
@@ -81,6 +81,30 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 		_event.sprite1 = (B2FlxShape) ((ObjectMap<String, Object>) contact.getFixtureA().getBody().getUserData()).get("shape");
 		_event.sprite2 = (B2FlxShape) ((ObjectMap<String, Object>) contact.getFixtureB().getBody().getUserData()).get("shape");
 		dispatchEvent(_event);
+	}
+	
+	/**
+	 * Dispatch the event.
+	 * @param contact		The current contact between two shapes.
+	 * @param oldManifold	The old manifold.
+	 * @param type			The type of event that needs to be dispatched.
+	 */
+	public void dispatch(Contact contact, Manifold oldManifold, String type)
+	{
+		_event.oldManifold = oldManifold;
+		dispatch(contact, type);
+	}
+	
+	/**
+	 * Dispatch the event.
+	 * @param contact	The current contact between two shapes.
+	 * @param impulse	The contact impulse.
+	 * @param type		The type of event that needs to be dispatched.
+	 */
+	public void dispatch(Contact contact, ContactImpulse impulse, String type)
+	{
+		_event.impulse = impulse;
+		dispatch(contact, type);
 	}
 
 	/**

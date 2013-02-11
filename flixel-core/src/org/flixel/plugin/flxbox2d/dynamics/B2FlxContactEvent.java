@@ -3,6 +3,8 @@ package org.flixel.plugin.flxbox2d.dynamics;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Manifold;
 
 import flash.events.Event;
 
@@ -27,9 +29,17 @@ public class B2FlxContactEvent extends Event
 	 */
 	public B2FlxShape sprite2;
 	/**
-	 * Contact data.
+	 * The contact data.
 	 */
 	public Contact contact;
+	/**
+	 * The old manifold to detect changes.
+	 */
+	public Manifold oldManifold;
+	/**
+	 * The contact impulse.
+	 */
+	public ContactImpulse impulse;
 
 	/**
 	 * Constructor
@@ -48,6 +58,8 @@ public class B2FlxContactEvent extends Event
 		sprite1 = null;
 		sprite2 = null;
 		contact = null;
+		oldManifold = null;
+		impulse = null;
 	}
 }
 

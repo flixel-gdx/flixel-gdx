@@ -2,6 +2,8 @@ package org.flixel.plugin.flxbox2d.common.math;
 
 import org.flixel.FlxG;
 
+import com.badlogic.gdx.math.Vector2;
+
 /**
  * Some bunch of Math stuff. Used for FlxBox2D.
  * 
@@ -29,15 +31,34 @@ public class B2FlxMath
 	 * Radians to degrees, but shorter variable name.
 	 */
 	public static final float RADDEG = RADIANSTODEGREES;
-	
+
 	/**
-	 * Generates a random number between the lower and higher number. 
-	 * @param lower		The lower number.
-	 * @param higher	The higher number.
-	 * @return	A random number that got generated.
+	 * Generates a random number between the lower and higher number.
+	 * 
+	 * @param lower
+	 *            The lower number.
+	 * @param higher
+	 *            The higher number.
+	 * @return A random number that got generated.
 	 */
 	public static float randomRange(float lower, float higher)
 	{
 		return (higher - lower) * FlxG.random() + lower;
 	}
+
+	public static Vector2 SubtractVV(Vector2 a, Vector2 b)
+	{
+		return new Vector2(a.x - b.x, a.y - b.y);
+	}
+
+	public final static float max(final float a, final float b)
+	{
+		return a > b ? a : b;
+	}
+
+	public final static int max(final int a, final int b)
+	{
+		return a > b ? a : b;
+	}
+
 }
