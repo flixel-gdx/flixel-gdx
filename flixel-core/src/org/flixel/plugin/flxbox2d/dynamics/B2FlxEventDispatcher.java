@@ -32,15 +32,18 @@ public class B2FlxEventDispatcher
 	public boolean dispatchEvent(B2FlxContactEvent event)
 	{
 		for(B2FlxListener listener : _listeners)
-		{			
-			if(event.type.equals(B2FlxContactEvent.BEGIN))
-				listener.beginContact(event.sprite1, event.sprite2, event.contact);
-			else if(event.type.equals(B2FlxContactEvent.END))
-				listener.endContact(event.sprite1, event.sprite2, event.contact);
-			else if(event.type.equals(B2FlxContactEvent.PRESOLVE))
-				listener.preSolve(event.sprite1, event.sprite2, event.contact, event.oldManifold);
-			else if(event.type.equals(B2FlxContactEvent.POSTSOLVE))
-				listener.postSolve(event.sprite1, event.sprite2, event.contact, event.impulse);
+		{
+			if(event.type.equals(listener.type))
+			{
+				if(listener.type.equals(B2FlxContactEvent.BEGIN))
+					listener.beginContact(event.sprite1, event.sprite2, event.contact);
+				else if(event.type.equals(B2FlxContactEvent.END))
+					listener.endContact(event.sprite1, event.sprite2, event.contact);
+				else if(event.type.equals(B2FlxContactEvent.PRESOLVE))
+					listener.preSolve(event.sprite1, event.sprite2, event.contact, event.oldManifold);
+				else if(event.type.equals(B2FlxContactEvent.POSTSOLVE))
+					listener.postSolve(event.sprite1, event.sprite2, event.contact, event.impulse);
+			}			
 		}
 		return true;
 	}
