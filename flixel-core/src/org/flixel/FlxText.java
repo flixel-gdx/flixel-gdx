@@ -209,8 +209,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * The text being displayed.<br>
-	 * Becare it's consuming memory.
+	 * The text being displayed.
 	 */
 	public String getText()
 	{
