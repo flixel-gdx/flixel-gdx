@@ -447,11 +447,6 @@ public class FlxEmitter extends FlxGroup
 		particle.drag.y = particleDrag.y;
 		particle.onEmit();
 	}
-
-	public void setParticleClass(Class <?extends FlxParticle> particleClass) 
-	{
-		this.particleClass = particleClass;
-	}
 	
 	/**
 	 * A more compact way of setting the width and height of the emitter.

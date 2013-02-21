@@ -769,7 +769,7 @@ public class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Checks to see if some <code>FlxObject</code> overlaps this <code>FlxObject</code> or <code>FlxGroup</code>.
+	 * Checks to see if some <code>FlxObject</code> or <code>FlxGroup</code> overlaps this <code>FlxObject</code>.
 	 * If the group has a LOT of things in it, it might be faster to use <code>FlxG.overlaps()</code>.
 	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
 	 * 

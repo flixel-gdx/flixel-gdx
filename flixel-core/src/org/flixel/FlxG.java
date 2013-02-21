@@ -1354,11 +1354,17 @@ public class FlxG
 	 * @param	NewCamera	Optional; specify a specific camera object to be the new main camera.
 	 */
 	static public void resetCameras(FlxCamera NewCamera)
-	{
-		for(int i = cameras.size - 1; i >= 0; i--)
+	{		
+		FlxCamera cam;
+		int i = 0;
+		int l = cameras.size;
+		while(i < l)
 		{
-			FlxG.removeCamera(cameras.get(i), true);
+			cam = FlxG.cameras.get(i++);
+			FlxG._displayList.removeValue(cam, true);
+			cam.destroy();
 		}
+		FlxG.cameras.clear();
 		
 		if(NewCamera == null)
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
