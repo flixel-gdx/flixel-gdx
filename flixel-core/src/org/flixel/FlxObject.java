@@ -387,6 +387,7 @@ public class FlxObject extends FlxBasic
 		
 		if(_flickerTimer != 0)
 		{
+			_flicker = !_flicker;
 			if(_flickerTimer > 0)
 			{
 				_flickerTimer = _flickerTimer - FlxG.elapsed;
