@@ -133,12 +133,7 @@ public class FlxSprite extends FlxObject
 	/**
 	 * Internal tracker for reloading the texture if its pixmap has been modified.
 	 */
-	protected ManagedTextureData _newTextureData;
-	/**
-	 * Internal tracker for counting cameras.
-	 */
-	protected int _cameraCounter;
-	
+	protected ManagedTextureData _newTextureData;	
 	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
@@ -543,19 +538,8 @@ public class FlxSprite extends FlxObject
 	@Override
 	public void draw()
 	{
-		if(_flickerTimer != 0)
-		{
-			_cameraCounter++;
-			if (cameras == null)
-				cameras = FlxG.cameras;
-			if(_cameraCounter == cameras.size)
-			{
-				_cameraCounter = 0;
-				_flicker = !_flicker;
-			}
-			if(_flicker)
-				return;
-		}
+		if(_flicker)
+			return;
 				
 		if(dirty)	//rarely 
 			calcFrame();
