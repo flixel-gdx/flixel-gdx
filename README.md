@@ -7,7 +7,7 @@ flixel-android is a port of the AS3 game framework [flixel](http://flixel.org) t
 Get Started
 -----------
 
-http://code.google.com/p/flixel-android/wiki/ProjectSetup
+https://github.com/flixel-gdx/flixel-gdx/wiki/Project-Setup
 
 
 Forums
