@@ -45,7 +45,7 @@ public class FlxG
 	 * If you build and maintain your own version of flixel,
 	 * you can give it your own name here.
 	 */
-	static public String LIBRARY_NAME = "flixel-android";
+	static public String LIBRARY_NAME = "flixel-gdx";
 	/**
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
