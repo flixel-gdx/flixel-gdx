@@ -78,7 +78,7 @@ public class B2FlxPulleyJoint extends B2FlxJoint
 	 * @return	This joint. Handy for chaining stuff together.
 	 */
 	@Override
-	public B2FlxJoint create()
+	public B2FlxPulleyJoint create()
 	{
 		((PulleyJointDef) jointDef).initialize(bodyA, bodyB, _groundAnchorA, _groundAnchorB, anchorA, anchorB, _ratio);
 		joint = B2FlxB.world.createJoint(jointDef);

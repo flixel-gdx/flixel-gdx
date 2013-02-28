@@ -80,7 +80,7 @@ public class B2FlxPrismaticJoint extends B2FlxJoint
 	 * Creates the joint.
 	 */
 	@Override
-	public B2FlxJoint create()
+	public B2FlxPrismaticJoint create()
 	{
 		((PrismaticJointDef) jointDef).initialize(bodyA, bodyB, anchorA, _axis);
 		joint = B2FlxB.world.createJoint(jointDef);

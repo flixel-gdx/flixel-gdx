@@ -76,7 +76,7 @@ public class B2FlxWheelJoint extends B2FlxJoint
 	 * @return	This joint. Handy for chaining stuff together.
 	 */
 	@Override
-	public B2FlxJoint create()
+	public B2FlxWheelJoint create()
 	{
 		((WheelJointDef) jointDef).initialize(bodyA, bodyB, anchorA, _axis);
 		joint = B2FlxB.world.createJoint(jointDef);
