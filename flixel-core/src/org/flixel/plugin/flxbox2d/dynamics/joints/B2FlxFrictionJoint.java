@@ -72,7 +72,7 @@ public class B2FlxFrictionJoint extends B2FlxJoint
 	 * @return This joint. Handy for chaining stuff together.
 	 */
 	@Override
-	public B2FlxJoint create()
+	public B2FlxFrictionJoint create()
 	{
 		((FrictionJointDef)jointDef).initialize(bodyA, bodyB, anchorA);
 		joint = B2FlxB.world.createJoint(jointDef);

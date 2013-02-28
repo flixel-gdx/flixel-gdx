@@ -109,7 +109,7 @@ public abstract class B2FlxShape extends FlxSprite
 	/**
 	 * Holds the user data.
 	 */
-	public ObjectMap<String, Object>userData;
+	public ObjectMap<String, Object> userData;
 	/**
 	 * Holds all joints that are attached to this body.
 	 */
@@ -422,7 +422,7 @@ public abstract class B2FlxShape extends FlxSprite
 				}
 				else
 					return false;
-				
+								
 				lower.mul(RATIO);
 				upper.mul(RATIO);
 				
@@ -431,9 +431,11 @@ public abstract class B2FlxShape extends FlxSprite
 				p2.x = upper.x - camera.scroll.x * scrollFactor.x;
 				p2.y = upper.y - camera.scroll.y * scrollFactor.y;
 				
-				// Check whether the bounding box are within the camera.
-				if( ((p1.x >= 0 && p1.x <= camera.width) || (p2.x >= 0 && p2.x <= camera.width)) &&
-					((p1.y >= 0 && p1.y <= camera.height) ||(p2.y >= 0 && p2.y <= camera.height)))
+				// Check whether the bounding box are within the camera 
+				// or if the bounding box is large than the camera itself.
+				if( ((p1.x >= 0) && (p1.x <= camera.width) || (p2.x >= 0) && (p2.x <= camera.width)) &&
+					((p1.y >= 0) && (p1.y <= camera.height) ||(p2.y >= 0) && (p2.y <= camera.height)) ||
+					(p1.x < 0) && (p2.x > camera.width) || (p1.y < 0) && (p2.y > camera.height))
 				{
 					onScreen = true;
 				}
@@ -464,13 +466,9 @@ public abstract class B2FlxShape extends FlxSprite
 	 */
 	@Override
 	public void draw()
-	{
-		if(_flickerTimer != 0)
-		{
-			_flicker = !_flicker;
-			if(_flicker)
-				return;
-		}
+	{		
+		if(_flicker)
+			return;
 		
 		if(dirty)	//rarely 
 			calcFrame();

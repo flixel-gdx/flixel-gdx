@@ -46,12 +46,19 @@ public class B2FlxWeldJoint extends B2FlxJoint
 			jointDef = new WeldJointDef();
 	}
 	
+	@Override
+	protected void setDefaults()
+	{
+		anchorA = bodyA.getWorldCenter();
+		super.setDefaults();
+	}
+	
 	/**
 	 * Creates the joint.
 	 * @return	This joint. Handy for chaining stuff together.
 	 */
 	@Override
-	public B2FlxJoint create()
+	public B2FlxWeldJoint create()
 	{
 		((WeldJointDef)jointDef).initialize(bodyA, bodyB, anchorA);
 		joint = B2FlxB.world.createJoint(jointDef);

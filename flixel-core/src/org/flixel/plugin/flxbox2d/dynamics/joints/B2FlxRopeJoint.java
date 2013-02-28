@@ -70,7 +70,7 @@ public class B2FlxRopeJoint extends B2FlxJoint
 	 * @return	This joint. Handy for chaining stuff together.
 	 */
 	@Override
-	public B2FlxJoint create()
+	public B2FlxRopeJoint create()
 	{
 		joint = B2FlxB.world.createJoint(jointDef);
 		return this;
