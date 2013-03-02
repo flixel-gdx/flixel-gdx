@@ -4,6 +4,9 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 import org.flixel.plugin.flxbox2d.common.math.B2FlxMath;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
@@ -121,12 +124,26 @@ public class B2FlxRevoluteJoint extends B2FlxJoint
 		return this;
 	}
 	
-	/**
-	 * Get the revolute joint.
-	 * @return
-	 */
-	public RevoluteJoint getJoint()
-	{
-		return (RevoluteJoint)joint;
-	}
+	@Override
+	public RevoluteJoint getJoint(){return (RevoluteJoint)joint;}	
+	@Override
+	public B2FlxRevoluteJoint setJointDef(JointDef jointDef){super.setJointDef(jointDef);return this;}	
+	@Override
+	public B2FlxRevoluteJoint setBodyA(Body bodyA){super.setBodyA(bodyA);return this;}	
+	@Override
+	public B2FlxRevoluteJoint setBodyB(Body bodyB){super.setBodyB(bodyB);return this;}	
+	@Override
+	public B2FlxRevoluteJoint setAnchorA(Vector2 anchorA){super.setAnchorA(anchorA);return this;}	
+	@Override
+	public B2FlxRevoluteJoint setAnchorB(Vector2 anchorB){super.setAnchorB(anchorB);return this;}	
+	@Override
+	public B2FlxRevoluteJoint setCollideConnected(boolean collideConnected){super.setCollideConnected(collideConnected);return this;}
+	@Override
+	public B2FlxRevoluteJoint setShowLine(boolean showLine){super.setShowLine(showLine);return this;}	
+	@Override
+	public B2FlxRevoluteJoint setLineThickness(float lineThickness){super.setLineThickness(lineThickness);return this;}	
+	@Override
+	public B2FlxRevoluteJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
+	@Override
+	public B2FlxRevoluteJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
 }

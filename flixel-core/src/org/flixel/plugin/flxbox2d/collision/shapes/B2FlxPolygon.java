@@ -4,7 +4,9 @@ import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 /**
  * A polygon shape which can be a convex or concave. The vertices
@@ -132,10 +134,66 @@ public class B2FlxPolygon extends B2FlxShape
 	}
 	
 	@Override
+	public B2FlxPolygon create()
+	{
+		super.create();
+		return this;
+	}
+	
+	@Override
 	public void destroy()
 	{
 		super.destroy();
 		_vertices = null;
 		shapes = null;
 	}
+	
+	@Override
+	public B2FlxPolygon setType(BodyType type){super.setType(type);return this;}	
+	@Override
+	public B2FlxPolygon setFixtureDef(FixtureDef fixtureDef){super.setFixtureDef(fixtureDef);return this;}	
+	@Override
+	public B2FlxPolygon setLinearDamping(float linearDamping){super.setLinearDamping(linearDamping);return this;}
+	@Override
+	public B2FlxPolygon setLinearVelocity(Vector2 linearVelocity){super.setLinearVelocity(linearVelocity);return this;}	
+	@Override
+	public B2FlxPolygon setLinearVelocity(float x, float y){super.setLinearVelocity(x, y);return this;}	
+	@Override
+	public B2FlxPolygon setAngularDamping(float angularDamping){super.setAngularDamping(angularDamping);return this;}	
+	@Override
+	public B2FlxPolygon setAngularVelocity(float angularVelocity){super.setAngularVelocity(angularVelocity);return this;}	
+	@Override
+	public B2FlxPolygon setBullet(boolean bullet){super.setBullet(bullet);return this;}	
+	@Override
+	public B2FlxPolygon setFixedRotation(boolean fixedRotation){super.setFixedRotation(fixedRotation);return this;}	
+	@Override
+	public B2FlxPolygon setAllowSleep(boolean allowSleep){super.setAllowSleep(allowSleep);return this;}	
+	@Override
+	public B2FlxPolygon setActive(boolean active){super.setActive(active);return this;}	
+	@Override
+	public B2FlxPolygon setAwake(boolean awake){super.setAwake(awake);return this;}	
+	@Override
+	public B2FlxPolygon setDensity(float density){super.setDensity(density);return this;}	
+	@Override
+	public B2FlxPolygon setFriction(float friction){super.setFriction(friction);return this;}	
+	@Override
+	public B2FlxPolygon setRestitution(float restitution){super.setRestitution(restitution);return this;}	
+	@Override
+	public B2FlxPolygon setPosition(Vector2 position){super.setPosition(position);return this;}	
+	@Override
+	public B2FlxPolygon setAngle(float angle){super.setAngle(angle);return this;}	
+	@Override
+	public B2FlxPolygon setGravityScale(float gravityScale){super.setGravityScale(gravityScale);return this;}	
+	@Override
+	public B2FlxPolygon setMaskBits(short maskBits){super.setMaskBits(maskBits);return this;}	
+	@Override
+	public B2FlxPolygon setCategoryBits(short categoryBits){super.setCategoryBits(categoryBits);return this;}	
+	@Override
+	public B2FlxPolygon setGroupIndex(short groupIndex){super.setGroupIndex(groupIndex);return this;}	
+	@Override
+	public B2FlxPolygon setSensor(boolean sensor){super.setSensor(sensor);return this;}	
+	@Override
+	public B2FlxPolygon setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
+	@Override
+	public B2FlxPolygon setDraggable(boolean draggable){super.setDraggable(draggable);return this;}
 }

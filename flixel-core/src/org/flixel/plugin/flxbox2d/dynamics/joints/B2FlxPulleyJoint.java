@@ -7,6 +7,8 @@ import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.PulleyJoint;
 import com.badlogic.gdx.physics.box2d.joints.PulleyJointDef;
 
@@ -163,14 +165,28 @@ public class B2FlxPulleyJoint extends B2FlxJoint
 		_ratio = ratio;
 		return this;
 	}
-
-	/**
-	 * Get the pulley joint.
-	 * @return
-	 */
-	public PulleyJoint getJoint()
-	{
-		return (PulleyJoint)joint;
-	}
+	
+	@Override
+	public PulleyJoint getJoint(){return (PulleyJoint)joint;}
+	@Override
+	public B2FlxPulleyJoint setJointDef(JointDef jointDef){super.setJointDef(jointDef);return this;}	
+	@Override
+	public B2FlxPulleyJoint setBodyA(Body bodyA){super.setBodyA(bodyA);return this;}	
+	@Override
+	public B2FlxPulleyJoint setBodyB(Body bodyB){super.setBodyB(bodyB);return this;}	
+	@Override
+	public B2FlxPulleyJoint setAnchorA(Vector2 anchorA){super.setAnchorA(anchorA);return this;}	
+	@Override
+	public B2FlxPulleyJoint setAnchorB(Vector2 anchorB){super.setAnchorB(anchorB);return this;}	
+	@Override
+	public B2FlxPulleyJoint setCollideConnected(boolean collideConnected){super.setCollideConnected(collideConnected);return this;}
+	@Override
+	public B2FlxPulleyJoint setShowLine(boolean showLine){super.setShowLine(showLine);return this;}	
+	@Override
+	public B2FlxPulleyJoint setLineThickness(float lineThickness){super.setLineThickness(lineThickness);return this;}	
+	@Override
+	public B2FlxPulleyJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
+	@Override
+	public B2FlxPulleyJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
 }
 

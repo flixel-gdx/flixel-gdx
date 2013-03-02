@@ -4,6 +4,8 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.PrismaticJoint;
 import com.badlogic.gdx.physics.box2d.joints.PrismaticJointDef;
 
@@ -141,13 +143,26 @@ public class B2FlxPrismaticJoint extends B2FlxJoint
 		return this;
 	}
 	
-	/**
-	 * Get the prismatic joint.
-	 * @return
-	 */
-	public PrismaticJoint getJoint()
-	{
-		return (PrismaticJoint)joint;
-	}
-
+	@Override
+	public PrismaticJoint getJoint(){return (PrismaticJoint)joint;}
+	@Override
+	public B2FlxPrismaticJoint setJointDef(JointDef jointDef){super.setJointDef(jointDef);return this;}	
+	@Override
+	public B2FlxPrismaticJoint setBodyA(Body bodyA){super.setBodyA(bodyA);return this;}	
+	@Override
+	public B2FlxPrismaticJoint setBodyB(Body bodyB){super.setBodyB(bodyB);return this;}	
+	@Override
+	public B2FlxPrismaticJoint setAnchorA(Vector2 anchorA){super.setAnchorA(anchorA);return this;}	
+	@Override
+	public B2FlxPrismaticJoint setAnchorB(Vector2 anchorB){super.setAnchorB(anchorB);return this;}	
+	@Override
+	public B2FlxPrismaticJoint setCollideConnected(boolean collideConnected){super.setCollideConnected(collideConnected);return this;}
+	@Override
+	public B2FlxPrismaticJoint setShowLine(boolean showLine){super.setShowLine(showLine);return this;}	
+	@Override
+	public B2FlxPrismaticJoint setLineThickness(float lineThickness){super.setLineThickness(lineThickness);return this;}	
+	@Override
+	public B2FlxPrismaticJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
+	@Override
+	public B2FlxPrismaticJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
 }
