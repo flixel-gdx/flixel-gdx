@@ -4,7 +4,10 @@ import org.flixel.FlxU;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.GearJoint;
 import com.badlogic.gdx.physics.box2d.joints.GearJointDef;
 
@@ -101,12 +104,26 @@ public class B2FlxGearJoint extends B2FlxJoint
 		return this;
 	}
 
-	/**
-	 * Get the gear joint.
-	 * @return
-	 */
-	public GearJoint getJoint()
-	{
-		return (GearJoint)joint;
-	}
+	@Override
+	public GearJoint getJoint(){return (GearJoint)joint;}
+	@Override
+	public B2FlxGearJoint setJointDef(JointDef jointDef){super.setJointDef(jointDef);return this;}	
+	@Override
+	public B2FlxGearJoint setBodyA(Body bodyA){super.setBodyA(bodyA);return this;}	
+	@Override
+	public B2FlxGearJoint setBodyB(Body bodyB){super.setBodyB(bodyB);return this;}	
+	@Override
+	public B2FlxGearJoint setAnchorA(Vector2 anchorA){super.setAnchorA(anchorA);return this;}	
+	@Override
+	public B2FlxGearJoint setAnchorB(Vector2 anchorB){super.setAnchorB(anchorB);return this;}	
+	@Override
+	public B2FlxGearJoint setCollideConnected(boolean collideConnected){super.setCollideConnected(collideConnected);return this;}
+	@Override
+	public B2FlxGearJoint setShowLine(boolean showLine){super.setShowLine(showLine);return this;}	
+	@Override
+	public B2FlxGearJoint setLineThickness(float lineThickness){super.setLineThickness(lineThickness);return this;}	
+	@Override
+	public B2FlxGearJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
+	@Override
+	public B2FlxGearJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
 }

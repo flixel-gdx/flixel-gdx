@@ -348,6 +348,15 @@ public abstract class B2FlxJoint extends FlxBasic
 	}
 	
 	/**
+	 * Get the joint.
+	 * @return
+	 */
+	public Joint getJoint()
+	{
+		return joint;
+	}
+	
+	/**
 	 * Set the joint definition.
 	 * @param jointDef
 	 * @return	This joint. Handy for chaining stuff together.

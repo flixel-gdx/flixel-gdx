@@ -3,6 +3,9 @@ package org.flixel.plugin.flxbox2d.dynamics.joints;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJoint;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 
@@ -100,13 +103,27 @@ public class B2FlxFrictionJoint extends B2FlxJoint
 		((FrictionJointDef)jointDef).maxTorque = maxTorque;
 		return this;
 	}
-	
-	/**
-	 * Get the friction joint.
-	 * @return
-	 */
-	public FrictionJoint getJoint()
-	{
-		return (FrictionJoint)joint;
-	}
+
+	@Override
+	public FrictionJoint getJoint(){return (FrictionJoint)joint;}
+	@Override
+	public B2FlxFrictionJoint setJointDef(JointDef jointDef){super.setJointDef(jointDef);return this;}	
+	@Override
+	public B2FlxFrictionJoint setBodyA(Body bodyA){super.setBodyA(bodyA);return this;}	
+	@Override
+	public B2FlxFrictionJoint setBodyB(Body bodyB){super.setBodyB(bodyB);return this;}	
+	@Override
+	public B2FlxFrictionJoint setAnchorA(Vector2 anchorA){super.setAnchorA(anchorA);return this;}	
+	@Override
+	public B2FlxFrictionJoint setAnchorB(Vector2 anchorB){super.setAnchorB(anchorB);return this;}	
+	@Override
+	public B2FlxFrictionJoint setCollideConnected(boolean collideConnected){super.setCollideConnected(collideConnected);return this;}
+	@Override
+	public B2FlxFrictionJoint setShowLine(boolean showLine){super.setShowLine(showLine);return this;}	
+	@Override
+	public B2FlxFrictionJoint setLineThickness(float lineThickness){super.setLineThickness(lineThickness);return this;}	
+	@Override
+	public B2FlxFrictionJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
+	@Override
+	public B2FlxFrictionJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
 }

@@ -963,7 +963,7 @@ public abstract class B2FlxShape extends FlxSprite
 		return this;
 	}
 	
-	public B2FlxShape allowSleep(boolean allowSleep)
+	public B2FlxShape setAllowSleep(boolean allowSleep)
 	{
 		bodyDef.allowSleep = allowSleep;
 		return this;

@@ -5,6 +5,8 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 /**
  * A line segment (edge) shape. These can be connected in chains or loops 
@@ -136,10 +138,66 @@ public class B2FlxEdge extends B2FlxShape
 	}
 	
 	@Override
+	public B2FlxEdge create()
+	{
+		super.create();
+		return this;
+	}
+	
+	@Override
 	public void destroy()
 	{
 		super.destroy();
 		_vertices = null;
 		shapes = null;
 	}
+	
+	@Override
+	public B2FlxEdge setType(BodyType type){super.setType(type);return this;}	
+	@Override
+	public B2FlxEdge setFixtureDef(FixtureDef fixtureDef){super.setFixtureDef(fixtureDef);return this;}	
+	@Override
+	public B2FlxEdge setLinearDamping(float linearDamping){super.setLinearDamping(linearDamping);return this;}
+	@Override
+	public B2FlxEdge setLinearVelocity(Vector2 linearVelocity){super.setLinearVelocity(linearVelocity);return this;}	
+	@Override
+	public B2FlxEdge setLinearVelocity(float x, float y){super.setLinearVelocity(x, y);return this;}	
+	@Override
+	public B2FlxEdge setAngularDamping(float angularDamping){super.setAngularDamping(angularDamping);return this;}	
+	@Override
+	public B2FlxEdge setAngularVelocity(float angularVelocity){super.setAngularVelocity(angularVelocity);return this;}	
+	@Override
+	public B2FlxEdge setBullet(boolean bullet){super.setBullet(bullet);return this;}	
+	@Override
+	public B2FlxEdge setFixedRotation(boolean fixedRotation){super.setFixedRotation(fixedRotation);return this;}	
+	@Override
+	public B2FlxEdge setAllowSleep(boolean allowSleep){super.setAllowSleep(allowSleep);return this;}	
+	@Override
+	public B2FlxEdge setActive(boolean active){super.setActive(active);return this;}	
+	@Override
+	public B2FlxEdge setAwake(boolean awake){super.setAwake(awake);return this;}	
+	@Override
+	public B2FlxEdge setDensity(float density){super.setDensity(density);return this;}	
+	@Override
+	public B2FlxEdge setFriction(float friction){super.setFriction(friction);return this;}	
+	@Override
+	public B2FlxEdge setRestitution(float restitution){super.setRestitution(restitution);return this;}	
+	@Override
+	public B2FlxEdge setPosition(Vector2 position){super.setPosition(position);return this;}	
+	@Override
+	public B2FlxEdge setAngle(float angle){super.setAngle(angle);return this;}	
+	@Override
+	public B2FlxEdge setGravityScale(float gravityScale){super.setGravityScale(gravityScale);return this;}	
+	@Override
+	public B2FlxEdge setMaskBits(short maskBits){super.setMaskBits(maskBits);return this;}	
+	@Override
+	public B2FlxEdge setCategoryBits(short categoryBits){super.setCategoryBits(categoryBits);return this;}	
+	@Override
+	public B2FlxEdge setGroupIndex(short groupIndex){super.setGroupIndex(groupIndex);return this;}	
+	@Override
+	public B2FlxEdge setSensor(boolean sensor){super.setSensor(sensor);return this;}	
+	@Override
+	public B2FlxEdge setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
+	@Override
+	public B2FlxEdge setDraggable(boolean draggable){super.setDraggable(draggable);return this;}
 }

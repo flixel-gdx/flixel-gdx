@@ -4,6 +4,8 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 
@@ -86,25 +88,36 @@ public class B2FlxRopeJoint extends B2FlxJoint
 	}
 	
 	@Override
-	public B2FlxJoint setAnchorA(Vector2 anchorA)
+	public B2FlxRopeJoint setAnchorA(Vector2 anchorA)
 	{		
 		((RopeJointDef)jointDef).localAnchorA.set(anchorA);
 		return this;
 	}
 	
 	@Override
-	public B2FlxJoint setAnchorB(Vector2 anchorB)
+	public B2FlxRopeJoint setAnchorB(Vector2 anchorB)
 	{
 		((RopeJointDef)jointDef).localAnchorB.set(anchorB);
 		return this;
 	}
 
-	/**
-	 * Get the rope joint.
-	 * @return
-	 */
-	public RopeJoint getJoint()
-	{
-		return (RopeJoint)joint;
-	}
+	@Override
+	public RopeJoint getJoint(){return (RopeJoint) joint;}	
+	@Override
+	public B2FlxRopeJoint setJointDef(JointDef jointDef){super.setJointDef(jointDef);return this;}	
+	@Override
+	public B2FlxRopeJoint setBodyA(Body bodyA){super.setBodyA(bodyA);return this;}	
+	@Override
+	public B2FlxRopeJoint setBodyB(Body bodyB){super.setBodyB(bodyB);return this;}	
+		
+	@Override
+	public B2FlxRopeJoint setCollideConnected(boolean collideConnected){super.setCollideConnected(collideConnected);return this;}
+	@Override
+	public B2FlxRopeJoint setShowLine(boolean showLine){super.setShowLine(showLine);return this;}	
+	@Override
+	public B2FlxRopeJoint setLineThickness(float lineThickness){super.setLineThickness(lineThickness);return this;}	
+	@Override
+	public B2FlxRopeJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
+	@Override
+	public B2FlxRopeJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
 }

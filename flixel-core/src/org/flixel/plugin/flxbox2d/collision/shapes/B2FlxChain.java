@@ -5,6 +5,8 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -169,6 +171,13 @@ public class B2FlxChain extends B2FlxShape
 		shape = null;
 	}
 	
+	@Override
+	public B2FlxShape create()
+	{
+		super.create();
+		return this;
+	}
+	
 	/**
 	 * Establish connectivity to a vertex that precedes the first vertex. 
 	 * Don't call this for loops. Needs to be called before create().
@@ -251,5 +260,54 @@ public class B2FlxChain extends B2FlxShape
 		_prevVertex = null;
 		_nextVertex = null;
 	}
+	
+	@Override
+	public B2FlxChain setType(BodyType type){super.setType(type);return this;}	
+	@Override
+	public B2FlxChain setFixtureDef(FixtureDef fixtureDef){super.setFixtureDef(fixtureDef);return this;}	
+	@Override
+	public B2FlxChain setLinearDamping(float linearDamping){super.setLinearDamping(linearDamping);return this;}
+	@Override
+	public B2FlxChain setLinearVelocity(Vector2 linearVelocity){super.setLinearVelocity(linearVelocity);return this;}	
+	@Override
+	public B2FlxChain setLinearVelocity(float x, float y){super.setLinearVelocity(x, y);return this;}	
+	@Override
+	public B2FlxChain setAngularDamping(float angularDamping){super.setAngularDamping(angularDamping);return this;}	
+	@Override
+	public B2FlxChain setAngularVelocity(float angularVelocity){super.setAngularVelocity(angularVelocity);return this;}	
+	@Override
+	public B2FlxChain setBullet(boolean bullet){super.setBullet(bullet);return this;}	
+	@Override
+	public B2FlxChain setFixedRotation(boolean fixedRotation){super.setFixedRotation(fixedRotation);return this;}	
+	@Override
+	public B2FlxChain setAllowSleep(boolean allowSleep){super.setAllowSleep(allowSleep);return this;}	
+	@Override
+	public B2FlxChain setActive(boolean active){super.setActive(active);return this;}	
+	@Override
+	public B2FlxChain setAwake(boolean awake){super.setAwake(awake);return this;}	
+	@Override
+	public B2FlxChain setDensity(float density){super.setDensity(density);return this;}	
+	@Override
+	public B2FlxChain setFriction(float friction){super.setFriction(friction);return this;}	
+	@Override
+	public B2FlxChain setRestitution(float restitution){super.setRestitution(restitution);return this;}	
+	@Override
+	public B2FlxChain setPosition(Vector2 position){super.setPosition(position);return this;}	
+	@Override
+	public B2FlxChain setAngle(float angle){super.setAngle(angle);return this;}	
+	@Override
+	public B2FlxChain setGravityScale(float gravityScale){super.setGravityScale(gravityScale);return this;}	
+	@Override
+	public B2FlxChain setMaskBits(short maskBits){super.setMaskBits(maskBits);return this;}	
+	@Override
+	public B2FlxChain setCategoryBits(short categoryBits){super.setCategoryBits(categoryBits);return this;}	
+	@Override
+	public B2FlxChain setGroupIndex(short groupIndex){super.setGroupIndex(groupIndex);return this;}	
+	@Override
+	public B2FlxChain setSensor(boolean sensor){super.setSensor(sensor);return this;}	
+	@Override
+	public B2FlxChain setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
+	@Override
+	public B2FlxChain setDraggable(boolean draggable){super.setDraggable(draggable);return this;}
 }
 
