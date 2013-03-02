@@ -77,7 +77,7 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	public void dispatch(Contact contact, String type)
 	{
 		_event.type = type;
-		_event.contact = contact; // TODO: check fixture whether is needed to dispatch an event.
+		_event.contact = contact;
 		_event.sprite1 = (B2FlxShape) ((ObjectMap<String, Object>) contact.getFixtureA().getBody().getUserData()).get("shape");
 		_event.sprite2 = (B2FlxShape) ((ObjectMap<String, Object>) contact.getFixtureB().getBody().getUserData()).get("shape");
 		dispatchEvent(_event);

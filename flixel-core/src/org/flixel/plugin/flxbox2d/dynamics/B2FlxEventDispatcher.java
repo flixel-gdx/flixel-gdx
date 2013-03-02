@@ -35,13 +35,13 @@ public class B2FlxEventDispatcher
 		{
 			if(event.type.equals(listener.type))
 			{
-				if(listener.type.equals(B2FlxContactEvent.BEGIN))
+				if(listener.type.equals(B2FlxContactEvent.BEGIN) && (event.sprite1.reportBeginContact || event.sprite2.reportBeginContact))
 					listener.beginContact(event.sprite1, event.sprite2, event.contact);
-				else if(event.type.equals(B2FlxContactEvent.END))
+				else if(event.type.equals(B2FlxContactEvent.END) && (event.sprite1.reportEndContact || event.sprite2.reportEndContact))
 					listener.endContact(event.sprite1, event.sprite2, event.contact);
-				else if(event.type.equals(B2FlxContactEvent.PRESOLVE))
+				else if(event.type.equals(B2FlxContactEvent.PRESOLVE) && (event.sprite1.reportPreSolve || event.sprite2.reportPreSolve))
 					listener.preSolve(event.sprite1, event.sprite2, event.contact, event.oldManifold);
-				else if(event.type.equals(B2FlxContactEvent.POSTSOLVE))
+				else if(event.type.equals(B2FlxContactEvent.POSTSOLVE) && (event.sprite1.reportPostSolve|| event.sprite2.reportPostSolve))
 					listener.postSolve(event.sprite1, event.sprite2, event.contact, event.impulse);
 			}			
 		}
