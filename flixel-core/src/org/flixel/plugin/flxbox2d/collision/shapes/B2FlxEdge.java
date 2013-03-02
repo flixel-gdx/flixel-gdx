@@ -195,7 +195,15 @@ public class B2FlxEdge extends B2FlxShape
 	@Override
 	public B2FlxEdge setGroupIndex(short groupIndex){super.setGroupIndex(groupIndex);return this;}	
 	@Override
-	public B2FlxEdge setSensor(boolean sensor){super.setSensor(sensor);return this;}	
+	public B2FlxEdge setSensor(boolean sensor){super.setSensor(sensor);return this;}
+	@Override
+	public B2FlxEdge setReportBeginContact(boolean reportBeginContact){super.setReportBeginContact(reportBeginContact);return this;}
+	@Override
+	public B2FlxEdge setReportEndContact(boolean reportEndContact){super.setReportEndContact(reportEndContact);return this;}
+	@Override
+	public B2FlxEdge setReportPreSolve(boolean reportPreSolve){super.setReportPreSolve(reportPreSolve);return this;}
+	@Override
+	public B2FlxEdge setReportPostSolve(boolean reportPostSolve){super.setReportPostSolve(reportPostSolve);return this;}
 	@Override
 	public B2FlxEdge setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override

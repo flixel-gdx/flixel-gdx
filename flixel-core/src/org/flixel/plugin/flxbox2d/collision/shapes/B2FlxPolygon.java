@@ -191,7 +191,15 @@ public class B2FlxPolygon extends B2FlxShape
 	@Override
 	public B2FlxPolygon setGroupIndex(short groupIndex){super.setGroupIndex(groupIndex);return this;}	
 	@Override
-	public B2FlxPolygon setSensor(boolean sensor){super.setSensor(sensor);return this;}	
+	public B2FlxPolygon setSensor(boolean sensor){super.setSensor(sensor);return this;}
+	@Override
+	public B2FlxPolygon setReportBeginContact(boolean reportBeginContact){super.setReportBeginContact(reportBeginContact);return this;}
+	@Override
+	public B2FlxPolygon setReportEndContact(boolean reportEndContact){super.setReportEndContact(reportEndContact);return this;}
+	@Override
+	public B2FlxPolygon setReportPreSolve(boolean reportPreSolve){super.setReportPreSolve(reportPreSolve);return this;}
+	@Override
+	public B2FlxPolygon setReportPostSolve(boolean reportPostSolve){super.setReportPostSolve(reportPostSolve);return this;}
 	@Override
 	public B2FlxPolygon setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override

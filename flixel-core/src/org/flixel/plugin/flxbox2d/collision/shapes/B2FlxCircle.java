@@ -182,7 +182,15 @@ public class B2FlxCircle extends B2FlxShape
 	@Override
 	public B2FlxCircle setGroupIndex(short groupIndex){super.setGroupIndex(groupIndex);return this;}	
 	@Override
-	public B2FlxCircle setSensor(boolean sensor){super.setSensor(sensor);return this;}	
+	public B2FlxCircle setSensor(boolean sensor){super.setSensor(sensor);return this;}
+	@Override
+	public B2FlxCircle setReportBeginContact(boolean reportBeginContact){super.setReportBeginContact(reportBeginContact);return this;}
+	@Override
+	public B2FlxCircle setReportEndContact(boolean reportEndContact){super.setReportEndContact(reportEndContact);return this;}
+	@Override
+	public B2FlxCircle setReportPreSolve(boolean reportPreSolve){super.setReportPreSolve(reportPreSolve);return this;}
+	@Override
+	public B2FlxCircle setReportPostSolve(boolean reportPostSolve){super.setReportPostSolve(reportPostSolve);return this;}
 	@Override
 	public B2FlxCircle setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override

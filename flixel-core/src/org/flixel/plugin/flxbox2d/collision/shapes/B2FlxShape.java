@@ -107,6 +107,22 @@ public abstract class B2FlxShape extends FlxSprite
 	 */
 	private boolean resetAngle;
 	/**
+	 * Whether to report begin contact or not.
+	 */
+	public boolean reportBeginContact = false;
+	/**
+	 * Whether to report end contact or not.
+	 */
+	public boolean reportEndContact = false;
+	/**
+	 * Whether to report pre solve or not.
+	 */
+	public boolean reportPreSolve = false;
+	/**
+	 * Whether to report post solve or not.
+	 */
+	public boolean reportPostSolve = false;
+	/**
 	 * Holds the user data.
 	 */
 	public ObjectMap<String, Object> userData;
@@ -432,7 +448,7 @@ public abstract class B2FlxShape extends FlxSprite
 				p2.y = upper.y - camera.scroll.y * scrollFactor.y;
 				
 				// Check whether the bounding box are within the camera 
-				// or if the bounding box is large than the camera itself.
+				// or if the bounding box is larger than the camera itself.
 				if( ((p1.x >= 0) && (p1.x <= camera.width) || (p2.x >= 0) && (p2.x <= camera.width)) &&
 					((p1.y >= 0) && (p1.y <= camera.height) ||(p2.y >= 0) && (p2.y <= camera.height)) ||
 					(p1.x < 0) && (p2.x > camera.width) || (p1.y < 0) && (p2.y > camera.height))
@@ -1050,6 +1066,27 @@ public abstract class B2FlxShape extends FlxSprite
 	public B2FlxShape setSensor(boolean sensor)
 	{
 		fixtureDef.isSensor = sensor;
+		return this;
+	}
+	
+	public B2FlxShape setReportBeginContact(boolean reportBeginContact)
+	{
+		this.reportBeginContact = reportBeginContact;
+		return this;
+	}
+	public B2FlxShape setReportEndContact(boolean reportEndContact)
+	{
+		this.reportEndContact = reportEndContact;
+		return this;
+	}
+	public B2FlxShape setReportPreSolve(boolean reportPreSolve)
+	{
+		this.reportPreSolve = reportPreSolve;
+		return this;
+	}
+	public B2FlxShape setReportPostSolve(boolean reportPostSolve)
+	{
+		this.reportPostSolve = reportPostSolve;
 		return this;
 	}
 	
