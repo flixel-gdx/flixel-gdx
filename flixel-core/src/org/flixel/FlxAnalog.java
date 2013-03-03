@@ -31,15 +31,15 @@ public class FlxAnalog extends FlxGroup
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */
-	private final int NORMAL = 0;
+	public static final int NORMAL = 0;
 	/**
 	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
 	 */
-	private final int HIGHLIGHT = 1;
+	public static final int HIGHLIGHT = 1;
 	/**
 	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
 	 */
-	private final int PRESSED = 2;		
+	public static final int PRESSED = 2;		
 	/**
 	 * Shows the current state of the button.
 	 */
@@ -58,10 +58,6 @@ public class FlxAnalog extends FlxGroup
 	 * An list of analogs that are currently active.
 	 */
 	private static Array<FlxAnalog> _analogs;
-	/**
-	 * The current pointer that's active on the analog.
-	 */
-	private int _currentPointer;
 	/**
 	 * This is just a pre-allocated x-y point container to be used however you like
 	 */
@@ -101,7 +97,16 @@ public class FlxAnalog extends FlxGroup
 	 */
 	private float _radius;
 	private float _direction;
-	private float _amount;		
+	private float _amount;
+	
+	/**
+	 * The area which the touch is allowed to drag.
+	 */
+	private Circle _dragZone;
+	/**
+	 * The radius where the touch can move while dragging the thumb.
+	 */
+	private float _dragRadius;
 	
 	/**
 	 * How fast the speed of this object is changing.
@@ -115,16 +120,18 @@ public class FlxAnalog extends FlxGroup
 		
 	/**
 	 * Constructor
-	 * @param	X		The X-coordinate of the point in space.
- 	 * @param	Y		The Y-coordinate of the point in space.
- 	 * @param	radius	The radius where the thumb can move. If 0, the background will be use as radius.
+	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
+ 	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
+ 	 * @param	radius	The radius where the thumb can move. Default 0, the background will be used as radius.
+ 	 * @param	dragRadius	The radius where the thumb can move. Default 0, the background * 1.25 will be used as radius.
  	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
 	 */
-	public FlxAnalog(float x, float y, float radius, float ease)
+	public FlxAnalog(float x, float y, float radius, float dragRadius, float ease)
 	{
 		this.x = x;
 		this.y = y;		
 		_radius = radius;
+		_dragRadius = dragRadius;
 		_ease = ease;
 		
 		if(_analogs == null)
@@ -134,24 +141,36 @@ public class FlxAnalog extends FlxGroup
 		status = NORMAL;
 		_direction = 0;
 		_amount = 0;
-		_currentPointer = -1;
 		acceleration = new FlxPoint();
 		_point = new FlxPoint();
 		
 		createBase();
 		createThumb();
 		createZone();
+		createDragZone();
 	}
 	
 	/**
 	 * Constructor
 	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
- 	 * @param	radius	The radius where the thumb can move. If 0, the background will be use as radius.
+ 	 * @param	radius	The radius where the thumb can move. If 0, the background will be used as radius.
+ 	 * @param	dragRadius	The radius where the thumb can move.
+	 */
+	public FlxAnalog(float x, float y, float radius, float dragRadius)
+	{
+		this(x, y, radius, dragRadius, .25f);
+	}
+	
+	/**
+	 * Constructor
+	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
+ 	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
+ 	 * @param	radius	The radius where the thumb can move. Default 0, the background will be used as radius.
 	 */
 	public FlxAnalog(float x, float y, float radius)
 	{
-		this(x, y, radius, .25f);
+		this(x, y, radius, 0, .25f);
 	}
 	
 	/**
@@ -161,7 +180,7 @@ public class FlxAnalog extends FlxGroup
 	 */
 	public FlxAnalog(float x, float y)
 	{
-		this(x, y, 0, .25f);
+		this(x, y, 0, 0, .25f);
 	}
 	
 	/**
@@ -170,7 +189,7 @@ public class FlxAnalog extends FlxGroup
 	 */
 	public FlxAnalog(float x)
 	{
-		this(x, 0, 0, .25f);
+		this(x, 0, 0, 0, .25f);
 	}
 	
 	/**
@@ -178,7 +197,7 @@ public class FlxAnalog extends FlxGroup
 	 */
 	public FlxAnalog()
 	{
-		this(0, 0, 0, .25f);
+		this(0, 0, 0, 0, .25f);
 	}
 	
 	
@@ -189,12 +208,12 @@ public class FlxAnalog extends FlxGroup
 	protected void createBase()
 	{
 		bg = new FlxSprite(x, y).loadGraphic(ImgBase);
-		bg.x += -bg.width * .5;
-		bg.y += -bg.height * .5;
+		bg.x += -bg.width * .5f;
+		bg.y += -bg.height * .5f;
 		bg.scrollFactor.x = bg.scrollFactor.y = 0;
 		bg.setSolid(false);
 		bg.ignoreDrawDebug = true;
-		add(bg);			
+		add(bg);
 	}
 	
 	/**
@@ -214,14 +233,25 @@ public class FlxAnalog extends FlxGroup
 	 * Creates the touch zone. It's based on the size of the background. 
 	 * The thumb will react when the mouse is in the zone.
 	 * Override this to customize the zone.
-	 * 
-	 * @param	contract	Contract the size.
 	 */
 	protected void createZone()
 	{
 		if(_radius == 0)			
-			_radius = bg.width / 2;
+			_radius = bg.width * .5f;
 		_zone = new Circle(x, y, _radius);
+	}
+	
+	/**
+	 * Creates the move zone. The thumb can only move in this zone.
+	 * It's based on the size of the background * 1.25.
+	 * When the mouse is out the zone, the thumb will be released.
+	 * Override this to customize the drag zone.
+	 */
+	protected void createDragZone()
+	{
+		if(_dragRadius == 0)
+			_dragRadius = bg.width * 1.25f;
+		_dragZone = new Circle(x, y, _dragRadius);
 	}
 	
 	/**
@@ -239,6 +269,7 @@ public class FlxAnalog extends FlxGroup
 		_point = null;
 		thumb = null;
 		_zone = null;
+		_dragZone = null;
 		bg = null;
 		thumb = null;
 	}
@@ -250,62 +281,45 @@ public class FlxAnalog extends FlxGroup
 	@Override
 	public void update()
 	{
-		boolean foundFreePointer = false;
+		boolean offAll = true;
 		int pointerId = 0;		
 		int	totalPointers = FlxG.mouse.activePointers + 1;		
-		
-		if(_analogs.size > 1)  // For multiple analogs.
-		{
-			// There is no reason to get into the loop if their is already a pointer on the analog
-			if(_currentPointer > 0)
-				pointerId = _currentPointer;
-			else
+
+		while(pointerId < totalPointers)
+		{	
+			if(!updateAnalog(pointerId))
 			{
-				while(pointerId < totalPointers)
-				{			
-					for(int i = 0; i < _analogs.size; i++)
-					{
-						// check whether the pointer is already taken by another analog.
-						if(_analogs.get(i) != this && _analogs.get(i)._currentPointer != pointerId) 
-						{
-							foundFreePointer = true;
-							break;
-						}
-					}
-					if(foundFreePointer)
-						break;
-					++pointerId;
-				}
+				offAll = false;
+				break;
 			}
-			updateAnalog(pointerId);
+			++pointerId;
 		}
-		else // For single analog.
-		{
-			while(pointerId < totalPointers)
-			{	
-				updateAnalog(pointerId);
-				++pointerId;
-			}
-		}
+		
+		thumb.x = (float) (x + MathUtils.cos(_direction) * _amount * _radius - (thumb.width * .5f));
+		thumb.y = (float) (y + MathUtils.sin(_direction) * _amount * _radius - (thumb.height * .5f));
+		
+		if(offAll)
+			status = NORMAL;
+		
 		super.update();
 	}
 	
-	protected void updateAnalog(int pointerId)
+	protected boolean updateAnalog(int pointerId)
 	{		
 		boolean offAll = true;
-		FlxG.mouse.getWorldPosition(pointerId, null, _point);
-		if(_zone.contains(_point.x, _point.y) || (status == PRESSED))
+		FlxG.mouse.getScreenPosition(pointerId, FlxG.camera, _point);
+		
+		if(_zone.contains(_point.x, _point.y) || (_dragZone.contains(_point.x, _point.y) && status == PRESSED))
 		{
-			offAll = false;	
+			offAll = false;
 			if(FlxG.mouse.pressed(pointerId))
 			{
-				_currentPointer = pointerId;
 				status = PRESSED;			
 				if(FlxG.mouse.justPressed(pointerId))
 				{
 					if(onDown != null)
 						onDown.callback();
-				}						
+				}
 				
 				if(status == PRESSED)
 				{
@@ -323,11 +337,10 @@ public class FlxAnalog extends FlxGroup
 					
 					acceleration.x = (float) (MathUtils.cos(_direction) * _amount * _radius);
 					acceleration.y = (float) (MathUtils.sin(_direction) * _amount * _radius);			
-				}					
+				}
 			}
 			else if(FlxG.mouse.justReleased(pointerId) && status == PRESSED)
-			{				
-				_currentPointer = -1;
+			{
 				status = HIGHLIGHT;
 				if(onUp != null)
 					onUp.callback();
@@ -340,21 +353,15 @@ public class FlxAnalog extends FlxGroup
 				status = HIGHLIGHT;
 				if(onOver != null)
 					onOver.callback();
-			}				
+			}
 		}
 		if((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
 		{				
 			_amount *= _ease;
-			if(Math.abs(_amount) < 0.1) 
+			if(Math.abs(_amount) < 0.1f) 
 				_amount = 0;
 		}
-		thumb.x = (float) (x + MathUtils.cos(_direction) * _amount * _radius - (thumb.width * .5f));
-		thumb.y = (float) (y + MathUtils.sin(_direction) * _amount * _radius - (thumb.height * .5f));
-		if(offAll)
-		{
-			status = NORMAL;
-			_currentPointer = -1;
-		}
+		return offAll;
 	}
 	
 	/**
@@ -363,33 +370,9 @@ public class FlxAnalog extends FlxGroup
 	 */
 	public float getAngle()
 	{
-		return (MathUtils.atan2(acceleration.y,acceleration.x) * DEGREES);
+		return (MathUtils.atan2(acceleration.y, acceleration.x) * DEGREES);
 	}
 	
-	/**
-	 * Whether the thumb is pressed or not.
-	 */
-	public boolean pressed()
-	{
-		return status == PRESSED;
-	}
-	
-	/**
-	 * Whether the thumb is just pressed or not.
-	 */
-	public boolean justPressed()
-	{
-		return FlxG.mouse.justPressed() && status == PRESSED;
-	}
-	
-	/**
-	 * Whether the thumb is just released or not.
-	 */
-	public boolean justReleased()
-	{
-		return FlxG.mouse.justReleased() && status == HIGHLIGHT;
-	}
-
 	/**
 	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the analog.
 	 * @param Alpha
