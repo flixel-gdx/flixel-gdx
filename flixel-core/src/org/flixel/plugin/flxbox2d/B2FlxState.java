@@ -22,11 +22,11 @@ public class B2FlxState extends FlxState
 	/**
 	 * Velocity iterations for the velocity constraint solver.
 	 */
-	protected int velocityIterations = 10; 
+	protected int velocityIterations = 8; 
 	/**
 	 * Position iterations for the position constraint solver. 
 	 */
-	protected int Iterations = 10;
+	protected int Iterations = 3;
 	/**
 	 * Handle the collision.
 	 */
