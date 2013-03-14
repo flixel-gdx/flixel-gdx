@@ -6,7 +6,6 @@ import org.flixel.FlxU;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxJoint;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -106,18 +105,14 @@ public class B2FlxDebug extends FlxBasic
 			ShapeRenderer renderer = FlxG.flashGfx.getShapeRenderer();
 			renderer.end();
 			renderer.setProjectionMatrix(FlxG.batch.getProjectionMatrix().scale(32f, 32f, 0));
-			
-			if(Gdx.gl10 != null)
-				Gdx.gl10.glPointSize(3);
-			renderer.begin(ShapeType.Point);
+									
+			renderer.begin(ShapeType.Filled);
 			float[] rgba = FlxU.getRGBA(CONTACT_COLOR);
 			renderer.setColor(rgba[0] * 0.00392f, rgba[1] * 0.00392f, rgba[2] * 0.00392f, 1);
 			int length = B2FlxB.world.getContactList().size();
 			for(int i = 0; i < length; i++)
 				drawContact(renderer, B2FlxB.world.getContactList().get(i));
-			renderer.end();
-			if(Gdx.gl10 != null)
-				Gdx.gl10.glPointSize(1);
+			renderer.end();			
 		}
 	}
 	
@@ -134,7 +129,7 @@ public class B2FlxDebug extends FlxBasic
 		Vector2 point = worldManifold.getPoints()[0];
 		point.x -= FlxG.camera.scroll.x / B2FlxB.RATIO;
 		point.y -= FlxG.camera.scroll.y / B2FlxB.RATIO;
-		renderer.point(point.x, point.y, 0);
+		renderer.circle(point.x, point.y, .05f, 360);
 	}
 	
 	/**

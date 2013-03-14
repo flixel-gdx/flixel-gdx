@@ -26,7 +26,7 @@ public class B2FlxState extends FlxState
 	/**
 	 * Position iterations for the position constraint solver. 
 	 */
-	protected int Iterations = 3;
+	protected int iterations = 3;
 	/**
 	 * Handle the collision.
 	 */
@@ -54,7 +54,7 @@ public class B2FlxState extends FlxState
 	@Override
 	public void update()
 	{
-		world.step(FlxG.elapsed, velocityIterations, Iterations);
+		world.step(FlxG.elapsed, velocityIterations, iterations);
 		world.clearForces();
 		if(B2FlxB.scheduledForActive.size > 0)
 			B2FlxB.safelyActivateBodies();
