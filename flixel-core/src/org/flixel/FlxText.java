@@ -48,6 +48,15 @@ public class FlxText extends FlxSprite
 	protected int _size;
 	
 	/**
+	 * Internal tracker for the x-position of the shadow, default is 1.
+	 */
+	protected float _shadowX = 1f;
+	/**
+	 * Internal tracker for the y-position of the shadow, default is 1.
+	 */
+	protected float _shadowY = 1f;
+	
+	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
 	 * 
 	 * @param	X				The X position of the text.
@@ -114,10 +123,12 @@ public class FlxText extends FlxSprite
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
 	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
+	 * @param	ShadowX		The x-position of the shadow.
+	 * @param	ShadowY		The y-position of the shadow.
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor)
+	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor, float ShadowX, float ShadowY)
 	{
 		if(Font == null)
 			Font = _font;
@@ -133,10 +144,29 @@ public class FlxText extends FlxSprite
 		setColor(Color);
 		_alignment = HAlignment.valueOf(Alignment.toUpperCase(Locale.ENGLISH));		
 		_shadow = ShadowColor;
+		_shadowX = ShadowX;
+		_shadowY = ShadowY;
 		
 		calcFrame();
 	
 		return this;
+	}
+	
+	/**
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
+	 * 
+	 * @param	Font		The name of the font face for the text display.
+	 * @param	Size		The size of the font (in pixels essentially).
+	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
+	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
+	 * @param	ShadowX		The x-position of the shadow.
+	 * 
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
+	 */
+	public FlxText setFormat(String Font, float Size, int Color, String Alignment, float ShadowX)
+	{
+		return setFormat(Font, Size, Color, Alignment, 0, ShadowX, 1f);
 	}
 	
 	/**
@@ -152,7 +182,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat(String Font, float Size, int Color, String Alignment)
 	{
-		return setFormat(Font, Size, Color, Alignment, 0);
+		return setFormat(Font, Size, Color, Alignment, 0, 1f, 1f);
 	}
 
 	/**
@@ -167,7 +197,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat(String Font, float Size, int Color)
 	{
-		return setFormat(Font, Size, Color, "left", 0);
+		return setFormat(Font, Size, Color, "left", 0, 1f, 1f);
 	}
 	
 	/**
@@ -181,7 +211,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat(String Font, float Size)
 	{
-		return setFormat(Font, Size, 0xFFFFFFFF, "left", 0);
+		return setFormat(Font, Size, 0xFFFFFFFF, "left", 0, 1f, 1f);
 	}
 	
 	/**
@@ -194,7 +224,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat(String Font)
 	{
-		return setFormat(Font, 8, 0xFFFFFFFF, "left", 0);
+		return setFormat(Font, 8, 0xFFFFFFFF, "left", 0, 1f, 1f);
 	}
 	
 	/**
@@ -205,7 +235,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat()
 	{
-		return setFormat(null, 8, 0xFFFFFFFF, "left", 0);
+		return setFormat(null, 8, 0xFFFFFFFF, "left", 0, 1f, 1f);
 	}
 	
 	/**
@@ -309,6 +339,22 @@ public class FlxText extends FlxSprite
 		_shadow = Color;
 	}
 	
+	public void setShadow(float ShadowX, float ShadowY)
+	{
+		_shadowX = ShadowX;
+		_shadowY = ShadowY;
+	}
+	
+	public void setShadowX(float ShadowX)
+	{
+		_shadowX = ShadowX;
+	}
+	
+	public void setShadowY(float ShadowY)
+	{
+		_shadowY = ShadowY;
+	}
+	
 	@Override
 	public void setAlpha(float Alpha)
 	{
@@ -382,7 +428,7 @@ public class FlxText extends FlxSprite
 			//tinting
 			int tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
 			_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
-			_textField.translate(1f, 1f);
+			_textField.translate(_shadowX, _shadowY);
 			
 			if(blend != null)
 			{
@@ -392,7 +438,7 @@ public class FlxText extends FlxSprite
 			}
 			else
 				_textField.draw(FlxG.batch);
-			_textField.translate(-1f, -1f);
+			_textField.translate(-_shadowX, -_shadowY);
 		}
 		
 		//tinting
