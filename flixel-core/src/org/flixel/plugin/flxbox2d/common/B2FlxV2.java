@@ -44,18 +44,19 @@ public class B2FlxV2 extends Vector2
 	{
 		this(0, 0);
 	}
-
-	public final static float cross(Vector2 a, Vector2 b)
-	{
-		return a.x * b.y - a.y * b.x;
+	
+	@Override
+	public Vector2 set(float x, float y)
+	{		
+		return super.set(x/B2FlxB.RATIO, y/B2FlxB.RATIO);
 	}
 
-	public final static Vector2 cross(Vector2 a, float s)
+	public final static Vector2 crs(Vector2 a, float s)
 	{
 		return new Vector2(s * a.y, -s * a.x);
 	}
 
-	public final static Vector2 cross(float s, Vector2 a)
+	public final static Vector2 crs(float s, Vector2 a)
 	{
 		return new Vector2(-s * a.y, s * a.x);
 	}

@@ -1028,7 +1028,16 @@ public abstract class B2FlxShape extends FlxSprite
 	public B2FlxShape setPosition(Vector2 position)
 	{
 		bodyDef.position.set(position);
+		if(body != null && !B2FlxB.world.isLocked())
+			body.setTransform(position, angle);
+		else if(body != null)
+			B2FlxB.addMove(this);
 		return this;
+	}
+	
+	public B2FlxShape setPosition(float x, float y)
+	{
+		return setPosition(new Vector2(x, y));
 	}
 	
 	public B2FlxShape setAngle(float angle)
