@@ -72,7 +72,7 @@ public class FlxText extends FlxSprite
 		if(Text == null)
 			Text = "";
 		
-		width = Width;
+		width = frameWidth = Width;
 		_text = Text;
 		allowCollisions = NONE;
 		moves = false;
@@ -348,7 +348,7 @@ public class FlxText extends FlxSprite
 		TextBounds bounds = _textField.setWrappedText(_text, 2, 3, width, _alignment);
 		// bounds.height is shorter than it should be.
 		// After some trial and error, adding seven seems to make it about right in most cases.
-		height = (int) FlxU.ceil(bounds.height + 7);
+		height = frameHeight = (int) FlxU.ceil(bounds.height + 7);
 	}
 	
 	@Override
@@ -360,9 +360,6 @@ public class FlxText extends FlxSprite
 			if(_flicker)
 				return;
 		}
-		
-		if (_textField.getBounds().width != width)
-			calcFrame();
 		
 		FlxCamera camera = FlxG._activeCamera;
 		
