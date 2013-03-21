@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.Array;
  */
 public class FlxSprite extends FlxObject
 {
-	protected String ImgDefault = "org/flixel/data/pack:default";
+	static protected String ImgDefault = "org/flixel/data/pack:default";
 	
 	/**
 	 * WARNING: The origin of the sprite will default to its center.
@@ -707,7 +707,7 @@ public class FlxSprite extends FlxObject
 		int rx = _pixels.getRegionX();
 		int ry = _pixels.getRegionY();
 		
-		Pixmap pixmap = textureData.consumePixmap();			
+		Pixmap pixmap = textureData.consumePixmap();		
 		pixmap.setColor(FlxU.argbToRgba(Color));
 		pixmap.drawLine((int) (rx + StartX), (int) (ry + StartY), (int) (rx + EndX), (int) (ry + EndY));
 		

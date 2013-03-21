@@ -13,7 +13,7 @@ import flash.events.MouseEvent;
  */
 public class FlxButton extends FlxSprite
 {
-	 protected String ImgDefaultButton = "org/flixel/data/pack:button";
+	 static protected String ImgDefaultButton = "org/flixel/data/pack:button";
 	
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.

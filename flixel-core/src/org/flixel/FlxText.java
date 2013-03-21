@@ -247,7 +247,7 @@ public class FlxText extends FlxSprite
 	}
 
 	/**
-	 * @private
+	 * The text being displayed.
 	 */
 	public void setText(CharSequence Text)
 	{		
@@ -264,7 +264,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * @private
+	 * The size of the text being displayed.
 	 */
 	public void setSize(float Size)
 	{
@@ -272,19 +272,6 @@ public class FlxText extends FlxSprite
 			return;
 		
 		setFormat(_font, Size, _color, getAlignment(), _shadow);
-	}
-	
-	/**
-	 * @private
-	 */
-	@Override
-	public void setColor(int Color)
-	{
-		Color &= 0x00FFFFFF;
-		
-		_color = Color;
-	
-		_textField.setColor((_color>>16)*0.00392f,(_color>>8&0xff)*0.00392f,(_color&0xff)*0.00392f,_alpha);
 	}
 	
 	/**
@@ -296,7 +283,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * @private
+	 * The font used for this text.
 	 */
 	public void setFont(String Font)
 	{
@@ -315,7 +302,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * @private
+	 * The alignment of the font ("left", "right", or "center").
 	 */
 	public void setAlignment(String Alignment)
 	{
@@ -324,7 +311,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * The color of the text shadow in 0xAARRGGBB hex format.
+	 * The color of the text shadow in 0xRRGGBB hex format.
 	 */
 	public int getShadow()
 	{
@@ -332,7 +319,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * @private
+	 * The color of the text shadow in 0xRRGGBB hex format.
 	 */
 	public void setShadow(int Color)
 	{
@@ -356,27 +343,12 @@ public class FlxText extends FlxSprite
 	}
 	
 	@Override
-	public void setAlpha(float Alpha)
-	{
-		if(Alpha > 1)
-			Alpha = 1;
-		if(Alpha < 0)
-			Alpha = 0;
-		if(Alpha == _alpha)
-			return;
-
-		_textField.setColor(_textField.getColor().r, _textField.getColor().g, _textField.getColor().b, Alpha);
-		_alpha = Alpha;
-	}	
-	
-	@Override
 	protected void calcFrame()
 	{
 		TextBounds bounds = _textField.setWrappedText(_text, 2, 3, width, _alignment);
 		// bounds.height is shorter than it should be.
 		// After some trial and error, adding seven seems to make it about right in most cases.
-		height = (int) FlxU.ceil(bounds.height + 7);		
-		setColor(_color);
+		height = (int) FlxU.ceil(bounds.height + 7);
 	}
 	
 	@Override
