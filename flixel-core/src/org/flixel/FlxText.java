@@ -122,7 +122,7 @@ public class FlxText extends FlxSprite
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
+	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xAARRGGBB format.
 	 * @param	ShadowX		The x-position of the shadow.
 	 * @param	ShadowY		The y-position of the shadow.
 	 * 
@@ -311,7 +311,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * The color of the text shadow in 0xRRGGBB hex format.
+	 * The color of the text shadow in 0xAARRGGBB hex format.
 	 */
 	public int getShadow()
 	{
@@ -319,7 +319,7 @@ public class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * The color of the text shadow in 0xRRGGBB hex format.
+	 * The color of the text shadow in 0xAARRGGBB hex format.
 	 */
 	public void setShadow(int Color)
 	{
@@ -396,7 +396,7 @@ public class FlxText extends FlxSprite
 		{
 			//tinting
 			int tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
-			_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
+			_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, ((_shadow >> 24) & 0xFF) * _alpha * 0.00392f);
 			_textField.translate(_shadowX, _shadowY);
 			
 			if(blend != null)

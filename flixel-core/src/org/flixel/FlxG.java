@@ -1945,7 +1945,7 @@ public class FlxG
 		_gl.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
 		
 		//Clear the camera
-		if(((camera.bgColor >> 24) & 0xff) == 0xff)
+		if(((camera.bgColor >> 24) & 0xff) == 0xFF)
 		{
 			int color = FlxU.multiplyColors(camera.bgColor, camera.getColor());
 			_floatArray = FlxU.getRGBA(color, _floatArray);
