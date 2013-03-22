@@ -262,6 +262,10 @@ public class FlxG
 	 * Internal storage system to prevent assets from being used repeatedly in memory.
 	 */
 	static FlxAssetCache _cache;
+	/**
+	 * Whether or not the asset cache is automatically cleared whenever the state changes.
+	 */
+	static public boolean disposeAssetsOnStateChange;
 	
 	/**
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
@@ -278,7 +282,7 @@ public class FlxG
 	/**
 	 * Internal, a pre-allocated array to prevent <code>new</code> calls.
 	 */
-	protected static float[] _floatArray = new float[4];
+	static float[] _floatArray;
 	
 	static public String getLibraryName()
 	{
@@ -1079,9 +1083,9 @@ public class FlxG
 			pixmap.setColor(FlxU.argbToRgba(Color));
 			pixmap.fill();
 			
-			_cache.loadTexture(Key, pixmap, Width, Height);
+			_cache.loadTexture(Key, pixmap);
 		}
-		return _cache.getTexture(Key);
+		return new TextureRegion(_cache.getTexture(Key), Width, Height);
 	}
 	
 	/**
@@ -1147,16 +1151,18 @@ public class FlxG
 		TextureRegion textureRegion = null;
 		String[] split = Graphic.split(":");
 		
+		//if no region has been specified, load as standard texture
 		if (split.length == 1)
 		{
-			textureRegion = _cache.loadTexture(Graphic);
+			textureRegion = new TextureRegion(_cache.loadTexture(Graphic));
 		}
+		//otherwise, load as TextureAtlas
 		else if (split.length == 2)
 		{
 			String fileName = split[0];
 			String regionName = split[1];
 		
-			textureRegion = _cache.loadTexture(fileName, regionName);
+			textureRegion = _cache.loadTextureRegion(fileName, regionName);
 		
 			if (textureRegion == null)
 				throw new RuntimeException("Could not find region " + regionName + " in " + fileName);
@@ -1166,30 +1172,31 @@ public class FlxG
 			throw new IllegalArgumentException("Invalid path: " + Graphic + ".");
 		}
 		
-		if (Unique && !checkBitmapCache(Key))
+		if (Unique)
 		{
-			TextureData textureData = textureRegion.getTexture().getTextureData();
+			if (!checkBitmapCache(Key))
+			{
+				TextureData textureData = textureRegion.getTexture().getTextureData();
 		
-			if(!textureData.isPrepared())
-				textureData.prepare();
+				if(!textureData.isPrepared())
+					textureData.prepare();
 			
-			int rx = textureRegion.getRegionX();
-			int ry = textureRegion.getRegionY();
-			int rw = textureRegion.getRegionWidth();
-			int rh = textureRegion.getRegionHeight();
+				int rx = textureRegion.getRegionX();
+				int ry = textureRegion.getRegionY();
+				int rw = textureRegion.getRegionWidth();
+				int rh = textureRegion.getRegionHeight();
 			
-			Pixmap newPixmap = new Pixmap(MathUtils.nextPowerOfTwo(rw), MathUtils.nextPowerOfTwo(rh), Pixmap.Format.RGBA8888);
-			Pixmap graphicPixmap = textureData.consumePixmap();
-			newPixmap.drawPixmap(graphicPixmap, 0, 0, rx, ry, rw, rh);
+				Pixmap newPixmap = new Pixmap(MathUtils.nextPowerOfTwo(rw), MathUtils.nextPowerOfTwo(rh), Pixmap.Format.RGBA8888);
+				Pixmap graphicPixmap = textureData.consumePixmap();
+				newPixmap.drawPixmap(graphicPixmap, 0, 0, rx, ry, rw, rh);
 			
-			if (textureData.disposePixmap())
-				graphicPixmap.dispose();
+				if (textureData.disposePixmap())
+					graphicPixmap.dispose();
 			
-			textureRegion = _cache.loadTexture(Key, newPixmap, rw, rh);
-		}
-		else if (Unique)
-		{
-			textureRegion = _cache.getTexture(Key);
+				_cache.loadTexture(Key, newPixmap);
+			}
+	
+			textureRegion = new TextureRegion(_cache.getTexture(Key), textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
 		}
 		
 		return textureRegion;
@@ -1872,7 +1879,8 @@ public class FlxG
 		FlxG.volumeHandler = null;
 		
 		//FlxG.clearBitmapCache();
-		_cache = new FlxAssetCache();
+		FlxG._cache = new FlxAssetCache();
+		FlxG.disposeAssetsOnStateChange = false;
 		
 		FlxCamera.defaultZoom = Zoom;
 		FlxCamera.defaultScaleMode = ScaleMode;
@@ -1892,6 +1900,8 @@ public class FlxG
 		FlxG.levels = new Array<Object>();
 		FlxG.scores = new IntArray();
 		FlxG.visualDebug = false;
+		
+		FlxG._floatArray = new float[4];
 	}
 	
 	/**
@@ -1902,7 +1912,15 @@ public class FlxG
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
-		FlxG.stopVibrate();
+		
+		try
+		{
+			FlxG.stopVibrate();
+		}
+		catch(Exception e)
+		{
+			//prevents android crashing if vibrate permission not set
+		}
 
 		FlxG.levels.clear();
 		FlxG.scores.clear();
@@ -2081,14 +2099,7 @@ public class FlxG
 	 */
 	public static void stopVibrate()
 	{
-		try
-		{
-			Gdx.input.cancelVibrate();
-		}
-		catch (Exception e)
-		{
-			FlxG.log(e.getMessage());
-		}
+		Gdx.input.cancelVibrate();
 	}
 	
 	/**

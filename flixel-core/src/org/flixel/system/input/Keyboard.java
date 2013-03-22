@@ -187,7 +187,7 @@ public class Keyboard extends Input
 		addKey("BACKSLASH",Keys.BACKSLASH);
 		//addKey("CAPSLOCK",Keys.CAPS_LOCK);
 		addKey("SEMICOLON",Keys.SEMICOLON);
-		//addKey("QUOTE",Keys.QUOTE);
+		addKey("QUOTE",Keys.APOSTROPHE);
 		addKey("ENTER",Keys.ENTER);
 		addKey("SHIFT",Keys.SHIFT_LEFT);
 		addKey("COMMA",Keys.COMMA);

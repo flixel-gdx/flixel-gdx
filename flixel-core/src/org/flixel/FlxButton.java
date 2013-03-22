@@ -350,7 +350,10 @@ public class FlxButton extends FlxSprite
 	{
 		super.resetHelpers();
 		if(label != null)
+		{
 			label.width = width;
+			label.calcFrame();
+		}
 	}
 	
 	/**
