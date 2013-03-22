@@ -23,32 +23,87 @@ import com.badlogic.gdx.utils.ObjectMap;
  */
 public class FlxAssetCache 
 {
-	protected ObjectMap<String, Disposable> _textures;
-	protected ObjectMap<String, TextureRegion> _textureRegions;
+	protected ObjectMap<String, Texture> _textures;
+	protected ObjectMap<String, TextureAtlas> _atlases;
+	protected ObjectMap<String, BitmapFont> _fonts;
 	protected ObjectMap<String, Disposable> _sounds;
 	
 	public FlxAssetCache()
 	{		
-		_textures = new ObjectMap<String, Disposable>();
-		_textureRegions = new ObjectMap<String, TextureRegion>();
+		_textures = new ObjectMap<String, Texture>();
+		_atlases = new ObjectMap<String, TextureAtlas>();
+		_fonts = new ObjectMap<String, BitmapFont>();
 		_sounds = new ObjectMap<String, Disposable>();
 	}
 	
 	/**
-	 * Loads a <code>TextureRegion</code> from an image file.
+	 * Loads a <code>Texture</code> from an image file.
 	 * 
 	 * @param Path		The path to the image file.
-	 * @return			The <code>TextureRegion</code> if found.
+	 * @return			The <code>Texture</code> if found.
 	 */
-	public TextureRegion loadTexture(String Path)
+	public Texture loadTexture(String Path)
 	{
-		if (!_textureRegions.containsKey(Path))
+		if (!_textures.containsKey(Path))
+			_textures.put(Path, new Texture(getFileHandle(Path)));
+		
+		return _textures.get(Path);
+	}
+	
+	/**
+	 * Converts a <code>Pixmap</code> into a <code>Texture</code> and stores it in the cache.
+	 * 
+	 * @param Key		The key to store the <code>Pixmap</code>.
+	 * @param Image		The <code>Pixmap</code> to store.
+	 * @return			The stored <code>Pixamp</code>.
+	 */
+	public Texture loadTexture(String Key, Pixmap Image)
+	{	
+		if (!_textures.containsKey(Key))
 		{
-			Texture texture = new Texture(getFileHandle(Path));
-			_textures.put(Path, texture);
-			_textureRegions.put(Path, new TextureRegion(texture));
+			_textures.put(Key, new Texture(new ManagedTextureData(Image)));
 		}
-		return getTexture(Path);
+		return _textures.get(Key);
+	}
+	
+	/**
+	 * Disposes a <code>Texture</code> and removes it from the cache.
+	 * 
+	 * @param Path		The path to the image file.
+	 */
+	public void disposeTexture(String Path)
+	{
+		Texture texture = _textures.remove(Path);
+		
+		if(texture != null)
+			texture.dispose();
+	}
+	
+	/**
+	 * Loads a <code>TextureAtlas</code> from a pack file.
+	 * 
+	 * @param Path		The path to the pack file.
+	 * @return			The <code>TextureAtlas</code> if found.
+	 */
+	public TextureAtlas loadTextureAtlas(String Path)
+	{
+		if (!_atlases.containsKey(Path))
+			_atlases.put(Path, new TextureAtlas(getFileHandle(Path)));
+		
+		return _atlases.get(Path);
+	}
+	
+	/**
+	 * Disposes a <code>TextureAtlas</code> and removes it from the cache.
+	 * 
+	 * @param Path
+	 */
+	public void disposeTextureAtlas(String Path)
+	{
+		TextureAtlas atlas = _atlases.get(Path);
+		
+		if (atlas != null)
+			atlas.dispose();
 	}
 	
 	/**
@@ -58,47 +113,20 @@ public class FlxAssetCache
 	 * @param Region	The name of the <code>TextureRegion</code>.
 	 * @return			The <code>TextureRegion</code> if found.
 	 */
-	public TextureRegion loadTexture(String Path, String Region)
+	public TextureRegion loadTextureRegion(String Path, String Region)
 	{
-		String Key = Path + ":" + Region;
-		if (!_textureRegions.containsKey(Key))
-		{
-			if (!_textures.containsKey(Path))
-			{		
-				_textures.put(Path, new TextureAtlas(getFileHandle(Path)));
-			}
-			_textureRegions.put(Key, ((TextureAtlas) _textures.get(Path)).findRegion(Region));
-		}
-		return getTexture(Key);
+		return new TextureRegion(loadTextureAtlas(Path).findRegion(Region));
 	}
 	
 	/**
-	 * Converts a <code>Pixmap</code> into a <code>TextureRegion</code> and stores it in the cache.
+	 * Loads a stored <code>Texture</code>.
 	 * 
-	 * @param Key		The key to store the <code>Pixmap</code>.
-	 * @param Image		The <code>Pixmap</code> to store.
-	 * @param Width		The width of the region.
-	 * @param Height	The height of the region.
-	 * @return			The stored <code>Pixamp</code>.
+	 * @param Key	The Key that was used to store this <code>Texture</code>.
+	 * @return		The <code>Texture</code>.
 	 */
-	public TextureRegion loadTexture(String Key, Pixmap Image, int Width, int Height)
-	{	
-		if (!_textureRegions.containsKey(Key))
-		{
-			_textureRegions.put(Key, new TextureRegion(new Texture(new ManagedTextureData(Image)), 0, 0, Width, Height));
-		}
-		return getTexture(Key);
-	}
-	
-	/**
-	 * Loads a stored <code>TextureRegion</code>.
-	 * 
-	 * @param Key	The Key that was used to store this <code>TextureRegion</code>.
-	 * @return		The <code>TextureRegion</code>
-	 */
-	public TextureRegion getTexture(String Key)
+	public Texture getTexture(String Key)
 	{
-		return new TextureRegion(_textureRegions.get(Key));
+		return _textures.get(Key);
 	}
 	
 	/**
@@ -109,7 +137,7 @@ public class FlxAssetCache
 	 */
 	public boolean containsTexture(String Key)
 	{
-		return _textureRegions.containsKey(Key);
+		return _textures.containsKey(Key);
 	}
 	
 	/**
@@ -132,15 +160,29 @@ public class FlxAssetCache
 	 */
 	public BitmapFont loadFont(String Path, int Size)
 	{
-		if (!_textures.containsKey(Path + Size))
+		if (!_fonts.containsKey(Path + Size))
 		{
 			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(getFileHandle(Path));
 			FreeTypeBitmapFontData data = generator.generateData(Size, FreeTypeFontGenerator.DEFAULT_CHARS, true);
 			generator.dispose();
-			_textures.put(Path + Size, new BitmapFont(data, data.getTextureRegion(), true));
+			_fonts.put(Path + Size, new BitmapFont(data, data.getTextureRegion(), true));
 		}
 		
-		return (BitmapFont) _textures.get(Path + Size);
+		return _fonts.get(Path + Size);
+	}
+	
+	/**
+	 * Disposes a font and removes it from the cache.
+	 * 
+	 * @param Path	The path to the font file.
+	 * @param Size	The size of the font.
+	 */
+	public void disposeFont(String Path, int Size)
+	{
+		BitmapFont font = _fonts.remove(Path + Size);
+		
+		if (font != null)
+			font.dispose();
 	}
 	
 	/**
@@ -174,29 +216,6 @@ public class FlxAssetCache
 	}
 	
 	/**
-	 * Disposes all textures and fonts currently contained in the cache.
-	 */
-	public void disposeTextures()
-	{
-		for (Disposable atlas : _textures.values())
-			atlas.dispose();
-		
-		_textures.clear();
-		_textureRegions.clear();
-	}
-	
-	/**
-	 * Disposes all sounds and music currently contained in the cache.
-	 */
-	public void disposeSounds()
-	{
-		for (Disposable sound : _sounds.values())
-			sound.dispose();
-		
-		_sounds.clear();
-	}
-	
-	/**
 	 * Disposes the specified sound or music and removes it from the cache.
 	 * @param Sound
 	 */
@@ -211,11 +230,71 @@ public class FlxAssetCache
 	}
 	
 	/**
+	 * Disposes the specified sound or music and removes it from the cache.
+	 * @param Path
+	 */
+	public void disposeSound(String Path)
+	{
+		Disposable sound = _sounds.remove(Path);
+		
+		if (sound != null)
+			sound.dispose();
+	}
+	
+	/**
+	 * Disposes all textures currently contained in the cache.
+	 */
+	public void disposeTextures()
+	{
+		for (Texture texture : _textures.values())
+			texture.dispose();
+		
+		_textures.clear();
+	}
+	
+	/**
+	 * Disposes all texture atlases currently contained in the cache.
+	 */
+	public void disposeTextureAtlases()
+	{
+		for (TextureAtlas atlas : _atlases.values())
+			atlas.dispose();
+		
+		_atlases.clear();
+	}
+	
+	/**
+	 * Disposes all texture fonts currently contained in the cache.
+	 */
+	public void disposeFonts()
+	{
+		for (BitmapFont font : _fonts.values())
+			font.dispose();
+		
+		_fonts.clear();
+	}
+	
+	/**
+	 * Disposes all sounds and music currently contained in the cache.
+	 */
+	public void disposeSounds()
+	{
+		for (Disposable sound : _sounds.values())
+			sound.dispose();
+		
+		_sounds.clear();
+	}
+	
+	/**
 	 * Disposes the cache.
 	 */
 	public void dispose()
 	{
 		clear();
+		_textures = null;
+		_atlases = null;
+		_fonts = null;
+		_sounds = null;
 	}
 	
 	/**
@@ -224,6 +303,8 @@ public class FlxAssetCache
 	public void clear()
 	{
 		disposeTextures();
+		disposeTextureAtlases();
+		disposeFonts();
 		disposeSounds();		
 	}
 	

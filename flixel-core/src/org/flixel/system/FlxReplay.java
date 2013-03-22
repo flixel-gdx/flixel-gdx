@@ -98,8 +98,8 @@ public class FlxReplay
 	public void load(String FileContents)
 	{
 		init();
-			
-		String[] lines = FileContents.split("\n");
+		
+		String[] lines = FileContents.split("\r?\n|\r");
 		
 		seed = Float.parseFloat(lines[0]);
 		

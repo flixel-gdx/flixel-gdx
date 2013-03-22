@@ -181,7 +181,7 @@ public class FlxTilemap extends FlxObject
 
 		//Figure out the map dimensions based on the data string
 		String[] columns;
-		String[] rows = MapData.split("\n");
+		String[] rows = MapData.split("\r?\n|\r");
 		heightInTiles = rows.length;
 		_data = new IntArray();
 		int row = 0;

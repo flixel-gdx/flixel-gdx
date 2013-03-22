@@ -1032,7 +1032,8 @@ public class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * @private
+	 * Set <code>pixels</code> to any <code>TextureRegion</code> object.
+	 * Automatically adjust graphic size and render helpers.
 	 */
 	public void setPixels(TextureRegion Pixels)
 	{
@@ -1053,7 +1054,9 @@ public class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * @private
+	 * Set <code>facing</code> using <code>FlxSprite.LEFT</code>,<code>RIGHT</code>,
+	 * <code>UP</code>, and <code>DOWN</code> to take advantage of
+	 * flipped sprites and/or just track player orientation more easily.
 	 */
 	public void setFacing(int Direction)
 	{
@@ -1071,7 +1074,7 @@ public class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * @private
+	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
 	 */
 	public void setAlpha(float Alpha)
 	{
@@ -1082,7 +1085,6 @@ public class FlxSprite extends FlxObject
 		if(Alpha == _alpha)
 			return;
 		_alpha = Alpha;
-		setColor(_color);
 	}
 	
 	/**
@@ -1096,7 +1098,9 @@ public class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * @private
+	 * Set <code>color</code> to a number in this format: 0xRRGGBB.
+	 * <code>color</code> IGNORES ALPHA.  To change the opacity use <code>alpha</code>.
+	 * Tints the whole sprite to be this color (similar to OpenGL vertex colors).
 	 */
 	public void setColor(int Color)
 	{
@@ -1106,8 +1110,6 @@ public class FlxSprite extends FlxObject
 	
 	/**
 	 * Tell the sprite to change to a specific frame of animation.
-	 * 
-	 * @param	Frame	The frame you want to display.
 	 */
 	public int getFrame()
 	{
@@ -1115,7 +1117,9 @@ public class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * @private
+	 * Tell the sprite to change to a specific frame of animation.
+	 * 
+	 * @param	Frame	The frame you want to display.
 	 */
 	public void setFrame(int Frame)
 	{
