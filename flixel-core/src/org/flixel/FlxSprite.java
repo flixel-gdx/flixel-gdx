@@ -2,8 +2,8 @@ package org.flixel;
 
 import org.flixel.event.IFlxAnim;
 import org.flixel.system.FlxAnim;
+import org.flixel.system.gdx.ManagedTextureData;
 
-import com.badlogic.gdx.graphics.ManagedTextureData;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
