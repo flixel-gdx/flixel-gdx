@@ -1247,6 +1247,8 @@ public class FlxG
 	static public void clearBitmapCache()
 	{
 		_cache.disposeTextures();
+		_cache.disposeTextureAtlases();
+		_cache.disposeFonts();
 	}
 	
 	/**
