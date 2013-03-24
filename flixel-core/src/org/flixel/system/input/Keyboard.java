@@ -110,6 +110,23 @@ public class Keyboard extends Input
 	public boolean VOLUME_DOWN;
 	public boolean VOLUME_UP;
 	
+	// Android/GDX joystick and gamepad buttons
+	public boolean BUTTON_CIRCLE;
+	public boolean BUTTON_A; // OUYA = O
+	public boolean BUTTON_B; // OUYA = A
+	public boolean BUTTON_X; // OUYA = U
+	public boolean BUTTON_Y; // OUYA = Y
+	public boolean BUTTON_Z;
+	public boolean BUTTON_L1;
+	public boolean BUTTON_R1;
+	public boolean BUTTON_L2;
+	public boolean BUTTON_R2;
+	public boolean BUTTON_THUMBL;
+	public boolean BUTTON_THUMBR;
+	public boolean BUTTON_START;
+	public boolean BUTTON_SELECT;
+	public boolean BUTTON_MODE;
+	
 	public Keyboard()
 	{
 		super();
@@ -211,7 +228,24 @@ public class Keyboard extends Input
 		addKey("POWER", Keys.POWER);
 		addKey("SEARCH", Keys.SEARCH);
 		addKey("VOLUME_DOWN", Keys.VOLUME_DOWN);
-		addKey("VOLUME_UP", Keys.VOLUME_UP);		
+		addKey("VOLUME_UP", Keys.VOLUME_UP);
+		
+		// JOYSTICK & GAMEPAD BUTTONS
+		addKey("BUTTON_CIRCLE", Keys.BUTTON_CIRCLE);
+		addKey("BUTTON_A", Keys.BUTTON_A);
+		addKey("BUTTON_B", Keys.BUTTON_B);
+		addKey("BUTTON_X", Keys.BUTTON_X);
+		addKey("BUTTON_Y", Keys.BUTTON_Y);
+		addKey("BUTTON_Z", Keys.BUTTON_Z);
+		addKey("BUTTON_L1", Keys.BUTTON_L1);
+		addKey("BUTTON_R1", Keys.BUTTON_R1);
+		addKey("BUTTON_L2", Keys.BUTTON_L2);
+		addKey("BUTTON_R2", Keys.BUTTON_R2);
+		addKey("BUTTON_THUMBL", Keys.BUTTON_THUMBL);
+		addKey("BUTTON_THUMBR", Keys.BUTTON_THUMBR);
+		addKey("BUTTON_START", Keys.BUTTON_START);
+		addKey("BUTTON_SELECT", Keys.BUTTON_SELECT);
+		addKey("BUTTON_MODE", Keys.BUTTON_MODE);
 	}
 		
 	/**
