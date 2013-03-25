@@ -295,7 +295,7 @@ public class FlxPath
 
 			//then draw a line to the next node
 			gfx.moveTo(_point.x,_point.y);
-			gfx.lineStyle(1,debugColor,linealpha);
+			gfx.lineStyle(1f,debugColor,linealpha);
 			_point.x = nextNode.x - (int)(Camera.scroll.x*debugScrollFactor.x); //copied from getScreenXY()
 			_point.y = nextNode.y - (int)(Camera.scroll.y*debugScrollFactor.y);
 			_point.x = (int)(_point.x + ((_point.x > 0)?0.0000001f:-0.0000001f));

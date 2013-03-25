@@ -16,13 +16,8 @@ import com.badlogic.gdx.math.Vector2;
  * 
  * @author Thomas Weston
  */
-public class Graphics {
-	
-	/**
-	 * The graphics instance.
-	 */
-	static private Graphics _graphics;
-	
+public class Graphics 
+{	
 	/**
 	 * The <code>ShapeRenderer</code> instance.
 	 */
@@ -36,23 +31,10 @@ public class Graphics {
 	/**
 	 * Create a new <code>Graphics</code> object.
 	 */
-	private Graphics()
+	public Graphics()
 	{
 		_shapeRenderer = new ShapeRenderer(10000);	
 		_drawingPosition = new Vector2();
-	}
-	
-	/**
-	 * Initialize the graphics.
-	 * 
-	 * @return	The initialized <code>Graphics</code> instance.
-	 */
-	public static Graphics initGraphics()
-	{
-		if (_graphics == null)
-			_graphics = new Graphics();
-		
-		return _graphics;
 	}
 	
 	/**
@@ -115,10 +97,10 @@ public class Graphics {
 	 * @param color		A hexadecimal color value of the line; for example, red is 0xFF0000, blue is 0x0000FF, and so on. If a value is not indicated, the default is 0x000000 (black). Optional.
 	 * @param alpha		A number that indicates the alpha value of the color of the line; valid values are 0 to 1. If a value is not indicated, the default is 1 (solid). If the value is less than 0, the default is 0. If the value is greater than 1, the default is 1.
 	 */
-	//TODO: implement thickness.
 	public void lineStyle(float thickness, int color, float alpha)
 	{
 		float[] rgba = FlxU.getRGBA(color);
+		Gdx.gl.glLineWidth(thickness);
 		_shapeRenderer.setColor(rgba[0] * 0.00392f, rgba[1] * 0.00392f, rgba[2] * 0.00392f, alpha);
 	}
 	
@@ -199,6 +181,5 @@ public class Graphics {
 		_shapeRenderer.dispose();
 		_shapeRenderer = null;
 		_drawingPosition = null;
-		_graphics = null;
 	}
 }

@@ -858,7 +858,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG._gl.glEnable(GL10.GL_SCISSOR_TEST);
 		
 		FlxG.batch = new SpriteBatch();
-		FlxG.flashGfx = Graphics.initGraphics();
+		FlxG.flashGfx = new Graphics();
 		
 		//Add basic input event listeners and mouse container
 		Gdx.input.setInputProcessor(this);
