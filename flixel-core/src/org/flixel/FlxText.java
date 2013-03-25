@@ -408,12 +408,14 @@ public class FlxText extends FlxSprite
 		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
 		
 		//scaling
+		_textField.getFont().setScale(1,1);
 		if(scale.x != 1 || scale.y != 1)
 		{
 			_textField.getFont().setScale(scale.x, scale.y);
-			calcFrame();
 		}
+		calcFrame();
 		
+		//position
 		_textField.setPosition(_point.x, _point.y);
 		
 		//rotation
