@@ -377,8 +377,16 @@ public class FlxText extends FlxSprite
 		_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
 		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
 		
+		//scaling
+		if(scale.x != 1 || scale.y != 1)
+		{
+			_textField.getFont().setScale(scale.x, scale.y);
+			calcFrame();
+		}
+		
 		_textField.setPosition(_point.x, _point.y);
 		
+		//rotation
 		if (angle != 0)
 		{
 			_matrix = FlxG.batch.getTransformMatrix().cpy();
@@ -414,11 +422,7 @@ public class FlxText extends FlxSprite
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 		
-		//scaling
-		if(scale.x != 1 || scale.y != 1)
-		{
-			_textField.getFont().setScale(scale.x, scale.y);
-		}
+		
 		
 		if(blend != null)
 		{
