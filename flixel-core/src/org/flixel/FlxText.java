@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Matrix4;
  * as long as they are only one liners.
  * 
  * @author	Ka Wing Chin
+ * @author	Thomas Weston
  */
 public class FlxText extends FlxSprite
 {	
@@ -50,11 +51,11 @@ public class FlxText extends FlxSprite
 	/**
 	 * Internal tracker for the x-position of the shadow, default is 1.
 	 */
-	protected float _shadowX = 1f;
+	protected float _shadowX;
 	/**
 	 * Internal tracker for the y-position of the shadow, default is 1.
 	 */
-	protected float _shadowY = 1f;
+	protected float _shadowY;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -122,9 +123,9 @@ public class FlxText extends FlxSprite
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xAARRGGBB format.
-	 * @param	ShadowX		The x-position of the shadow.
-	 * @param	ShadowY		The y-position of the shadow.
+	 * @param	ShadowColor	An int representing the desired text shadow color in flash 0xAARRGGBB format.
+	 * @param	ShadowX		The x-position of the shadow, default is 1.
+	 * @param	ShadowY		The y-position of the shadow, default is 1.
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -160,15 +161,33 @@ public class FlxText extends FlxSprite
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	ShadowX		The x-position of the shadow.
+	 * @param	ShadowColor	A int representing the desired text shadow color in flash 0xAARRGGBB format.
+	 * @param	ShadowX		The x-position of the shadow, default is 1.
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(String Font, float Size, int Color, String Alignment, float ShadowX)
+	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor, float ShadowX)
 	{
-		return setFormat(Font, Size, Color, Alignment, 0, ShadowX, 1f);
+		return setFormat(Font, Size, Color, Alignment, ShadowColor, ShadowX, 1f);
 	}
 	
+	/**
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
+	 * 
+	 * @param	Font		The name of the font face for the text display.
+	 * @param	Size		The size of the font (in pixels essentially).
+	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
+	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
+	 * @param	ShadowColor	An int representing the desired text shadow color in flash 0xAARRGGBB format.
+	 * 
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
+	 */
+	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor)
+	{
+		return setFormat(Font, Size, Color, Alignment, ShadowColor, 1f, 1f);
+	}	
+		
 	/**
 	 * You can use this if you have a lot of text parameters
 	 * to set instead of the individual properties.
@@ -326,17 +345,28 @@ public class FlxText extends FlxSprite
 		_shadow = Color;
 	}
 	
+	/**
+	 * The position of the text shadow.
+	 * @param ShadowX	The x-position
+	 * @param ShadowY	The y-position
+	 */
 	public void setShadow(float ShadowX, float ShadowY)
 	{
 		_shadowX = ShadowX;
 		_shadowY = ShadowY;
 	}
 	
+	/**
+	 * The x-position of the text shadow.
+	 */
 	public void setShadowX(float ShadowX)
 	{
 		_shadowX = ShadowX;
 	}
 	
+	/**
+	 * The y-position of the text shadow.
+	 */
 	public void setShadowY(float ShadowY)
 	{
 		_shadowY = ShadowY;
@@ -377,8 +407,16 @@ public class FlxText extends FlxSprite
 		_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
 		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
 		
+		//scaling
+		if(scale.x != 1 || scale.y != 1)
+		{
+			_textField.getFont().setScale(scale.x, scale.y);
+			calcFrame();
+		}
+		
 		_textField.setPosition(_point.x, _point.y);
 		
+		//rotation
 		if (angle != 0)
 		{
 			_matrix = FlxG.batch.getTransformMatrix().cpy();
@@ -413,7 +451,9 @@ public class FlxText extends FlxSprite
 		//tinting
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
-
+		
+		
+		
 		if(blend != null)
 		{
 			FlxG.batch.setBlendFunction(blend[0], blend[1]);
