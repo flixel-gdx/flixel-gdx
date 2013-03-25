@@ -413,7 +413,13 @@ public class FlxText extends FlxSprite
 		//tinting
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
-
+		
+		//scaling
+		if(scale.x != 1 || scale.y != 1)
+		{
+			_textField.getFont().setScale(scale.x, scale.y);
+		}
+		
 		if(blend != null)
 		{
 			FlxG.batch.setBlendFunction(blend[0], blend[1]);

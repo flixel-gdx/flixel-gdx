@@ -26,7 +26,11 @@ public class TweenPlugin extends FlxBasic
 	 * Just give it a bunch of tweens or timelines and call update() periodically, you 
 	 * don't need to care for anything else! Relax and enjoy your animations.
 	 */
-	public static TweenManager manager;
+	public static TweenManager manager;	
+	/**
+	 * Whether the tween should updates or not when <code>FlxG.paused</code> is set to true.
+	 */
+	public static boolean ignorePause = false;
 	
 	/**
 	 * Constructor
@@ -43,7 +47,7 @@ public class TweenPlugin extends FlxBasic
 	@Override
 	public void update()
 	{
-		if(!FlxG.paused)
+		if(!FlxG.paused || ignorePause)
 			manager.update(FlxG.elapsed);
 	}
 	
