@@ -161,7 +161,7 @@ public class FlxText extends FlxSprite
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	ShadowColor	A int representing the desired text shadow color in flash 0xAARRGGBB format.
+	 * @param	ShadowColor	An int representing the desired text shadow color in flash 0xAARRGGBB format.
 	 * @param	ShadowX		The x-position of the shadow, default is 1.
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
@@ -431,7 +431,7 @@ public class FlxText extends FlxSprite
 			FlxG.batch.setTransformMatrix(rotationMatrix);
 		}
 		
-		//Render a single pixel shadow beneath the text
+		//Render shadow behind the text
 		if (_shadow != 0)
 		{
 			//tinting
@@ -455,7 +455,7 @@ public class FlxText extends FlxSprite
 		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 		
 		
-		
+		//blending
 		if(blend != null)
 		{
 			FlxG.batch.setBlendFunction(blend[0], blend[1]);

@@ -1797,6 +1797,40 @@ public class FlxG
 		pluginList.add(Plugin);
 		return Plugin;
 	}
+	
+	/**
+	 * Adds a new plugin to the global plugin array. A new instance of the plugin will be created if it's not exists yet.
+	 * 
+	 * @param	Plugin	Any object that extends FlxBasic. Useful for managers and other things.  See org.flixel.plugin for some examples!
+	 * 
+	 * @return	The same <code>FlxBasic</code>-based plugin you passed in.
+	 */
+	static public FlxBasic addPlugin(Class<? extends FlxBasic> ClassType)
+	{
+		//Don't add repeats
+		Array<FlxBasic> pluginList = FlxG.plugins;
+		int i = 0;
+		int l = pluginList.size;
+		while(i < l)
+		{
+			if(pluginList.get(i).getClass().equals(ClassType))
+				return plugins.get(i);
+			i++;
+		}
+		
+		//no repeats! safe to add a new instance of this plugin
+		FlxBasic plugin = null;
+		try
+		{
+			plugin = ClassType.newInstance();
+			pluginList.add(plugin);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return plugin;
+	}
 
 	/**
 	 * Retrieves a plugin based on its class name from the global plugin array.
