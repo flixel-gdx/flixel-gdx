@@ -51,11 +51,11 @@ public class FlxText extends FlxSprite
 	/**
 	 * Internal tracker for the x-position of the shadow, default is 1.
 	 */
-	protected float _shadowX;
+	protected float _shadowX = 1f;
 	/**
 	 * Internal tracker for the y-position of the shadow, default is 1.
 	 */
-	protected float _shadowY;
+	protected float _shadowY = 1f;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -290,7 +290,7 @@ public class FlxText extends FlxSprite
 		if (Size == _size)
 			return;
 		
-		setFormat(_font, Size, _color, getAlignment(), _shadow);
+		setFormat(_font, Size, _color, getAlignment(), _shadow, _shadowX, _shadowY);
 	}
 	
 	/**
@@ -309,7 +309,7 @@ public class FlxText extends FlxSprite
 		if (Font == _font)
 			return;
 		
-		setFormat(Font, _size, _color, getAlignment(), _shadow);
+		setFormat(Font, _size, _color, getAlignment(), _shadow, _shadowX, _shadowY);
 	}
 	
 	/**

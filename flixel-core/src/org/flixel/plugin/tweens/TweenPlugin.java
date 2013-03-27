@@ -52,6 +52,14 @@ public class TweenPlugin extends FlxBasic
 	}
 	
 	/**
+	 * Remove all tweens.
+	 */
+	public void clear()
+	{
+		manager.killAll();
+	}
+	
+	/**
 	 * Remove all tweens and free memory.
 	 */
 	@Override

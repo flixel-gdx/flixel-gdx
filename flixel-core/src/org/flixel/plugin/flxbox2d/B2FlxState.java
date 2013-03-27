@@ -31,7 +31,10 @@ public class B2FlxState extends FlxState
 	 * Handle the collision.
 	 */
 	protected B2FlxContactListener contactListener;
-	
+	/**
+	 * Preallocated gravity
+	 */
+	private final Vector2 _gravity = new Vector2(0, 9.8f);
 	
 	/**
 	 * Creates the world with earth gravity and let inactive bodies sleep. 
@@ -44,7 +47,7 @@ public class B2FlxState extends FlxState
 		B2FlxB.init();
 		
 		// Construct a world object.
-		world = B2FlxB.world = new World(new Vector2(0, 9.8f), true);
+		world = B2FlxB.world = new World(_gravity, true);
 		world.setContactListener(contactListener = new B2FlxContactListener());
 	}
 		
@@ -99,6 +102,7 @@ public class B2FlxState extends FlxState
 	 */
 	public void setGravity(float gravityX, float gravityY)
 	{
-		setGravity(new Vector2(gravityX, gravityY));
+		_gravity.set(gravityX, gravityY);
+		setGravity(_gravity);
 	}
 }
