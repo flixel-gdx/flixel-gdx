@@ -51,11 +51,11 @@ public class FlxText extends FlxSprite
 	/**
 	 * Internal tracker for the x-position of the shadow, default is 1.
 	 */
-	protected float _shadowX = 1f;
+	protected float _shadowX;
 	/**
 	 * Internal tracker for the y-position of the shadow, default is 1.
 	 */
-	protected float _shadowY = 1f;
+	protected float _shadowY;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -77,7 +77,7 @@ public class FlxText extends FlxSprite
 		_text = Text;
 		allowCollisions = NONE;
 		moves = false;
-		setFormat("org/flixel/data/font/nokiafc22.ttf", 8, 0xFFFFFF, "left", 0);
+		setFormat("org/flixel/data/font/nokiafc22.ttf", 8, 0xFFFFFF, "left", 0, 1f, 1f);
 	}
 	
 	/**
@@ -111,6 +111,7 @@ public class FlxText extends FlxSprite
 	@Override
 	public void destroy()
 	{
+		_textField.clear();
 		_textField = null;
 		super.destroy();
 	}
