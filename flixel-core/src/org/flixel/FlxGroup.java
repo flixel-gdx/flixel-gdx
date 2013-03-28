@@ -279,7 +279,7 @@ public class FlxGroup extends FlxBasic
 			try {
 				return add(ObjectClass.newInstance());
 			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage());
+				throw new RuntimeException("Could not create new " + ObjectClass.getName());
 			}
 		}
 	}

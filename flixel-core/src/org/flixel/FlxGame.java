@@ -617,9 +617,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.resetCameras();
 		FlxG.resetInput();
 		FlxG.destroySounds();
-		if (FlxG.disposeAssetsOnStateChange)
-			FlxG.clearBitmapCache();
-		FlxG._cache.disposeTextures();
+		FlxG.clearBitmapCache();
 		
 		// Clear the debugger overlay's Watch window
 		if(_debugger != null)
@@ -1009,7 +1007,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_state.destroy();
 		_mouseEvent = null;
 		FlxG.reset();
-		FlxG._cache.dispose();
+		FlxG.disposeAssetManager();
 		FlxG.batch.dispose();
 		FlxG.flashGfx.dispose();
 	}

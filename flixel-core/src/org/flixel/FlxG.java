@@ -7,15 +7,13 @@ import org.flixel.event.IFlxReplay;
 import org.flixel.event.IFlxVolume;
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
-import org.flixel.system.FlxAssetCache;
+import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -261,11 +259,7 @@ public class FlxG
 	/**
 	 * Internal storage system to prevent assets from being used repeatedly in memory.
 	 */
-	static FlxAssetCache _cache;
-	/**
-	 * Whether or not the asset cache is automatically cleared whenever the state changes.
-	 */
-	static public boolean disposeAssetsOnStateChange;
+	static protected FlxAssetManager _cache;
 	
 	/**
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
@@ -950,11 +944,7 @@ public class FlxG
 	{
 		if((music != null) && (ForceDestroy || !music.survive))
 		{
-			Music gdxMusic = music._music;
-			Sound gdxSound = music._sound;
-			music.destroy();
-			_cache.disposeSound(gdxMusic);
-			_cache.disposeSound(gdxSound);
+			music.destroy(true);
 			music = null;
 		}
 		int i = 0;
@@ -964,13 +954,7 @@ public class FlxG
 		{
 			sound = (FlxSound) sounds.members.get(i++);
 			if((sound != null) && (ForceDestroy || !sound.survive))
-			{
-				Music gdxMusic = sound._music;
-				Sound gdxSound = sound._sound;
-				sound.destroy();
-				_cache.disposeSound(gdxMusic);
-				_cache.disposeSound(gdxSound);
-			}
+				sound.destroy(true);
 		}
 	}
 
@@ -1247,8 +1231,15 @@ public class FlxG
 	static public void clearBitmapCache()
 	{
 		_cache.disposeTextures();
-		_cache.disposeTextureAtlases();
 		_cache.disposeFonts();
+	}
+	
+	/**
+	 * Dispose the asset manager and all assets it contains.
+	 */
+	static void disposeAssetManager()
+	{
+		_cache.dispose();
 	}
 	
 	/**
@@ -1915,8 +1906,7 @@ public class FlxG
 		FlxG.volumeHandler = null;
 		
 		//FlxG.clearBitmapCache();
-		FlxG._cache = new FlxAssetCache();
-		FlxG.disposeAssetsOnStateChange = false;
+		FlxG._cache = new FlxAssetManager();
 		
 		FlxCamera.defaultZoom = Zoom;
 		FlxCamera.defaultScaleMode = ScaleMode;

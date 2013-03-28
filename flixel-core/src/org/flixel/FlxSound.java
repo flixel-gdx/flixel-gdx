@@ -179,24 +179,43 @@ public class FlxSound extends FlxBasic
 		amplitudeLeft = 0;
 		amplitudeRight = 0;
 		autoDestroy = false;
+		survive = false;
 		_wasPlaying = false;
 	}
 		
 	/**
 	 * Clean up memory.
+	 * 
+	 * @param	Dispose		Whether or not to dispose the sound file.
 	 */
-	public void destroy()
+	public void destroy(boolean Dispose)
 	{
 		kill();
 		
-		_sound = null;
-		_music = null;
+		if (Dispose)
+		{
+			if (_sound != null)
+				FlxG._cache.disposeSound(_sound);
+			if (_music != null)
+				FlxG._cache.disposeSound(_music);
+			_sound = null;
+			_music = null;
+		}
+		
 		_soundId = 0;
 		_target = null;
 		name = null;
 		artist = null;
 		
 		super.destroy();
+	}
+	
+	/**
+	 * Clean up memory.
+	 */
+	public void destroy()
+	{
+		destroy(false);
 	}
 		
 	/**
@@ -270,7 +289,7 @@ public class FlxSound extends FlxBasic
 	public void kill()
 	{
 		super.kill();
-		if ((FlxG._cache.containsSound(_sound) || FlxG._cache.containsSound(_music)) && (_sound != null && _soundId != 0) || (_music != null && _music.isPlaying()))
+		if ((_sound != null && _soundId != 0) || (_music != null && _music.isPlaying()))
 			stop();
 	}
 	
