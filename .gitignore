@@ -2,4 +2,3 @@ bin/
 gen/
 
 Thumbs.db
-.travis.yml

@@ -6,19 +6,6 @@ import com.badlogic.gdx.utils.Array;
 public class FlxU
 {
 	/**
-	 * The value PI as a float. (180 degrees)
-	 */
-	public static final float PI = 3.1415927f;    
-    /**
-     * The value 2PI as a float. (360 degrees)
-     */
-    public static final float TWO_PI = 2.0f * PI;
-    /**
-     * The value PI/2 as a float. (90 degrees)
-     */
-    public static final float HALF_PI = 0.5f * PI;
-
-	/**
 	 * Opens a web page in a new tab or window.
 	 * MUST be called from the UI thread or else badness.
 	 * 
@@ -38,7 +25,8 @@ public class FlxU
 	 */
 	static public float abs(float Value)
 	{
-		return (Value>0)?Value:-Value;
+		// it's slightly quicker to do this than flixel's (Value>0)?Value:-Value;
+		return Math.abs(Value);
 	}
 	
 	/**
@@ -855,166 +843,19 @@ public class FlxU
 		float dy = Point1.y - Point2.y;
 		return (float) Math.sqrt(dx * dx + dy * dy);
 	}
-		
-	/**
-	 * Returns the arc cosine of an angle given in radians. 
-	 * If value is smaller than -1, then the result is PI.
-	 * If the argument is greater than 1, then the result is 0.
-	 * 
-	 * @param value    The angle, in radians.
-	 * @return value's acos
-	 */
-	public static float acos(float value)
-	{
-		if(-1.0f < value)
-		{
-			if(value < 1.0f)
-				return (float) Math.acos(value);
-			return 0.0f;
-		}
-		return PI;
-	}
-
-	/**
-	 * Returns the arc sine of an angle given in radians.
-	 * If value is smaller than -1, then the result is -HALF_PI.
-	 * If the argument is greater than 1, then the result is HALF_PI.
-	 * 
-	 * @param value	The angle, in radians.
-	 * @return fValue's asin
-	 */
-	public static float asin(float value)
-	{
-		if(-1.0f < value)
-		{
-			if(value < 1.0f)
-				return (float) Math.asin(value);
-
-			return HALF_PI;
-		}
-		return -HALF_PI;
-	}
-
-	
-	/**
-	 * Computes and returns the sine of the specified angle in radians.
-	 * To calculate a radian. This method is only a fast sine approximation.
-	 * 
-	 * @param angleRadians	A number that represents an angle measured in radians.
-	 * @return A number from -1.0 to 1.0.
-	 */
-	public static float sin(float angleRadians)
-	{
-		if(angleRadians < -3.14159265)
-		{
-			angleRadians += 6.28318531;
-		}
-		else if(angleRadians > 3.14159265)
-		{
-			angleRadians -= 6.28318531;
-		}
-		angleRadians = (float) ((angleRadians < 0.0) ? (1.27323954 * angleRadians + .405284735 * angleRadians * angleRadians)
-				: (1.27323954 * angleRadians - 0.405284735 * angleRadians * angleRadians));
-		return (float) ((angleRadians < 0.0) ? (0.225 * (angleRadians * -angleRadians - angleRadians) + angleRadians)
-				: (0.225 * (angleRadians * angleRadians - angleRadians) + angleRadians));
-	}
-
-	/**
-	 * Computes and returns the cosine of the specified angle in radians. To
-	 * calculate a radian. This method is only a fast cosine approximation.
-	 * 
-	 * @param angleRadians	A number that represents an angle measured in radians.
-	 * @return A number from -1.0 to 1.0.
-	 */
-	public static float cos(float angleRadians)
-	{
-		if(angleRadians < -3.14159265)
-		{
-			angleRadians += 6.28318531;
-		}
-		else if(angleRadians > 3.14159265)
-		{
-			angleRadians -= 6.28318531;
-		}
-
-		angleRadians += 1.57079632;
-		if(angleRadians > 3.14159265)
-		{
-			angleRadians -= 6.28318531;
-		}
-
-		angleRadians = (float) ((angleRadians < 0.0) ? (1.27323954 * angleRadians + .405284735 * angleRadians * angleRadians)
-				: (1.27323954 * angleRadians - 0.405284735 * angleRadians * angleRadians));
-		return (float) ((angleRadians < 0.0) ? (0.225 * (angleRadians * -angleRadians - angleRadians) + angleRadians)
-				: (0.225 * (angleRadians * angleRadians - angleRadians) + angleRadians));
-	}
-
-	/**
-	 * Returns the value squared. value ^ 2.
-	 * 
-	 * @param value	The vaule to square.
-	 * @return The square of the given value.
-	 */
-	public static float sqr(float value)
-	{
-		return value * value;
-	}
-
-	/**
-	 * Integer cast with respect to its sign.
-	 * 
-	 * @param value	A number.
-	 * @return The number casted to an integer with respect to its sign.
-	 */
-	public static int rint(float value)
-	{
-		if(value > 0.0)
-		{
-			return (int) (value + 0.5);
-		}
-		else if(value < 0.0)
-		{
-			return -(int) (-value + 0.5);
-		}
-		else
-		{
-			return 0;
-		}
-	}
-	
-	/**
-	 * Returns Euler's number e raised to the power of a double value
-	 * @param value
-	 * @return
-	 */
-	public static float exp(double value) 
-	{
-	    final long tmp = (long) (1512775 * value + 1072632447);
-	    return (float) Double.longBitsToDouble(tmp << 32);
-	}
 
 	/**
 	 * Returns the value of the first argument raised to the power of the second argument.
 	 * Note: before you use this code you have to test it if the approximation is good 
 	 * enough for you!
-	 * @param a		The base.
-	 * @param b		The exponent.
-	 * @return
+	 * @param Base		The base.
+	 * @param Exponent	The exponent.
+	 * @return	The result.
 	 */
-	public static float pow(final double a, final double b) 
+	public static float pow(double Base, double Exponent) 
 	{
-	    final int tmp = (int) (Double.doubleToLongBits(a) >> 32);
-	    final int tmp2 = (int) (b * (tmp - 1072632447) + 1072632447);
+	    final int tmp = (int) (Double.doubleToLongBits(Base) >> 32);
+	    final int tmp2 = (int) (Exponent * (tmp - 1072632447) + 1072632447);
 	    return (float) Double.longBitsToDouble(((long) tmp2) << 32);
 	}
-	
-	/**
-	 * Returns the natural logarithm (base e) of a double value.
-	 * 
-	 * @param value
-	 */
-	public static float log(double value) 
-	{		
-	    return (float) (6 * (value - 1) / (value + 1 + 4 * (Math.sqrt(value))));
-	} 
 }

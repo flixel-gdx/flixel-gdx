@@ -466,6 +466,7 @@ public class FlxText extends FlxSprite
 		else
 			_textField.draw(FlxG.batch);
 		
+		//rotation
 		if (angle != 0)
 			FlxG.batch.setTransformMatrix(_matrix);
 		
