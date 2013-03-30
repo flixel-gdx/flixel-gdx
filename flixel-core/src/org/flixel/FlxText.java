@@ -137,7 +137,7 @@ public class FlxText extends FlxSprite
 		
 		if (!Font.equals(_font) || Size != _size)
 		{			
-			_textField = new BitmapFontCache(FlxG._cache.loadFont(Font, (int)Size));			
+			_textField = new BitmapFontCache(FlxG.loadFont(Font, FlxU.round(Size)));			
 		}
  
 		_font = Font;

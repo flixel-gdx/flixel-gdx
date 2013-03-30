@@ -134,10 +134,13 @@ public class FlxCamera extends FlxBasic
 	 * Decides how flixel handles different screen sizes.
 	 */
 	protected int _scaleMode;
+	
+	//TODO:comment these properly
 	public float _screenScaleFactorX;
 	public float _screenScaleFactorY;
 	public int viewportWidth;
 	public int viewportHeight;
+	
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */

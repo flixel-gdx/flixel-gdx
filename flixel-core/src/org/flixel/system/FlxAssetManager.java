@@ -2,20 +2,13 @@ package org.flixel.system;
 
 import org.flixel.system.gdx.FlxFileHandleResolver;
 import org.flixel.system.gdx.FreeTypeFontLoader;
-import org.flixel.system.gdx.ManagedTextureData;
-
+import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.TextureLoader;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 
 /**
  * This class provides an easy way to load and store textures, fonts,
@@ -25,8 +18,14 @@ import com.badlogic.gdx.utils.Disposable;
  */
 public class FlxAssetManager 
 {
+	/**
+	 * Internal, the libgdx asset manager.
+	 */
 	protected AssetManager _assetManager;
 	
+	/**
+	 * Create a new FlxAssetManager instance.
+	 */
 	public FlxAssetManager()
 	{	
 		FileHandleResolver resolver = new FlxFileHandleResolver();
@@ -35,210 +34,78 @@ public class FlxAssetManager
 	}
 	
 	/**
-	 * Loads a <code>Texture</code> from an image file.
+	 * Loads an asset from a file.
 	 * 
-	 * @param Path		The path to the image file.
-	 * @return			The <code>Texture</code> if found.
+	 * @param	FileName	The path to the asset file.
+	 * @param	Type		The type of asset.
+	 * @param	Parameter	Optional parameters for the loader.
+	 * 
+	 * @return	The asset, if found.
 	 */
-	public Texture loadTexture(String Path)
+	public <T> T load(String FileName, Class<T> Type, AssetLoaderParameters<T> Parameter)
 	{
-		if (!_assetManager.isLoaded(Path, Texture.class))
+		if (!_assetManager.isLoaded(FileName, Type))
 		{
-			_assetManager.load(Path, Texture.class);
+			_assetManager.load(FileName, Type, Parameter);
 			_assetManager.finishLoading();
 		}
 		
-		return _assetManager.get(Path, Texture.class);
+		return _assetManager.get(FileName, Type);
 	}
 	
 	/**
-	 * Converts a <code>Pixmap</code> into a <code>Texture</code> and stores it in the cache.
+	 * Loads an asset from a file.
 	 * 
-	 * @param Key		The key to store the <code>Pixmap</code>.
-	 * @param Image		The <code>Pixmap</code> to store.
-	 * @return			The stored <code>Pixamp</code>.
-	 */
-	public Texture loadTexture(String Key, Pixmap Image)
-	{	
-		if (!_assetManager.isLoaded(Key, Pixmap.class))
-		{
-			TextureLoader.TextureParameter parameter = new TextureLoader.TextureParameter();
-			parameter.textureData = new ManagedTextureData(Image);
-			_assetManager.load(Key, Texture.class, parameter);
-			_assetManager.finishLoading();
-		}
-		
-		return _assetManager.get(Key, Texture.class);
-	}
-	
-	/**
-	 * Disposes a <code>Texture</code> and removes it from the cache.
+	 * @param	FileName	The path to the asset file.
+	 * @param	Type		The type of asset.
 	 * 
-	 * @param Path		The path to the image file.
+	 * @return	The asset, if found.
 	 */
-	public void disposeTexture(String Path)
+	public <T> T load(String FileName, Class<T> Type)
 	{
-		_assetManager.unload(Path);
+		return load(FileName, Type, null);
 	}
 	
 	/**
-	 * Loads a <code>TextureAtlas</code> from a pack file.
+	 * Disposes the asset and removes it from the manager.
 	 * 
-	 * @param Path		The path to the pack file.
-	 * @return			The <code>TextureAtlas</code> if found.
+	 * @param	FileName	The asset to dispose.
 	 */
-	public TextureAtlas loadTextureAtlas(String Path)
+	public void unload(String FileName)
 	{
-		if (!_assetManager.isLoaded(Path, TextureAtlas.class))
-		{
-			_assetManager.load(Path, TextureAtlas.class);
-			_assetManager.finishLoading();
-		}
-		
-		return _assetManager.get(Path, TextureAtlas.class);
+		_assetManager.unload(FileName);
 	}
 	
 	/**
-	 * Disposes a <code>TextureAtlas</code> and removes it from the cache.
+	 * Whether or not the cache contains an asset with this key.
 	 * 
-	 * @param Path
-	 */
-	public void disposeTextureAtlas(String Path)
-	{
-		_assetManager.unload(Path);
-	}
-	
-	/**
-	 * Loads a <code>TextureRegion</code> from a <code>TextureAtlas</code>.
+	 * @param	Key			The key to check.
+	 * @param	Type		The type of asset.
 	 * 
-	 * @param Path		The path to the <code>TextureAtlas</code>.
-	 * @param Region	The name of the <code>TextureRegion</code>.
-	 * @return			The <code>TextureRegion</code> if found.
+	 * @return	Whether or not the key exists.
 	 */
-	public TextureRegion loadTextureRegion(String Path, String Region)
+	public <T> boolean containsAsset(String Key, Class<T> Type)
 	{
-		return new TextureRegion(loadTextureAtlas(Path).findRegion(Region));
+		return _assetManager.isLoaded(Key, Type);
 	}
 	
 	/**
-	 * Loads a stored <code>Texture</code>.
+	 * Whether or not the cache contains an asset with this key.
 	 * 
-	 * @param Key	The Key that was used to store this <code>Texture</code>.
-	 * @return		The <code>Texture</code>.
-	 */
-	public Texture getTexture(String Key)
-	{
-		return _assetManager.get(Key, Texture.class);
-	}
-	
-	/**
-	 * Whether or not the cache contains a <code>Texture</code> with this key.
+	 * @param	Key			The key to check.
 	 * 
-	 * @param Key	The key to check.
-	 * @return		Whether or not the key exists.
+	 * @return	Whether or not the key exists.
 	 */
-	public boolean containsTexture(String Key)
+	public boolean containsAsset(String Key)
 	{
-		return _assetManager.isLoaded(Key, Texture.class);
+		return _assetManager.isLoaded(Key);
 	}
 	
 	/**
-	 * Whether or not the cache contains this sound.
-	 * 
-	 * @param Sound		The sound to check.
-	 * @return	Whether or not the sound exists.
+	 * Disposes all textures that were created at run time i.e. not loaded from an
+	 * external file.
 	 */
-	public boolean containsSound(Disposable Sound)
-	{
-		return _assetManager.containsAsset(Sound);
-	}
-	
-	/**
-	 * Loads a bitmap font.
-	 * 
-	 * @param Path	The path to the font file.
-	 * @param Size	The size of the font.
-	 * @return		The font.
-	 */
-	public BitmapFont loadFont(String Path, int Size)
-	{
-		String Key = Path + ":" + Size;
-		if (!_assetManager.isLoaded(Key))
-		{
-			_assetManager.load(Key, BitmapFont.class);
-			_assetManager.finishLoading();
-		}
-		
-		return _assetManager.get(Key, BitmapFont.class);
-	}
-	
-	/**
-	 * Disposes a font and removes it from the cache.
-	 * 
-	 * @param Path	The path to the font file.
-	 * @param Size	The size of the font.
-	 */
-	public void disposeFont(String Path, int Size)
-	{
-		_assetManager.unload(Path + ":" + Size);
-	}
-	
-	/**
-	 * Loads a <code>Sound</code> from a file.
-	 * @param Path	The path to the file.
-	 * @return		The sound.
-	 */
-	public Sound loadSound(String Path)
-	{
-		if (!_assetManager.isLoaded(Path))
-		{
-			_assetManager.load(Path, Sound.class);
-			_assetManager.finishLoading();
-		}
-		
-		return _assetManager.get(Path, Sound.class);
-	}
-	
-	/**
-	 * Loads a <code>Music</code> instance from a file.
-	 * @param Path	The path to the file.
-	 * @return		The music.
-	 */
-	public Music loadMusic(String Path)
-	{
-		if (!_assetManager.isLoaded(Path))
-		{
-			_assetManager.load(Path, Music.class);
-			_assetManager.finishLoading();
-		}
-		
-		return _assetManager.get(Path, Music.class);
-	}
-	
-	/**
-	 * Disposes the specified sound or music and removes it from the cache.
-	 * @param Sound
-	 */
-	public void disposeSound(Disposable Sound)
-	{
-		String fileName = _assetManager.getAssetFileName(Sound);
-		if (fileName != null)
-			_assetManager.unload(fileName);
-	}
-	
-	/**
-	 * Disposes the specified sound or music and removes it from the cache.
-	 * @param Path
-	 */
-	public void disposeSound(String Path)
-	{
-		_assetManager.unload(Path);
-	}
-	
-	/**
-	 * Disposes all run time textures currently contained in the cache.
-	 */
-	public void disposeTextures()
+	public void disposeRunTimeTextures()
 	{
 		// Dispose TextureAtlases first, to prevent conflicts with textures that are parts of atlases.
 		Array<String> assetNames = _assetManager.getAssetNames();
@@ -278,29 +145,15 @@ public class FlxAssetManager
 	}
 	
 	/**
-	 * Disposes all texture fonts currently contained in the cache.
+	 * Disposes all assets of a certain type.
 	 */
-	public void disposeFonts()
+	public <T> void disposeAssets(Class<T> Type)
 	{
 		Array<String> assetNames = _assetManager.getAssetNames();
 		
 		for (String assetName : assetNames)
 		{
-			if (_assetManager.getAssetType(assetName).equals(BitmapFont.class))
-				_assetManager.unload(assetName);
-		}
-	}
-	
-	/**
-	 * Disposes all sounds and music currently contained in the cache.
-	 */
-	public void disposeSounds()
-	{
-		Array<String> assetNames = _assetManager.getAssetNames();
-		
-		for (String assetName : assetNames)
-		{
-			if (_assetManager.getAssetType(assetName).equals(Sound.class) || _assetManager.getAssetType(assetName).equals(Music.class))
+			if (_assetManager.getAssetType(assetName).equals(Type))
 				_assetManager.unload(assetName);
 		}
 	}
@@ -314,10 +167,32 @@ public class FlxAssetManager
 	}
 	
 	/**
-	 * Disposes all assets currently contained in the cache.
+	 * Clears and disposes all assets currently contained in the cache.
 	 */
 	public void clear()
 	{
 		_assetManager.clear();		
+	}
+	
+	/**
+	 * The number of assets contained in the manager.
+	 * Useful for debugging.
+	 * 
+	 * @return The number of assets.
+	 */
+	public int getNumberOfAssets()
+	{
+		return _assetManager.getLoadedAssets();
+	}
+	
+	/**
+	 * Gets the names of all the assets contained in the manager.
+	 * Useful for debugging.
+	 * 
+	 * @return	The names of all assets.
+	 */
+	public Array<String> getNamesOfAssets()
+	{
+		return _assetManager.getAssetNames();
 	}
 }

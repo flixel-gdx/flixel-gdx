@@ -9,17 +9,22 @@ import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
+import org.flixel.system.gdx.ManagedTextureData;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -1016,16 +1021,39 @@ public class FlxG
 	}
 	
 	/**
+	 * Free memory by disposing a sound file and removing it from the cache.
+	 * 
+	 * @param Path		The path to the sound file.
+	 */
+	static public void disposeSound(String Path)
+	{
+		_cache.unload(Path);
+	}
+	
+	/**
+	 * Check the local cache to see if an asset with this key has been
+	 * loaded already.
+	 * 
+	 * @param Key 		The string key identifying the asset.
+	 * 
+	 * @return Whether or not this file can be found in the cache.
+	 */
+	static public boolean checkCache(String Key)
+	{
+		return _cache.containsAsset(Key);
+	}
+	
+	/**
 	 * Check the local bitmap cache to see if a bitmap with this key has been
 	 * loaded already.
 	 * 
-	 * @param Key The string key identifying the bitmap.
+	 * @param Key 		The string key identifying the bitmap.
 	 * 
 	 * @return Whether or not this file can be found in the cache.
 	 */
 	static public boolean checkBitmapCache(String Key)
 	{
-		return _cache.containsTexture(Key);
+		return _cache.containsAsset(Key, Texture.class);
 	}
 	
 	/**
@@ -1067,9 +1095,11 @@ public class FlxG
 			pixmap.setColor(FlxU.argbToRgba(Color));
 			pixmap.fill();
 			
-			_cache.loadTexture(Key, pixmap);
+			TextureParameter parameter = new TextureParameter();
+			parameter.textureData = new ManagedTextureData(pixmap);
+			_cache.load(Key, Texture.class, parameter);
 		}
-		return new TextureRegion(_cache.getTexture(Key), Width, Height);
+		return new TextureRegion(_cache.load(Key, Texture.class), Width, Height);
 	}
 	
 	/**
@@ -1138,7 +1168,7 @@ public class FlxG
 		//if no region has been specified, load as standard texture
 		if (split.length == 1)
 		{
-			textureRegion = new TextureRegion(_cache.loadTexture(Graphic));
+			textureRegion = new TextureRegion(_cache.load(Graphic, Texture.class));
 		}
 		//otherwise, load as TextureAtlas
 		else if (split.length == 2)
@@ -1146,10 +1176,12 @@ public class FlxG
 			String fileName = split[0];
 			String regionName = split[1];
 		
-			textureRegion = _cache.loadTextureRegion(fileName, regionName);
+			textureRegion = FlxG.loadTextureAtlas(fileName).findRegion(regionName);
 		
 			if (textureRegion == null)
 				throw new RuntimeException("Could not find region " + regionName + " in " + fileName);
+			
+			textureRegion = new TextureRegion(textureRegion);
 		}
 		else
 		{
@@ -1177,10 +1209,12 @@ public class FlxG
 				if (textureData.disposePixmap())
 					graphicPixmap.dispose();
 			
-				_cache.loadTexture(Key, newPixmap);
+				TextureParameter parameter = new TextureParameter();
+				parameter.textureData = new ManagedTextureData(newPixmap);
+				_cache.load(Key, Texture.class, parameter);
 			}
 	
-			textureRegion = new TextureRegion(_cache.getTexture(Key), textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+			textureRegion = new TextureRegion(_cache.load(Key, Texture.class), textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
 		}
 		
 		return textureRegion;
@@ -1226,12 +1260,35 @@ public class FlxG
 	}
 	
 	/**
+	 * Loads a <code>TextureAtlas</code> from a file and caches it.
+	 * 
+	 * @param Path			The path to the atlas file you want to load.
+	 * 
+	 * @return	The <code>TextureAtlas</code>.
+	 */
+	static public TextureAtlas loadTextureAtlas(String Path)
+	{
+		return _cache.load(Path, TextureAtlas.class);
+	}
+	
+	/**
+	 * Free memory by disposing a <code>TextureAtlas</code> and removing it
+	 * from the cache.
+	 * 
+	 * @param Path			The path to the atlas file.
+	 */
+	static public void disposeTextureAtlas(String Path)
+	{
+		_cache.unload(Path);
+	}
+	
+	/**
 	 * Dumps the cache's image references.
 	 */
 	static public void clearBitmapCache()
 	{
-		_cache.disposeTextures();
-		_cache.disposeFonts();
+		_cache.disposeRunTimeTextures();
+		_cache.disposeAssets(BitmapFont.class);
 	}
 	
 	/**
@@ -1243,15 +1300,49 @@ public class FlxG
 	}
 	
 	/**
+	 * The number of assets currently loaded.
+	 * Useful for debugging.
+	 * 
+	 * @return	The number of assets.
+	 */
+	static public int getNumberOfAssets()
+	{
+		return _cache.getNumberOfAssets();
+	}
+	
+	/**
 	 * Loads an external text file.
 	 * 
 	 * @param FileName	The path to the text file.
 	 * 
 	 * @return	The contents of the file.
 	 */
-	static public String loadString(String FileName)
+	static public String loadString(String Path)
 	{
-		return Gdx.files.internal(FileName).readString();
+		return Gdx.files.internal(Path).readString();
+	}
+	
+	/**
+	 * Loads a font from a file and caches it.
+	 * 
+	 * @param Path		The path to the font file.
+	 * @param Size		The size of the font.
+	 * @return	The font.
+	 */
+	static public BitmapFont loadFont(String Path, int Size)
+	{
+		return _cache.load(Path + ":" + Size, BitmapFont.class);
+	}
+	
+	/**
+	 * Free memory by disposing a font and removing it from the cache.
+	 * 
+	 * @param Path		The path to the font file.
+	 * @param Size		The size of the font.
+	 */
+	static public void disposeFont(String Path, int Size)
+	{
+		_cache.unload(Path + ":" + Size);
 	}
 	
 	/**

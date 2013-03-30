@@ -135,7 +135,11 @@ public class FlxSound extends FlxBasic
 	/**
 	 * Internal helper for how many times to try playing a sound effect before giving up.
 	 */
-	static protected final int _tryLimit = 5000;
+	protected int _tryLimit;
+	/**
+	 * Internal, store the sound file's location so we can dispose it later.
+	 */
+	protected String _filePath;
 		
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -181,6 +185,7 @@ public class FlxSound extends FlxBasic
 		autoDestroy = false;
 		survive = false;
 		_wasPlaying = false;
+		_tryLimit = 5000;
 	}
 		
 	/**
@@ -192,16 +197,11 @@ public class FlxSound extends FlxBasic
 	{
 		kill();
 		
-		if (Dispose)
-		{
-			if (_sound != null)
-				FlxG._cache.disposeSound(_sound);
-			if (_music != null)
-				FlxG._cache.disposeSound(_music);
-			_sound = null;
-			_music = null;
-		}
+		if (Dispose && FlxG.checkCache(_filePath))
+			FlxG.disposeSound(_filePath);
 		
+		_sound = null;
+		_music = null;
 		_soundId = 0;
 		_target = null;
 		name = null;
@@ -317,11 +317,11 @@ public class FlxSound extends FlxBasic
 				return loadEmbedded(EmbeddedSound, Looped, AutoDestroy, Type);
 				
 			case SFX:
-				_sound = FlxG._cache.loadSound(EmbeddedSound);
+				_sound = FlxG._cache.load(EmbeddedSound, Sound.class);
 				break;
 			
 			case MUSIC:
-				_music = FlxG._cache.loadMusic(EmbeddedSound);
+				_music = FlxG._cache.load(EmbeddedSound, Music.class);
 				break;
 				
 			default:
@@ -329,6 +329,7 @@ public class FlxSound extends FlxBasic
 		}
 		
 		//NOTE: can't pull ID3 info from embedded sound currently
+		_filePath = EmbeddedSound;
 		_looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
