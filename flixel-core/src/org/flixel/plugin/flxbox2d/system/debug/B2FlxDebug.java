@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * A plugin for rendering joints and contact points.
+ * To activate, set <code>FlxG.debug</code> to true in the subclass of FlxGame.
  * 
  * @author Ka Wing Chin
  */
@@ -91,7 +92,7 @@ public class B2FlxDebug extends FlxBasic
 	@Override
 	public void draw()
 	{
-		if(!FlxG.visualDebug)
+		if(!FlxG.visualDebug || B2FlxB.world == null)
 			return;
 		if(drawJoints)
 		{

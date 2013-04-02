@@ -1,7 +1,10 @@
 package org.flixel.plugin.flxbox2d;
 
 import org.flixel.FlxBasic;
+import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
+import org.flixel.plugin.flxbox2d.managers.B2FlxContactManager;
+import org.flixel.plugin.flxbox2d.system.debug.B2FlxDebug;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -23,6 +26,10 @@ public class B2FlxB
 	 * The world where the object lives.
 	 */
 	public static World world;
+	/**
+	 * The contact manager.
+	 */
+	public static B2FlxContactManager contact;
 	/**
 	 * A list for shapes and joints that didn't get killed due the world got locked.
 	 */
@@ -47,13 +54,17 @@ public class B2FlxB
 	 * Vertices for polygon rendering.
 	 */
 	public static Vector2[] vertices;
+	/**
+	 * Internal, track wether to use the debugger or not.
+	 */
+	private static boolean _drawDebug;
 	
 	
 	/**
 	 * Called by <code>B2FlxState</code> to setup the vertices.
 	 */
 	public static void init()
-	{
+	{	
 		scheduledForRemoval = new Array<FlxBasic>();
 		scheduledForRevival = new Array<FlxBasic>();
 		scheduledForInActive = new Array<B2FlxShape>();
@@ -73,8 +84,17 @@ public class B2FlxB
 	 */
 	public static void destroy()
 	{
+		world.dispose();
 		world = null;
+		contact.destroy();
+		contact = null;
 		vertices = null;
+		if(_drawDebug)
+		{
+			FlxG.getPlugin(B2FlxDebug.class).destroy();
+			FlxG.removePluginType(B2FlxDebug.class);			
+			_drawDebug = false;
+		}
 		scheduledForRemoval.clear();
 		scheduledForRemoval = null;
 		scheduledForActive.clear();
@@ -83,6 +103,14 @@ public class B2FlxB
 		scheduledForInActive = null;
 		scheduledForMove.clear();
 		scheduledForMove = null;
+	}
+	
+	public static void initDebugger()
+	{
+		if(_drawDebug)
+			return;
+		_drawDebug = true;
+		FlxG.addPlugin(new B2FlxDebug());
 	}
 
 	/**

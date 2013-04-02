@@ -2,7 +2,7 @@ package org.flixel.plugin.flxbox2d;
 
 import org.flixel.FlxG;
 import org.flixel.FlxState;
-import org.flixel.plugin.flxbox2d.dynamics.B2FlxContactListener;
+import org.flixel.plugin.flxbox2d.managers.B2FlxContactManager;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -30,13 +30,14 @@ public class B2FlxState extends FlxState
 	/**
 	 * Handle the collision.
 	 */
-	protected B2FlxContactListener contactListener;
+	protected B2FlxContactManager contact;
 	/**
 	 * Preallocated gravity
 	 */
 	private final Vector2 _gravity = new Vector2(0, 9.8f);
 	
 	/**
+	 * Prepare the Box2D initial setup.
 	 * Creates the world with earth gravity and let inactive bodies sleep. 
 	 * Override this to setup your own world.
 	 */
@@ -45,10 +46,13 @@ public class B2FlxState extends FlxState
 	{			
 		// Setup required static variables
 		B2FlxB.init();
-		
 		// Construct a world object.
 		world = B2FlxB.world = new World(_gravity, true);
-		world.setContactListener(contactListener = new B2FlxContactListener());
+		// Create the contact manager.
+		contact = B2FlxB.contact = new B2FlxContactManager(world);
+		
+		if(FlxG.debug)
+			B2FlxB.initDebugger();
 	}
 		
 	/**
@@ -78,12 +82,10 @@ public class B2FlxState extends FlxState
 	@Override
 	public void destroy()
 	{		
-		super.destroy();
-		contactListener.destroy();
-		contactListener = null;
-		world.dispose();
-		world = null;
+		super.destroy();		
 		B2FlxB.destroy();
+		contact = null;
+		world = null;
 	}
 	
 	/**

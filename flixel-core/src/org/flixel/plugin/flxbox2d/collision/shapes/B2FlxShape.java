@@ -107,22 +107,6 @@ public abstract class B2FlxShape extends FlxSprite
 	 */
 	private boolean resetAngle;
 	/**
-	 * Whether to report begin contact or not.
-	 */
-	public boolean reportBeginContact = false;
-	/**
-	 * Whether to report end contact or not.
-	 */
-	public boolean reportEndContact = false;
-	/**
-	 * Whether to report pre solve or not.
-	 */
-	public boolean reportPreSolve = false;
-	/**
-	 * Whether to report post solve or not.
-	 */
-	public boolean reportPostSolve = false;
-	/**
 	 * Holds the user data.
 	 */
 	public ObjectMap<String, Object> userData;
@@ -971,8 +955,6 @@ public abstract class B2FlxShape extends FlxSprite
 		return this;
 	}
 	
-	// TODO: change body during runtime and needs to check whether the world is locked.
-	
 	public B2FlxShape setFixedRotation(boolean fixedRotation)
 	{
 		bodyDef.fixedRotation = fixedRotation;
@@ -1075,27 +1057,6 @@ public abstract class B2FlxShape extends FlxSprite
 	public B2FlxShape setSensor(boolean sensor)
 	{
 		fixtureDef.isSensor = sensor;
-		return this;
-	}
-	
-	public B2FlxShape setReportBeginContact(boolean reportBeginContact)
-	{
-		this.reportBeginContact = reportBeginContact;
-		return this;
-	}
-	public B2FlxShape setReportEndContact(boolean reportEndContact)
-	{
-		this.reportEndContact = reportEndContact;
-		return this;
-	}
-	public B2FlxShape setReportPreSolve(boolean reportPreSolve)
-	{
-		this.reportPreSolve = reportPreSolve;
-		return this;
-	}
-	public B2FlxShape setReportPostSolve(boolean reportPostSolve)
-	{
-		this.reportPostSolve = reportPostSolve;
 		return this;
 	}
 	

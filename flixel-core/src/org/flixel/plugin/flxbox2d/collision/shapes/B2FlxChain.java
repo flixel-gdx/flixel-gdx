@@ -306,14 +306,6 @@ public class B2FlxChain extends B2FlxShape
 	@Override
 	public B2FlxChain setSensor(boolean sensor){super.setSensor(sensor);return this;}
 	@Override
-	public B2FlxChain setReportBeginContact(boolean reportBeginContact){super.setReportBeginContact(reportBeginContact);return this;}
-	@Override
-	public B2FlxChain setReportEndContact(boolean reportEndContact){super.setReportEndContact(reportEndContact);return this;}
-	@Override
-	public B2FlxChain setReportPreSolve(boolean reportPreSolve){super.setReportPreSolve(reportPreSolve);return this;}
-	@Override
-	public B2FlxChain setReportPostSolve(boolean reportPostSolve){super.setReportPostSolve(reportPostSolve);return this;}
-	@Override
 	public B2FlxChain setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override
 	public B2FlxChain setDraggable(boolean draggable){super.setDraggable(draggable);return this;}

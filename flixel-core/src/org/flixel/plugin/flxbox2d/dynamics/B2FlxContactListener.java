@@ -1,6 +1,7 @@
 package org.flixel.plugin.flxbox2d.dynamics;
 
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
+import org.flixel.plugin.flxbox2d.events.B2FlxContactEvent;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -8,12 +9,14 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.ObjectMap;
 
+import flash.events.EventDispatcher;
+
 /**
  * Collision event for FlxBox2D collision handling.
  * 
  * @author Ka Wing Chin
  */
-public class B2FlxContactListener extends B2FlxEventDispatcher implements ContactListener
+public class B2FlxContactListener extends EventDispatcher implements ContactListener
 {	
 	private B2FlxContactEvent _event;
 
@@ -31,7 +34,7 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void beginContact(Contact contact)
 	{
-		dispatch(contact, B2FlxContactEvent.BEGIN);
+		dispatch(contact, B2FlxContactEvent.BEGIN_CONTACT);
 	}
 
 	/** 
@@ -40,7 +43,7 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void endContact(Contact contact)
 	{
-		dispatch(contact, B2FlxContactEvent.END);
+		dispatch(contact, B2FlxContactEvent.END_CONTACT);
 	}
 
 	/**
@@ -53,7 +56,7 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold)
 	{
-		dispatch(contact, oldManifold, B2FlxContactEvent.PRESOLVE);
+		dispatch(contact, oldManifold, B2FlxContactEvent.PRE_SOLVE);
 	}
 
 	/**
@@ -65,7 +68,7 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
-		dispatch(contact, impulse, B2FlxContactEvent.POSTSOLVE);
+		dispatch(contact, impulse, B2FlxContactEvent.POST_SOLVE);
 	}
 	
 	/**
@@ -78,8 +81,10 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	{
 		_event.type = type;
 		_event.contact = contact;
-		_event.sprite1 = (B2FlxShape) ((ObjectMap<String, Object>) contact.getFixtureA().getBody().getUserData()).get("shape");
-		_event.sprite2 = (B2FlxShape) ((ObjectMap<String, Object>) contact.getFixtureB().getBody().getUserData()).get("shape");
+		_event.fixtureA = contact.getFixtureA();
+		_event.fixtureB = contact.getFixtureB();
+		_event.sprite1 = (B2FlxShape) ((ObjectMap<String, Object>) _event.fixtureA.getBody().getUserData()).get("shape");
+		_event.sprite2 = (B2FlxShape) ((ObjectMap<String, Object>) _event.fixtureB.getBody().getUserData()).get("shape");
 		dispatchEvent(_event);
 	}
 	
@@ -110,10 +115,8 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	/**
 	 * Clean up the memory.
 	 */
-	@Override
 	public void destroy()
 	{
-		super.destroy();
 		_event.destroy();
 		_event = null;
 	}

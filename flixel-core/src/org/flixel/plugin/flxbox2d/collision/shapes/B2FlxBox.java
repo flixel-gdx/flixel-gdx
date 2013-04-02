@@ -211,15 +211,7 @@ public class B2FlxBox extends B2FlxShape
 	@Override
 	public B2FlxBox setGroupIndex(short groupIndex){super.setGroupIndex(groupIndex);return this;}	
 	@Override
-	public B2FlxBox setSensor(boolean sensor){super.setSensor(sensor);return this;}	
-	@Override
-	public B2FlxBox setReportBeginContact(boolean reportBeginContact){super.setReportBeginContact(reportBeginContact);return this;}
-	@Override
-	public B2FlxBox setReportEndContact(boolean reportEndContact){super.setReportEndContact(reportEndContact);return this;}
-	@Override
-	public B2FlxBox setReportPreSolve(boolean reportPreSolve){super.setReportPreSolve(reportPreSolve);return this;}
-	@Override
-	public B2FlxBox setReportPostSolve(boolean reportPostSolve){super.setReportPostSolve(reportPostSolve);return this;}
+	public B2FlxBox setSensor(boolean sensor){super.setSensor(sensor);return this;}
 	@Override
 	public B2FlxBox setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override
