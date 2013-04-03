@@ -34,6 +34,8 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 	@Override
 	public void beginContact(Contact contact)
 	{
+		_event.oldManifold = null;
+		_event.impulse = null;
 		dispatch(contact, B2FlxContactEvent.BEGIN_CONTACT);
 	}
 
@@ -43,6 +45,8 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 	@Override
 	public void endContact(Contact contact)
 	{
+		_event.oldManifold = null;
+		_event.impulse = null;
 		dispatch(contact, B2FlxContactEvent.END_CONTACT);
 	}
 
@@ -56,7 +60,9 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold)
 	{
-		dispatch(contact, oldManifold, B2FlxContactEvent.PRE_SOLVE);
+		_event.impulse = null;
+		_event.oldManifold = oldManifold;
+		dispatch(contact, B2FlxContactEvent.PRE_SOLVE);
 	}
 
 	/**
@@ -68,7 +74,9 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
-		dispatch(contact, impulse, B2FlxContactEvent.POST_SOLVE);
+		_event.oldManifold = null;
+		_event.impulse = impulse;
+		dispatch(contact, B2FlxContactEvent.POST_SOLVE);
 	}
 	
 	/**
@@ -86,30 +94,6 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 		_event.sprite1 = (B2FlxShape) ((ObjectMap<String, Object>) _event.fixtureA.getBody().getUserData()).get("shape");
 		_event.sprite2 = (B2FlxShape) ((ObjectMap<String, Object>) _event.fixtureB.getBody().getUserData()).get("shape");
 		dispatchEvent(_event);
-	}
-	
-	/**
-	 * Dispatch the event.
-	 * @param contact		The current contact between two shapes.
-	 * @param oldManifold	The old manifold.
-	 * @param type			The type of event that needs to be dispatched.
-	 */
-	public void dispatch(Contact contact, Manifold oldManifold, String type)
-	{
-		_event.oldManifold = oldManifold;
-		dispatch(contact, type);
-	}
-	
-	/**
-	 * Dispatch the event.
-	 * @param contact	The current contact between two shapes.
-	 * @param impulse	The contact impulse.
-	 * @param type		The type of event that needs to be dispatched.
-	 */
-	public void dispatch(Contact contact, ContactImpulse impulse, String type)
-	{
-		_event.impulse = impulse;
-		dispatch(contact, type);
 	}
 
 	/**

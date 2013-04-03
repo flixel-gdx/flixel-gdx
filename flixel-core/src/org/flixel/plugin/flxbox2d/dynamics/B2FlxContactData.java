@@ -1,6 +1,7 @@
 package org.flixel.plugin.flxbox2d.dynamics;
 
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
+import org.flixel.plugin.flxbox2d.events.IB2FlxListener;
 
 /**
  *
@@ -18,9 +19,9 @@ public class B2FlxContactData
 	public int categoryB;
 	public B2FlxShape spriteA;
 	public B2FlxShape spriteB;
-	public B2FlxListener listener;
+	public IB2FlxListener listener;
 	
-	public B2FlxContactData(B2FlxShape spriteA, B2FlxShape spriteB, B2FlxListener listener)
+	public B2FlxContactData(B2FlxShape spriteA, B2FlxShape spriteB, IB2FlxListener listener)
 	{
 		this.spriteA = spriteA;
 		this.spriteB = spriteB;
@@ -28,7 +29,7 @@ public class B2FlxContactData
 		type = SINGLE;
 	}
 
-	public B2FlxContactData(int categoryA, int categoryB, B2FlxListener listener)
+	public B2FlxContactData(int categoryA, int categoryB, IB2FlxListener listener)
 	{
 		this.categoryA = categoryA;
 		this.categoryB = categoryB;
@@ -36,7 +37,7 @@ public class B2FlxContactData
 		type = GROUP;
 	}
 	
-	public B2FlxContactData(B2FlxShape spriteA, int categoryB, B2FlxListener listener)
+	public B2FlxContactData(B2FlxShape spriteA, int categoryB, IB2FlxListener listener)
 	{
 		this.spriteA = spriteA;
 		this.categoryB = categoryB;
@@ -44,7 +45,7 @@ public class B2FlxContactData
 		type = MIX_A;
 	}
 	
-	public B2FlxContactData(int categoryA, B2FlxShape spriteB, B2FlxListener listener)
+	public B2FlxContactData(int categoryA, B2FlxShape spriteB, IB2FlxListener listener)
 	{
 		this.categoryA = categoryA;
 		this.spriteB = spriteB;
