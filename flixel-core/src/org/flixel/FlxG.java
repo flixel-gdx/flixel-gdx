@@ -9,7 +9,6 @@ import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
-import org.flixel.system.gdx.FlxFileHandleResolver;
 import org.flixel.system.gdx.ManagedTextureData;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
@@ -1169,25 +1168,7 @@ public class FlxG
 		//if no region has been specified, load as standard texture
 		if (split.length == 1)
 		{	
-			Pixmap pixmap = new Pixmap(new FlxFileHandleResolver().resolve(Graphic));
-						
-			//ensure texture is power of two
-			int width = pixmap.getWidth();
-			int height = pixmap.getHeight();
-			if (!MathUtils.isPowerOfTwo(width) || !MathUtils.isPowerOfTwo(height))
-			{
-				Pixmap newPixmap = new Pixmap(MathUtils.nextPowerOfTwo(width), MathUtils.nextPowerOfTwo(height), Pixmap.Format.RGBA8888);
-				newPixmap.drawPixmap(pixmap, 0, 0);
-				TextureParameter parameter = new TextureParameter();
-				parameter.textureData = new ManagedTextureData(newPixmap);
-				textureRegion = new TextureRegion(_cache.load(Graphic, Texture.class, parameter), width, height);
-			}
-			else
-			{
-				textureRegion = new TextureRegion(_cache.load(Graphic, Texture.class));
-			}
-			
-			pixmap.dispose();
+			textureRegion = new TextureRegion(_cache.load(Graphic, Texture.class));
 		}
 		//otherwise, load as TextureAtlas
 		else if (split.length == 2)

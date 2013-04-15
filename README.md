@@ -8,6 +8,7 @@ Get Started
 -----------
 
 [Project Setup](https://github.com/flixel-gdx/flixel-gdx/wiki/Project-Setup)
+
 [Quick Guide](https://github.com/flixel-gdx/flixel-gdx/wiki/Quick-Guide)
 
 
