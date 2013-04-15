@@ -7,7 +7,8 @@ flixel-gdx is a port of the AS3 game framework [flixel](http://flixel.org) to Ja
 Get Started
 -----------
 
-https://github.com/flixel-gdx/flixel-gdx/wiki/Project-Setup
+[Project Setup](https://github.com/flixel-gdx/flixel-gdx/wiki/Project-Setup)
+[Quick Guide](https://github.com/flixel-gdx/flixel-gdx/wiki/Quick-Guide)
 
 
 Forums
