@@ -118,14 +118,6 @@ public class B2FlxSprite extends B2FlxShape
 	@Override
 	public B2FlxSprite setSensor(boolean sensor){super.setSensor(sensor);return this;}
 	@Override
-	public B2FlxSprite setReportBeginContact(boolean reportBeginContact){super.setReportBeginContact(reportBeginContact);return this;}
-	@Override
-	public B2FlxSprite setReportEndContact(boolean reportEndContact){super.setReportEndContact(reportEndContact);return this;}
-	@Override
-	public B2FlxSprite setReportPreSolve(boolean reportPreSolve){super.setReportPreSolve(reportPreSolve);return this;}
-	@Override
-	public B2FlxSprite setReportPostSolve(boolean reportPostSolve){super.setReportPostSolve(reportPostSolve);return this;}
-	@Override
 	public B2FlxSprite setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override
 	public B2FlxSprite setDraggable(boolean draggable){super.setDraggable(draggable);return this;}

@@ -1,6 +1,7 @@
 package org.flixel.plugin.flxbox2d.dynamics;
 
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
+import org.flixel.plugin.flxbox2d.events.B2FlxContactEvent;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -8,12 +9,14 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.ObjectMap;
 
+import flash.events.EventDispatcher;
+
 /**
  * Collision event for FlxBox2D collision handling.
  * 
  * @author Ka Wing Chin
  */
-public class B2FlxContactListener extends B2FlxEventDispatcher implements ContactListener
+public class B2FlxContactListener extends EventDispatcher implements ContactListener
 {	
 	private B2FlxContactEvent _event;
 
@@ -31,7 +34,9 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void beginContact(Contact contact)
 	{
-		dispatch(contact, B2FlxContactEvent.BEGIN);
+		_event.oldManifold = null;
+		_event.impulse = null;
+		dispatch(contact, B2FlxContactEvent.BEGIN_CONTACT);
 	}
 
 	/** 
@@ -40,7 +45,9 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void endContact(Contact contact)
 	{
-		dispatch(contact, B2FlxContactEvent.END);
+		_event.oldManifold = null;
+		_event.impulse = null;
+		dispatch(contact, B2FlxContactEvent.END_CONTACT);
 	}
 
 	/**
@@ -53,7 +60,9 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold)
 	{
-		dispatch(contact, oldManifold, B2FlxContactEvent.PRESOLVE);
+		_event.impulse = null;
+		_event.oldManifold = oldManifold;
+		dispatch(contact, B2FlxContactEvent.PRE_SOLVE);
 	}
 
 	/**
@@ -65,7 +74,9 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
-		dispatch(contact, impulse, B2FlxContactEvent.POSTSOLVE);
+		_event.oldManifold = null;
+		_event.impulse = impulse;
+		dispatch(contact, B2FlxContactEvent.POST_SOLVE);
 	}
 	
 	/**
@@ -78,42 +89,18 @@ public class B2FlxContactListener extends B2FlxEventDispatcher implements Contac
 	{
 		_event.type = type;
 		_event.contact = contact;
-		_event.sprite1 = (B2FlxShape) ((ObjectMap<String, Object>) contact.getFixtureA().getBody().getUserData()).get("shape");
-		_event.sprite2 = (B2FlxShape) ((ObjectMap<String, Object>) contact.getFixtureB().getBody().getUserData()).get("shape");
+		_event.fixtureA = contact.getFixtureA();
+		_event.fixtureB = contact.getFixtureB();
+		_event.sprite1 = (B2FlxShape) ((ObjectMap<String, Object>) _event.fixtureA.getBody().getUserData()).get("shape");
+		_event.sprite2 = (B2FlxShape) ((ObjectMap<String, Object>) _event.fixtureB.getBody().getUserData()).get("shape");
 		dispatchEvent(_event);
-	}
-	
-	/**
-	 * Dispatch the event.
-	 * @param contact		The current contact between two shapes.
-	 * @param oldManifold	The old manifold.
-	 * @param type			The type of event that needs to be dispatched.
-	 */
-	public void dispatch(Contact contact, Manifold oldManifold, String type)
-	{
-		_event.oldManifold = oldManifold;
-		dispatch(contact, type);
-	}
-	
-	/**
-	 * Dispatch the event.
-	 * @param contact	The current contact between two shapes.
-	 * @param impulse	The contact impulse.
-	 * @param type		The type of event that needs to be dispatched.
-	 */
-	public void dispatch(Contact contact, ContactImpulse impulse, String type)
-	{
-		_event.impulse = impulse;
-		dispatch(contact, type);
 	}
 
 	/**
 	 * Clean up the memory.
 	 */
-	@Override
 	public void destroy()
 	{
-		super.destroy();
 		_event.destroy();
 		_event = null;
 	}
