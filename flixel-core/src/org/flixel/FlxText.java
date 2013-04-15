@@ -144,7 +144,8 @@ public class FlxText extends FlxSprite
 		_size = (int) Size;
 		
 		setColor(Color);
-		_alignment = HAlignment.valueOf(Alignment.toUpperCase(Locale.ENGLISH));		
+		if (Alignment != null)
+			_alignment = HAlignment.valueOf(Alignment.toUpperCase(Locale.ENGLISH));		
 		_shadow = ShadowColor;
 		_shadowX = ShadowX;
 		_shadowY = ShadowY;
@@ -326,6 +327,8 @@ public class FlxText extends FlxSprite
 	 */
 	public void setAlignment(String Alignment)
 	{
+		if (Alignment == null)
+			return;
 		_alignment = HAlignment.valueOf(Alignment.toUpperCase(Locale.ENGLISH));
 		calcFrame();
 	}
