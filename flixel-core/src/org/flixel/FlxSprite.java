@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+import flash.display.BlendMode;
+
 /**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
  * with a bunch of graphics options and abilities, like animation and stamping.
@@ -45,7 +47,7 @@ public class FlxSprite extends FlxObject
 	 * E.g. "multiply", "screen", etc.
 	 * @default null
 	 */
-	public int[] blend;
+	public String blend;
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
@@ -583,7 +585,8 @@ public class FlxSprite extends FlxObject
 			framePixels.setPosition(_point.x, _point.y);
 			if(blend != null)
 			{
-				FlxG.batch.setBlendFunction(blend[0], blend[1]);
+				int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
+				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 				framePixels.draw(FlxG.batch);
 				FlxG.batch.setBlendFunction(0x0302, 0x0303);
 			}

@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.math.Matrix4;
 
+import flash.display.BlendMode;
+
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
  * Can tint, fade, rotate and scale just like a sprite.
@@ -445,7 +447,8 @@ public class FlxText extends FlxSprite
 			
 			if(blend != null)
 			{
-				FlxG.batch.setBlendFunction(blend[0], blend[1]);
+				int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
+				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 				_textField.draw(FlxG.batch);
 				FlxG.batch.setBlendFunction(0x0302, 0x0303);
 			}
@@ -462,7 +465,8 @@ public class FlxText extends FlxSprite
 		//blending
 		if(blend != null)
 		{
-			FlxG.batch.setBlendFunction(blend[0], blend[1]);
+			int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
+			FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 			_textField.draw(FlxG.batch);
 			FlxG.batch.setBlendFunction(0x0302, 0x0303);
 		}

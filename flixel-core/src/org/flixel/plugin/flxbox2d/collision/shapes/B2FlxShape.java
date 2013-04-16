@@ -31,6 +31,8 @@ import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
+import flash.display.BlendMode;
+
 /**
  * This is an abstract or parent class for all shapes. It contains the required variables for 
  * creating the body and debug drawing.
@@ -514,7 +516,8 @@ public abstract class B2FlxShape extends FlxSprite
 				framePixels.setPosition(_point.x, _point.y);
 				if(blend != null)
 				{
-					FlxG.batch.setBlendFunction(blend[0], blend[1]);
+					int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
+					FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 					framePixels.draw(FlxG.batch);
 					FlxG.batch.setBlendFunction(0x0302, 0x0303);
 				}
