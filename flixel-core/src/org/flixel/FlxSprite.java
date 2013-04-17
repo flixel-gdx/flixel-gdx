@@ -45,7 +45,7 @@ public class FlxSprite extends FlxObject
 	/**
 	 * Blending modes, just like Photoshop or whatever.
 	 * E.g. "multiply", "screen", etc.
-	 * @default null
+	 * @default normal
 	 */
 	public String blend;
 	/**
@@ -155,7 +155,7 @@ public class FlxSprite extends FlxObject
 		scale = new FlxPoint(1f,1f);
 		_alpha = 1f;
 		_color = 0x00ffffff;
-		blend = null;
+		blend = "normal";
 		antialiasing = false;
 		cameras = null;
 		
@@ -170,7 +170,7 @@ public class FlxSprite extends FlxObject
 		
 		_callback = null;
 		_newTextureData = null;
-		
+				
 		if(SimpleGraphic == null)
 			SimpleGraphic = ImgDefault;
 		loadGraphic(SimpleGraphic);
@@ -571,7 +571,7 @@ public class FlxSprite extends FlxObject
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		framePixels.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 
-		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
+		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == "normal"))
 		{ 	//Simple render
 			framePixels.setPosition(_point.x, _point.y);
 			framePixels.draw(FlxG.batch);			
@@ -583,7 +583,7 @@ public class FlxSprite extends FlxObject
 			if((angle != 0) && (_bakedRotation <= 0))
 				framePixels.setRotation(angle);
 			framePixels.setPosition(_point.x, _point.y);
-			if(blend != null)
+			if(blend != "normal")
 			{
 				int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);

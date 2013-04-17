@@ -445,7 +445,7 @@ public class FlxText extends FlxSprite
 			_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, ((_shadow >> 24) & 0xFF) * _alpha * 0.00392f);
 			_textField.translate(_shadowX, _shadowY);
 			
-			if(blend != null)
+			if(blend != "normal")
 			{
 				int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
@@ -463,7 +463,7 @@ public class FlxText extends FlxSprite
 		
 		
 		//blending
-		if(blend != null)
+		if(blend != "normal")
 		{
 			int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 			FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);

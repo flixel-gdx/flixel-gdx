@@ -32,6 +32,14 @@ public class B2FlxMath
 	 */
 	public static final float RADDEG = RADIANSTODEGREES;
 
+	
+	public static float distance(Vector2 a, Vector2 b)
+	{
+		float cX = a.x - b.x;
+		float cY = a.y - b.y;
+		return (float) Math.sqrt(cX * cX + cY * cY);
+	}
+	
 	/**
 	 * Generates a random number between the lower and higher number.
 	 * 
