@@ -2,6 +2,7 @@ package org.flixel;
 
 import java.util.Locale;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
@@ -414,12 +415,12 @@ public class FlxText extends FlxSprite
 		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
 		
 		//scaling
-		_textField.getFont().setScale(1,1);
-		if(scale.x != 1 || scale.y != 1)
+		BitmapFont font = _textField.getFont();
+		if(scale.x != font.getScaleX() || scale.y != font.getScaleY())
 		{
 			_textField.getFont().setScale(scale.x, scale.y);
+			calcFrame();
 		}
-		calcFrame();
 		
 		//position
 		_textField.setPosition(_point.x, _point.y);
@@ -437,6 +438,13 @@ public class FlxText extends FlxSprite
 			FlxG.batch.setTransformMatrix(rotationMatrix);
 		}
 		
+		//blending
+		if (blend != null && !blend.equals(BlendMode.NORMAL))
+		{
+			int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
+			FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
+		}
+		
 		//Render shadow behind the text
 		if (_shadow != 0)
 		{
@@ -444,16 +452,7 @@ public class FlxText extends FlxSprite
 			int tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
 			_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, ((_shadow >> 24) & 0xFF) * _alpha * 0.00392f);
 			_textField.translate(_shadowX, _shadowY);
-			
-			if(blend != "normal")
-			{
-				int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
-				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
-				_textField.draw(FlxG.batch);
-				FlxG.batch.setBlendFunction(0x0302, 0x0303);
-			}
-			else
-				_textField.draw(FlxG.batch);
+			_textField.draw(FlxG.batch);
 			_textField.translate(-_shadowX, -_shadowY);
 		}
 		
@@ -461,17 +460,14 @@ public class FlxText extends FlxSprite
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 		
+		_textField.draw(FlxG.batch);
 		
 		//blending
-		if(blend != "normal")
+		if (blend != null && !blend.equals(BlendMode.NORMAL))
 		{
-			int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
+			int[] blendFunc = BlendMode.getOpenGLBlendMode(BlendMode.NORMAL);
 			FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
-			_textField.draw(FlxG.batch);
-			FlxG.batch.setBlendFunction(0x0302, 0x0303);
 		}
-		else
-			_textField.draw(FlxG.batch);
 		
 		//rotation
 		if (angle != 0)

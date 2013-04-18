@@ -99,14 +99,14 @@ public class BlendMode
 		_blendMap = new HashMap<String, int[]>(15);
 		_blendMap.put(ADD, new int[]{GL10.GL_ONE, GL10.GL_ONE});
 		_blendMap.put(ALPHA, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE});
-		_blendMap.put(DARKEN, new int[]{GL10.GL_DST_COLOR, GL10.GL_ZERO});
+		//_blendMap.put(DARKEN, new int[]{GL10.GL_DST_COLOR, GL10.GL_ZERO});
 		//_blendMap.put(DIFFERENCE, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(ERASE, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(HARDLIGHT, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(INVERT, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(LAYER, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(LIGHTEN, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
-		_blendMap.put(MULTIPLY, new int[]{GL10.GL_DST_COLOR, GL10.GL_ONE_MINUS_SRC_ALPHA});
+		_blendMap.put(MULTIPLY, new int[]{GL10.GL_DST_COLOR, GL10.GL_ZERO});
 		_blendMap.put(NORMAL, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(OVERLAY, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		_blendMap.put(SCREEN, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE});

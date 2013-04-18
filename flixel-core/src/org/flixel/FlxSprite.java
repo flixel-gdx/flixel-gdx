@@ -45,7 +45,7 @@ public class FlxSprite extends FlxObject
 	/**
 	 * Blending modes, just like Photoshop or whatever.
 	 * E.g. "multiply", "screen", etc.
-	 * @default normal
+	 * @default null
 	 */
 	public String blend;
 	/**
@@ -155,7 +155,7 @@ public class FlxSprite extends FlxObject
 		scale = new FlxPoint(1f,1f);
 		_alpha = 1f;
 		_color = 0x00ffffff;
-		blend = "normal";
+		blend = null;
 		antialiasing = false;
 		cameras = null;
 		
@@ -571,7 +571,7 @@ public class FlxSprite extends FlxObject
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		framePixels.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 
-		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == "normal"))
+		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null || blend.equals(BlendMode.NORMAL)))
 		{ 	//Simple render
 			framePixels.setPosition(_point.x, _point.y);
 			framePixels.draw(FlxG.batch);			
@@ -583,12 +583,13 @@ public class FlxSprite extends FlxObject
 			if((angle != 0) && (_bakedRotation <= 0))
 				framePixels.setRotation(angle);
 			framePixels.setPosition(_point.x, _point.y);
-			if(blend != "normal")
+			if(blend != null && !blend.equals(BlendMode.NORMAL))
 			{
 				int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 				framePixels.draw(FlxG.batch);
-				FlxG.batch.setBlendFunction(0x0302, 0x0303);
+				blendFunc = BlendMode.getOpenGLBlendMode(BlendMode.NORMAL);
+				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 			}
 			else
 			{
@@ -663,7 +664,6 @@ public class FlxSprite extends FlxObject
 	 */
 	public void stamp(Pixmap Brush, int SourceX, int SourceY, int SourceWidth, int SourceHeight, int DestinationX, int DestinationY)
 	{	
-		Pixmap.setBlending(Pixmap.Blending.SourceOver);
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 		
 		TextureData textureData = null;

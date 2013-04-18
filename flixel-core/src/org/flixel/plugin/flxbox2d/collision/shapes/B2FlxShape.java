@@ -502,7 +502,7 @@ public abstract class B2FlxShape extends FlxSprite
 			int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 			framePixels.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 			
-			if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == "normal"))
+			if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null || blend.equals(BlendMode.NORMAL)))
 			{ 	//Simple render
 				framePixels.setPosition(_point.x, _point.y);
 				framePixels.draw(FlxG.batch);
@@ -514,13 +514,13 @@ public abstract class B2FlxShape extends FlxSprite
 				if((angle != 0) && (_bakedRotation <= 0))
 					framePixels.setRotation(angle);
 				framePixels.setPosition(_point.x, _point.y);
-				if(blend != "normal")
+				if(blend != null && !blend.equals(BlendMode.NORMAL))
 				{
 					int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 					FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 					framePixels.draw(FlxG.batch);
-					FlxG.batch.setBlendFunction(0x0302, 0x0303);
-					FlxG.log("still here?");
+					blendFunc = BlendMode.getOpenGLBlendMode(BlendMode.NORMAL);
+					FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 				}
 				else
 				{
