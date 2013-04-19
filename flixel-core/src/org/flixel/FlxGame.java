@@ -165,6 +165,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	private BitmapFont _font;
 	/**
+	 * Temporary text buffer for the fps.
+	 */
+	private StringBuffer _stringBuffer;
+	/**
 	 * Temporary camera to display the fps.
 	 */
 	private OrthographicCamera _fontCamera;
@@ -814,7 +818,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			FlxG.batch.setProjectionMatrix(_fontCamera.combined);
 			FlxG.batch.begin();
 			FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			_font.draw(FlxG.batch, "fps:"+Gdx.graphics.getFramesPerSecond(), Gdx.graphics.getWidth() - 80, 0);
+			_stringBuffer.delete(0, _stringBuffer.length());
+			_stringBuffer.append("fps:");
+			_stringBuffer.append(Gdx.graphics.getFramesPerSecond());
+			_font.draw(FlxG.batch, _stringBuffer, Gdx.graphics.getWidth() - 80, 0);
 			FlxG.batch.end();
 		}
 		if(_debuggerUp)
@@ -888,6 +895,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_font.setScale(2);
 		_fontCamera = new OrthographicCamera();
 		_fontCamera.setToOrtho(true);
+		_stringBuffer = new StringBuffer();
 	}
 	
 	/**
@@ -1004,6 +1012,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	public void dispose()
 	{
 		_font.dispose();
+		_stringBuffer = null;
 		_state.destroy();
 		_mouseEvent = null;
 		FlxG.reset();

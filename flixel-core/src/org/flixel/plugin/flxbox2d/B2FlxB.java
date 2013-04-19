@@ -1,5 +1,7 @@
 package org.flixel.plugin.flxbox2d;
 
+import java.util.Iterator;
+
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
@@ -9,6 +11,7 @@ import org.flixel.plugin.flxbox2d.system.debug.B2FlxDebug;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -84,6 +87,21 @@ public class B2FlxB
 	 */
 	public static void destroy()
 	{
+		Iterator<Body> bodies = world.getBodies();
+		while(bodies.hasNext())
+		{
+			Body body = bodies.next();
+			if(body != null)
+				world.destroyBody(body);
+		}
+		
+		Iterator<Joint> joints = world.getJoints();
+		while(joints.hasNext())
+		{
+			Joint joint = joints.next();
+			if(joint != null)
+				world.destroyJoint(joint);
+		}
 		world.dispose();
 		world = null;
 		contact.destroy();
