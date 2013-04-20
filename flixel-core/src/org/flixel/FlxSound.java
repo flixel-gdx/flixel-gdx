@@ -379,7 +379,7 @@ public class FlxSound extends FlxBasic
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from a URL.
 	 * 
-	 * @param	EmbeddedSound	A string representing the URL of the MP3 file you want to play.
+	 * @param	SoundURL		A string representing the URL of the MP3 file you want to play.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
 	 * 
@@ -404,9 +404,8 @@ public class FlxSound extends FlxBasic
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from a URL.
 	 * 
-	 * @param	EmbeddedSound	A string representing the URL of the MP3 file you want to play.
+	 * @param	SoundURL		A string representing the URL of the MP3 file you want to play.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -418,9 +417,7 @@ public class FlxSound extends FlxBasic
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from a URL.
 	 * 
-	 * @param	EmbeddedSound	A string representing the URL of the MP3 file you want to play.
-	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
+	 * @param	SoundURL		A string representing the URL of the MP3 file you want to play.
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -704,21 +701,9 @@ public class FlxSound extends FlxBasic
 		else if (_music != null)
 			_music.setVolume(volume);
 	}
-		
-	/**
-	 * An internal helper function used to help Flash resume playing a looped sound.
-	 * 
-	 * @param	event		An <code>Event</code> object.
-	 */
-	protected void looped()
-	{
-		
-	}
 
 	/**
 	 * An internal helper function used to help Flash clean up and re-use finished sounds.
-	 * 
-	 * @param	event		An <code>Event</code> object.
 	 */
 	protected void stopped()
 	{
@@ -733,8 +718,6 @@ public class FlxSound extends FlxBasic
 		
 	/**
 	 * Internal event handler for ID3 info (i.e. fetching the song name).
-	 * 
-	 * @param	event	An <code>Event</code> object.
 	 */
 	//TODO: ID3 info
 	protected void gotID3()

@@ -71,7 +71,6 @@ public class FrameRecord
 	 * Load this frame record with input data from the input managers.
 	 * 
 	 * @param Frame		What frame it is.
-	 * @param Keys		Keyboard data from the keyboard manager.
 	 * 
 	 * @return A reference to this <code>FrameRecord</code> object.
 	 * 

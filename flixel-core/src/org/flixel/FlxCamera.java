@@ -721,8 +721,6 @@ public class FlxCamera extends FlxBasic
 	
 	/**
 	 * A simple screen-shake effect.
-	 * 
-	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
 	 */
 	public void shake()
 	{

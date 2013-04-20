@@ -304,7 +304,7 @@ public class Mouse extends FlxPoint
 	/**
 	 * Fetch the world position of the specified pointer on any given camera.
 	 * 
-	 * @param Point		The pointer id.
+	 * @param Pointer	The pointer id.
 	 * @param Camera	If unspecified, first/main global camera is used instead.
 	 * 
 	 * @return The pointer's location in world space.
@@ -623,7 +623,7 @@ public class Mouse extends FlxPoint
 	 * Part of the keystroke recording system.
 	 * Takes data about key presses and sets it into array.
 	 * 
-	 * @param	KeyStates	Array of data about key states.
+	 * @param	Record	Array of data about key states.
 	 */
 	//TODO: This should play all pointers, not just the first one.
 	public void playback(MouseRecord Record)

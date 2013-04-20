@@ -27,7 +27,8 @@ public class FlxList
 	
 	/**
 	 * Gets a new <code>FlxList</code> from the pool.
-	 * @return
+	 * 
+	 * @return	A new <code>FlxList</code>.
 	 */
 	static public FlxList getNew()
 	{

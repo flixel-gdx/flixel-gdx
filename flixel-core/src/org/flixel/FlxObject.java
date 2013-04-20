@@ -1011,8 +1011,6 @@ public class FlxObject extends FlxBasic
 	
 	/**
 	 * Check and see if this object is currently on screen.
-	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 */
 	public boolean onScreen()
 	{
@@ -1022,8 +1020,8 @@ public class FlxObject extends FlxBasic
 	/**
 	 * Call this function to figure out the on-screen position of the object.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * 
 	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
 	 */
@@ -1043,7 +1041,7 @@ public class FlxObject extends FlxBasic
 	/**
 	 * Call this function to figure out the on-screen position of the object.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera. 
+	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it. 
 	 *
 	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
 	 */

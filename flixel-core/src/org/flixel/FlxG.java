@@ -310,9 +310,9 @@ public class FlxG
 	 * 
 	 * @param	Data	Anything you want to log to the console.
 	 */
-	public static void log(Object data)
+	public static void log(Object Data)
 	{
-		log("flixel", data);
+		log("flixel", Data);
 	}
 	
 	/**
@@ -422,7 +422,7 @@ public class FlxG
 	 * <code>FlxG.shuffle()</code> is deterministic and safe for use with replays/recordings.
 	 * HOWEVER, <code>FlxU.shuffle()</code> is NOT deterministic and unsafe for use with replays/recordings.
 	 * 
-	 * @param	A				A libgdx <code>Array</code> object containing...stuff.
+	 * @param	Objects			A libgdx <code>Array</code> object containing...stuff.
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * 
 	 * @return	The same libgdx <code>Array</code> object that you passed in in the first place.
@@ -619,8 +619,6 @@ public class FlxG
 	
 	/**
 	 * Resets the game or state and requests a new recording.
-	 * 
-	 * @param	StandardMode	If true, reset the entire game, else just reset the current state.
 	 */
 	static public void recordReplay()
 	{
@@ -1313,7 +1311,7 @@ public class FlxG
 	/**
 	 * Loads an external text file.
 	 * 
-	 * @param FileName	The path to the text file.
+	 * @param Path		The path to the text file.
 	 * 
 	 * @return	The contents of the file.
 	 */
@@ -1883,7 +1881,7 @@ public class FlxG
 	/**
 	 * Adds a new plugin to the global plugin array. A new instance of the plugin will be created if it's not exists yet.
 	 * 
-	 * @param	Plugin	Any object that extends FlxBasic. Useful for managers and other things.  See org.flixel.plugin for some examples!
+	 * @param	ClassType	Any object that extends FlxBasic. Useful for managers and other things.  See org.flixel.plugin for some examples!
 	 * 
 	 * @return	The same <code>FlxBasic</code>-based plugin you passed in.
 	 */

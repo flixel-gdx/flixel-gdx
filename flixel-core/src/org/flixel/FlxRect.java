@@ -202,7 +202,7 @@ public class FlxRect
 	/**
 	 * Helper function, just copies the values from this rectangle to the specified rectangle.
 	 * 
-	 * @param	Point	Any <code>FlxRect</code>.
+	 * @param	Rect		Any <code>FlxRect</code>.
 	 * 
 	 * @return	A reference to the altered rectangle parameter.
 	 */
@@ -234,7 +234,7 @@ public class FlxRect
 	/**
 	 * Helper function, just copies the values from this rectangle to the specified libgdx rectangle.
 	 * 
-	 * @param	Point	Any <code>Rectangle</code>.
+	 * @param	FlashRect	Any <code>Rectangle</code>.
 	 * 
 	 * @return	A reference to the altered rectangle parameter.
 	 */

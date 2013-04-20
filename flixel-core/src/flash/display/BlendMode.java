@@ -3,7 +3,6 @@ package flash.display;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 
 public class BlendMode

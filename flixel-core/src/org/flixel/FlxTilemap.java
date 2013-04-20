@@ -926,7 +926,7 @@ public class FlxTilemap extends FlxObject
 	 * If the group has a LOT of things in it, it might be faster to use <code>FlxG.overlaps()</code>.
 	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
 	 * 
-	 * @param	Object			The object being tested.
+	 * @param	ObjectOrGroup			The object being tested.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * 
@@ -1885,7 +1885,7 @@ public class FlxTilemap extends FlxObject
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
 	 * 
-	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
+	 * @param	Bitmap		A Flash <code>BitmapData</code> object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
 	 * @param	ColorMap	An array of color values (uint 0xAARRGGBB) in the order they're intended to be assigned as indices
@@ -1915,7 +1915,7 @@ public class FlxTilemap extends FlxObject
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
 	 * 
-	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
+	 * @param	Bitmap		A Flash <code>BitmapData</code> object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
 	 * 
@@ -1932,7 +1932,7 @@ public class FlxTilemap extends FlxObject
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
 	 * 
-	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
+	 * @param	Bitmap		A Flash <code>BitmapData</code> object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
@@ -1948,7 +1948,7 @@ public class FlxTilemap extends FlxObject
 	 * non-black pixels are set as non-colliding.
 	 * Black pixels must be PURE BLACK.
 	 * 
-	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
+	 * @param	Bitmap		A Flash <code>BitmapData</code> object, preferably black and white.
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */

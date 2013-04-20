@@ -127,7 +127,7 @@ public class FlxU
 	 * <code>FlxG.shuffle()</code> is deterministic and safe for use with replays/recordings.
 	 * HOWEVER, <code>FlxU.shuffle()</code> is NOT deterministic and unsafe for use with replays/recordings.
 	 * 
-	 * @param	A				A libgdx <code>Array</code> object containing...stuff.
+	 * @param	Objects				A libgdx <code>Array</code> object containing...stuff.
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * 
 	 * @return	The same libgdx <code>Array</code> object that you passed in in the first place.
