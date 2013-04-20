@@ -110,7 +110,7 @@ public class FlxPoint
 	/**
 	 * Helper function, just copies the values from the specified libgdx vector.
 	 * 
-	 * @param	Point	Any <code>Point</code>.
+	 * @param	FlashPoint	Any <code>Point</code>.
 	 * 
 	 * @return	A reference to itself.
 	 */
@@ -124,7 +124,7 @@ public class FlxPoint
 	/**
 	 * Helper function, just copies the values from this point to the specified libgdx vector.
 	 * 
-	 * @param	Point	Any <code>Point</code>.
+	 * @param	FlashPoint	Any <code>Point</code>.
 	 * 
 	 * @return	A reference to the altered point parameter.
 	 */

@@ -58,7 +58,8 @@ version ${spec.version}
         <!-- Save all in the single zip file -->
 		<antcall target="compress-dist" />
 		
-
+		<!-- Create a config file for the setup-ui -->
+		<antcall target="create-config" />
 
 	</target>
 
@@ -70,7 +71,7 @@ version ${spec.version}
 		<echo message="---------------------------------------------"/>
 
 		<property name="src.dir"          value="${ant.project.name}-core/src/" />
-		<property name="bin.dir"          value="${ant.project.name}-core/bin/classes" />
+		<property name="bin.dir"          value="${ant.project.name}-core/bin/" />
 		<property name="bin.lib"          value="${ant.project.name}-core/libs" />
 		
 		<!-- Clean old build -->
@@ -89,6 +90,11 @@ version ${spec.version}
 
 		<!-- COMPILE!!!!!! -->
 		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" />
+		
+		<!-- Copy resources -->
+		<copy toDir="${bin.dir}">
+		    <fileset dir="${src.dir}" excludes="**/*.java"/>
+		</copy>
 
 		<echo message="---------------------------------------------"/>
 		<echo message="End Compile: Core"/>
@@ -109,7 +115,7 @@ version ${spec.version}
 		<echo message="---------------------------------------------"/>
 
 		<property name="src.dir"          value="${ant.project.name}-${project}/src/" />
-		<property name="bin.dir"          value="${ant.project.name}-${project}/bin/classes" />
+		<property name="bin.dir"          value="${ant.project.name}-${project}/bin/" />
 		<property name="bin.lib"          value="${ant.project.name}-${project}/libs" />
 		<!-- Clean old build -->
 
@@ -160,10 +166,10 @@ version ${spec.version}
 		<echo message="---------------------------------------------"/>
 
 		<property name="src.dir"          value="${ant.project.name}-${project}/src/" />
-		<property name="bin.dir"          value="${ant.project.name}-${project}/bin/classes" />
+		<property name="bin.dir"          value="${ant.project.name}-${project}/bin/" />
 		<property name="bin.lib"          value="${ant.project.name}-${project}/libs" />
 		<property name="jar.name"         value="${ant.project.name}-${project}.jar" />
-		<property name="jar.name.source"  value="${ant.project.name}-${project}-source.jar" />
+		<property name="jar.name.source"  value="${ant.project.name}-${project}-sources.jar" />
 
 
 		<tstamp>
@@ -174,7 +180,7 @@ version ${spec.version}
 		<!-- Create bin jar -->
 		<jar destfile="${dist.dir}/${jar.name}">
 			<fileset dir="${bin.dir}" />
-
+			
 			<manifest>
 
 				<attribute name="Specification-Title"     value="${spec.title}" />
@@ -190,12 +196,12 @@ version ${spec.version}
 		<!-- Create source jar -->
 		<jar destfile="${dist.dir}/${jar.name.source}">
 			<fileset dir="${src.dir}" includes="**/*.java"/>
-				<zipgroupfileset file="${bin.lib}/*.jar">
+				<!-- <zipgroupfileset file="${bin.lib}/*.jar">
 					<exclude name="*-natives.jar"/>
 					<exclude name="*-debug.jar"/>
 					<exclude name="android-*.jar"/>
 					<exclude name="gwt*.jar"/>
-				</zipgroupfileset>
+				</zipgroupfileset>-->
 		</jar>
 
 		<echo message="---------------------------------------------"/>
@@ -261,7 +267,7 @@ version ${spec.version}
 		<echo message="---------------------------------------------"/>
         
 		<tstamp>
-			<format property="buildDate" pattern="yyyy-MM-dd" />
+			<format property="buildDate" pattern="yyyyMMdd" />
 		</tstamp>
 		
 		<property name="licences"       value="${dist.dir}/licences" />
@@ -275,9 +281,9 @@ version ${spec.version}
 		<copy file="README.md" 	todir="${licences}"/>
 		
 		<!-- Compress javadoc in a zip file -->		
-		<zip destfile="${dist.dir}/flixel-gdx-javadoc.zip" >
+		<!-- <zip destfile="${dist.dir}/flixel-gdx-javadoc.zip" >
     	    <fileset dir="${dist.dir}/docs" />
-		</zip>
+		</zip>-->
 		
 		<!-- Generate the final zip with the library, javadoc and licences -->
     	<zip destfile="${compress}/flixel-gdx-nigthly-latest.zip" >
@@ -285,9 +291,9 @@ version ${spec.version}
 				<include name="**/*.jar" />
 			</fileset>
 			
-    	    <fileset dir="${dist.dir}">
+    	    <!--  <fileset dir="${dist.dir}">
 				<include name="docs/**/**.*" />
-			</fileset>
+			</fileset>-->
 			
     	    <fileset dir="${licences}" />
 		</zip>
@@ -300,6 +306,55 @@ version ${spec.version}
 		<echo message="---------------------------------------------"/>
     	
     	
+    </target>
+    
+    <target name="create-config">
+        
+        <echo message="---------------------------------------------"/>
+		<echo message="Create setup-ui config"/>
+		<echo message="---------------------------------------------"/>
+        
+        <property name="compress"       value="${dist.dir}compress/" />
+        <property name="url"			value="http://www.sylvain-grialou.name:8180/job/flixel-gdx/ws/${compress}" />
+        
+        <tstamp>
+			<format property="buildDate" pattern="yyyyMMdd" />
+		</tstamp>
+        
+        <delete file="flixel-gdx.txt"/>
+        <echo file="flixel-gdx.txt">[name]
+flixel-gdx
+
+[homepage]
+http://github.com/flixel-gdx/flixel-gdx
+
+[gwt]
+org.flixel
+
+[stable-version]
+0.5
+
+[stable-url]
+${url}flixel-gdx-nightly-${buildDate}.zip
+
+[libs-common]
+flixel-core.jar
+flixel-core-sources.jar
+
+[libs-desktop]
+flixel-desktop.jar
+flixel-desktop-sources.jar
+
+[libs-android]
+flixel-android.jar
+flixel-android-sources.jar
+flixel-android.jar.properties
+
+[libs-html]
+flixel-gwt.jar
+flixel-gwt-sources.jar
+            
+        </echo>
     </target>
 
 </project>
