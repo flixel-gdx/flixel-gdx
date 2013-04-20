@@ -126,8 +126,7 @@ public abstract class B2FlxJoint extends FlxBasic
 	
 		scrollFactor = new FlxPoint(1.0f,1.0f);
 		
-		if(FlxG.getPlugin(B2FlxDebug.class) != null)
-			B2FlxDebug.addJoint(this);
+		B2FlxB.joints.add(this);
 		
 		init();
 	}

@@ -4,14 +4,12 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxU;
 import org.flixel.plugin.flxbox2d.B2FlxB;
-import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxJoint;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
-import com.badlogic.gdx.utils.Array;
 
 /**
  * A plugin for rendering joints and contact points.
@@ -73,14 +71,12 @@ public class B2FlxDebug extends FlxBasic
 	 * Whether to draw contact points or not. Default is true;
 	 */
 	public static boolean drawCollisions;	
-	/**
-	 * An array of joints.
-	 */
-	static Array<B2FlxJoint> joints;
 	
+	/**
+	 * Constructor
+	 */
 	public B2FlxDebug()
-	{
-		joints = new Array<B2FlxJoint>();
+	{		
 		drawBodies = true;
 		drawJoints = true;
 		drawCollisions = true;
@@ -96,9 +92,9 @@ public class B2FlxDebug extends FlxBasic
 			return;
 		if(drawJoints)
 		{
-			for(int i = 0; i < joints.size; i++)
+			for(int i = 0; i < B2FlxB.joints.size; i++)
 			{
-				joints.get(i).drawDebug();
+				B2FlxB.joints.get(i).drawDebug();
 			}
 		}
 		if(drawCollisions)
@@ -113,7 +109,7 @@ public class B2FlxDebug extends FlxBasic
 			int length = B2FlxB.world.getContactList().size();
 			for(int i = 0; i < length; i++)
 				drawContact(renderer, B2FlxB.world.getContactList().get(i));
-			renderer.end();			
+			renderer.end();
 		}
 	}
 	
@@ -131,25 +127,6 @@ public class B2FlxDebug extends FlxBasic
 		point.x -= FlxG.camera.scroll.x / B2FlxB.RATIO;
 		point.y -= FlxG.camera.scroll.y / B2FlxB.RATIO;
 		renderer.circle(point.x, point.y, .05f, 360);
-	}
-	
-	/**
-	 * Adds a joint to the renderer.
-	 * @param joint		The joint that needs to be drawn in the debug.
-	 */
-	public static void addJoint(B2FlxJoint joint)
-	{
-		joints.add(joint);
-	}
-	
-	/**
-	 * Cleans up the memory.
-	 */
-	@Override
-	public void destroy()
-	{
-		joints.clear();
-		joints = null;
 	}
 }
 

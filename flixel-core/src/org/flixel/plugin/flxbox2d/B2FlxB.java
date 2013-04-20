@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
+import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxJoint;
 import org.flixel.plugin.flxbox2d.managers.B2FlxContactManager;
 import org.flixel.plugin.flxbox2d.system.debug.B2FlxDebug;
 
@@ -58,11 +59,14 @@ public class B2FlxB
 	 */
 	public static Vector2[] vertices;
 	/**
+	 * An array of joints.
+	 */
+	public static Array<B2FlxJoint> joints;
+	/**
 	 * Internal, track wether to use the debugger or not.
 	 */
 	private static boolean _drawDebug;
-	
-	
+		
 	/**
 	 * Called by <code>B2FlxState</code> to setup the vertices.
 	 */
@@ -80,6 +84,8 @@ public class B2FlxB
 			for(int i = 0; i < vertices.length; i++)
 				vertices[i] = new Vector2();
 		}
+		
+		joints = new Array<B2FlxJoint>();
 	}
 	
 	/**
@@ -87,6 +93,13 @@ public class B2FlxB
 	 */
 	public static void destroy()
 	{
+		for(int i = 0; i < joints.size; i++)
+		{
+			joints.get(i).destroy();
+		}
+		joints.clear();
+		joints = null;
+		
 		Iterator<Body> bodies = world.getBodies();
 		while(bodies.hasNext())
 		{
