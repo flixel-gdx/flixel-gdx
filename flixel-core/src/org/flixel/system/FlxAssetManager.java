@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
@@ -117,16 +118,24 @@ public class FlxAssetManager
 			if (_assetManager.isLoaded(assetName) && _assetManager.getAssetType(assetName).equals(TextureAtlas.class))
 			{
 				Array<String> dependencies = _assetManager.getDependencies(assetName);
+				boolean dispose = false;
 				for (String dependency : dependencies)
 				{
 					Texture texture = _assetManager.get(dependency, Texture.class);
+					TextureData textureData = texture.getTextureData();
 					// Quickest way to check if Texture was created at run time or not.
-					if (!texture.getTextureData().disposePixmap())
+					if (!textureData.disposePixmap())
 					{
-						_assetManager.unload(assetName);
-						break;
-					}
+						dispose = true;
+						
+						if (!textureData.isPrepared())
+							textureData.prepare();
+						
+						textureData.consumePixmap().dispose();
+					}	
 				}
+				if (dispose)
+					_assetManager.unload(assetName);
 			}
 		}
 		
@@ -138,8 +147,16 @@ public class FlxAssetManager
 			if (_assetManager.getAssetType(assetName).equals(Texture.class))
 			{
 				Texture texture = _assetManager.get(assetName, Texture.class);
-				if (!texture.getTextureData().disposePixmap())
+				TextureData textureData = texture.getTextureData();
+				if (!textureData.disposePixmap())
+				{
 					_assetManager.unload(assetName);
+					
+					if (!textureData.isPrepared())
+						textureData.prepare();
+					
+					textureData.consumePixmap().dispose();
+				}
 			}
 		}
 	}

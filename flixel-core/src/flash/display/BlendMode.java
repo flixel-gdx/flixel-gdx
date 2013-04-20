@@ -3,6 +3,7 @@ package flash.display;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 
 public class BlendMode
@@ -80,10 +81,7 @@ public class BlendMode
 	 * @return	An array containing the opengl blend values.
 	 */
 	public static int[] getOpenGLBlendMode(String blendmode)
-	{
-		if (_blendMap == null)
-			init();
-		
+	{		
 		int[] openGLBlendmode = _blendMap.get(blendmode);
 		if (openGLBlendmode == null)
 			openGLBlendmode = _blendMap.get(NORMAL);
@@ -92,13 +90,22 @@ public class BlendMode
 	}
 	
 	/**
+	 * Add a new blendmode.
+	 */
+	public static void addBlendMode(String name, int sFactor, int dFactor)
+	{
+		_blendMap.put(name, new int[]{sFactor, dFactor});
+	}
+	
+	/**
 	 * Initializes the map;
 	 */
-	private static void init()
+	static
 	{
 		_blendMap = new HashMap<String, int[]>(15);
-		_blendMap.put(ADD, new int[]{GL10.GL_ONE, GL10.GL_ONE});
-		_blendMap.put(ALPHA, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE});
+		
+		addBlendMode(ADD, GL10.GL_ONE, GL10.GL_ONE);
+		addBlendMode(ALPHA, GL10.GL_SRC_ALPHA, GL10.GL_ONE);
 		//_blendMap.put(DARKEN, new int[]{GL10.GL_DST_COLOR, GL10.GL_ZERO});
 		//_blendMap.put(DIFFERENCE, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(ERASE, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
@@ -106,10 +113,10 @@ public class BlendMode
 		//_blendMap.put(INVERT, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(LAYER, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(LIGHTEN, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
-		_blendMap.put(MULTIPLY, new int[]{GL10.GL_DST_COLOR, GL10.GL_ZERO});
-		_blendMap.put(NORMAL, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
+		addBlendMode(MULTIPLY, GL10.GL_DST_COLOR, GL10.GL_ZERO);
+		addBlendMode(NORMAL, GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		//_blendMap.put(OVERLAY, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
-		_blendMap.put(SCREEN, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE});
+		addBlendMode(SCREEN, GL10.GL_SRC_ALPHA, GL10.GL_ONE);
 		//_blendMap.put(SHADER, );
 		//_blendMap.put(SUBTRACT, );
 	}
