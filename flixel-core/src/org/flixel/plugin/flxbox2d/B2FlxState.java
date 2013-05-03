@@ -20,13 +20,19 @@ public class B2FlxState extends FlxState
 	 */
 	public World world;
 	/**
+	 * The amount of time to simulate, this should not vary. 
+	 * If you change the framerate be sure to update the timeStep:
+	 * 1 / framerate.
+	 */
+	protected float timeStep;
+	/**
 	 * Velocity iterations for the velocity constraint solver.
 	 */
 	protected int velocityIterations = 8; 
 	/**
 	 * Position iterations for the position constraint solver. 
 	 */
-	protected int iterations = 3;
+	protected int positionIterations = 3;
 	/**
 	 * Handle the collision.
 	 */
@@ -44,8 +50,10 @@ public class B2FlxState extends FlxState
 	@Override
 	public void create()
 	{			
-		// Setup required static variables
+		// Setup required static variables.
 		B2FlxB.init();
+		// Fixed time step.
+		timeStep = (float) (1f / FlxG.getFramerate());
 		// Construct a world object.
 		world = B2FlxB.world = new World(_gravity, true);
 		// Create the contact manager.
@@ -61,7 +69,7 @@ public class B2FlxState extends FlxState
 	@Override
 	public void update()
 	{
-		world.step(FlxG.elapsed, velocityIterations, iterations);
+		world.step(timeStep, velocityIterations, positionIterations);
 		world.clearForces();
 		if(B2FlxB.scheduledForActive.size > 0)
 			B2FlxB.safelyActivateBodies();

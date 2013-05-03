@@ -40,11 +40,7 @@ import flash.display.BlendMode;
  * @author Ka Wing Chin
  */
 public abstract class B2FlxShape extends FlxSprite
-{	
-	/**
-	 * The ratio from meters to pixels. 
-	 */
-	public final float RATIO = B2FlxB.RATIO;	
+{		
 	/**
 	 * A body which isn't affected by world forces and it does not react to collisions. Can't move.
 	 */
@@ -236,8 +232,8 @@ public abstract class B2FlxShape extends FlxSprite
 		if(body != null)
 		{
 			position = body.getPosition();
-			x = position.x * RATIO - width * .5f;
-			y = position.y * RATIO - height * .5f;			
+			x = position.x * B2FlxB.RATIO - width * .5f;
+			y = position.y * B2FlxB.RATIO - height * .5f;			
 			
 			angle = body.getAngle() * B2FlxMath.RADDEG;
 			if(resetAngle)
@@ -264,7 +260,7 @@ public abstract class B2FlxShape extends FlxSprite
 	 */
 	protected boolean killBody()
 	{
-		if(!B2FlxB.world.isLocked() && exists && body != null)
+		if(!B2FlxB.world.isLocked() && body != null)
 		{
 			killJoints();
 			B2FlxB.world.destroyBody(body);
@@ -337,7 +333,7 @@ public abstract class B2FlxShape extends FlxSprite
 		framePixels.setRotation(angle);
 		body.setLinearVelocity(new Vector2(0,0));
 		body.setAngularVelocity(0);
-		position.set(x / RATIO, y / RATIO);
+		position.set(x / B2FlxB.RATIO, y / B2FlxB.RATIO);
 		if(B2FlxB.world.isLocked())
 			B2FlxB.addMove(this);
 		else	
@@ -425,8 +421,8 @@ public abstract class B2FlxShape extends FlxSprite
 				else
 					return false;
 								
-				lower.mul(RATIO);
-				upper.mul(RATIO);
+				lower.mul(B2FlxB.RATIO);
+				upper.mul(B2FlxB.RATIO);
 				
 				p1.x = lower.x - camera.scroll.x * scrollFactor.x;
 				p1.y = lower.y - camera.scroll.y * scrollFactor.y;
@@ -686,7 +682,7 @@ public abstract class B2FlxShape extends FlxSprite
 		FlxG.flashGfx.lineStyle(1, color, 1);
 		for(int i = 0; i < vertexCount; i++) 
 		{
-			Vector2 v = vertices[i].mul(RATIO);
+			Vector2 v = vertices[i].mul(B2FlxB.RATIO);
 			v.x -= (camera.scroll.x * scrollFactor.x) - offset.x;
 			v.y -= (camera.scroll.y * scrollFactor.y) - offset.y;
 			if(i == 0) 
@@ -720,7 +716,7 @@ public abstract class B2FlxShape extends FlxSprite
 		FlxG.flashGfx.lineStyle(1, color, 1);
 		for(int i = 0; i < 20; i++, angle += angleInc) 
 		{
-			v.set(MathUtils.cos(angle) * radius + center.x, MathUtils.sin(angle) * radius + center.y).mul(RATIO);
+			v.set(MathUtils.cos(angle) * radius + center.x, MathUtils.sin(angle) * radius + center.y).mul(B2FlxB.RATIO);
 			v.x -= (camera.scroll.x * scrollFactor.x) - offset.x;
 			v.y -= (camera.scroll.y * scrollFactor.y) - offset.y;
 			if (i == 0) 
@@ -733,8 +729,8 @@ public abstract class B2FlxShape extends FlxSprite
 			lv.set(v);
 		}
 		renderer.line(f.x, f.y, lv.x, lv.y);
-		center.mul(RATIO);
-		axis.mul(RATIO);
+		center.mul(B2FlxB.RATIO);
+		axis.mul(B2FlxB.RATIO);
 		center.x -= (camera.scroll.x * scrollFactor.x) - offset.x;
 		center.y -= (camera.scroll.y * scrollFactor.y) - offset.y;
 		renderer.line(center.x, center.y, 0, center.x + axis.x * radius, center.y + axis.y * radius, 0);

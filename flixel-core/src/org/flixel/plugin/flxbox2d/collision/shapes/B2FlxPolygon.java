@@ -102,7 +102,7 @@ public class B2FlxPolygon extends B2FlxShape
 			vector = new Vector2[vertexCount];
 			for (int j = 0; j < vertexCount; j++) 
 			{		
-				vector[j] = new Vector2((float)_vertices[i][j][0] / RATIO, (float)_vertices[i][j][1] / RATIO);					
+				vector[j] = new Vector2((float)_vertices[i][j][0] / B2FlxB.RATIO, (float)_vertices[i][j][1] / B2FlxB.RATIO);					
 			}
 			shape = new PolygonShape();
 			((PolygonShape)shape).set(vector);
@@ -117,8 +117,8 @@ public class B2FlxPolygon extends B2FlxShape
 	@Override
 	public void createBody()
 	{	
-		bodyDef.position.x = x / RATIO;
-		bodyDef.position.y = y / RATIO;
+		bodyDef.position.x = x / B2FlxB.RATIO;
+		bodyDef.position.y = y / B2FlxB.RATIO;
 		position = bodyDef.position;
 		body = B2FlxB.world.createBody(bodyDef);
 		PolygonShape s;

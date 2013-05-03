@@ -25,12 +25,7 @@ import com.badlogic.gdx.physics.box2d.JointDef;
  * @author Ka Wing Chin
  */
 public abstract class B2FlxJoint extends FlxBasic
-{
-	/**
-	 * The ratio of meters to pixel.
-	 */
-	static final float RATIO = B2FlxB.RATIO;
-	
+{		
 	/**
 	 * This stores the attached bodies and the type of the joint.
 	 */
@@ -206,14 +201,16 @@ public abstract class B2FlxJoint extends FlxBasic
 	 */
 	protected boolean killJoint()
 	{
-		if(!B2FlxB.world.isLocked() && exists && joint != null)
+		if(!B2FlxB.world.isLocked() && joint != null)
 		{
 			B2FlxB.world.destroyJoint(joint);
 			joint = null;
 			return true;
 		}
 		else if(B2FlxB.world.isLocked())
+		{
 			B2FlxB.addSafelyRemove(this);
+		}
 		return false;
 	}
 	
@@ -282,8 +279,8 @@ public abstract class B2FlxJoint extends FlxBasic
 		if(camera == null)
 			camera = FlxG.camera;
 		
-		p1.set(joint.getAnchorA().mul(RATIO));
-		p2.set(joint.getAnchorB().mul(RATIO));
+		p1.set(joint.getAnchorA().mul(B2FlxB.RATIO));
+		p2.set(joint.getAnchorB().mul(B2FlxB.RATIO));
 		
 		p1.x -= camera.scroll.x * scrollFactor.x;
 		p1.y -= camera.scroll.y * scrollFactor.y;
@@ -335,8 +332,8 @@ public abstract class B2FlxJoint extends FlxBasic
 	{
 		ShapeRenderer segment = FlxG.flashGfx.getShapeRenderer();
 		FlxG.flashGfx.lineStyle(lineThickness, lineColor, lineAlpha);
-		x1.set(bodyA.getTransform().getPosition().mul(RATIO));
-		x2.set(bodyB.getTransform().getPosition().mul(RATIO));
+		x1.set(bodyA.getTransform().getPosition().mul(B2FlxB.RATIO));
+		x2.set(bodyB.getTransform().getPosition().mul(B2FlxB.RATIO));
 		x1.x -= camera.scroll.x * scrollFactor.x;
 		x1.y -= camera.scroll.y * scrollFactor.y;
 		x2.x -= camera.scroll.x * scrollFactor.x;

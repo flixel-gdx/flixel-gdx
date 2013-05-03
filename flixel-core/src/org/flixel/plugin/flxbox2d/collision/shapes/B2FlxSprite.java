@@ -3,8 +3,8 @@ package org.flixel.plugin.flxbox2d.collision.shapes;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 /**
  * This class doesn't have any shape. It's a shapeless body which is used 
@@ -59,8 +59,8 @@ public class B2FlxSprite extends B2FlxShape
 	@Override
 	protected void createBody()
 	{
-		bodyDef.position.x = x / RATIO;
-		bodyDef.position.y = y / RATIO;
+		bodyDef.position.x = x / B2FlxB.RATIO;
+		bodyDef.position.y = y / B2FlxB.RATIO;
 		position = bodyDef.position;
 		body = B2FlxB.world.createBody(bodyDef);
 		setUserData(userData);
@@ -69,7 +69,7 @@ public class B2FlxSprite extends B2FlxShape
 	@Override
 	public B2FlxSprite create()
 	{
-		super.create();
+		super.create();		
 		return this;
 	}
 	

@@ -103,16 +103,16 @@ public class B2FlxPulleyJoint extends B2FlxJoint
 		if(camera == null)
 			camera = FlxG.camera;
 		
-		p1.set(joint.getAnchorA().mul(RATIO));
-		p2.set(joint.getAnchorB().mul(RATIO));
+		p1.set(joint.getAnchorA().mul(B2FlxB.RATIO));
+		p2.set(joint.getAnchorB().mul(B2FlxB.RATIO));
 		
 		p1.x -= camera.scroll.x * scrollFactor.x;
 		p1.y -= camera.scroll.y * scrollFactor.y;
 		p2.x -= camera.scroll.x * scrollFactor.x;
 		p2.y -= camera.scroll.y * scrollFactor.y;
 		
-		x1.set(((PulleyJoint)joint).getGroundAnchorA().mul(RATIO));
-		x2.set(((PulleyJoint)joint).getGroundAnchorB().mul(RATIO));
+		x1.set(((PulleyJoint)joint).getGroundAnchorA().mul(B2FlxB.RATIO));
+		x2.set(((PulleyJoint)joint).getGroundAnchorB().mul(B2FlxB.RATIO));
 		x1.x -= (int)camera.scroll.x * scrollFactor.x;
 		x1.y -= (int)camera.scroll.y * scrollFactor.y;
 		x2.x -= (int)camera.scroll.x * scrollFactor.x;

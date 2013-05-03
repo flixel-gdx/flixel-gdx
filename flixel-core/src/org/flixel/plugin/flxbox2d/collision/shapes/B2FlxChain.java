@@ -140,7 +140,7 @@ public class B2FlxChain extends B2FlxShape
 		Vector2[] v = new Vector2[length];
 		for(int i = 0; i < length; i++)
 		{
-			v[i] = new Vector2(_vertices.get(i)[0]/RATIO, _vertices.get(i)[1]/RATIO);
+			v[i] = new Vector2(_vertices.get(i)[0]/B2FlxB.RATIO, _vertices.get(i)[1]/B2FlxB.RATIO);
 		}
 		if(_loop)
 			((ChainShape)shape).createLoop(v);
@@ -162,8 +162,8 @@ public class B2FlxChain extends B2FlxShape
 	@Override
 	protected void createBody()
 	{
-		bodyDef.position.x = x / RATIO;
-		bodyDef.position.y = y / RATIO;
+		bodyDef.position.x = x / B2FlxB.RATIO;
+		bodyDef.position.y = y / B2FlxB.RATIO;
 		position = bodyDef.position;
 		body = B2FlxB.world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
@@ -192,7 +192,7 @@ public class B2FlxChain extends B2FlxShape
 			FlxG.log("Can't set ghost edges on loops!");
 			return this;
 		}
-		_prevVertex = new Vector2(x/RATIO, y/RATIO);
+		_prevVertex = new Vector2(x/B2FlxB.RATIO, y/B2FlxB.RATIO);
 		return this;
 	}
 
@@ -210,7 +210,7 @@ public class B2FlxChain extends B2FlxShape
 			FlxG.log("Can't set ghost edges on loops!");
 			return this;
 		}
-		_nextVertex = new Vector2(x/RATIO, y/RATIO);
+		_nextVertex = new Vector2(x/B2FlxB.RATIO, y/B2FlxB.RATIO);
 		return this;
 	}
 	

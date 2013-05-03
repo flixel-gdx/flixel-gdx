@@ -83,7 +83,7 @@ public class B2FlxCircle extends B2FlxShape
 	public void createShape()
 	{
 		shape = new CircleShape();
-		shape.setRadius(_radius/RATIO);
+		shape.setRadius(_radius/B2FlxB.RATIO);
 		// The shape radius is gone when the shape got disposed.
 		_shapeRadius = shape.getRadius();
 		fixtureDef.shape = shape;
@@ -96,8 +96,8 @@ public class B2FlxCircle extends B2FlxShape
 	@Override
 	protected void createBody()
 	{	
-		bodyDef.position.x = (x + _radius) / RATIO;
-		bodyDef.position.y = (y + _radius) / RATIO;
+		bodyDef.position.x = (x + _radius) / B2FlxB.RATIO;
+		bodyDef.position.y = (y + _radius) / B2FlxB.RATIO;
 		position = bodyDef.position;
 		body = B2FlxB.world.createBody(bodyDef);
 		fixture = body.createFixture(fixtureDef);
@@ -136,7 +136,7 @@ public class B2FlxCircle extends B2FlxShape
 	 */
 	public void setShapePosition(float x, float y)
 	{
-		((CircleShape)fixtureDef.shape).setPosition(new Vector2(x/RATIO, y/RATIO));
+		((CircleShape)fixtureDef.shape).setPosition(new Vector2(x/B2FlxB.RATIO, y/B2FlxB.RATIO));
 	}
 
 	@Override

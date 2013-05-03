@@ -116,6 +116,7 @@ public class FlxText extends FlxSprite
 	{
 		_textField.clear();
 		_textField = null;
+		_text = null;
 		super.destroy();
 	}
 	

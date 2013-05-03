@@ -125,9 +125,9 @@ public class B2FlxBox extends B2FlxShape
 		shape = new PolygonShape();
 		fixtureDef.shape = shape;
 		if(_center != null)
-			((PolygonShape)shape).setAsBox(width * .5f / RATIO, height * .5f / RATIO, _center, bodyDef.angle);
+			((PolygonShape)shape).setAsBox(width * .5f / B2FlxB.RATIO, height * .5f / B2FlxB.RATIO, _center, bodyDef.angle);
 		else
-			((PolygonShape)shape).setAsBox(width * .5f / RATIO, height * .5f / RATIO);
+			((PolygonShape)shape).setAsBox(width * .5f / B2FlxB.RATIO, height * .5f / B2FlxB.RATIO);
 	}
 
 	/**
@@ -137,8 +137,8 @@ public class B2FlxBox extends B2FlxShape
 	@Override
 	protected void createBody()
 	{
-		bodyDef.position.x = (x + width * .5f) / RATIO;
-		bodyDef.position.y = (y + height * .5f) / RATIO;
+		bodyDef.position.x = (x + width * .5f) / B2FlxB.RATIO;
+		bodyDef.position.y = (y + height * .5f) / B2FlxB.RATIO;
 		position = bodyDef.position;
 		body = B2FlxB.world.createBody(bodyDef);
 		fixture = body.createFixture(fixtureDef);

@@ -106,8 +106,8 @@ public class B2FlxEdge extends B2FlxShape
 		Vector2 endPoint;
 		for (int i = 0; i < length; i++) 
 		{
-			startPoint = new Vector2(_vertices[i][0]/RATIO, _vertices[i][1]/RATIO);
-			endPoint= new Vector2(_vertices[i+1][0]/RATIO, _vertices[i+1][1]/RATIO);
+			startPoint = new Vector2(_vertices[i][0]/B2FlxB.RATIO, _vertices[i][1]/B2FlxB.RATIO);
+			endPoint= new Vector2(_vertices[i+1][0]/B2FlxB.RATIO, _vertices[i+1][1]/B2FlxB.RATIO);
 			shape = new EdgeShape();
 			((EdgeShape)shape).set(startPoint, endPoint);
 			shapes[i] = ((EdgeShape)shape);
@@ -121,8 +121,8 @@ public class B2FlxEdge extends B2FlxShape
 	@Override
 	public void createBody()
 	{		
-		bodyDef.position.x = x / RATIO;
-		bodyDef.position.y = y / RATIO;
+		bodyDef.position.x = x / B2FlxB.RATIO;
+		bodyDef.position.y = y / B2FlxB.RATIO;
 		position = bodyDef.position;
 		body = B2FlxB.world.createBody(bodyDef);
 		EdgeShape s;
