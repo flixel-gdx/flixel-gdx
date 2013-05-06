@@ -2,6 +2,7 @@ package org.flixel.plugin.flxbox2d;
 
 import org.flixel.FlxG;
 import org.flixel.FlxState;
+import org.flixel.FlxU;
 import org.flixel.plugin.flxbox2d.managers.B2FlxContactManager;
 
 import com.badlogic.gdx.math.Vector2;
@@ -15,6 +16,35 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class B2FlxState extends FlxState
 {	
+	/**
+	 * The amount of time to simulate, this should not vary. 
+	 * If you change the framerate be sure to update the timeStep.
+	 */
+	private final float FIXED_TIMESTEP = 1.0f / 60.0f;
+	/**
+	 * Minimum remaining time to avoid box2d unstability caused by very small delta times.
+	 * If remaining time to simulate is smaller than this, the rest of time will be added 
+	 * to the last step instead of performing one more single step with only the small 
+	 * delta time.
+	 */
+	private final float MINIMUM_TIMESTEP = 1.0f / 600.0f;
+	/**
+	 * Maximum number of steps per tick to avoid spiral of death.
+	 */
+	private final int MAXIMUM_NUMBER_OF_STEPS = 25;
+	/**
+	 * Internal, the frame time.
+	 */
+	private float _frameTime;
+	/**
+	 * Internal, the amoutn of steps performed.
+	 */
+	private int _stepsPerformed;
+	/**
+	 * Internal, the delta time.
+	 */
+	private float _deltaTime;
+	
 	/**
 	 * The world where the object lives.
 	 */
@@ -61,11 +91,22 @@ public class B2FlxState extends FlxState
 	@Override
 	public void update()
 	{
-		if(FlxG.elapsed == 0f)
-			return;
-		
-		world.step(FlxG.elapsed, velocityIterations, positionIterations);
+		_frameTime = FlxG.elapsed;
+		_stepsPerformed = 0;
+		while((_frameTime > 0.0) && (_stepsPerformed < MAXIMUM_NUMBER_OF_STEPS))
+		{
+			_deltaTime = FlxU.min(_frameTime, FIXED_TIMESTEP);
+			_frameTime -= _deltaTime;
+			if(_frameTime < MINIMUM_TIMESTEP)
+			{
+				_deltaTime += _frameTime;
+				_frameTime = 0.0f;
+			}
+			world.step(_deltaTime, velocityIterations, positionIterations);
+			_stepsPerformed++;
+		}
 		world.clearForces();
+		
 		if(B2FlxB.scheduledForActive.size > 0)
 			B2FlxB.safelyActivateBodies();
 		if(B2FlxB.scheduledForInActive.size > 0)
