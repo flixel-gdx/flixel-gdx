@@ -200,4 +200,6 @@ public class B2FlxEdge extends B2FlxShape
 	public B2FlxEdge setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override
 	public B2FlxEdge setDraggable(boolean draggable){super.setDraggable(draggable);return this;}
+	@Override
+	public B2FlxEdge setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

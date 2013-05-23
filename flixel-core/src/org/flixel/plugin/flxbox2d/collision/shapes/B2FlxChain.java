@@ -309,5 +309,7 @@ public class B2FlxChain extends B2FlxShape
 	public B2FlxChain setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override
 	public B2FlxChain setDraggable(boolean draggable){super.setDraggable(draggable);return this;}
+	@Override
+	public B2FlxChain setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }
 

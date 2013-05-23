@@ -682,7 +682,7 @@ public class FlxG
 			music = new FlxSound();
 		if(music.active)
 			music.stop();
-		music.loadEmbedded(Music,true);
+		music.loadEmbedded(Music,true,false,FlxSound.MUSIC);
 		music.setVolume(Volume);
 		music.survive = true;
 		music.play();
@@ -1286,7 +1286,6 @@ public class FlxG
 	static public void clearBitmapCache()
 	{
 		_cache.disposeRunTimeTextures();
-		_cache.disposeAssets(BitmapFont.class);
 	}
 	
 	/**

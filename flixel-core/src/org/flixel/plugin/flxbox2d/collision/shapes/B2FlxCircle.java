@@ -187,4 +187,6 @@ public class B2FlxCircle extends B2FlxShape
 	public B2FlxCircle setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override
 	public B2FlxCircle setDraggable(boolean draggable){super.setDraggable(draggable);return this;}
+	@Override
+	public B2FlxCircle setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

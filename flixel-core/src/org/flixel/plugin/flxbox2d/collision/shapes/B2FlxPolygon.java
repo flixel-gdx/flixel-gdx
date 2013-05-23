@@ -196,4 +196,6 @@ public class B2FlxPolygon extends B2FlxShape
 	public B2FlxPolygon setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override
 	public B2FlxPolygon setDraggable(boolean draggable){super.setDraggable(draggable);return this;}
+	@Override
+	public B2FlxPolygon setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

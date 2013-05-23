@@ -3,10 +3,6 @@ package org.flixel.plugin.flxbox2d;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.FlxU;
-import org.flixel.plugin.flxbox2d.managers.B2FlxContactManager;
-
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 
 /**
  * This is the basic game "state" for Box2D object. The FlxState class doesn't work with 
@@ -18,16 +14,18 @@ public class B2FlxState extends FlxState
 {	
 	/**
 	 * The amount of time to simulate, this should not vary. 
-	 * If you change the framerate be sure to update the timeStep.
+	 * If you change the framerate during runtime, which is not recommended, be sure to 
+	 * update the time step.
 	 */
-	private final float FIXED_TIMESTEP = 1.0f / 60.0f;
+	private float FIXED_TIMESTEP;
 	/**
 	 * Minimum remaining time to avoid box2d unstability caused by very small delta times.
 	 * If remaining time to simulate is smaller than this, the rest of time will be added 
 	 * to the last step instead of performing one more single step with only the small 
-	 * delta time.
+	 * delta time. If you change the framerate during runtime, which is not recommended, 
+	 * be sure to update the minimum time step. 
 	 */
-	private final float MINIMUM_TIMESTEP = 1.0f / 600.0f;
+	private float MINIMUM_TIMESTEP = 1.0f / 600.0f;
 	/**
 	 * Maximum number of steps per tick to avoid spiral of death.
 	 */
@@ -44,11 +42,6 @@ public class B2FlxState extends FlxState
 	 * Internal, the delta time.
 	 */
 	private float _deltaTime;
-	
-	/**
-	 * The world where the object lives.
-	 */
-	public World world;
 	/**
 	 * Velocity iterations for the velocity constraint solver.
 	 */
@@ -56,15 +49,7 @@ public class B2FlxState extends FlxState
 	/**
 	 * Position iterations for the position constraint solver. 
 	 */
-	protected int positionIterations = 3;
-	/**
-	 * Handle the collision.
-	 */
-	protected B2FlxContactManager contact;
-	/**
-	 * Preallocated gravity
-	 */
-	private final Vector2 _gravity = new Vector2(0, 9.8f);
+	protected int positionIterations = 3;	
 	
 	/**
 	 * Prepare the Box2D initial setup.
@@ -76,13 +61,10 @@ public class B2FlxState extends FlxState
 	{			
 		// Setup required static variables.
 		B2FlxB.init();
-		// Construct a world object.
-		world = B2FlxB.world = new World(_gravity, true);
-		// Create the contact manager.
-		contact = B2FlxB.contact = new B2FlxContactManager(world);
-		
-		if(FlxG.debug)
-			B2FlxB.initDebugger();
+		// Apply the correct time step
+		FIXED_TIMESTEP = 1f / FlxG.getFramerate();
+		// Apply the correct minimum time step.
+		MINIMUM_TIMESTEP = 1f / (FlxG.getFramerate() * 10f);
 	}
 		
 	/**
@@ -102,10 +84,10 @@ public class B2FlxState extends FlxState
 				_deltaTime += _frameTime;
 				_frameTime = 0.0f;
 			}
-			world.step(_deltaTime, velocityIterations, positionIterations);
+			B2FlxB.world.step(_deltaTime, velocityIterations, positionIterations);
 			_stepsPerformed++;
 		}
-		world.clearForces();
+		B2FlxB.world.clearForces();
 		
 		if(B2FlxB.scheduledForActive.size > 0)
 			B2FlxB.safelyActivateBodies();
@@ -128,27 +110,5 @@ public class B2FlxState extends FlxState
 	{		
 		super.destroy();		
 		B2FlxB.destroy();
-		contact = null;
-		world = null;
-	}
-	
-	/**
-	 * Change the global gravity vector.
-	 * @param gravity
-	 */
-	public void setGravity(Vector2 gravity)
-	{
-		world.setGravity(gravity);
-	}
-	
-	/**
-	 * Change the global gravity vector.
-	 * @param gravityX
-	 * @param gravityY
-	 */
-	public void setGravity(float gravityX, float gravityY)
-	{
-		_gravity.set(gravityX, gravityY);
-		setGravity(_gravity);
 	}
 }

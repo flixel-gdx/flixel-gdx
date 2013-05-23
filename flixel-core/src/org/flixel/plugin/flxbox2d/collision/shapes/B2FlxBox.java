@@ -216,4 +216,6 @@ public class B2FlxBox extends B2FlxShape
 	public B2FlxBox setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override
 	public B2FlxBox setDraggable(boolean draggable){super.setDraggable(draggable);return this;}
+	@Override
+	public B2FlxBox setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

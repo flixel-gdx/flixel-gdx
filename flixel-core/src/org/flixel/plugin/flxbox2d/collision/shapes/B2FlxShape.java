@@ -105,6 +105,11 @@ public abstract class B2FlxShape extends FlxSprite
 	 */
 	private boolean resetAngle;
 	/**
+	 * Survive the sprite along with the body on state change. Default is false.
+	 * The shape needs to be static or kept a reference somewhere or it will be nullified.
+	 */
+	private boolean survive = false;
+	/**
 	 * Holds the user data.
 	 */
 	public ObjectMap<String, Object> userData;
@@ -120,6 +125,10 @@ public abstract class B2FlxShape extends FlxSprite
 	 * The fixture that is used for debug drawing.
 	 */
 	private Fixture _fixtureDebug;
+	/**
+	 * Internal cache.
+	 */
+	private final Vector2 _linearVelocity = new Vector2();
 	/**
 	 * Internal, for debug purpose only. Destroying these shouldn't be done in this class.
 	 */
@@ -148,8 +157,9 @@ public abstract class B2FlxShape extends FlxSprite
 		
 		userData = new ObjectMap<String, Object>();
 		userData.put("shape", this);
-		
+
 		userData.put("draggable", _draggable);
+		userData.put("survive", false);
 		
 		joints = new Array<B2FlxJoint>();
 		userData.put("joints", joints);
@@ -294,6 +304,8 @@ public abstract class B2FlxShape extends FlxSprite
 	@Override
 	public void destroy()
 	{
+		if(survive && B2FlxB.getSurvive())
+			return;
 		super.destroy();
 		if(body != null)
 		{
@@ -331,7 +343,7 @@ public abstract class B2FlxShape extends FlxSprite
 		}
 		angle = 0;
 		framePixels.setRotation(angle);
-		body.setLinearVelocity(new Vector2(0,0));
+		body.setLinearVelocity(_linearVelocity);
 		body.setAngularVelocity(0);
 		position.set(x / B2FlxB.RATIO, y / B2FlxB.RATIO);
 		if(B2FlxB.world.isLocked())
@@ -1009,11 +1021,12 @@ public abstract class B2FlxShape extends FlxSprite
 	
 	public B2FlxShape setPosition(Vector2 position)
 	{
-		bodyDef.position.set(position);
 		if(body != null && !B2FlxB.world.isLocked())
 			body.setTransform(position, angle);
 		else if(body != null)
 			B2FlxB.addMove(this);
+		else
+			bodyDef.position.set(position);
 		return this;
 	}
 	
@@ -1079,5 +1092,26 @@ public abstract class B2FlxShape extends FlxSprite
 	public boolean getDraggable()
 	{
 		return _draggable;
+	}
+
+	/**
+	 * Wether the body needs to be destroyed on state change or not.
+	 * When this is set to true, don't forget to set B2FlxB.suviveWorld to true
+	 * otherwise the body will still get destroyed.
+	 * @param survive
+	 */
+	public B2FlxShape setSurvive(boolean survive)
+	{
+		this.survive = survive;
+		userData.put("survive", survive);
+		return this;
+	}
+	
+	/**
+	 * @return the survive
+	 */
+	public boolean getSurvive()
+	{
+		return survive;
 	}
 }

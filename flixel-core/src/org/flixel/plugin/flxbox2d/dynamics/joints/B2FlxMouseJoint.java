@@ -25,11 +25,7 @@ import com.badlogic.gdx.utils.ObjectMap;
  * @author Ka Wing Chin
  */
 public class B2FlxMouseJoint extends FlxBasic
-{
-	/**
-	 * The ratio from meters to pixels.
-	 */
-	private final float RATIO = B2FlxB.RATIO;
+{	
 	/**
 	 * The definition of the mouse joint.
 	 */
@@ -79,6 +75,7 @@ public class B2FlxMouseJoint extends FlxBasic
 	 */
 	public B2FlxMouseJoint()
 	{
+		_mouseJointDef = new MouseJointDef();
 		_groundBody = B2FlxB.world.createBody(new BodyDef());
 		_testPoint = new Vector3();
 		_mouseTarget = new Vector2();
@@ -101,8 +98,8 @@ public class B2FlxMouseJoint extends FlxBasic
 	 */
 	private void updateMouseWorld()
 	{
-		_mouseWorldX = FlxG.mouse.x / RATIO;
-		_mouseWorldY = FlxG.mouse.y / RATIO;
+		_mouseWorldX = FlxG.mouse.x / B2FlxB.RATIO;
+		_mouseWorldY = FlxG.mouse.y / B2FlxB.RATIO;
 	}
 	
 	/**
@@ -128,11 +125,10 @@ public class B2FlxMouseJoint extends FlxBasic
 			if (_hitBody != null && _hitBody.getType() == BodyType.KinematicBody || !(Boolean)userData.get("draggable")) 
 				return false;
 			
-			// if we hit something we create a new mouse joint
+			// if we hit something we pass the data to the mouse joint.
 			// and attach it to the hit body.
 			if (_hitBody != null) 
 			{
-				_mouseJointDef = new MouseJointDef();
 				_mouseJointDef.bodyA = _groundBody;
 				_mouseJointDef.bodyB = _hitBody;
 				_mouseJointDef.collideConnected = true;
@@ -255,8 +251,8 @@ public class B2FlxMouseJoint extends FlxBasic
 		
 		Vector2 a = _mouseJoint.getAnchorA();
 		Vector2 b = _mouseJoint.getAnchorB();
-		a.mul(RATIO);
-		b.mul(RATIO);
+		a.mul(B2FlxB.RATIO);
+		b.mul(B2FlxB.RATIO);
 		a.x -= camera.scroll.x; 
 		a.y -= camera.scroll.y; 
 		b.x -= camera.scroll.x; 

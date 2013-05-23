@@ -121,5 +121,7 @@ public class B2FlxSprite extends B2FlxShape
 	public B2FlxSprite setResetAngle(boolean resetAngle){super.setResetAngle(resetAngle);return this;}	
 	@Override
 	public B2FlxSprite setDraggable(boolean draggable){super.setDraggable(draggable);return this;}
+	@Override
+	public B2FlxSprite setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }
 

@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * This is a global helper class for Box2D.
@@ -34,6 +35,10 @@ public class B2FlxB
 	 * The contact manager.
 	 */
 	public static B2FlxContactManager contact;
+	/**
+	 * Let the world live on state change. Default is false.
+	 */
+	private static boolean surviveWorld = false;
 	/**
 	 * A list for shapes and joints that didn't get killed due the world got locked.
 	 */
@@ -57,7 +62,11 @@ public class B2FlxB
 	/**
 	 * Vertices for polygon rendering.
 	 */
-	public static Vector2[] vertices;
+	public static final Vector2[] vertices = new Vector2[1000];	
+	/**
+	 * Preallocated gravity
+	 */
+	private final static Vector2 _gravity = new Vector2(0, 9.8f);
 	/**
 	 * An array of joints.
 	 */
@@ -68,29 +77,41 @@ public class B2FlxB
 	private static boolean _drawDebug;
 		
 	/**
+	 * Create vertices for polygon rendering.
+	 */
+	static
+	{
+		for(int i = 0; i < vertices.length; i++)
+			vertices[i] = new Vector2();
+	}
+	
+	/**
 	 * Called by <code>B2FlxState</code> to setup the vertices.
 	 */
 	public static void init()
 	{	
+		// Construct a world object.
+		if(world == null)
+			world = new World(_gravity, true);
+		
+		// Create the contact manager.		
+		contact = new B2FlxContactManager(B2FlxB.world);
+		
+		if(FlxG.debug)
+			B2FlxB.initDebugger();
+		
 		scheduledForRemoval = new Array<FlxBasic>();
 		scheduledForRevival = new Array<FlxBasic>();
 		scheduledForInActive = new Array<B2FlxShape>();
 		scheduledForActive = new Array<B2FlxShape>();
 		scheduledForMove = new Array<B2FlxShape>();
-		
-		if(vertices == null)
-		{
-			vertices = new Vector2[1000];
-			for(int i = 0; i < vertices.length; i++)
-				vertices[i] = new Vector2();
-		}
-		
 		joints = new Array<B2FlxJoint>();
 	}
 	
 	/**
 	 * Clean up memory.
 	 */
+	@SuppressWarnings("unchecked")
 	public static void destroy()
 	{
 		for(int i = 0; i < joints.size; i++)
@@ -101,13 +122,24 @@ public class B2FlxB
 		joints = null;
 		
 		Iterator<Body> bodies = world.getBodies();
+		ObjectMap<String, Object> userData;
 		while(bodies.hasNext())
 		{
 			Body body = bodies.next();
 			if(body != null)
-				world.destroyBody(body);
+			{
+				userData = (ObjectMap<String, Object>) body.getUserData();
+				if(userData != null)
+				{
+					if(!surviveWorld)
+						world.destroyBody(body);					
+					else if(surviveWorld && (Boolean)userData.get("survive") == false)
+						world.destroyBody(body);
+				}
+				else
+					world.destroyBody(body);
+			}
 		}
-		
 		Iterator<Joint> joints = world.getJoints();
 		while(joints.hasNext())
 		{
@@ -115,11 +147,13 @@ public class B2FlxB
 			if(joint != null)
 				world.destroyJoint(joint);
 		}
-		world.dispose();
-		world = null;
+		if(!surviveWorld)
+		{
+			world.dispose();
+			world = null;
+		}
 		contact.destroy();
 		contact = null;
-		vertices = null;
 		if(_drawDebug)
 		{
 			FlxG.getPlugin(B2FlxDebug.class).destroy();
@@ -309,5 +343,42 @@ public class B2FlxB
 			scheduledForMove.get(i).body.setTransform(scheduledForMove.get(i).position, scheduledForMove.get(i).angle);
 		}
 		scheduledForMove.clear();
+	}
+	
+	/**
+	 * Change the global gravity vector.
+	 * @param gravity
+	 */
+	public static void setGravity(Vector2 gravity)
+	{
+		B2FlxB.world.setGravity(gravity);
+	}
+	
+	/**
+	 * Change the global gravity vector.
+	 * @param gravityX
+	 * @param gravityY
+	 */
+	public static void setGravity(float gravityX, float gravityY)
+	{
+		_gravity.set(gravityX, gravityY);
+		setGravity(_gravity);
+	}
+	
+	/**
+	 * Let the world survive on state change.
+	 * @param survive
+	 */
+	public static void setSurvive(boolean survive)
+	{
+		surviveWorld = survive;
+	}
+	
+	/**
+	 * Whether the world is set to survive or not.
+	 */
+	public static boolean getSurvive()
+	{
+		return surviveWorld;
 	}
 }
