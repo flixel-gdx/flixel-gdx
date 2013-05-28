@@ -1213,8 +1213,6 @@ public class FlxObject extends FlxBasic
 		return separatedX || separatedY;
 	}
 	
-	
-	
 	/**
 	 * The X-axis component of the object separation process.
 	 * 

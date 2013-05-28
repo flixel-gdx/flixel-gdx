@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.utils.Array;
 import flash.display.Graphics;
 import flash.display.Stage;
@@ -861,6 +862,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
         FlxG._gl.glDisable(GL10.GL_DEPTH_TEST);
         FlxG._gl.glDisable(GL10.GL_FOG);
 		FlxG._gl.glEnable(GL10.GL_SCISSOR_TEST);
+		
+		FileTextureData.copyToPOT = true;
 		
 		FlxG.batch = new SpriteBatch();
 		FlxG.flashGfx = new Graphics();

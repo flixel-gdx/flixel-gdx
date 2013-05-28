@@ -1,5 +1,6 @@
 package org.flixel;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -24,6 +25,7 @@ public class FlxSound extends FlxBasic
 	 * A large music file.
 	 */
 	static public final int MUSIC = 2;
+	
 	/**
 	 * The X position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
@@ -132,10 +134,7 @@ public class FlxSound extends FlxBasic
 	 * Internal helper for detecting when the sound has stopped.
 	 */
 	protected boolean _wasPlaying;
-	/**
-	 * Internal helper for how many times to try playing a sound effect before giving up.
-	 */
-	protected int _tryLimit;
+
 	/**
 	 * Internal, store the sound file's location so we can dispose it later.
 	 */
@@ -161,7 +160,7 @@ public class FlxSound extends FlxBasic
 		_panAmount = 0;
 		_sound = null;
 		_music = null;
-		_soundId = 0;
+		_soundId = -1;
 		_position = -1;
 		_volume = 1.0f;
 		_volumeAdjust = 1.0f;
@@ -185,7 +184,6 @@ public class FlxSound extends FlxBasic
 		autoDestroy = false;
 		survive = false;
 		_wasPlaying = false;
-		_tryLimit = 5000;
 	}
 		
 	/**
@@ -202,7 +200,7 @@ public class FlxSound extends FlxBasic
 		
 		_sound = null;
 		_music = null;
-		_soundId = 0;
+		_soundId = -1;
 		_target = null;
 		name = null;
 		artist = null;
@@ -223,7 +221,7 @@ public class FlxSound extends FlxBasic
 	 */
 	@Override 
 	public void update()
-	{		
+	{
 		float radial = 1.0f;
 		float fade = 1.0f;
 		
@@ -289,7 +287,7 @@ public class FlxSound extends FlxBasic
 	public void kill()
 	{
 		super.kill();
-		if ((_sound != null && _soundId != 0) || (_music != null && _music.isPlaying()))
+		if ((_sound != null && _soundId != -1) || (_music != null && _music.isPlaying()))
 			stop();
 	}
 	
@@ -480,13 +478,11 @@ public class FlxSound extends FlxBasic
 		}
 		if(_looped)
 		{
-			if(_sound != null && _soundId == 0)
+			if(_sound != null && _soundId == -1)
 			{
-				int tryLimit = _tryLimit;
-				while (_soundId == 0 && tryLimit-- > 0)
-					_soundId = _sound.loop();
+				_soundId = attemptPlaySound(_sound, true);
 				
-				if(_soundId == 0)
+				if(_soundId == -1)
 					exists = false;
 			}
 			else if(_music != null && !_music.isPlaying())
@@ -500,13 +496,11 @@ public class FlxSound extends FlxBasic
 		}
 		else
 		{
-			if(_sound != null && _soundId == 0)
+			if(_sound != null && _soundId == -1)
 			{
-				int tryLimit = _tryLimit;
-				while (_soundId == 0 && tryLimit-- > 0)
-					_soundId = _sound.play();
+				_soundId = attemptPlaySound(_sound, false);
 				
-				if(_soundId == 0)
+				if(_soundId == -1)
 					exists = false;
 					//TODO: Detect when Sound is finished.
 			}
@@ -520,7 +514,7 @@ public class FlxSound extends FlxBasic
 			}
 		}
 		
-		active = ((_music != null && _music.isPlaying()) || _soundId != 0);
+		active = ((_music != null && _music.isPlaying()) || _soundId != -1);
 		_position = 0;
 		
 		_wasPlaying = true;
@@ -540,18 +534,16 @@ public class FlxSound extends FlxBasic
 	 */
 	public void resume()
 	{
-		if(_soundId == 0 || (_music != null && !_music.isPlaying()))
+		if(_soundId == -1 || (_music != null && !_music.isPlaying()))
 			return;
 			
 		if(_looped)
 		{
 			if(_sound != null)
 			{
-				int tryLimit = _tryLimit;
-				while (_soundId == 0 && tryLimit-- > 0)
-					_soundId = _sound.loop();
+				_soundId = attemptPlaySound(_sound, true);
 				
-				if(_soundId == 0)
+				if(_soundId == -1)
 					exists = false;
 			}
 			else if(_music != null)
@@ -565,11 +557,9 @@ public class FlxSound extends FlxBasic
 		{
 			if(_sound != null)
 			{
-				int tryLimit = _tryLimit;
-				while (_soundId == 0 && tryLimit-- > 0)
-					_soundId = _sound.play();
+				_soundId = attemptPlaySound(_sound, false);
 				
-				if(_soundId == 0)
+				if(_soundId == -1)
 					exists = false;
 			}
 			else if(_music != null)
@@ -580,7 +570,7 @@ public class FlxSound extends FlxBasic
 			}
 		}
 			
-		active = ((_music != null && _music.isPlaying()) || _soundId != 0);
+		active = ((_music != null && _music.isPlaying()) || _soundId != -1);
 		_position = 0;
 	}
 		
@@ -589,7 +579,7 @@ public class FlxSound extends FlxBasic
 	 */
 	public void pause()
 	{
-		if(_sound != null && _soundId != 0)
+		if(_sound != null && _soundId != -1)
 		{
 			_sound.stop(_soundId); // TODO: pause of sound. Now it stops it.
 			_position = -1;
@@ -607,7 +597,7 @@ public class FlxSound extends FlxBasic
 	 */
 	public void stop()
 	{
-		if (_sound != null && _soundId != 0)
+		if (_sound != null && _soundId != -1)
 		{
 			_sound.stop(_soundId);
 			stopped();
@@ -695,7 +685,7 @@ public class FlxSound extends FlxBasic
 	{
 		float volume = (FlxG.mute?0:1)*FlxG.getVolume()*_volume*_volumeAdjust;
 		
-		if (_sound != null && _soundId != 0)
+		if (_sound != null && _soundId != -1)
 			_sound.setPan(_soundId, _panAmount, volume);
 		//TODO: panning for Music
 		else if (_music != null)
@@ -707,7 +697,7 @@ public class FlxSound extends FlxBasic
 	 */
 	protected void stopped()
 	{
-	    _soundId = 0;
+	    _soundId = -1;
 	    _position = -1;
 		active = false;
 		if(autoDestroy)
@@ -730,5 +720,33 @@ public class FlxSound extends FlxBasic
 			artist = _sound.id3.artist;
 		_sound.removeEventListener(Event.ID3, gotID3);
 		*/
+	}
+	
+	/**
+	 * Internal function to play a libgdx sound object. Returns a positive value if successful,
+	 * -1 if it fails.
+	 * 
+	 * @param SoundObject	The libgdx sound object.
+	 * @param Looped		Whether to loop the sound or not.
+	 * @return	Positive streamId if successful, -1 if not.
+	 */
+	protected long attemptPlaySound(Sound SoundObject, boolean Looped)
+	{	
+		if (Gdx.app.getType() != ApplicationType.Android)
+			return Looped ? _sound.loop() : _sound.play();
+		else
+		{
+			// On Android, the sound file is not guaranteed to be loaded
+			// by the time play is called. Our current workaround is to block
+			// the application until the file is successfully played. Usually this
+			// delay is not noticeable.
+			final int PLAY_TRY_LIMIT = 5000;
+		
+			int i = 0;
+			long soundId = -1;
+			while (soundId <= 0 && i++ < PLAY_TRY_LIMIT)
+				soundId = Looped ? _sound.loop() : _sound.play();
+			return (soundId <= 0) ? -1 : soundId;
+		}
 	}
 }
