@@ -673,19 +673,44 @@ public class FlxG
 	/**
 	 * Set up and play a looping background soundtrack.
 	 * 
-	 * @param Music The sound file you want to loop in the background.
-	 * @param Volume How loud the sound should be, from 0 to 1.
+	 * @param Music 		The sound file you want to loop in the background.
+	 * @param Volume 		How loud the sound should be, from 0 to 1.
+	 * @param Looped		Whether to loop this sound.
+	 * @param AutoDestroy	Whether to destroy this sound when it finished playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 */
-	static public void playMusic(String Music, float Volume)
+	static public void playMusic(String Music, float Volume, boolean Looped, boolean AutoDestroy)
 	{
 		if(music == null)
 			music = new FlxSound();
 		if(music.active)
 			music.stop();
-		music.loadEmbedded(Music,true,false,FlxSound.MUSIC);
+		music.loadEmbedded(Music,Looped,AutoDestroy,FlxSound.MUSIC);
 		music.setVolume(Volume);
 		music.survive = true;
 		music.play();
+	}
+	
+	/**
+	 * Set up and play a looping background soundtrack.
+	 * 
+	 * @param Music 		The sound file you want to loop in the background.
+	 * @param Volume 		How loud the sound should be, from 0 to 1.
+	 * @param Looped		Whether to loop this sound.
+	 */
+	static public void playMusic(String Music, float Volume, boolean Looped)
+	{
+		playMusic(Music, Volume, Looped, false);
+	}
+	
+	/**
+	 * Set up and play a looping background soundtrack.
+	 * 
+	 * @param Music 		The sound file you want to loop in the background.
+	 * @param Volume 		How loud the sound should be, from 0 to 1.
+	 */
+	static public void playMusic(String Music, float Volume)
+	{
+		playMusic(Music, Volume, true, false);
 	}
 
 	/**
@@ -695,7 +720,7 @@ public class FlxG
 	 */
 	static public void playMusic(String Music)
 	{
-		playMusic(Music, 1.0f);
+		playMusic(Music, 1.0f, true, false);
 	}
 	
 	/**
