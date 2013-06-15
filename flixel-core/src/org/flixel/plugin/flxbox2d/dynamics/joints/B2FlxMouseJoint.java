@@ -251,8 +251,8 @@ public class B2FlxMouseJoint extends FlxBasic
 		
 		Vector2 a = _mouseJoint.getAnchorA();
 		Vector2 b = _mouseJoint.getAnchorB();
-		a.mul(B2FlxB.RATIO);
-		b.mul(B2FlxB.RATIO);
+		a.scl(B2FlxB.RATIO);
+		b.scl(B2FlxB.RATIO);
 		a.x -= camera.scroll.x; 
 		a.y -= camera.scroll.y; 
 		b.x -= camera.scroll.x; 

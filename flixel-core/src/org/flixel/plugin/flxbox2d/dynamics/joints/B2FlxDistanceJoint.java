@@ -130,4 +130,6 @@ public class B2FlxDistanceJoint extends B2FlxJoint
 	public B2FlxDistanceJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
 	@Override
 	public B2FlxDistanceJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
+	@Override
+	public B2FlxDistanceJoint setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

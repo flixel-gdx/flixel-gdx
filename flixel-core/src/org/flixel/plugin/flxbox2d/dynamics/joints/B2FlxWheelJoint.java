@@ -150,5 +150,7 @@ public class B2FlxWheelJoint extends B2FlxJoint
 	public B2FlxWheelJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
 	@Override
 	public B2FlxWheelJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
+	@Override
+	public B2FlxWheelJoint setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }
 

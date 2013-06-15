@@ -98,7 +98,7 @@ public class ExplosionPlugin
 		float angle = (float) Math.atan2(bodyPosition.y - _expOrigen.y, bodyPosition.x - _expOrigen.x);
 		
 		_impulse.set(MathUtils.cos(angle) * force, MathUtils.sin(angle) * force);
-		body.applyLinearImpulse(_impulse, bodyPosition);
+		body.applyLinearImpulse(_impulse, bodyPosition, true);
 	}
 }
 

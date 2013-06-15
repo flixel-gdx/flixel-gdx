@@ -145,7 +145,18 @@ public class B2FlxB
 		{
 			Joint joint = joints.next();
 			if(joint != null)
-				world.destroyJoint(joint);
+			{
+				userData = (ObjectMap<String, Object>) joint.getUserData();
+				if(userData != null)
+				{
+					if(!surviveWorld)
+						world.destroyJoint(joint);
+					else if(surviveWorld && (Boolean)userData.get("survive") == false)
+						world.destroyJoint(joint);
+				}
+				else
+					world.destroyJoint(joint);
+			}
 		}
 		if(!surviveWorld)
 		{

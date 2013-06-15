@@ -146,4 +146,6 @@ public class B2FlxRevoluteJoint extends B2FlxJoint
 	public B2FlxRevoluteJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
 	@Override
 	public B2FlxRevoluteJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
+	@Override
+	public B2FlxRevoluteJoint setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

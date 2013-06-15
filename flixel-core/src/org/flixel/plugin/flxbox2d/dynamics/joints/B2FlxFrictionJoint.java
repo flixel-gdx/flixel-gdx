@@ -126,4 +126,6 @@ public class B2FlxFrictionJoint extends B2FlxJoint
 	public B2FlxFrictionJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
 	@Override
 	public B2FlxFrictionJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
+	@Override
+	public B2FlxFrictionJoint setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

@@ -120,4 +120,6 @@ public class B2FlxRopeJoint extends B2FlxJoint
 	public B2FlxRopeJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
 	@Override
 	public B2FlxRopeJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
+	@Override
+	public B2FlxRopeJoint setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

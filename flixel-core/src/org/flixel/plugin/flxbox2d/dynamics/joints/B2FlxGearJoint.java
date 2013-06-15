@@ -126,4 +126,6 @@ public class B2FlxGearJoint extends B2FlxJoint
 	public B2FlxGearJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
 	@Override
 	public B2FlxGearJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
+	@Override
+	public B2FlxGearJoint setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

@@ -1,5 +1,7 @@
 package org.flixel;
 
+import java.util.Iterator;
+
 import org.flixel.event.IFlxObject;
 import org.flixel.event.IFlxTile;
 import org.flixel.system.FlxTile;
@@ -9,7 +11,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 
@@ -1707,21 +1715,28 @@ public class FlxTilemap extends FlxObject
 	 */
     static public String tiledmapToCSV(TiledMap Map, int Layer)
     {
+    	MapLayers layers = Map.getLayers();    	
+    	TiledMapTileLayer map = (TiledMapTileLayer) layers.get("map");
+    	    
     	int row = 0;
         int column;
         StringBuilder csv = new StringBuilder();                
-        int Height = Map.layers.get(Layer).getHeight();
-        int Width = Map.layers.get(Layer).getWidth();
-        int[][] Data = Map.layers.get(Layer).tiles;
-        int index;
+        int Height = (int) map.getTileHeight();
+        int Width = (int) map.getTileWidth();
+        Cell cell;
+        int index = 0;
+        
         while(row < Height)
         {
         	column = 0;
             while(column < Width)
             {                               
-            	index = Data[row][column];
-                            
-                if(column == 0)
+            	cell = map.getCell(row,column);
+            	if(cell != null)
+            		index = cell.getTile().getId();
+            	else
+            		index = 0;
+            	if(column == 0)
                 {
                 	if(row == 0)
                 		csv.append(index);

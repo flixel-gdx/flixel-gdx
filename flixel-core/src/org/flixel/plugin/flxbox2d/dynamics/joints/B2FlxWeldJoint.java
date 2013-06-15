@@ -90,4 +90,6 @@ public class B2FlxWeldJoint extends B2FlxJoint
 	public B2FlxWeldJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
 	@Override
 	public B2FlxWeldJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
+	@Override
+	public B2FlxWeldJoint setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

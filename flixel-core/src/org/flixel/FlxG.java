@@ -735,7 +735,7 @@ public class FlxG
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public FlxSound loadSound(String EmbeddedSound,float Volume,boolean Looped,boolean AutoDestroy,boolean AutoPlay,String URL)
+	static public FlxSound loadSound(String EmbeddedSound,float Volume,boolean Looped,boolean AutoDestroy,boolean AutoPlay,String URL,int Type)
 	{
 		if((EmbeddedSound == null) && (URL == null))
 		{
@@ -744,13 +744,18 @@ public class FlxG
 		}
 		FlxSound sound = (FlxSound) sounds.recycle(FlxSound.class);
 		if(EmbeddedSound != null)
-			sound.loadEmbedded(EmbeddedSound,Looped,AutoDestroy);
+			sound.loadEmbedded(EmbeddedSound,Looped,AutoDestroy,Type);
 		else
 			sound.loadStream(URL,Looped,AutoDestroy);
 		sound.setVolume(Volume);
 		if(AutoPlay)
 			sound.play();
 		return sound;
+	}
+	
+	static public FlxSound loadSound(String EmbeddedSound,float Volume,boolean Looped,boolean AutoDestroy,boolean AutoPlay,String URL)
+	{
+		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, AutoPlay, URL, FlxSound.AUTO);
 	}
 
 	/**
@@ -766,7 +771,7 @@ public class FlxG
 	 */
 	static public FlxSound loadSound(String EmbeddedSound,float Volume,boolean Looped,boolean AutoDestroy,boolean AutoPlay)
 	{
-		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, AutoPlay, null);
+		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, AutoPlay, null, FlxSound.AUTO);
 	}
 	
 	/**
@@ -781,7 +786,7 @@ public class FlxG
 	 */
 	static public FlxSound loadSound(String EmbeddedSound, float Volume, boolean Looped, boolean AutoDestroy)
 	{
-		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, false, null);
+		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, false, null, FlxSound.AUTO);
 	}
 	
 	/**
@@ -795,7 +800,7 @@ public class FlxG
 	 */
 	static public FlxSound loadSound(String EmbeddedSound, float Volume, boolean Looped)
 	{
-		return loadSound(EmbeddedSound, Volume, Looped, false, false, null);
+		return loadSound(EmbeddedSound, Volume, Looped, false, false, null, FlxSound.AUTO);
 	}
 	
 	/**
@@ -808,7 +813,7 @@ public class FlxG
 	 */
 	static public FlxSound loadSound(String EmbeddedSound, float Volume)
 	{
-		return loadSound(EmbeddedSound, Volume, false, false, false, null);
+		return loadSound(EmbeddedSound, Volume, false, false, false, null, FlxSound.AUTO);
 	}
 	
 	/**
@@ -820,7 +825,7 @@ public class FlxG
 	 */
 	static public FlxSound loadSound(String EmbeddedSound)
 	{
-		return loadSound(EmbeddedSound, 1.0f, false, false, false, null);
+		return loadSound(EmbeddedSound, 1.0f, false, false, false, null, FlxSound.AUTO);
 	}
 	
 	/**

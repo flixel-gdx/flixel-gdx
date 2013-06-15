@@ -4,6 +4,7 @@ import org.flixel.event.IFlxReplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxReplay;
+import org.flixel.system.FlxSplashScreen;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
@@ -182,6 +183,9 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 * Internal, a pre-allocated <code>MouseEvent</code> to prevent <code>new</code> calls.
 	 */
 	private MouseEvent _mouseEvent;
+	
+	protected boolean showSplashScreen = false;
+	private boolean _splashScreenShown = false;
 		
 	/**
 	 * Instantiate a new game object.
@@ -639,9 +643,20 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			_state.destroy();
 			_state = null;			
 		}
-		//Finally assign and create the new state
-		_state = _requestedState;
-		_state.create();
+		if(showSplashScreen && !_splashScreenShown)
+		{
+			_splashScreenShown = true;
+			_state = new FlxSplashScreen(_requestedState);
+			_requestedState = _state;
+			_state.create();
+		}
+		else
+		{
+			//Finally assign and create the new state
+			_state = _requestedState;
+			_state.create();
+		}
+		
 	}
 	
 	/**
@@ -666,6 +681,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			}
 			_replayTimer = 0;
 			_replayCancelKeys = null;
+			if(showSplashScreen)
+				_splashScreenShown = false;
 			FlxG.reset();
 		}
 		

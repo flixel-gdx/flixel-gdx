@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
+import com.badlogic.gdx.utils.ObjectMap;
 
 
 /**
@@ -90,6 +91,15 @@ public abstract class B2FlxJoint extends FlxBasic
 	 * scrollFactor is initialized as (1,1) by default.
 	 */
 	public FlxPoint scrollFactor;
+	/**
+	 * Survive the joint on state change. Default is false. The joint needs to be static
+	 * or keep a reference somewhere or it will be nullified.
+	 */
+	private boolean survive;
+	/**
+	 * Holds the user data.
+	 */
+	private ObjectMap<String, Object> userData;
 
 	
 	/**
@@ -279,8 +289,8 @@ public abstract class B2FlxJoint extends FlxBasic
 		if(camera == null)
 			camera = FlxG.camera;
 		
-		p1.set(joint.getAnchorA().mul(B2FlxB.RATIO));
-		p2.set(joint.getAnchorB().mul(B2FlxB.RATIO));
+		p1.set(joint.getAnchorA().scl(B2FlxB.RATIO));
+		p2.set(joint.getAnchorB().scl(B2FlxB.RATIO));
 		
 		p1.x -= camera.scroll.x * scrollFactor.x;
 		p1.y -= camera.scroll.y * scrollFactor.y;
@@ -332,8 +342,8 @@ public abstract class B2FlxJoint extends FlxBasic
 	{
 		ShapeRenderer segment = FlxG.flashGfx.getShapeRenderer();
 		FlxG.flashGfx.lineStyle(lineThickness, lineColor, lineAlpha);
-		x1.set(bodyA.getTransform().getPosition().mul(B2FlxB.RATIO));
-		x2.set(bodyB.getTransform().getPosition().mul(B2FlxB.RATIO));
+		x1.set(bodyA.getTransform().getPosition().scl(B2FlxB.RATIO));
+		x2.set(bodyB.getTransform().getPosition().scl(B2FlxB.RATIO));
 		x1.x -= camera.scroll.x * scrollFactor.x;
 		x1.y -= camera.scroll.y * scrollFactor.y;
 		x2.x -= camera.scroll.x * scrollFactor.x;
@@ -415,5 +425,27 @@ public abstract class B2FlxJoint extends FlxBasic
 	{
 		this.lineAlpha = lineAlpha;
 		return this;
+	}
+	
+	/**
+	 * Whether the joint needs to be destroyed on state change or not.
+	 * When this is set to true, don't forget to set B2FlxB.surviveWorld to true,
+	 * otherwise the joint will still get destroyed.
+	 * @param survive
+	 * @return
+	 */	
+	public B2FlxJoint setSurvive(boolean survive)
+	{
+		this.survive = survive;
+		userData.put("survive", survive);
+		return this;
+	}
+	
+	/**
+	 * @return the survive.
+	 */
+	public boolean getSurvive()
+	{
+		return survive;
 	}
 }

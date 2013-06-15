@@ -165,4 +165,6 @@ public class B2FlxPrismaticJoint extends B2FlxJoint
 	public B2FlxPrismaticJoint setLineColor(int lineColor){super.setLineColor(lineColor);return this;}	
 	@Override
 	public B2FlxPrismaticJoint setLineAlpha(float lineAlpha){super.setLineAlpha(lineAlpha);return this;}
+	@Override
+	public B2FlxPrismaticJoint setSurvive(boolean survive){super.setSurvive(survive);return this;}
 }

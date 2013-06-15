@@ -106,7 +106,7 @@ public abstract class B2FlxShape extends FlxSprite
 	private boolean resetAngle;
 	/**
 	 * Survive the sprite along with the body on state change. Default is false.
-	 * The shape needs to be static or kept a reference somewhere or it will be nullified.
+	 * The shape needs to be static or keep a reference somewhere or it will be nullified.
 	 */
 	private boolean survive = false;
 	/**
@@ -433,8 +433,8 @@ public abstract class B2FlxShape extends FlxSprite
 				else
 					return false;
 								
-				lower.mul(B2FlxB.RATIO);
-				upper.mul(B2FlxB.RATIO);
+				lower.scl(B2FlxB.RATIO);
+				upper.scl(B2FlxB.RATIO);
 				
 				p1.x = lower.x - camera.scroll.x * scrollFactor.x;
 				p1.y = lower.y - camera.scroll.y * scrollFactor.y;
@@ -694,7 +694,7 @@ public abstract class B2FlxShape extends FlxSprite
 		FlxG.flashGfx.lineStyle(1, color, 1);
 		for(int i = 0; i < vertexCount; i++) 
 		{
-			Vector2 v = vertices[i].mul(B2FlxB.RATIO);
+			Vector2 v = vertices[i].scl(B2FlxB.RATIO);
 			v.x -= (camera.scroll.x * scrollFactor.x) - offset.x;
 			v.y -= (camera.scroll.y * scrollFactor.y) - offset.y;
 			if(i == 0) 
@@ -728,7 +728,7 @@ public abstract class B2FlxShape extends FlxSprite
 		FlxG.flashGfx.lineStyle(1, color, 1);
 		for(int i = 0; i < 20; i++, angle += angleInc) 
 		{
-			v.set(MathUtils.cos(angle) * radius + center.x, MathUtils.sin(angle) * radius + center.y).mul(B2FlxB.RATIO);
+			v.set(MathUtils.cos(angle) * radius + center.x, MathUtils.sin(angle) * radius + center.y).scl(B2FlxB.RATIO);
 			v.x -= (camera.scroll.x * scrollFactor.x) - offset.x;
 			v.y -= (camera.scroll.y * scrollFactor.y) - offset.y;
 			if (i == 0) 
@@ -741,8 +741,8 @@ public abstract class B2FlxShape extends FlxSprite
 			lv.set(v);
 		}
 		renderer.line(f.x, f.y, lv.x, lv.y);
-		center.mul(B2FlxB.RATIO);
-		axis.mul(B2FlxB.RATIO);
+		center.scl(B2FlxB.RATIO);
+		axis.scl(B2FlxB.RATIO);
 		center.x -= (camera.scroll.x * scrollFactor.x) - offset.x;
 		center.y -= (camera.scroll.y * scrollFactor.y) - offset.y;
 		renderer.line(center.x, center.y, 0, center.x + axis.x * radius, center.y + axis.y * radius, 0);
