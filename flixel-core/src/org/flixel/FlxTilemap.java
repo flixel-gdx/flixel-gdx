@@ -1,7 +1,5 @@
 package org.flixel;
 
-import java.util.Iterator;
-
 import org.flixel.event.IFlxObject;
 import org.flixel.event.IFlxTile;
 import org.flixel.system.FlxTile;
@@ -11,11 +9,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.utils.Array;
@@ -1717,12 +1712,12 @@ public class FlxTilemap extends FlxObject
     {
     	MapLayers layers = Map.getLayers();    	
     	TiledMapTileLayer map = (TiledMapTileLayer) layers.get("map");
-    	    
+    	
     	int row = 0;
         int column;
         StringBuilder csv = new StringBuilder();                
-        int Height = (int) map.getTileHeight();
-        int Width = (int) map.getTileWidth();
+        int Height = (int) map.getHeight();
+        int Width = (int) map.getWidth();
         Cell cell;
         int index = 0;
         
@@ -1731,7 +1726,7 @@ public class FlxTilemap extends FlxObject
         	column = 0;
             while(column < Width)
             {                               
-            	cell = map.getCell(row,column);
+            	cell = map.getCell(column, row);
             	if(cell != null)
             		index = cell.getTile().getId();
             	else
@@ -1749,6 +1744,7 @@ public class FlxTilemap extends FlxObject
             }
             row++;
         }
+        FlxG.log(csv.toString());
         return csv.toString();
     }
 
@@ -2091,7 +2087,6 @@ public class FlxTilemap extends FlxObject
 			rx %= _tiles.getRegionWidth();
 		}
 		_textureRegion = new TextureRegion(_tiles, rx, ry, _tileWidth, _tileHeight);
-		_textureRegion.flip(false, true);
 		_regions.set(Index, _textureRegion);
 	}
 }
