@@ -1720,20 +1720,21 @@ public class FlxTilemap extends FlxObject
         int Width = (int) map.getWidth();
         Cell cell;
         int index = 0;
+        row = Height;
         
-        while(row < Height)
+        while(row > 0)
         {
         	column = 0;
             while(column < Width)
             {                               
-            	cell = map.getCell(column, row);
+            	cell = map.getCell(column, row-1);
             	if(cell != null)
             		index = cell.getTile().getId();
             	else
             		index = 0;
             	if(column == 0)
                 {
-                	if(row == 0)
+                	if(row == Height)
                 		csv.append(index);
                     else
                     	csv.append("\n"+index);
@@ -1742,7 +1743,7 @@ public class FlxTilemap extends FlxObject
                 	csv.append(","+index);
                 column++;
             }
-            row++;
+            row--;
         }
         FlxG.log(csv.toString());
         return csv.toString();
@@ -2087,6 +2088,7 @@ public class FlxTilemap extends FlxObject
 			rx %= _tiles.getRegionWidth();
 		}
 		_textureRegion = new TextureRegion(_tiles, rx, ry, _tileWidth, _tileHeight);
+		_textureRegion.flip(false, true);
 		_regions.set(Index, _textureRegion);
 	}
 }
