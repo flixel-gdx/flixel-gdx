@@ -1,0 +1,74 @@
+splashscreen.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+gear_grey
+  rotate: false
+  xy: 339, 2
+  size: 163, 163
+  orig: 163, 163
+  offset: 0, 0
+  index: -1
+powered_by
+  rotate: false
+  xy: 306, 167
+  size: 126, 23
+  orig: 126, 23
+  offset: 0, 0
+  index: -1
+gear_purple
+  rotate: false
+  xy: 2, 421
+  size: 83, 83
+  orig: 83, 83
+  offset: 0, 0
+  index: -1
+flixel-gdx
+  rotate: false
+  xy: 2, 71
+  size: 259, 57
+  orig: 259, 57
+  offset: 0, 0
+  index: -1
+gear_blue
+  rotate: false
+  xy: 2, 130
+  size: 174, 177
+  orig: 174, 177
+  offset: 0, 0
+  index: -1
+gear_green
+  rotate: false
+  xy: 2, 309
+  size: 107, 110
+  orig: 107, 110
+  offset: 0, 0
+  index: -1
+heart
+  rotate: false
+  xy: 178, 130
+  size: 126, 38
+  orig: 126, 38
+  offset: 0, 0
+  index: -1
+lightbulb
+  rotate: false
+  xy: 87, 421
+  size: 96, 71
+  orig: 96, 71
+  offset: 0, 0
+  index: -1
+code
+  rotate: false
+  xy: 178, 170
+  size: 111, 72
+  orig: 111, 72
+  offset: 0, 0
+  index: -1
+dpad
+  rotate: false
+  xy: 2, 2
+  size: 335, 67
+  orig: 335, 67
+  offset: 0, 0
+  index: -1

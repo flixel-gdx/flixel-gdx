@@ -39,26 +39,11 @@ public class FlxSplashScreen extends FlxState
 	public void create()
 	{
 		tempZoom = FlxG.camera.getZoom();
-		int tempWidth = FlxG.width;
-		int tempHeight = FlxG.height;
 		
-		FlxG.camera.setZoom(1f);
-		if(FlxG.width > FlxG.height)
-		{
-			FlxG.width = 800;
-			FlxG.height = 480;
-		}
-		else
-		{
-			FlxG.width = 480;
-			FlxG.height = 800;
-		}
-		
+		FlxG.camera.setZoom(1f);		
 		CENTER_X = FlxG.width / 2;
 		CENTER_Y = FlxG.height / 2;
 		FlxG.resetCameras();
-		FlxG.width = tempWidth;
-		FlxG.height = tempHeight;
 		
 		FlxG.setBgColor(0xFFFFFFFF);
 		
@@ -74,18 +59,7 @@ public class FlxSplashScreen extends FlxState
 
 		add(new FlxSprite(CENTER_X - 63, CENTER_Y + 113, ImgPoweredBy));
 		add(new FlxSprite(CENTER_X - 129, CENTER_Y + 140, ImgFlixelGDX));
-		
-//		FlxG.log(FlxG.camera._screenScaleFactorX);
-//		FlxG.log(FlxG.camera._screenScaleFactorY);
-		
-//		int scale = (int) FlxU.ceil(FlxG.camera._screenScaleFactorX);
-		
-//		cam = new FlxCamera(0, 0, FlxG.width * scale, FlxG.height * scale);
-//		cam.setZoom(1f / scale);
-//		cam.setColor(0xFFCCCC);
-//		FlxG.addCamera(cam);
-//		cam.flash(0x00000000, .25f);
-//		FlxG.camera.fade(0xFFFFFFFF, 0);
+
 		FlxG.camera.flash(0x00000000, .25f);
 	}
 	

@@ -2,9 +2,14 @@ package org.flixel.system;
 
 import org.flixel.system.gdx.FlxFileHandleResolver;
 import org.flixel.system.gdx.FreeTypeFontLoader;
+
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver.Resolution;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -29,7 +34,7 @@ public class FlxAssetManager
 	 */
 	public FlxAssetManager()
 	{	
-		FileHandleResolver resolver = new FlxFileHandleResolver();
+		FileHandleResolver resolver = new FlxFileHandleResolver();		
 		_assetManager = new AssetManager(resolver);
 		_assetManager.setLoader(BitmapFont.class, new FreeTypeFontLoader(resolver));
 	}
@@ -75,6 +80,15 @@ public class FlxAssetManager
 	public void unload(String FileName)
 	{
 		_assetManager.unload(FileName);
+	}
+	
+	/**
+	 * Add resolutions to the resolver.
+	 * @param resolutions	An array of resolutions.
+	 */
+	public void addResolutionResolver(Resolution[] resolutions)
+	{
+		_assetManager.setLoader(Texture.class, new TextureLoader(new ResolutionFileResolver(new InternalFileHandleResolver(), resolutions)));
 	}
 	
 	/**

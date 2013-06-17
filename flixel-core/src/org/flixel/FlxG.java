@@ -16,6 +16,7 @@ import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver.Resolution;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -1335,6 +1336,15 @@ public class FlxG
 	static public int getNumberOfAssets()
 	{
 		return _cache.getNumberOfAssets();
+	}
+	
+	/**
+	 * Add resolutions to the resolver.
+	 * @param resolutions	An array of resolutions (e.g. new Resolution(320, 480, "320480")).
+	 */
+	static public void addResolutionResolver(Resolution[] resolutions)
+	{
+		_cache.addResolutionResolver(resolutions);
 	}
 	
 	/**
