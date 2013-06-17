@@ -1708,33 +1708,29 @@ public class FlxTilemap extends FlxObject
 	 * 
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-    static public String tiledmapToCSV(TiledMap Map, int Layer)
+	static public String tiledmapToCSV(TiledMap Map, TiledMapTileLayer Layer)
     {
-    	MapLayers layers = Map.getLayers();    	
-    	TiledMapTileLayer map = (TiledMapTileLayer) layers.get("map");
-    	
     	int row = 0;
         int column;
         StringBuilder csv = new StringBuilder();                
-        int Height = (int) map.getHeight();
-        int Width = (int) map.getWidth();
+        int Height = (int) Layer.getHeight();
+        int Width = (int) Layer.getWidth();
         Cell cell;
         int index = 0;
-        row = Height;
         
-        while(row > 0)
+        while(row < Height)
         {
         	column = 0;
             while(column < Width)
             {                               
-            	cell = map.getCell(column, row-1);
+            	cell = Layer.getCell(column, row);
             	if(cell != null)
             		index = cell.getTile().getId();
             	else
             		index = 0;
             	if(column == 0)
                 {
-                	if(row == Height)
+                	if(row == 0)
                 		csv.append(index);
                     else
                     	csv.append("\n"+index);
@@ -1743,10 +1739,35 @@ public class FlxTilemap extends FlxObject
                 	csv.append(","+index);
                 column++;
             }
-            row--;
+            row++;
         }
-        FlxG.log(csv.toString());
         return csv.toString();
+    }
+	
+	/**
+	 * Converts a <code>TiledMap</code> object to a comma-separated string.
+	 * 
+	 * @param Map		A <code>TiledMap</code> instance.
+	 * @param Layer		Which layer of the <code>TiledMap</code> to use.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+    static public String tiledmapToCSV(TiledMap Map, int Layer)
+    {
+    	return tiledmapToCSV(Map, (TiledMapTileLayer) Map.getLayers().get(Layer));
+    }
+    
+    /**
+	 * Converts a <code>TiledMap</code> object to a comma-separated string.
+	 * 
+	 * @param Map		A <code>TiledMap</code> instance.
+	 * @param Layer		Which layer of the <code>TiledMap</code> to use.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+    static public String tiledmapToCSV(TiledMap Map, String Layer)
+    {
+    	return tiledmapToCSV(Map, (TiledMapTileLayer) Map.getLayers().get(Layer));
     }
 
     /**
