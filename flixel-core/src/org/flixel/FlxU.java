@@ -593,8 +593,8 @@ public class FlxU
 	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
 	 */
 	static public String getClassName(Object Obj, boolean Simple)
-	{	
-		return Simple?Obj.getClass().getSimpleName():Obj.getClass().getName();
+	{			
+		return Simple?ClassReflection.getSimpleName(Obj.getClass()):Obj.getClass().getName();
 	}
 	
 	/**

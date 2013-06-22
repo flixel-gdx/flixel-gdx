@@ -473,7 +473,7 @@ public class FlxGroup extends FlxBasic
 				{
 					try
 					{
-						basic.getClass().getMethod(FunctionName).invoke(basic);
+						ClassReflection.getMethod(basic.getClass(), FunctionName).invoke(basic);
 					}
 					catch(Exception e)
 					{
@@ -509,8 +509,8 @@ public class FlxGroup extends FlxBasic
 		int i = 0;
 		while(i < length)
 		{
-			basic = members.get(i++);
-			if((basic != null) && !basic.exists && ((objectClass == null) || (objectClass.isInstance(basic))))
+			basic = members.get(i++);			
+			if((basic != null) && !basic.exists && ((objectClass == null) || (ClassReflection.isInstance(objectClass, basic))))
 				return basic;
 		}
 		return null;

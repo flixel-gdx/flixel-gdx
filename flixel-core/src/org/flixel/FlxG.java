@@ -2008,8 +2008,8 @@ public class FlxG
 		Array<FlxBasic> pluginList = FlxG.plugins;
 		int i = pluginList.size-1;
 		while(i >= 0)
-		{
-			if(ClassType.isInstance(pluginList.get(i)))
+		{			
+			if(ClassReflection.isInstance(ClassType, pluginList.get(i)))
 			{
 				pluginList.removeIndex(i);
 				results = true;
