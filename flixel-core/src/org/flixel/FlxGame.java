@@ -18,6 +18,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+
 import flash.display.Graphics;
 import flash.display.Stage;
 import flash.events.MouseEvent;
@@ -673,7 +675,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			_requestedReset = false;
 			try
 			{
-				_requestedState = _iState.newInstance();
+				_requestedState = ClassReflection.newInstance(_iState);
 			}
 			catch (Exception e)
 			{

@@ -2,6 +2,8 @@ package org.flixel;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public class FlxU
 {
@@ -629,9 +631,12 @@ public class FlxU
 	 */
 	static public Class<?> getClass(String Name)
 	{
-		try {
-			return Class.forName(Name);
-		} catch (ClassNotFoundException e) {
+		try 
+		{
+			return ClassReflection.forName(Name);
+		} 
+		catch(ReflectionException e)
+		{
 			throw new RuntimeException(e);
 		}
 	}

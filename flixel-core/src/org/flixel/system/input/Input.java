@@ -4,6 +4,7 @@ import org.flixel.FlxG;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectIntMap;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 /**
  * Keeps track of what keys are pressed and how with handy booleans or strings.
@@ -59,9 +60,12 @@ public class Input
 			if (o.name.length() == 0)
 				continue;
 			
-			try {
-				Keyboard.class.getField(o.name).setBoolean(this, false);
-			} catch (Exception e) {
+			try 
+			{
+				ClassReflection.getField(Keyboard.class, o.name).set(this, false);
+			} 
+			catch (Exception e) 
+			{
 				FlxG.log("Keyboard", e.getMessage());
 			}
 			o.current = 0;
@@ -186,9 +190,12 @@ public class Input
 			o2 = _map.get(o.code);
 			o2.current = o.value;
 			if(o.value > 0)
-				try {
-					Keyboard.class.getField(o2.name).setBoolean(this, true);
-				} catch (Exception e) {
+				try 
+				{
+					ClassReflection.getField(Keyboard.class, o2.name).set(this, true);
+				} 
+				catch (Exception e) 
+				{
 					FlxG.log("Input", e.getMessage());
 				}
 		}

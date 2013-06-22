@@ -1,5 +1,7 @@
 package org.flixel;
 
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+
 /**
  * <code>FlxEmitter</code> is a lightweight particle emitter.
  * It can be used for one-time explosions or for
@@ -210,7 +212,7 @@ public class FlxEmitter extends FlxGroup
 		while(i < Quantity)
 		{	
 			try {
-				particle = particleClass.newInstance();
+				particle = ClassReflection.newInstance(particleClass);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 import flash.display.Graphics;
 import flash.display.Stage;
@@ -646,7 +647,7 @@ public class FlxG
 	{		
 		try
 		{
-			_game._requestedState = (FlxState) _game._state.getClass().newInstance();
+			_game._requestedState = (FlxState) ClassReflection.newInstance(_game._state.getClass());
 		}
 		catch (Exception e) 
 		{
@@ -1941,7 +1942,7 @@ public class FlxG
 		FlxBasic plugin = null;
 		try
 		{
-			plugin = ClassType.newInstance();
+			plugin = ClassReflection.newInstance(ClassType);
 			pluginList.add(plugin);
 		}
 		catch(Exception e)

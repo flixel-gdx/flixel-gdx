@@ -3,6 +3,7 @@ package org.flixel;
 import java.util.Comparator;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 /**
  * This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.
@@ -256,7 +257,7 @@ public class FlxGroup extends FlxBasic
 				if(ObjectClass == null)
 					return null;
 				try {
-					return add(ObjectClass.newInstance());
+					return add(ClassReflection.newInstance(ObjectClass));
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
@@ -277,7 +278,7 @@ public class FlxGroup extends FlxBasic
 			if(ObjectClass == null)
 				return null;
 			try {
-				return add(ObjectClass.newInstance());
+				return add(ClassReflection.newInstance(ObjectClass));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -427,7 +428,8 @@ public class FlxGroup extends FlxBasic
 				{
 					try
 					{
-						basic.getClass().getField(VariableName).set(basic, Value);
+						ClassReflection.getField(basic.getClass(), VariableName).set(basic, Value);
+						
 					}
 					catch(Exception e)
 					{
@@ -731,9 +733,9 @@ public class FlxGroup extends FlxBasic
 		{
 			try
 			{
-				if(Obj1.getClass().getField(_sortIndex).getFloat(Obj1) < Obj2.getClass().getField(_sortIndex).getFloat(Obj2))
+				if((Float)ClassReflection.getField(Obj1.getClass(), _sortIndex).get(Obj1) < (Float) ClassReflection.getField(Obj2.getClass(), _sortIndex).get(Obj2))
 					return _sortOrder;
-				else if(Obj1.getClass().getField(_sortIndex).getFloat(Obj1) > Obj2.getClass().getField(_sortIndex).getFloat(Obj2))
+				else if((Float)ClassReflection.getField(Obj1.getClass(), _sortIndex).get(Obj1) > (Float) ClassReflection.getField(Obj2.getClass(), _sortIndex).get(Obj2))
 					return -_sortOrder;
 			}
 			catch(Exception e)
