@@ -316,16 +316,20 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	{
 		//if(!Silent)
 			//FlxG.play(SndBeep);
-		_soundTrayTimer = 1;
-		_soundTray.y = 0;
-		_soundTray.visible = true;
-		int globalVolume = Math.round(FlxG.getVolume()*10);
-		if(FlxG.mute)
-			globalVolume = 0;
-		for (int i = 0; i < _soundTrayBars.size; i++)
+		
+		if(_soundTray != null)
 		{
-			if(i < globalVolume) _soundTrayBars.get(i).setAlpha(1);
-			else _soundTrayBars.get(i).setAlpha(0.5f);
+			_soundTrayTimer = 1;
+			_soundTray.y = 0;
+			_soundTray.visible = true;
+			int globalVolume = Math.round(FlxG.getVolume()*10);
+			if(FlxG.mute)
+				globalVolume = 0;
+			for (int i = 0; i < _soundTrayBars.size; i++)
+			{
+				if(i < globalVolume) _soundTrayBars.get(i).setAlpha(1);
+				else _soundTrayBars.get(i).setAlpha(0.5f);
+			}
 		}
 	}
 	
@@ -377,14 +381,14 @@ public class FlxGame implements ApplicationListener, InputProcessor
 					case Keys.MINUS:
 					//case Keys.UNDERSCORE:
 						FlxG.mute = false;
-			    		FlxG.setVolume(FlxG.getVolume() - 0.1f);
-			    		showSoundTray();
+						FlxG.setVolume(FlxG.getVolume() - 0.1f);
+						showSoundTray();
 						return true;
 					case Keys.PLUS:
 					case Keys.EQUALS:
 						FlxG.mute = false;
-			    		FlxG.setVolume(FlxG.getVolume() + 0.1f);
-			    		showSoundTray();
+						FlxG.setVolume(FlxG.getVolume() + 0.1f);
+						showSoundTray();
 						return true;
 					default:
 						break;
