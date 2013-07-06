@@ -1,0 +1,70 @@
+<!-- Call this to fetch all the required libraries from the server -->
+<project name="fetch-libraries" default="all">
+	<property name="domain" value="http://flixel-gdx.com/dist"/>
+	<target name="fetch">
+		<!-- download archives -->
+		<get src="${domain}/libgdx-nightly.zip" dest="libgdx-nightly.zip" usetimestamp="true"/>
+		<get src="${domain}/tween-engine.zip" dest="tween-engine.zip" usetimestamp="true"/>
+
+	</target>
+	
+	<target name="extract">
+		<!-- core project -->
+		<mkdir dir="flixel-core/libs"/>
+		<unzip src="libgdx-nightly.zip" dest="flixel-core/libs">
+			<patternset>
+				<include name="gdx.jar"/>
+				<include name="sources/gdx-sources.jar"/>
+				<include name="extensions/gdx-freetype/gdx-freetype.jar"/>
+				<include name="extensions/gdx-freetype/sources/gdx-freetype-sources.jar"/>
+			</patternset>
+			<mapper type="flatten"/>
+		</unzip>
+		
+		<unzip src="tween-engine.zip" dest="flixel-core/libs"/>
+		
+		<!-- android project -->
+		<unzip src="libgdx-nightly.zip" dest="flixel-android/libs">
+			<patternset>
+				<include name="gdx-backend-android.jar"/>
+				<include name="sources/gdx-backend-android-sources.jar"/>
+			</patternset>
+			<mapper type="flatten"/>
+		</unzip>
+		
+		<mkdir dir="flixel-android/libs/armeabi"/>
+		<unzip src="libgdx-nightly.zip" dest="flixel-android/libs/armeabi">
+			<patternset>
+				<include name="armeabi/libgdx.so"/>
+				<include name="armeabi/libandroidgl20.so"/>
+				<include name="extensions/gdx-freetype/armeabi/libgdx-freetype.so"/>
+			</patternset>
+			<mapper type="flatten"/>
+		</unzip>
+		
+		<mkdir dir="flixel-android/libs/armeabi-v7a"/>
+		<unzip src="libgdx-nightly.zip" dest="flixel-android/libs/armeabi-v7a">
+			<patternset>
+				<include name="armeabi-v7a/libgdx.so"/>
+				<include name="armeabi-v7a/libandroidgl20.so"/>
+				<include name="extensions/gdx-freetype/armeabi-v7a/libgdx-freetype.so"/>
+			</patternset>
+			<mapper type="flatten"/>
+		</unzip>
+		
+		<!-- desktop project -->
+		<mkdir dir="flixel-desktop/libs"/>
+		<unzip src="libgdx-nightly.zip" dest="flixel-desktop/libs">
+			<patternset>
+				<include name="gdx-backend-lwjgl.jar"/>
+				<include name="gdx-backend-lwjgl-natives.jar"/>
+				<include name="sources/gdx-backend-lwjgl-sources.jar"/>
+				<include name="gdx-natives.jar"/>
+				<include name="extensions/gdx-freetype/gdx-freetype-natives.jar"/>
+			</patternset>
+			<mapper type="flatten"/>
+		</unzip>
+	</target>
+	
+	<target name="all" depends="fetch,extract"/>
+</project>

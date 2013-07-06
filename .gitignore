@@ -2,4 +2,8 @@ bin/
 gen/
 dist/
 
+*.jar
+*.so
+*.zip
+
 Thumbs.db
