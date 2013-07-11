@@ -7,6 +7,7 @@ import org.flixel.event.IFlxReplay;
 import org.flixel.event.IFlxVolume;
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
+import org.flixel.plugin.GestureManager;
 import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.gdx.ManagedTextureData;
@@ -15,6 +16,7 @@ import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver.Resolution;
 import com.badlogic.gdx.graphics.GL10;
@@ -27,6 +29,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
@@ -192,6 +195,7 @@ public class FlxG
 	static public Array<FlxSave> saves; 
 	static public int save;
 
+	static public InputMultiplexer inputs;
 	/**
 	 * A reference to a <code>FlxMouse</code> object.  Important for input!
 	 */
@@ -2051,12 +2055,17 @@ public class FlxG
 		FlxG.mouse = new Mouse();
 		FlxG.keys = new Keyboard();
 		FlxG.sensor = new Sensor();
+		FlxG.inputs = new InputMultiplexer();
 		
 		FlxG.levels = new Array<Object>();
 		FlxG.scores = new IntArray();
 		FlxG.visualDebug = false;
 		
 		FlxG._floatArray = new float[4];
+		
+		GestureManager manager = new GestureManager();
+		FlxG.inputs.addProcessor(new GestureDetector(manager));
+		addPlugin(manager);
 	}
 	
 	/**
