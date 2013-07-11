@@ -892,7 +892,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.flashGfx = new Graphics();
 		
 		//Add basic input event listeners and mouse container
-		Gdx.input.setInputProcessor(this);
+		FlxG.inputs.addProcessor(this);
+		Gdx.input.setInputProcessor(FlxG.inputs);
 		_mouseEvent = new MouseEvent(null, 0, 0);
 		
 		//Detect whether or not we're running on a mobile device
