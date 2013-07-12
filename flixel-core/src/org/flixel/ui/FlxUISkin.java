@@ -233,6 +233,8 @@ public class FlxUISkin
 		public FlxSprite loadGraphic()
 		{
 			FlxSprite sprite = new FlxSprite().loadGraphic(image, false, false, width, height);
+			sprite.immovable = true;
+			sprite.scrollFactor.x = sprite.scrollFactor.y = 0;
 			sprite.setOriginToCorner();
 			return sprite;
 		}

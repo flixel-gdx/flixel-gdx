@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 import flash.display.Graphics;
 import flash.display.Stage;
+import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 
 /**
@@ -185,6 +186,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 * Internal, a pre-allocated <code>MouseEvent</code> to prevent <code>new</code> calls.
 	 */
 	private MouseEvent _mouseEvent;
+	/**
+	 * Internal, a pre-allocated <code>KeyboardEvent</code> to prevent <code>new</code> calls.
+	 */
+	private KeyboardEvent _keyboardEvent;
 	
 	protected boolean showSplashScreen = false;
 	private boolean _splashScreenShown = false;
@@ -399,7 +404,9 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			return true;
 		
 		FlxG.keys.handleKeyUp(KeyCode);
-		
+		_keyboardEvent.type = KeyboardEvent.KEY_UP;
+		_keyboardEvent.keyCode = KeyCode;
+		stage.dispatchEvent(_keyboardEvent);		
 		return true;
 	}
 	
@@ -438,13 +445,19 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		}
 		
 		FlxG.keys.handleKeyDown(KeyCode);
+		_keyboardEvent.type = KeyboardEvent.KEY_DOWN;
+		_keyboardEvent.keyCode = KeyCode;
+		stage.dispatchEvent(_keyboardEvent);
 		return true;
 	}
 
 	@Override
 	public boolean keyTyped(char character)
 	{
-		return false;
+		_keyboardEvent.charCode = character;
+		_keyboardEvent.type = KeyboardEvent.KEY_TYPED;
+		stage.dispatchEvent(_keyboardEvent);
+		return true;
 	}
 
 	/**
@@ -894,6 +907,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		//Add basic input event listeners and mouse container
 		Gdx.input.setInputProcessor(this);
 		_mouseEvent = new MouseEvent(null, 0, 0);
+		_keyboardEvent = new KeyboardEvent(null);
 		
 		//Detect whether or not we're running on a mobile device
 		FlxG.mobile = (Gdx.app.getType() != ApplicationType.Desktop);
@@ -1041,6 +1055,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_stringBuffer = null;
 		_state.destroy();
 		_mouseEvent = null;
+		_keyboardEvent = null;
 		FlxG.reset();
 		FlxG.disposeAssetManager();
 		FlxG.batch.dispose();

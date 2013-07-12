@@ -42,24 +42,7 @@ public class FlxUIComponent extends FlxSprite
 	public FlxUIComponent(float X, float Y, FlxUISkin UISkin, String Label, int Width, int Height)
 	{
 		super(X, Y);
-		skin = UISkin;		
-		if(skin.image != null)
-			loadGraphic(skin.image, false, false, skin.width, skin.height);
-		if(skin.patches != null)
-		{
-			_isNinePatch = true;
-			_width = Width;
-			_height = Height;
-			_topLeft = skin.patches.get(NinePatch.TOP_LEFT).loadGraphic();
-			_topCenter = skin.patches.get(NinePatch.TOP_CENTER).loadGraphic();
-			_topRight = skin.patches.get(NinePatch.TOP_RIGHT).loadGraphic();
-			_middleLeft = skin.patches.get(NinePatch.MIDDLE_LEFT).loadGraphic();
-			_middleCenter = skin.patches.get(NinePatch.MIDDLE_CENTER).loadGraphic();
-			_middleRight = skin.patches.get(NinePatch.MIDDLE_RIGHT).loadGraphic();
-			_bottomLeft = skin.patches.get(NinePatch.BOTTOM_LEFT).loadGraphic();
-			_bottomCenter = skin.patches.get(NinePatch.BOTTOM_CENTER).loadGraphic();
-			_bottomRight = skin.patches.get(NinePatch.BOTTOM_RIGHT).loadGraphic();			
-		}
+		skin = UISkin;
 		
 		if(Label != null)
 		{
@@ -71,6 +54,36 @@ public class FlxUIComponent extends FlxSprite
 							skin.labelShadowColor,
 							skin.labelShadowPosition.x,
 							skin.labelShadowPosition.y);
+		}
+		
+		if(skin.image != null)
+			loadGraphic(skin.image, false, false, skin.width, skin.height);
+		if(skin.patches != null)
+		{
+			origin.x = origin.y = 0;
+			_isNinePatch = true;
+			_height = Height; 
+			_width = Width;
+			if(skin.patches.get(NinePatch.TOP_LEFT) != null)
+				_topLeft = skin.patches.get(NinePatch.TOP_LEFT).loadGraphic();
+			if(skin.patches.get(NinePatch.TOP_CENTER) != null)
+				_topCenter = skin.patches.get(NinePatch.TOP_CENTER).loadGraphic();
+			if(skin.patches.get(NinePatch.TOP_RIGHT) != null)
+				_topRight = skin.patches.get(NinePatch.TOP_RIGHT).loadGraphic();
+			if(skin.patches.get(NinePatch.MIDDLE_LEFT) != null)
+				_middleLeft = skin.patches.get(NinePatch.MIDDLE_LEFT).loadGraphic();
+			if(skin.patches.get(NinePatch.MIDDLE_CENTER) != null)
+				_middleCenter = skin.patches.get(NinePatch.MIDDLE_CENTER).loadGraphic();
+			if(skin.patches.get(NinePatch.MIDDLE_RIGHT) != null)
+				_middleRight = skin.patches.get(NinePatch.MIDDLE_RIGHT).loadGraphic();
+			if(skin.patches.get(NinePatch.BOTTOM_LEFT) != null)
+				_bottomLeft = skin.patches.get(NinePatch.BOTTOM_LEFT).loadGraphic();
+			if(skin.patches.get(NinePatch.BOTTOM_CENTER) != null)
+				_bottomCenter = skin.patches.get(NinePatch.BOTTOM_CENTER).loadGraphic();
+			if(skin.patches.get(NinePatch.BOTTOM_RIGHT) != null)
+				_bottomRight = skin.patches.get(NinePatch.BOTTOM_RIGHT).loadGraphic();	
+			
+			stretch();
 		}
 		
 		scrollFactor.x = scrollFactor.y = 0;
@@ -109,21 +122,29 @@ public class FlxUIComponent extends FlxSprite
 		skin = null;
 		if(_isNinePatch)
 		{
-			_topLeft.destroy();
+			if(_topLeft != null)
+				_topLeft.destroy();
 			_topLeft = null;
-			_topCenter.destroy();
+			if(_topCenter != null)
+				_topCenter.destroy();
 			_topCenter = null;
-			_topRight.destroy();
+			if(_topRight != null)
+				_topRight.destroy();
 			_topRight = null;
-			_bottomLeft.destroy();
+			if(_bottomLeft != null)
+				_bottomLeft.destroy();
 			_bottomLeft = null;
-			_bottomCenter.destroy();
+			if(_bottomCenter != null)
+				_bottomCenter.destroy();
 			_bottomCenter = null;
-			_bottomRight.destroy();
+			if(_bottomRight != null)
+				_bottomRight.destroy();
 			_bottomRight = null;
-			_middleLeft.destroy();
+			if(_middleLeft != null)
+				_middleLeft.destroy();
 			_middleLeft = null;
-			_middleRight.destroy();
+			if(_middleRight != null)
+				_middleRight.destroy();
 			_middleRight = null;			
 		}
 	}
@@ -133,22 +154,46 @@ public class FlxUIComponent extends FlxSprite
 	{
 		if(_isNinePatch)
 		{
-			_topLeft.x = x - _topLeft.width;
-			_topLeft.y = y - _topLeft.height;
-			_topCenter.x = x;
-			_topCenter.y = y - _topCenter.height;
-			_topRight.x = x + width;
-			_topRight.y = y - _topRight.height;
-			_bottomLeft.x = x - _bottomLeft.width;
-			_bottomLeft.y = y + height;
-			_bottomCenter.x = x;
-			_bottomCenter.y = y + height;
-			_bottomRight.x = x + width;
-			_bottomRight.y = y + height;
-			_middleLeft.x = x - _middleLeft.width;
-			_middleLeft.y = y;
-			_middleRight.x = x + width;
-			_middleRight. y = y;
+			if(_topLeft != null)
+			{
+				_topLeft.x = x - _topLeft.width;
+				_topLeft.y = y - _topLeft.height;				
+			}
+			if(_topCenter != null)
+			{
+				_topCenter.x = x;
+				_topCenter.y = y - _topCenter.height;				
+			}
+			if(_topRight != null)
+			{
+				_topRight.x = x + width;
+				_topRight.y = y - _topRight.height;				
+			}
+			if(_bottomLeft != null)
+			{
+				_bottomLeft.x = x - _bottomLeft.width;
+				_bottomLeft.y = y + height;				
+			}
+			if(_bottomCenter != null)
+			{
+				_bottomCenter.x = x;
+				_bottomCenter.y = y + height;				
+			}
+			if(_bottomRight != null)
+			{
+				_bottomRight.x = x + width;
+				_bottomRight.y = y + height;				
+			}
+			if(_middleLeft != null)
+			{
+				_middleLeft.x = x - _middleLeft.width;
+				_middleLeft.y = y;				
+			}
+			if(_middleRight != null)
+			{
+				_middleRight.x = x + width;
+				_middleRight. y = y;				
+			}
 		}
 		
 		super.update();
@@ -168,18 +213,22 @@ public class FlxUIComponent extends FlxSprite
 					break;
 				case FlxUISkin.LABEL_TOP:
 					label.x = x;
-					label.y = y - height;
+					label.y = y - label.height;
+					label.y -= _topCenter != null ? _topCenter.height : 0; 
 					break;
 				case FlxUISkin.LABEL_RIGHT:
 					label.x = width + x;
+					label.x += _middleRight != null ? _middleRight.width : 0;
 					label.y = y;
 					break;
 				case FlxUISkin.LABEL_BOTTOM:
 					label.x = x;
 					label.y = y + height;					
+					label.y += _bottomCenter != null ? _bottomCenter.height : 0; 
 					break;
 				case FlxUISkin.LABEL_LEFT:
 					label.x = x - width;
+					label.x -= _middleLeft != null ? _middleLeft.width : 0;
 					label.y = y;
 					break;
 				default:
@@ -199,15 +248,24 @@ public class FlxUIComponent extends FlxSprite
 		super.draw();
 		if(_isNinePatch)
 		{
-			_topLeft.draw();
-			_topCenter.draw();
-			_topRight.draw();
-			_middleLeft.draw();
-//			_middleCenter.draw();
-			_middleRight.draw();
-			_bottomLeft.draw();
-			_bottomCenter.draw();
-			_bottomRight.draw();
+			if(_topLeft != null)
+				_topLeft.draw();
+			if(_topCenter != null)
+				_topCenter.draw();
+			if(_topRight != null)
+				_topRight.draw();
+			if(_middleLeft != null)
+				_middleLeft.draw();
+//			if(_middleCenter != null)
+//				_middleCenter.draw();
+			if(_middleRight != null)
+				_middleRight.draw();
+			if(_bottomLeft != null)
+				_bottomLeft.draw();
+			if(_bottomCenter != null)
+				_bottomCenter.draw();
+			if(_bottomRight != null)
+				_bottomRight.draw();
 		}
 		if(label != null)
 		{
@@ -219,11 +277,21 @@ public class FlxUIComponent extends FlxSprite
 	
 	public void stretch()
 	{
-		width = (_width == 0) ? label.width : _width; 
-		height = (_height == 0) ? label.height : _height;		
-		scale.x = _topCenter.scale.x = _bottomCenter.scale.x = width;
-		scale.y = _middleLeft.scale.y = _middleRight.scale.y = height;
 		label.calcFrame();
+		width = (_width == 0) ? label.width : _width; 
+		height = (_height == 0) ? label.height : _height;
+		
+		scale.x = width / _middleCenter.width;
+		if(_topCenter != null)
+			_topCenter.scale.x = width / _topCenter.width;
+		if(_bottomCenter != null)
+			_bottomCenter.scale.x = width / _bottomCenter.width;
+		
+		scale.y = height / _middleCenter.height;
+		if(_middleLeft != null)
+			_middleLeft.scale.y = height / _middleLeft.height;
+		if(_middleRight != null)
+			_middleRight.scale.y = height / _middleRight.height;
 	}
 	
 	@Override
@@ -239,15 +307,24 @@ public class FlxUIComponent extends FlxSprite
 
 	public void setNinePatchStatus(int Frame)
 	{		
-		_topLeft.setFrame(Frame);
-		_topCenter.setFrame(Frame);
-		_topRight.setFrame(Frame);
-		_middleLeft.setFrame(Frame);
-		_middleCenter.setFrame(Frame);
-		_middleRight.setFrame(Frame);
-		_bottomLeft.setFrame(Frame);
-		_bottomCenter.setFrame(Frame);
-		_bottomRight.setFrame(Frame);
+		if(_topLeft != null)
+			_topLeft.setFrame(Frame);
+		if(_topCenter != null)
+			_topCenter.setFrame(Frame);
+		if(_topRight != null)
+			_topRight.setFrame(Frame);
+		if(_middleLeft != null)
+			_middleLeft.setFrame(Frame);
+		if(_middleCenter != null)
+			_middleCenter.setFrame(Frame);
+		if(_middleRight != null)
+			_middleRight.setFrame(Frame);
+		if(_bottomLeft != null)
+			_bottomLeft.setFrame(Frame);
+		if(_bottomCenter != null)
+			_bottomCenter.setFrame(Frame);
+		if(_bottomRight != null)
+			_bottomRight.setFrame(Frame);
 	}
 	
 	public void setEnable(boolean enable)

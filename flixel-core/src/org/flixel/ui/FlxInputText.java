@@ -2,10 +2,12 @@ package org.flixel.ui;
 
 import org.flixel.FlxG;
 import org.flixel.FlxText;
+import org.flixel.FlxU;
 import org.flixel.ui.event.IFlxInputText;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -23,7 +25,7 @@ import flash.events.Listener;
  */
 public class FlxInputText extends FlxUITouchable
 {	
-	public FlxText textField;
+	protected FlxTextCustom textField;
 	static public final String NO_FILTER = "";
 	static public final String ONLY_ALPHA = "^\\d*$";
 	static public final String ONLY_NUMERIC = "^\\d*$";
@@ -64,12 +66,13 @@ public class FlxInputText extends FlxUITouchable
 	/**
 	 * The max amount of characters the textfield can contain.
 	 */
-	private int _maxLength = 0;
+	private int _maxLength = 0;	
+	private int _currentLineCounter = 1;
 	/**
 	 * Buffer text.
 	 */
 	protected StringBuffer buffer;
-	private boolean _changed;
+	private boolean _isChanged;
 	private boolean _passwordMode;
 	private StringBuffer _textPassword;
 	
@@ -85,10 +88,10 @@ public class FlxInputText extends FlxUITouchable
 	 * @param BackgroundColor	The color of the box background. Set to 0 to disable background.
 	 * @param EmbeddedFont		Whether this text field uses embedded fonts.
 	 */
-	public FlxInputText(float X, float Y, FlxUISkin skin, String Text, int Width)
+	public FlxInputText(float X, float Y, FlxUISkin skin, String Text, int Width, int Height)
 	{
-		super(X, Y, skin, Text, Width);		
-		textField = new FlxText(X+4, Y-6, Width-20, null, true);
+		super(X, Y, skin, Text, Width, Height);
+		textField = new FlxTextCustom(X, Y-6, Width, null, true);
 		textField.setFormat(null, 16);
 		buffer = new StringBuffer();
 		_textPassword = new StringBuffer();
@@ -97,17 +100,17 @@ public class FlxInputText extends FlxUITouchable
 
 	public FlxInputText(float X, float Y, FlxUISkin skin, String Text)
 	{
-		this(X, Y, skin, Text, 328);
+		this(X, Y, skin, Text, 300, 32);
 	}
 
 	public FlxInputText(float X, float Y, FlxUISkin skin)
 	{
-		this(X, Y, skin, null, 328);
+		this(X, Y, skin, null, 300, 32);
 	}
 	
 	public FlxInputText(float X, float Y)
 	{
-		this(X, Y, null, null, 328);
+		this(X, Y, null, null, 300, 32);
 	}
 
 	/**
@@ -128,7 +131,6 @@ public class FlxInputText extends FlxUITouchable
 	{		
 		checkFocus();
 		super.update();
-//		FlxG.log(status);
 	}
 	
 	protected void checkFocus()
@@ -176,31 +178,44 @@ public class FlxInputText extends FlxUITouchable
 					if(buffer.length() > 0)
 					{
 						buffer.delete(buffer.length()-1, buffer.length());
-						_changed = true;
+						_isChanged = true;
 					}
 				}				
 				// Enter
 				else if(key == Keys.ENTER)
 				{
-					if(callback != null) // TODO: move this to text area.
+					if(callback != null)
 						callback.onEnter(textField.getText());
-					buffer.append("\n");
-					_changed = true;
+					if(1 < textField.getMaxLines() && _currentLineCounter < textField.getMaxLines())
+					{
+						buffer.append("\n");
+						_isChanged = true;
+					}
 				}
 				// Add some text
 				else
 				{
-					if(buffer.length() < _maxLength)
+					if(buffer.length() < _maxLength || _maxLength == 0)
 					{
 						buffer.append(filter(String.valueOf(((KeyboardEvent)e).charCode)));
 						if(_passwordMode)
 							_textPassword.append("*");
-						_changed = true;
+						_isChanged = true;
 					}
 				}
-				if(_changed)
+				if(_isChanged)
+				{
+					// Precalculate if it fits the boundings.
+					if(1 < textField.getMaxLines())
+					{
+						textField.setText(buffer);
+						if(textField.getMaxLines() < textField.getTotalLines())
+							buffer.deleteCharAt(buffer.length()-1);
+					}
 					textField.setText(_passwordMode ? _textPassword : buffer);
-				_changed = false;
+					_currentLineCounter = textField.getTotalLines() == -1 ? 1 : textField.getTotalLines();
+				}
+				_isChanged = false;
 			}
 		}
 	};
@@ -235,6 +250,11 @@ public class FlxInputText extends FlxUITouchable
 				text = "";
 		}	
 		return text;
+	}
+	
+	public FlxText getTextField()
+	{
+		return textField;
 	}
 	
 	public int getForceCase()
@@ -273,6 +293,11 @@ public class FlxInputText extends FlxUITouchable
 		return _maxLength;
 	}
 	
+	public void setMaxLines(int Lines)
+	{
+		textField.setMaxLines(Lines);
+	}
+	
 	public void setPasswordMode(boolean enable)
 	{
 		_passwordMode = enable;
@@ -301,5 +326,108 @@ public class FlxInputText extends FlxUITouchable
 	public String getFilterMode()
 	{
 		return _filterMode;
+	}
+	
+	public void setText(CharSequence Text)
+	{
+		textField.setText(Text);
+	}
+	
+	public void getText()
+	{
+		textField.getText();
+	}
+}
+
+/**
+ * 
+ * 
+ * @author Ka Wing Chin
+ */
+class FlxTextCustom extends FlxText
+{
+	/**
+	 * The amount of lines allowed in the textfield.
+	 */
+	private int _maxLines = 1;
+	private float _firstLineHeight;
+	/**
+	 * The bounding height for each line.
+	 */
+	private float _lineHeight;
+	private CharSequence _saveText;
+
+	public FlxTextCustom(float X, float Y, int Width, String Text, boolean EmbeddedFont)
+	{
+		super(X, Y, Width, Text, EmbeddedFont);		
+	}
+	
+	@Override
+	protected void calcFrame()
+	{
+		TextBounds bounds;
+//		if(_maxLines > 1)
+			bounds = _textField.setWrappedText(_text, 2, 3, width, _alignment);
+//		else
+//			bounds = _textField.setText(_text, 2, 3);
+		
+		// bounds.height is shorter than it should be.
+		// After some trial and error, adding seven seems to make it about right in most cases.
+		height = frameHeight = (int) FlxU.ceil(bounds.height + 7);
+	}
+	
+	public void saveOldText()
+	{
+		_saveText = _text;
+	}
+	
+	public CharSequence getOldText()
+	{
+		return _saveText;
+	}
+	
+	@Override
+	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor, float ShadowX, float ShadowY)
+	{
+		super.setFormat(Font, Size, Color, Alignment, ShadowColor, ShadowX, ShadowY);
+		// Save text.
+		String text = getText();
+		
+		// Calculate lineheight.
+		_textField.setWrappedText("ABC", 2, 3, FlxG.width, _alignment);
+		_firstLineHeight = _textField.getBounds().height;
+		_textField.setWrappedText("ABC\nABC", 2, 3, FlxG.width, _alignment);
+		float doubleLine = _textField.getBounds().height;
+		_lineHeight = doubleLine - _firstLineHeight;
+		
+		// Set text back.
+		_text = text;
+		calcFrame();
+		return this;
+	}
+	
+	public void setMaxLines(int Lines)
+	{
+		if(_maxLines == 0)
+			return;
+		_maxLines = Lines;
+	}
+	
+	public int getMaxLines()
+	{
+		return _maxLines;
+	}
+	
+	public float getHeight()
+	{
+		return _textField.getBounds().height;
+	}
+	
+	public int getTotalLines()
+	{
+		if(_maxLines == 1 || getHeight() == _firstLineHeight)
+			return 1;
+		else
+			return (int) ((getHeight() - _firstLineHeight) / _lineHeight) + 1;
 	}
 }
