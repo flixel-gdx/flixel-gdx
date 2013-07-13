@@ -79,20 +79,17 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 	}
 
 	@Override
-	protected void checkFocus()
+	public void onChange()
 	{
-		if(FlxG.mouse.justPressed())
+		if(overlapsPoint(_point.make(FlxG.mouse.x, FlxG.mouse.y)))
 		{
-			if(overlapsPoint(_point.make(FlxG.mouse.x, FlxG.mouse.y)))
-			{
-				setActive(true);
-				Gdx.input.getTextInput(this, _title, textField.getText());
-			}
+			setActive(true);
+			Gdx.input.getTextInput(this, _title, textField.getText());
 		}
-	}
+	}	
 
 	@Override
-	public void onChange()
+	protected void checkFocus()
 	{
 		// Keep this empty
 	}

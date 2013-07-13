@@ -2,12 +2,10 @@ package org.flixel.ui;
 
 import org.flixel.FlxG;
 import org.flixel.FlxText;
-import org.flixel.FlxU;
 import org.flixel.ui.event.IFlxInputText;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -100,17 +98,17 @@ public class FlxInputText extends FlxUITouchable
 
 	public FlxInputText(float X, float Y, FlxUISkin skin, String Text)
 	{
-		this(X, Y, skin, Text, 300, 32);
+		this(X, Y, skin, Text, FlxG.width, 32);
 	}
 
 	public FlxInputText(float X, float Y, FlxUISkin skin)
 	{
-		this(X, Y, skin, null, 300, 32);
+		this(X, Y, skin, null, FlxG.width, 32);
 	}
 	
 	public FlxInputText(float X, float Y)
 	{
-		this(X, Y, null, null, 300, 32);
+		this(X, Y, null, null, FlxG.width, 32);
 	}
 
 	/**
@@ -178,6 +176,8 @@ public class FlxInputText extends FlxUITouchable
 					if(buffer.length() > 0)
 					{
 						buffer.delete(buffer.length()-1, buffer.length());
+						if(_passwordMode)
+							_textPassword.delete(_textPassword.length()-1, _textPassword.length());
 						_isChanged = true;
 					}
 				}				
@@ -205,13 +205,10 @@ public class FlxInputText extends FlxUITouchable
 				}
 				if(_isChanged)
 				{
-					// Precalculate if it fits the boundings.
-					if(1 < textField.getMaxLines())
-					{
-						textField.setText(buffer);
-						if(textField.getMaxLines() < textField.getTotalLines())
-							buffer.deleteCharAt(buffer.length()-1);
-					}
+					// Precalculate whether it fits the boundings or not.
+					textField.setText(buffer);
+					if(textField.getMaxLines() < textField.getTotalLines())
+						buffer.deleteCharAt(buffer.length()-1);
 					textField.setText(_passwordMode ? _textPassword : buffer);
 					_currentLineCounter = textField.getTotalLines() == -1 ? 1 : textField.getTotalLines();
 				}
@@ -355,35 +352,10 @@ class FlxTextCustom extends FlxText
 	 * The bounding height for each line.
 	 */
 	private float _lineHeight;
-	private CharSequence _saveText;
 
 	public FlxTextCustom(float X, float Y, int Width, String Text, boolean EmbeddedFont)
 	{
 		super(X, Y, Width, Text, EmbeddedFont);		
-	}
-	
-	@Override
-	protected void calcFrame()
-	{
-		TextBounds bounds;
-//		if(_maxLines > 1)
-			bounds = _textField.setWrappedText(_text, 2, 3, width, _alignment);
-//		else
-//			bounds = _textField.setText(_text, 2, 3);
-		
-		// bounds.height is shorter than it should be.
-		// After some trial and error, adding seven seems to make it about right in most cases.
-		height = frameHeight = (int) FlxU.ceil(bounds.height + 7);
-	}
-	
-	public void saveOldText()
-	{
-		_saveText = _text;
-	}
-	
-	public CharSequence getOldText()
-	{
-		return _saveText;
 	}
 	
 	@Override
@@ -425,9 +397,6 @@ class FlxTextCustom extends FlxText
 	
 	public int getTotalLines()
 	{
-		if(_maxLines == 1 || getHeight() == _firstLineHeight)
-			return 1;
-		else
-			return (int) ((getHeight() - _firstLineHeight) / _lineHeight) + 1;
+		return (int) ((getHeight() - _firstLineHeight) / _lineHeight) + 1;
 	}
 }
