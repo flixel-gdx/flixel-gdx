@@ -9,40 +9,98 @@ import com.badlogic.gdx.Input.TextInputListener;
 import flash.events.KeyboardEvent;
 
 /**
+ * Skinnable DialogBox. When clicked a dialog will be opened.
+ * For desktop it will be Swing dialog.
+ * For Android it will be standard Android dialog.
  * 
  * @author Ka Wing Chin
  */
 public class FlxDialogBox extends FlxInputText implements TextInputListener
 {
-
+	/**
+	 * The title of the dialog.
+	 */
 	private String _title;
+	/**
+	 * Callback will be fired on input or on cancel.
+	 */
 	public IFlxDialogBox callback;
 
-	public FlxDialogBox(float X, float Y, FlxUISkin skin, int Width, int Height, String Text, String Title)
+	/**
+	 * Creates new <code>FlxDialogBox</code> object.
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component.
+	 * @param Width		The width of the component. Default 0, unlimited width.
+	 * @param Height 	The height of the component. Default 0, unlimited height.
+	 * @param Title		The title of the dialog box.
+	 */
+	public FlxDialogBox(float X, float Y, FlxUISkin skin, String Label, int Width, int Height, String Title)
 	{
-		super(X, Y, skin, Text, Width, Height);
+		super(X, Y, skin, Label, Width, Height);
 		_title = Title;
 		FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
 	}
 
-	public FlxDialogBox(float X, float Y, FlxUISkin skin, int Width, int Height, String Text)
+	/**
+	 * Creates new <code>FlxDialogBox</code> object.
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component.
+	 * @param Width		The width of the component. Default 0, unlimited width.
+	 * @param Height 	The height of the component. Default 0, unlimited height.
+	 */
+	public FlxDialogBox(float X, float Y, FlxUISkin skin, String Label, int Width, int Height)
 	{
-		this(X, Y, skin, Width, 32, Text, null);
+		this(X, Y, skin, Label, Width, Height, null);
 	}
 
-	public FlxDialogBox(float X, float Y, FlxUISkin skin, int Width, int Height)
+	/**
+	 * Creates new <code>FlxDialogBox</code> object.
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component.
+	 * @param Width		The width of the component. Default 0, unlimited width.
+	 */
+	public FlxDialogBox(float X, float Y, FlxUISkin skin, String Label, int Width)
 	{
-		this(X, Y, skin, Width, 32, null, null);
+		this(X, Y, skin, Label, Width, 0, null);
 	}
 
+	/**
+	 * Creates new <code>FlxDialogBox</code> object.
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component.
+	 */
+	public FlxDialogBox(float X, float Y, FlxUISkin skin, String Label)
+	{
+		this(X, Y, skin, Label, 0, 0, null);
+	}
+
+	/**
+	 * Creates new <code>FlxDialogBox</code> object.
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 */
 	public FlxDialogBox(float X, float Y, FlxUISkin skin)
 	{
-		this(X, Y, skin, 328, 32, null, null);
+		this(X, Y, skin, null, 0, 0, null);
 	}
-
+	
+	/**
+	 * Creates new <code>FlxDialogBox</code> object.
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 */
 	public FlxDialogBox(float X, float Y)
 	{
-		this(X, Y, null, 328, 32, null, null);
+		this(X, Y, null, null, 0, 0, null);
 	}
 
 	@Override
@@ -52,13 +110,9 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 		callback = null;
 	}
 
-	@Override
-	public void draw()
-	{
-		super.draw();
-		textField.draw();
-	}
-
+	/**
+	 * Will be called when text got applied from the dialog box into the textfield.
+	 */
 	@Override
 	public void input(String text)
 	{
@@ -70,6 +124,9 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 		setActive(false);
 	}
 
+	/**
+	 * Will be called when the dialog box got canceled.
+	 */
 	@Override
 	public void canceled()
 	{

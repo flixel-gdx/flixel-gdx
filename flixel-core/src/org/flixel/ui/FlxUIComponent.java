@@ -4,41 +4,106 @@ import org.flixel.FlxSprite;
 import org.flixel.ui.FlxUISkin.NinePatch;
 
 /**
- *
+ * This is a generic UI component. It supports single image and ninepatch.
+ * Needs skin to get it working. 
+ * 
  * @author Ka Wing Chin
  */
 public class FlxUIComponent extends FlxSprite
 {	
-	public String ID;
-	protected boolean enabled;
-	protected boolean focused;
-	protected boolean activated;
-	
 	/**
-	 * Shows the current state of the button.
+	 * The ID of the component. It may be required on some UI components like <code>FlxRadioButton</code>
+	 */
+	public String ID;
+	/**
+	 * Tracks whether the component is enabled or not.
+	 */
+	protected boolean enabled;
+	/**
+	 * Tracks whether the component is focused/highlighted or not.
+	 */
+	protected boolean focused;
+	/**
+	 * Tracks whether the component is activiated. 
+	 */
+	protected boolean activated;	
+	/**
+	 * The current state of the button.
 	 */
 	public int status;
+	/**
+	 * The <code>FlxLabel</code> for the component.
+	 */
 	public FlxLabel label;
+	/**
+	 * The <code>FlxSkin</code> of the component
+	 */
 	public FlxUISkin skin;
+	/**
+	 * The status of the <code>FlxSkin</code>
+	 */
 	public int skinStatus;
 	
 	/**
-	 * Ninepatch stuff
+	 * Whether the component uses <code>NinePatch</code> or not.
 	 */
 	protected boolean _isNinePatch;
+	/**
+	 * Top left of the <code>Ninepatch</code>.
+	 */
 	protected FlxSprite _topLeft;
+	/**
+	 * Top center of the <code>Ninepatch</code>.
+	 */
 	protected FlxSprite _topCenter;
+	/**
+	 * Top right of the <code>Ninepatch</code>.
+	 */
 	protected FlxSprite _topRight;
-	protected FlxSprite _bottomLeft;
-	protected FlxSprite _bottomCenter;
-	protected FlxSprite _bottomRight;
+	/**
+	 * Middle left of the <code>Ninepatch</code>.
+	 */
 	protected FlxSprite _middleLeft;
-	protected FlxSprite _middleCenter; 
+	/**
+	 * Middle center of the <code>Ninepatch</code>. 
+	 * If this is not null, it will be used as base graphic for this component.
+	 */
+	protected FlxSprite _middleCenter;
+	/**
+	 * Middle right of the <code>Ninepatch</code>.
+	 */
 	protected FlxSprite _middleRight;
+	/**
+	 * Bottom left of the <code>Ninepatch</code>.
+	 */
+	protected FlxSprite _bottomLeft;
+	/**
+	 * Bottom center of the <code>Ninepatch</code>.
+	 */
+	protected FlxSprite _bottomCenter;
+	/**
+	 * Bottom right of the <code>Ninepatch</code>.
+	 */
+	protected FlxSprite _bottomRight;
 	
-	private float _width;
-	private float _height;
+	/**
+	 * Internal, the width that is given in the constructor.
+	 */
+	protected float _width;
+	/**
+	 * Internal the height that is given in the constructor.
+	 */
+	protected float _height;
 	
+	/**
+	 * Constructor
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component.
+	 * @param Width		The width of the component. Default auto.
+	 * @param Height	The height of the component. Default auto.
+	 */
 	public FlxUIComponent(float X, float Y, FlxUISkin UISkin, String Label, int Width, int Height)
 	{
 		super(X, Y);
@@ -46,7 +111,7 @@ public class FlxUIComponent extends FlxSprite
 		
 		if(Label != null)
 		{
-			label = new FlxLabel(0, 0, Label, Width, Height);
+			label = new FlxLabel(0, 0, Label, skin.labelWidth, skin.labelHeight);
 			label.setFormat(skin.labelFont,
 							skin.labelSize,
 							skin.labelColor,
@@ -54,10 +119,12 @@ public class FlxUIComponent extends FlxSprite
 							skin.labelShadowColor,
 							skin.labelShadowPosition.x,
 							skin.labelShadowPosition.y);
+			label.calcFrame();
 		}
-		
+		// Single image
 		if(skin.image != null)
 			loadGraphic(skin.image, false, false, skin.width, skin.height);
+		// Ninepatch
 		if(skin.patches != null)
 		{
 			origin.x = origin.y = 0;
@@ -81,8 +148,7 @@ public class FlxUIComponent extends FlxSprite
 			if(skin.patches.get(NinePatch.BOTTOM_CENTER) != null)
 				_bottomCenter = skin.patches.get(NinePatch.BOTTOM_CENTER).loadGraphic();
 			if(skin.patches.get(NinePatch.BOTTOM_RIGHT) != null)
-				_bottomRight = skin.patches.get(NinePatch.BOTTOM_RIGHT).loadGraphic();	
-			
+				_bottomRight = skin.patches.get(NinePatch.BOTTOM_RIGHT).loadGraphic();			
 			stretch();
 		}
 		
@@ -94,19 +160,40 @@ public class FlxUIComponent extends FlxSprite
 		activated = false;
 	}
 	
+	/**
+	 * Constructor
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component.
+	 * @param Width		The width of the component. Default auto.
+	 */
+	public FlxUIComponent(float X, float Y, FlxUISkin Skin, String Label, int Width)
+	{
+		this(X, Y, Skin, Label, Width, 0);
+	}
+	
+	/**
+	 * Construtor
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component.
+	 */
 	public FlxUIComponent(float X, float Y, FlxUISkin Skin, String Label)
 	{
 		this(X, Y, Skin, Label, 0, 0);
 	}
 	
+	/**
+	 * Constructor
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 */
 	public FlxUIComponent(float X, float Y, FlxUISkin Skin)
 	{
 		this(X, Y, Skin, null, 0, 0);
-	}
-	
-	public FlxUIComponent(float X, float Y)
-	{
-		this(X, Y, null, null, 0, 0);
 	}
 		
 	@Override
@@ -114,11 +201,10 @@ public class FlxUIComponent extends FlxSprite
 	{
 		super.destroy();
 		if(label != null)
-		{
 			label.destroy();
-			label = null;
-		}
-		skin.destroy();
+		label = null;
+		if(skin != null)
+			skin.destroy();
 		skin = null;
 		if(_isNinePatch)
 		{
@@ -131,6 +217,12 @@ public class FlxUIComponent extends FlxSprite
 			if(_topRight != null)
 				_topRight.destroy();
 			_topRight = null;
+			if(_middleLeft != null)
+				_middleLeft.destroy();
+			_middleLeft = null;
+			if(_middleRight != null)
+				_middleRight.destroy();
+			_middleRight = null;			
 			if(_bottomLeft != null)
 				_bottomLeft.destroy();
 			_bottomLeft = null;
@@ -140,18 +232,13 @@ public class FlxUIComponent extends FlxSprite
 			if(_bottomRight != null)
 				_bottomRight.destroy();
 			_bottomRight = null;
-			if(_middleLeft != null)
-				_middleLeft.destroy();
-			_middleLeft = null;
-			if(_middleRight != null)
-				_middleRight.destroy();
-			_middleRight = null;			
 		}
 	}
 	
 	@Override
 	public void update()
 	{
+		// If it's a ninepatch, place the parts correctly.
 		if(_isNinePatch)
 		{
 			if(_topLeft != null)
@@ -275,19 +362,24 @@ public class FlxUIComponent extends FlxSprite
 		}
 	}
 	
+	/**
+	 * Stretch the component
+	 */
 	public void stretch()
 	{
 		label.calcFrame();
 		width = (_width == 0) ? label.width : _width; 
 		height = (_height == 0) ? label.height : _height;
 		
-		scale.x = width / _middleCenter.width;
+		if(_middleCenter != null)
+			scale.x = width / _middleCenter.width;		
 		if(_topCenter != null)
-			_topCenter.scale.x = width / _topCenter.width;
+			_topCenter.scale.x = width / _topCenter.width;		
 		if(_bottomCenter != null)
 			_bottomCenter.scale.x = width / _bottomCenter.width;
 		
-		scale.y = height / _middleCenter.height;
+		if(_middleCenter != null)
+			scale.y = height / _middleCenter.height;
 		if(_middleLeft != null)
 			_middleLeft.scale.y = height / _middleLeft.height;
 		if(_middleRight != null)
@@ -305,7 +397,11 @@ public class FlxUIComponent extends FlxSprite
 			setNinePatchStatus(Frame);
 	}
 
-	public void setNinePatchStatus(int Frame)
+	/**
+	 * Set the status of ninepatch.
+	 * @param Frame
+	 */
+	protected void setNinePatchStatus(int Frame)
 	{		
 		if(_topLeft != null)
 			_topLeft.setFrame(Frame);
@@ -327,17 +423,29 @@ public class FlxUIComponent extends FlxSprite
 			_bottomRight.setFrame(Frame);
 	}
 	
+	/**
+	 * Whether to enable the component or not.
+	 * @param enable	boolean
+	 */
 	public void setEnable(boolean enable)
 	{
 		enabled = enable;
 		setFrame(enabled ? skin.NORMAL : skin.DISABLED);
 	}
 	
+	/**
+	 * Whether the component is enabled or not.
+	 * @return
+	 */
 	public boolean getEnable()
 	{
 		return enabled;
 	}
 	
+	/**
+	 * Whether to focus/highlight the component or not.
+	 * @param focus	boolean
+	 */
 	public void setFocus(boolean focus)
 	{
 		focused = focus;
@@ -347,11 +455,19 @@ public class FlxUIComponent extends FlxSprite
 			setFrame(focused ? skin.ACTIVE_HIGHTLIGHT_DISABLED : skin.DISABLED);
 	}
 	
+	/**
+	 * Whether the component is focused/highlighted or not.
+	 * @return
+	 */
 	public boolean getFocus()
 	{
 		return focused;
 	}
 	
+	/**
+	 * Whether the component is activated or not.
+	 * @param active	boolean
+	 */
 	public void setActive(boolean active)
 	{
 		activated = active;
@@ -361,6 +477,10 @@ public class FlxUIComponent extends FlxSprite
 			setFrame(enabled ? skin.NORMAL : skin.DISABLED);		
 	}
 	
+	/**
+	 * Whether the component is activated or not.
+	 * @return
+	 */
 	public boolean getActivated()
 	{
 		return activated;

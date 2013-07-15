@@ -1,29 +1,59 @@
 package org.flixel.ui;
 
-import org.flixel.FlxBasic;
 import org.flixel.FlxGroup;
 import org.flixel.FlxPoint;
 
 /**
+ * Add <code>FlxUIComponent</code> in the group to align it horizontal or vertical.
+ * The component requires an ID. 
  *
  * @author Ka Wing Chin
  */
 public class FlxUIGroup extends FlxGroup
 {
 	/**
-	 * VERTICAL or HORIZONTAL.
+	 * Align components vertically. 
 	 */
 	public static final int ALIGN_VERTICAL = 0;
-	public static final int ALIGN_HORIZONTAL = 1;	
+	/**
+	 * Align the components horizontally.
+	 */
+	public static final int ALIGN_HORIZONTAL = 1;
+	/**
+	 * The alignment, default is vertical.
+	 */
 	public int align = ALIGN_VERTICAL;
-	
+	/**
+	 * The top empty space from each component.
+	 */
 	public float marginTop = 48;
+	/**
+	 * The left empty space from each component. 
+	 */
 	public float marginLeft = 100;
+	/**
+	 * Tracks the starter x-position of the group.
+	 */
 	public float x = 0;
-	public float y = 0;	
+	/**
+	 * Tracks the starter y-position of the group.
+	 */
+	public float y = 0;
+	/**
+	 * The label for the group.
+	 */
 	public FlxLabel label;
+	/**
+	 * The label offeset.
+	 */
 	public FlxPoint labelOffset;
 	
+	/**
+	 * Creates a new <code>FlxUIGroup</code> object.
+	 * @param X			The x-position.
+	 * @param Y			The y-position.
+	 * @param Label		The label.
+	 */
 	public FlxUIGroup(float X, float Y, String Label)
 	{
 		super(0);
@@ -36,16 +66,28 @@ public class FlxUIGroup extends FlxGroup
 		}
 	}
 	
+	/**
+	 * Creates a new <code>FlxUIGroup</code> object.
+	 * @param X			The x-position.
+	 * @param Y			The y-position.
+	 */
 	public FlxUIGroup(float X, float Y)
 	{
 		this(X, Y, null);
 	}
 	
+	/**
+	 * Creates a new <code>FlxUIGroup</code> object.
+	 * @param X			The x-position.
+	 */
 	public FlxUIGroup(float X)
 	{
 		this(X, 0, null);
 	}
 	
+	/**
+	 * Creates a new <code>FlxUIGroup</code> object.
+	 */
 	public FlxUIGroup()
 	{
 		this(0, 0, null);
@@ -71,7 +113,12 @@ public class FlxUIGroup extends FlxGroup
 			label.draw();
 	}
 		
-	public FlxBasic add(FlxUIComponent Object)
+	/**
+	 * Adds a <code>FlxUIComponent</code> to the group.
+	 * @param Object	The component.
+	 * @return			The same component that has been added.
+	 */
+	public FlxUIComponent add(FlxUIComponent Object)
 	{
 		FlxUIComponent object;
 		for(int i = 0; i < length; i++)
@@ -94,9 +141,14 @@ public class FlxUIGroup extends FlxGroup
 			Object.x = this.x + (marginLeft * length) + Object.x;
 			Object.y += this.y; 
 		}
-		return super.add(Object);		
+		return (FlxUIComponent) super.add(Object);
 	}
 	
+	/**
+	 * Get the component by ID.
+	 * @param ID	The ID.
+	 * @return		The component, null if it doesn't exists.
+	 */
 	public FlxUIComponent getComponent(String ID)
 	{
 		FlxUIComponent object;

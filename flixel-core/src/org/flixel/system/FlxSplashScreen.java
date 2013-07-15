@@ -7,7 +7,8 @@ import org.flixel.FlxU;
 import org.flixel.event.IFlxCamera;
 
 /**
- *
+ * A flixel-gdx splashscreen. Will be shown if the FlxGame.showSplashScreen is set to true.
+ * 
  * @author Ka Wing Chin
  */
 public class FlxSplashScreen extends FlxState
@@ -24,15 +25,21 @@ public class FlxSplashScreen extends FlxState
 	private final static String ImgCode = "org/flixel/data/splashscreen:code";
 	private final static String ImgDPAD = "org/flixel/data/splashscreen:dpad";
 	
-	private FlxState state;
+	public static boolean splashScreenShown = false;
+	
+	private FlxState _state;
 	private static int CENTER_X;
 	private static int CENTER_Y;
 	private float _counter = 2.25f;
 	private float tempZoom;
 	
+	/**
+	 * Creates a new <code>FlxSpashScreen</code> object.
+	 * @param _requestedState	The <code>FlxState</code> that needs to be switch to.
+	 */
 	public FlxSplashScreen(FlxState _requestedState)
 	{
-		this.state = _requestedState;
+		_state = _requestedState;
 	}
 	
 	@Override
@@ -83,7 +90,7 @@ public class FlxSplashScreen extends FlxState
 					public void callback()
 					{
 						FlxG.camera.setZoom(tempZoom);
-						FlxG.switchState(state);
+						FlxG.switchState(_state);
 					}
 				});
 			}
@@ -95,6 +102,7 @@ public class FlxSplashScreen extends FlxState
 	{
 		FlxG.disposeTextureAtlas("org/flixel/data/splashscreen");
 		super.destroy();
+		_state = null;
 	}
 	
 	private class Gear extends FlxSprite

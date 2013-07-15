@@ -192,7 +192,6 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	private KeyboardEvent _keyboardEvent;
 	
 	protected boolean showSplashScreen = false;
-	private boolean _splashScreenShown = false;
 		
 	/**
 	 * Instantiate a new game object.
@@ -662,9 +661,9 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			_state.destroy();
 			_state = null;			
 		}
-		if(showSplashScreen && !_splashScreenShown)
+		if(showSplashScreen && !FlxSplashScreen.splashScreenShown)
 		{
-			_splashScreenShown = true;
+			FlxSplashScreen.splashScreenShown = true;
 			_state = new FlxSplashScreen(_requestedState);
 			_requestedState = _state;
 			_state.create();
@@ -701,7 +700,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			_replayTimer = 0;
 			_replayCancelKeys = null;
 			if(showSplashScreen)
-				_splashScreenShown = false;
+				FlxSplashScreen.splashScreenShown = false;
 			FlxG.reset();
 		}
 		

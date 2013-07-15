@@ -12,108 +12,171 @@ import flash.events.KeyboardEvent;
 import flash.events.Listener;
 
 /**
- * FlxInputText v1.10, Input text field extension for Flixel.
- * Heavely modified to get it working for flixel-gdx.
+ * Copyright (c) 2009 Martín Sebastián Wain
+ * License: Creative Commons Attribution 3.0 United States
+ * @link http://creativecommons.org/licenses/by/3.0/us/ 
  * 
+ * Input textfield extension for Flixel.
+ * Heavely modified to get it work on flixel-gdx.
+ * Supports multiline and filters.
+ * 
+ * @author Ka Wing Chin
  * @author Gama11
  * @author Mr_Walrus
- * @author Nitram_cero
  * @author Martin Sebastian Wain
- * @author Ka Wing Chin
+ * 
+ * @link http://forums.flixel.org/index.php/topic,272.0.html
  */
 public class FlxInputText extends FlxUITouchable
-{	
-	protected FlxTextCustom textField;
-	static public final String NO_FILTER = "";
-	static public final String ONLY_ALPHA = "^\\d*$";
-	static public final String ONLY_NUMERIC = "^\\d*$";
-	static public final String ONLY_ALPHANUMERIC = "^[A-Za-z0-9_]+$";
+{
 	/**
-	 * Alpha numeric with white space.
+	 * No filter
 	 */
-	static public final String ONLY_ALPHANUMERICSPACE = "^[A-Za-z0-9_ ]+$";
-	static public final String CUSTOM_FILTER = "";
-
-	static public final int ALL_CASES = 0;
-	static public final int UPPER_CASE = 1;
-	static public final int LOWER_CASE = 2;
-
+	public static final String NO_FILTER = "";
+	/**
+	 * Only letters and no space.
+	 */
+	public static final String ONLY_ALPHA = "^\\d*$";
+	/**
+	 * Only numbers and no space.
+	 */
+	public static final String ONLY_NUMERIC = "^\\d*$";
+	/**
+	 * Only letters and numbers.
+	 */
+	public static final String ONLY_ALPHA_NUMERIC = "^[A-Za-z0-9_]+$";
+	/**
+	 * Only letters, numbers and white space.
+	 */
+	public static final String ONLY_ALPHA_NUMERIC_SPACE = "^[A-Za-z0-9_ ]+$";
+	/**
+	 * Custom filter.
+	 */
+	public static final String CUSTOM_FILTER = "";
+	/**
+	 * All cases.
+	 */
+	public static final int ALL_CASES = 0;
+	/**
+	 * Upper case.
+	 */
+	public static final int UPPER_CASE = 1;
+	/**
+	 * Lower case.
+	 */
+	public static final int LOWER_CASE = 2;
 	/**
 	 * Defines what text to filter. It can be NO_FILTER, ONLY_ALPHA,
-	 * ONLY_NUMERIC, ONLY_ALPHA_NUMERIC or CUSTOM_FILTER (Remember to append
-	 * "FlxInputText." as a prefix to those constants)
+	 * ONLY_NUMERIC, ONLY_ALPHA_NUMERIC or CUSTOM_FILTER.
 	 */
-	private String _filterMode = NO_FILTER;
-
+	private String _filterMode = NO_FILTER;	
 	/**
 	 * This regular expression will filter out (remove) everything that matches.
 	 * This is activated by setting filterMode = FlxInputText.CUSTOM_FILTER.
-	 */
+	 */	
 	public String customFilterPattern;
-
 	/**
-	 * A function called when the enter key is pressed on this text box.
-	 * Function should be formatted "onEnterPressed(text:String)".
-	 */
-	public IFlxInputText callback;
-	/**
-	 * If this is set to true, text typed is forced to be uppercase.
+	 * Text transform, ALL_CASES, LOWER_CASE and UPPER_CASE.
 	 */
 	private int _forceCase = ALL_CASES;
-
+	/**
+	 * The textfield that will be displayed.
+	 */
+	protected FlxTextCustom textField;
+	/**
+	 * A function called when the enter key is pressed on this text box.
+	 */
+	public IFlxInputText callback;	
 	/**
 	 * The max amount of characters the textfield can contain.
 	 */
-	private int _maxLength = 0;	
+	private int _maxLength = 0;
+	/**
+	 * Whether the textfield is in password mode or not.
+	 */
+	private boolean _passwordMode;
+	/**
+	 * Tracks the amount of lines.
+	 */
 	private int _currentLineCounter = 1;
 	/**
 	 * Buffer text.
 	 */
-	protected StringBuffer buffer;
-	private boolean _isChanged;
-	private boolean _passwordMode;
-	private StringBuffer _textPassword;
-	
-
+	protected StringBuffer textBuffer;
 	/**
-	 * Creates a new editable text box.
-	 * 
-	 * @param X					The X position of the text.
-	 * @param Y					The Y position of the text.
-	 * @param Width				The width of the text box.
-	 * @param Text				The text to display initially.
-	 * @param TextColor			The color of the text.
-	 * @param BackgroundColor	The color of the box background. Set to 0 to disable background.
-	 * @param EmbeddedFont		Whether this text field uses embedded fonts.
+	 * Buffer password.
 	 */
-	public FlxInputText(float X, float Y, FlxUISkin skin, String Text, int Width, int Height)
+	private StringBuffer _passwordBuffer;
+	/**
+	 * Tracks whether the text got changed or not.
+	 */
+	private boolean _isChanged;
+	
+	/**
+	 * Constructor
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component.
+	 * @param Width		The width of the component. Default 0, unlimited width.
+	 * @param Height	The height of the component. Default 0, unlimited height.
+	 */
+	public FlxInputText(float X, float Y, FlxUISkin skin, String Label, int Width, int Height)
 	{
-		super(X, Y, skin, Text, Width, Height);
+		super(X, Y, skin, Label, Width, Height);
 		textField = new FlxTextCustom(X, Y-6, Width, null, true);
 		textField.setFormat(null, 16);
-		buffer = new StringBuffer();
-		_textPassword = new StringBuffer();
+		textBuffer = new StringBuffer();
+		_passwordBuffer = new StringBuffer();
 		FlxG.getStage().addEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
 	}
 
-	public FlxInputText(float X, float Y, FlxUISkin skin, String Text)
+	/**
+	 * Constructor
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component
+	 * @param Width		The width of the component. Default 0, unlimited width.
+	 */
+	public FlxInputText(float X, float Y, FlxUISkin skin, String Label, int Width)
 	{
-		this(X, Y, skin, Text, FlxG.width, 32);
-	}
-
-	public FlxInputText(float X, float Y, FlxUISkin skin)
-	{
-		this(X, Y, skin, null, FlxG.width, 32);
+		this(X, Y, skin, Label, Width, 0);
 	}
 	
-	public FlxInputText(float X, float Y)
+	/**
+	 * Constructor
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
+	 * @param Label		The label along side the component
+	 */
+	public FlxInputText(float X, float Y, FlxUISkin skin, String Label)
 	{
-		this(X, Y, null, null, FlxG.width, 32);
+		this(X, Y, skin, Label, 0, 0);
 	}
 
 	/**
-	 * Draw the caret in addition to the text.
+	 * Constructor
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 * @param UISkin	The skin that needs to be applied.
 	 */
+	public FlxInputText(float X, float Y, FlxUISkin skin)
+	{
+		this(X, Y, skin, null, 0, 0);
+	}
+	
+	/**
+	 * Constructor
+	 * @param X			The x-position of the component.
+	 * @param Y			The y-position of the component.
+	 */
+	public FlxInputText(float X, float Y)
+	{
+		this(X, Y, null, null, 0, 0);
+	}
+
 	@Override
 	public void draw()
 	{
@@ -121,16 +184,16 @@ public class FlxInputText extends FlxUITouchable
 		textField.draw();
 	}
 
-	/**
-	 * Check for mouse input every tick.
-	 */
 	@Override
 	public void update()
-	{		
+	{
 		checkFocus();
 		super.update();
 	}
 	
+	/**
+	 * Check whether a click has been occurred outside the textfield. Hides the keyboard on mobile.
+	 */
 	protected void checkFocus()
 	{
 		// Focus lost.
@@ -143,6 +206,10 @@ public class FlxInputText extends FlxUITouchable
 		}
 	}
 	
+	/**
+	 * This will automatically called when textfield got clicked. Allows to type in the textfield.
+	 * Shows the keyboard on mobile.
+	 */
 	@Override
 	public void onChange()
 	{
@@ -152,7 +219,7 @@ public class FlxInputText extends FlxUITouchable
 	}
 
 	/**
-	 * Handles keypresses generated on the stage.
+	 * Handles key presses generated on the stage.
 	 * 
 	 * @param e		The triggering keyboard event.
 	 */
@@ -173,11 +240,11 @@ public class FlxInputText extends FlxUITouchable
 				// Backspace
 				if(key == Keys.BACKSPACE)
 				{
-					if(buffer.length() > 0)
+					if(textBuffer.length() > 0)
 					{
-						buffer.delete(buffer.length()-1, buffer.length());
+						textBuffer.delete(textBuffer.length()-1, textBuffer.length());
 						if(_passwordMode)
-							_textPassword.delete(_textPassword.length()-1, _textPassword.length());
+							_passwordBuffer.delete(_passwordBuffer.length()-1, _passwordBuffer.length());
 						_isChanged = true;
 					}
 				}				
@@ -188,28 +255,28 @@ public class FlxInputText extends FlxUITouchable
 						callback.onEnter(textField.getText());
 					if(1 < textField.getMaxLines() && _currentLineCounter < textField.getMaxLines())
 					{
-						buffer.append("\n");
+						textBuffer.append("\n");
 						_isChanged = true;
 					}
 				}
 				// Add some text
 				else
 				{
-					if(buffer.length() < _maxLength || _maxLength == 0)
+					if(textBuffer.length() < _maxLength || _maxLength == 0)
 					{
-						buffer.append(filter(String.valueOf(((KeyboardEvent)e).charCode)));
+						textBuffer.append(filter(String.valueOf(((KeyboardEvent)e).charCode)));
 						if(_passwordMode)
-							_textPassword.append("*");
+							_passwordBuffer.append("*");
 						_isChanged = true;
 					}
 				}
 				if(_isChanged)
 				{
 					// Precalculate whether it fits the boundings or not.
-					textField.setText(buffer);
+					textField.setText(textBuffer);
 					if(textField.getMaxLines() < textField.getTotalLines())
-						buffer.deleteCharAt(buffer.length()-1);
-					textField.setText(_passwordMode ? _textPassword : buffer);
+						textBuffer.deleteCharAt(textBuffer.length()-1);
+					textField.setText(_passwordMode ? _passwordBuffer : textBuffer);
 					_currentLineCounter = textField.getTotalLines() == -1 ? 1 : textField.getTotalLines();
 				}
 				_isChanged = false;
@@ -225,7 +292,8 @@ public class FlxInputText extends FlxUITouchable
 		textField.destroy();
 		textField = null;
 		callback = null;
-		buffer = null;
+		textBuffer = null;
+		_passwordBuffer = null;
 	}
 
 	/**
@@ -249,11 +317,19 @@ public class FlxInputText extends FlxUITouchable
 		return text;
 	}
 	
+	/**
+	 * Get the textfield.
+	 * @return	The textfield.
+	 */
 	public FlxText getTextField()
 	{
 		return textField;
 	}
 	
+	/**
+	 * Get the current case that got forced.
+	 * @return
+	 */
 	public int getForceCase()
 	{ 
 		return _forceCase;
@@ -269,11 +345,19 @@ public class FlxInputText extends FlxUITouchable
 		textField.setText(filter(textField.getText()));
 	}
 	
+	/**
+	 * Set the font size.
+	 * @param Size
+	 */
 	public void setSize(float Size)
 	{
 		textField.setSize(Size);
 	}
-		
+	
+	/**
+	 * The maximum chars the textfield is allowed.
+	 * @param Length
+	 */
 	public void setMaxLength(int Length)
 	{
 		_maxLength = Length;
@@ -290,11 +374,19 @@ public class FlxInputText extends FlxUITouchable
 		return _maxLength;
 	}
 	
+	/**
+	 * Set the maximum lines the textfield is allowed.
+	 * @param Lines
+	 */
 	public void setMaxLines(int Lines)
 	{
 		textField.setMaxLines(Lines);
 	}
 	
+	/**
+	 * Make the textfield go in to password mode and show * for every char.
+	 * @param enable
+	 */
 	public void setPasswordMode(boolean enable)
 	{
 		_passwordMode = enable;
@@ -309,6 +401,11 @@ public class FlxInputText extends FlxUITouchable
 		return _passwordMode;
 	}
 	
+	/**
+	 * Set the filter mode that the text needs to be filtered.
+	 * NO_FILTER, ONLY_ALPHA, ONLY_NUMERIC, ONLY_ALPHA_NUMERIC, ONLY_ALPHA_NUMERIC_SPACE or CUSTOM_FILTER
+	 * @param filterMode
+	 */
 	public void setFilterMode(String filterMode)
 	{
 		_filterMode = filterMode;
@@ -316,7 +413,7 @@ public class FlxInputText extends FlxUITouchable
 	}
 	
 	/**
-	 * Defines what text to filter. It can be NO_FILTER, ONLY_ALPHA, ONLY_NUMERIC, ONLY_ALPHA_NUMERIC or CUSTOM_FILTER
+	 * Defines what text to filter. It can be NO_FILTER, ONLY_ALPHA, ONLY_NUMERIC, ONLY_ALPHA_NUMERIC, ONLY_ALPHA_NUMERIC_SPACE or CUSTOM_FILTER
 	 * (Remember to append "FlxInputText." as a prefix to those constants)
 	 * @param	newFilter		The filtering mode
 	 */
@@ -325,19 +422,26 @@ public class FlxInputText extends FlxUITouchable
 		return _filterMode;
 	}
 	
+	/**
+	 * Set text in the textfield.
+	 * @param Text
+	 */
 	public void setText(CharSequence Text)
 	{
 		textField.setText(Text);
 	}
 	
-	public void getText()
+	/**
+	 * Get the text from the textfield.
+	 */
+	public CharSequence getText()
 	{
-		textField.getText();
+		return textField.getText();
 	}
 }
 
 /**
- * 
+ * Just a custmized FlxText. It calculates the boundings and how many lines there are.
  * 
  * @author Ka Wing Chin
  */
@@ -347,12 +451,24 @@ class FlxTextCustom extends FlxText
 	 * The amount of lines allowed in the textfield.
 	 */
 	private int _maxLines = 1;
+	/**
+	 * The line height of the first line.
+	 */
 	private float _firstLineHeight;
 	/**
 	 * The bounding height for each line.
 	 */
 	private float _lineHeight;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param	X				The X position of the text.
+	 * @param	Y				The Y position of the text.
+	 * @param	Width			The width of the text object (height is determined automatically).
+	 * @param	Text			The actual text you would like to display initially.
+	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not.
+	 */
 	public FlxTextCustom(float X, float Y, int Width, String Text, boolean EmbeddedFont)
 	{
 		super(X, Y, Width, Text, EmbeddedFont);		
@@ -363,7 +479,7 @@ class FlxTextCustom extends FlxText
 	{
 		super.setFormat(Font, Size, Color, Alignment, ShadowColor, ShadowX, ShadowY);
 		// Save text.
-		String text = getText();
+		CharSequence text = getText();
 		
 		// Calculate lineheight.
 		_textField.setWrappedText("ABC", 2, 3, FlxG.width, _alignment);
@@ -378,6 +494,10 @@ class FlxTextCustom extends FlxText
 		return this;
 	}
 	
+	/**
+	 * Set the maximum lines.
+	 * @param Lines
+	 */
 	public void setMaxLines(int Lines)
 	{
 		if(_maxLines == 0)
@@ -385,16 +505,28 @@ class FlxTextCustom extends FlxText
 		_maxLines = Lines;
 	}
 	
+	/**
+	 * Get the maximum lines.
+	 * @return
+	 */
 	public int getMaxLines()
 	{
 		return _maxLines;
 	}
 	
+	/**
+	 * Get the current bounding height of the textfield.
+	 * @return
+	 */
 	public float getHeight()
 	{
 		return _textField.getBounds().height;
 	}
 	
+	/**
+	 * Get the total lines of the textfield.
+	 * @return
+	 */
 	public int getTotalLines()
 	{
 		return (int) ((getHeight() - _firstLineHeight) / _lineHeight) + 1;

@@ -5,6 +5,7 @@ import org.flixel.ui.event.IFlxRadioButtonGroup;
 import com.badlogic.gdx.utils.Array;
 
 /**
+ * A group that holds <code>FlxRadioButton</code>s.
  * 
  * @author Ka Wing Chin
  */
@@ -14,7 +15,13 @@ public class FlxRadioButtonGroup
 	 * Array of all the <code>FlxBasic</code>s that exist in this group.
 	 */
 	public Array<FlxRadioButton> members;
+	/**
+	 * The current radiobutton that is selected. 
+	 */
 	private FlxRadioButton _current;
+	/**
+	 * The callback will be fired when there is a change made.
+	 */
 	public IFlxRadioButtonGroup onChange;
 	/**
 	 * The number of entries in the members array.
@@ -22,13 +29,16 @@ public class FlxRadioButtonGroup
 	 * instead of members.length unless you really know what you're doing!
 	 */
 	public int length;
-
 	/**
 	 * Internal tracker for the maximum capacity of the group.
 	 * Default is 0, or no max capacity.
 	 */
 	protected int _maxSize;
 	
+	/**
+	 * Creates a new <code>FlxRadioButtonGroup</code> object.
+	 * @param MaxSize	The max size the group is allowed.
+	 */
 	public FlxRadioButtonGroup(int MaxSize)
 	{
 		members = new Array<FlxRadioButton>(MaxSize);
@@ -36,15 +46,18 @@ public class FlxRadioButtonGroup
 		_maxSize = MaxSize;
 	}
 	
+	/**
+	 * Creates a new <code>FlxRadioButtonGroup</code> object.
+	 */
 	public FlxRadioButtonGroup()
 	{
 		this(0);
 	}
 	
 	/**
-	 * Adds a new <code>FlxBasic</code> subclass (FlxBasic, FlxSprite, Enemy, etc) to the group.
-	 * FlxGroup will try to replace a null member of the array first.
-	 * Failing that, FlxGroup will add it to the end of the member array,
+	 * Adds a new <code>FlxRadioButton</code> to the group.
+	 * FlxRadioButtonGroup will try to replace a null member of the array first.
+	 * Failing that, FlxRadioButtonGroup will add it to the end of the member array,
 	 * assuming there is room for it, and doubling the size of the array if necessary.
 	 *
 	 * <p>WARNING: If the group has a maxSize that has already been met,
@@ -52,7 +65,7 @@ public class FlxRadioButtonGroup
 	 *
 	 * @param	Object		The object you want to add to the group.
 	 *
-	 * @return	The same <code>FlxBasic</code> object that was passed in.
+	 * @return	The same <code>FlxRadioButton</code> object that was passed in.
 	 */
 	public FlxRadioButton add(FlxRadioButton Object)
 	{
@@ -89,6 +102,10 @@ public class FlxRadioButtonGroup
 		return Object;
 	}	
 	
+	/**
+	 * Change all status of the radio button.
+	 * @param RadioButton
+	 */
 	protected void onChange(FlxRadioButton RadioButton)
 	{
 		// Break if it's already selected.
@@ -110,17 +127,28 @@ public class FlxRadioButtonGroup
 			onChange.callback();
 	}
 	
+	/**
+	 * Select a radio button at the given index. 
+	 * @param Index
+	 */
 	public void setCheck(int Index)
 	{		
 		if(Index < members.size)
 			onChange((FlxRadioButton) members.get(Index));
 	}
 	
+	/**
+	 * Select a radio button.
+	 * @param RadioButton
+	 */
 	public void setCheck(FlxRadioButton RadioButton)
 	{
 		onChange(RadioButton);
 	}
 
+	/**
+	 * Clean up memory.
+	 */
 	public void destroy()
 	{		
 		_current = null;
@@ -139,11 +167,19 @@ public class FlxRadioButtonGroup
 		}
 	}
 
+	/**
+	 * Get the ID of the selected radio button.
+	 * @return
+	 */
 	public String getSelected()
 	{
 		return _current.ID;
 	}
 	
+	/**
+	 * Get the text of label from the selected radio button.
+	 * @return
+	 */
 	public String getSelectedLabel()
 	{
 		return _current.label.getText();
