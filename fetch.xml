@@ -64,6 +64,16 @@
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
+		
+		<!-- gwt project -->
+		<mkdir dir="flixel-html5/war/WEB-INF/lib"/>
+		<unzip src="libgdx-nightly.zip" dest="flixel-html5/war/WEB-INF/lib">
+			<patternset>
+				<include name="gdx-backend-gwt.jar"/>
+				<include name="sources/gdx-backend-gwt-sources.jar"/>
+			</patternset>
+			<mapper type="flatten"/>
+		</unzip>
 	</target>
 	
 	<target name="all" depends="fetch,extract"/>

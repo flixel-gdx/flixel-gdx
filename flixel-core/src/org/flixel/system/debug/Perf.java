@@ -1,7 +1,5 @@
 package org.flixel.system.debug;
 
-import java.text.DecimalFormat;
-
 import org.flixel.FlxG;
 import org.flixel.system.FlxWindow;
 
@@ -167,8 +165,7 @@ public class Perf extends FlxWindow
 			flashPlayerFramerate /= _flashMarker;
 			output.append((int)(1/(flashPlayerFramerate/1000)) + "/" + FlxG.getFlashFramerate() + "fps\n");
 		
-			DecimalFormat twoDForm = new DecimalFormat("#.##");
-			output.append(twoDForm.format((Gdx.app.getNativeHeap() * 0.000000954f)) + "MB\n"); 
+			output.append((float)( ( (Gdx.app.getJavaHeap() + Gdx.app.getNativeHeap()) * 0.000000954f )/*.toFixed(2)*/ ) + "MB\n"); 
 			
 			int updateTime = 0;
 			i = 0;

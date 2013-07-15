@@ -1,6 +1,9 @@
 bin/
 gen/
 dist/
+gwt-unitCache/
+deploy/
+classes/
 
 *.jar
 *.so
