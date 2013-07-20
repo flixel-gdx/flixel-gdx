@@ -4,7 +4,7 @@ import org.flixel.FlxSprite;
 import org.flixel.ui.FlxUISkin.NinePatch;
 
 /**
- * This is abstract UI component. It supports single image and ninepatch.
+ * This is an abstract UI component. It supports single image and ninepatch.
  * Needs skin to get it working. 
  * 
  * @author Ka Wing Chin
@@ -163,7 +163,7 @@ public abstract class FlxUIComponent extends FlxSprite
 
 		if(skin.labelVerticalAlign.equals("top"))
 			_verticalCenter = y;
-		else if(skin.labelVerticalAlign.equals("center"))
+		else if(skin.labelVerticalAlign.equals("middle"))
 			_verticalCenter = y + (height / 2f) - (label.height / 2f);
 		else if(skin.labelVerticalAlign.equals("bottom"))
 			_verticalCenter = y + (height - label.height);
@@ -328,7 +328,6 @@ public abstract class FlxUIComponent extends FlxSprite
 			{
 				case FlxUISkin.LABEL_NONE:
 					label.x = x;
-					label.y = y;
 					label.y = _verticalCenter;
 					break;
 				case FlxUISkin.LABEL_TOP:

@@ -45,7 +45,7 @@ public class FlxLabel extends FlxUIComponent
 		skin.PRESSED = -1;
 		skin.DISABLED = -1;
 		skin.setFormat(null, 8, 0xFFFFFF, "center");
-		skin.labelVerticalAlign = "center";
+		skin.labelVerticalAlign = "middle";
 		skin.setNinePatch(NinePatch.TOP_LEFT, ImgLabelTopLeft, 4, 4);
 		skin.setNinePatch(NinePatch.TOP_CENTER, ImgLabelTopCenter, 1, 4);
 		skin.setNinePatch(NinePatch.TOP_RIGHT, ImgLabelTopRight, 4, 4);

@@ -121,7 +121,7 @@ public class FlxNinePatchButton extends FlxUITouchable
 		skin.HIGHLIGHT_DISABLED = 3;
 		skin.DISABLED = 4;
 		skin.setFormat(null, 16);
-		skin.labelVerticalAlign = "center";
+		skin.labelVerticalAlign = "middle";
 		skin.labelAlign = "center";
 		skin.setImage(ImgMiddleCenter, 1, 1);
 		skin.setNinePatch(NinePatch.TOP_LEFT, ImgTopLeft, 8, 8);

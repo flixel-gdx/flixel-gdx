@@ -114,7 +114,7 @@ public class FlxUISkin
 	 */
 	public String labelAlign = "left";
 	/**
-	 * Label vertical alignment. Default "top". Others are "center" and "bottom".
+	 * Label vertical alignment. Default "top". Others are "middle" and "bottom".
 	 * It only works when labelPosition is LABEL_NONE.
 	 */
 	public String labelVerticalAlign = "top";

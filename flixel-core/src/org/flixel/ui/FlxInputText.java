@@ -24,7 +24,7 @@ import flash.events.Listener;
  * @author Ka Wing Chin
  * @author Gama11
  * @author Mr_Walrus
- * @author Martin Sebastian Wain (nitram_cero (2BAM))
+ * @author nitram_cero (Martin Sebastián Wain)
  */
 public class FlxInputText extends FlxUITouchable
 {
@@ -330,7 +330,7 @@ public class FlxInputText extends FlxUITouchable
 				}
 				if(_isChanged)
 				{
-					// Precalculate whether it fits the boundings or not.
+					// Calculate whether it fits the bounding or not.
 					textfield.setText(textBuffer);
 					if(_maxLines < textfield.getTotalLines())
 						textBuffer.deleteCharAt(textBuffer.length()-1);
@@ -464,7 +464,6 @@ public class FlxInputText extends FlxUITouchable
 	/**
 	 * Defines what text to filter. It can be NO_FILTER, ONLY_ALPHA, ONLY_NUMERIC, ONLY_ALPHA_NUMERIC, ONLY_ALPHA_NUMERIC_SPACE or CUSTOM_FILTER
 	 * (Remember to append "FlxInputText." as a prefix to those constants)
-	 * @param	newFilter		The filtering mode
 	 */
 	public String getFilterMode()
 	{
@@ -487,6 +486,4 @@ public class FlxInputText extends FlxUITouchable
 	{
 		return textfield.getText();
 	}
-	
-	
 }

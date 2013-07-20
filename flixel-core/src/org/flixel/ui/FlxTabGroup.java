@@ -232,10 +232,10 @@ public class FlxTabGroup extends FlxUIGroup
 	
 	/**
 	 * Add content at given index.
-	 * @param Object	The object that needs to be added.
 	 * @param Index		The index where the object needs to be stored.
+	 * @param Object	The object that needs to be added.
 	 */
-	public void addContent(FlxObject Object, int Index)
+	public void addContent(int Index, FlxObject Object)
 	{
 		if(Index > _tabs.length - 1)
 			return;

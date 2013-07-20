@@ -31,8 +31,7 @@ public class FlxTab extends FlxUITouchable
 		skin.PRESSED = 2;
 		skin.ACTIVE_NORMAL = 1;
 		skin.setFormat(null, 8, 0xFFFFFF, "center");
-//		skin.labelPosition = FlxUISkin.LABEL_NONE;
-		skin.labelVerticalAlign = "center";
+		skin.labelVerticalAlign = "middle";
 		skin.setImage(ImgTab, 1, 48);	
 		skin.labelOffset.y = 0;
 	}
