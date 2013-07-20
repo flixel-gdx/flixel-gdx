@@ -163,6 +163,12 @@ public class FlxUITouchable extends FlxUIComponent
 			soundUp.destroy();
 		super.destroy();
 	}
+	
+	@Override
+	public void setDefaultSkin()
+	{
+		FlxG.log("You don't have a skin provided in your subclass");
+	}
 
 	/**
 	 * Initialize the mouse listener.

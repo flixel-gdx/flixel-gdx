@@ -1,7 +1,6 @@
 package org.flixel.ui;
 
 import org.flixel.FlxGroup;
-import org.flixel.FlxPoint;
 
 /**
  * Add <code>FlxUIComponent</code> in the group to align it horizontal or vertical.
@@ -42,11 +41,7 @@ public class FlxUIGroup extends FlxGroup
 	/**
 	 * The label for the group.
 	 */
-	public FlxLabel label;
-	/**
-	 * The label offeset.
-	 */
-	public FlxPoint labelOffset;
+	public FlxTextExt label;
 	
 	/**
 	 * Creates a new <code>FlxUIGroup</code> object.
@@ -61,8 +56,8 @@ public class FlxUIGroup extends FlxGroup
 		y = Y;
 		if(Label != null)
 		{
-			this.label = new FlxLabel(X, Y, Label, 0, 0);
-			y += this.label.getSize();
+			label = new FlxTextExt(X, Y, 0, 0, Label);
+			y += label.height;
 		}
 	}
 	
@@ -102,7 +97,6 @@ public class FlxUIGroup extends FlxGroup
 			label.destroy();
 			label = null;
 		}
-		labelOffset = null;
 	}
 	
 	@Override

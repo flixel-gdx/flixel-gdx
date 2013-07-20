@@ -8,6 +8,8 @@ package org.flixel.ui;
  */
 public class FlxSwitch extends FlxUITouchable
 {	
+	private final String ImgSwitch = "org/flixel/data/pack:switch";
+	
 	/**
 	 * Creates a new <code>FlxSwitch</code> object.
 	 * @param X
@@ -47,5 +49,19 @@ public class FlxSwitch extends FlxUITouchable
 	public FlxSwitch(float X, float Y, String ID)
 	{
 		this(X, Y, ID, null, null);
+	}
+	
+	@Override
+	public void setDefaultSkin()
+	{
+		skin = new FlxUISkin();
+		skin.NORMAL = 0;
+		skin.PRESSED = -1;
+		skin.HIGHLIGHT = -1;
+		skin.DISABLED = -1;
+		skin.ACTIVE_NORMAL = 1;
+		skin.labelPosition = FlxUISkin.LABEL_LEFT;
+		skin.setFormat(null, 16);
+		skin.setImage(ImgSwitch, 107, 34);
 	}
 }

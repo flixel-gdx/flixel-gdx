@@ -8,6 +8,8 @@ package org.flixel.ui;
  */
 public class FlxRadioButton extends FlxUITouchable
 {	
+	private final String ImgRadioButton = "org/flixel/data/pack:radiobutton";
+	
 	/**
 	 * The group where this radio button belongs to.
 	 */
@@ -64,6 +66,21 @@ public class FlxRadioButton extends FlxUITouchable
 		group.add(this);
 	}
 	
+	@Override
+	public void setDefaultSkin()
+	{
+		skin = new FlxUISkin();
+		skin.DISABLED = 3;
+		skin.HIGHLIGHT_DISABLED = 4;
+		skin.ACTIVE_NORMAL = 5;
+		skin.ACTIVE_HIGHTLIGHT = 6;
+		skin.ACTIVE_PRESSED = 7;
+		skin.ACTIVE_DISABLED = 8;
+		skin.ACTIVE_HIGHTLIGHT_DISABLED = 9;
+		skin.setImage(ImgRadioButton, 32, 32);
+		skin.labelPosition = FlxUISkin.LABEL_RIGHT;
+		skin.setFormat(null, 16);
+	}
 	
 	@Override
 	public void destroy()

@@ -7,26 +7,63 @@ import org.flixel.FlxSprite;
 import org.flixel.ui.event.IFlxTab;
 
 /**
- *
+ * A group that holds <FlxTab>s. It automatically resize the tabs to fit in the given width.
+ * The tabs can also be set vertically.
+ * 
  * @author Ka Wing Chin
  */
 public class FlxTabGroup extends FlxUIGroup
 {
+	private final String ImgDivider = "org/flixel/data/holo_dark/tab_divider.png";
+	
+	/**
+	 * The divider skin.
+	 */
 	private FlxUISkin _dividerSkin;
+	/**
+	 * A group that holds the tabs.
+	 */
 	private FlxGroup _tabs;
+	/**
+	 * A group that holds the dividers.
+	 */
 	private FlxGroup _dividers;
+	/**
+	 * A group that holds the contents.
+	 */
 	private FlxGroup _content;
+	/**
+	 * Tracks the current tab.
+	 */
 	private int _current = 0;
-	public IFlxTab onChange;
+	/**
+	 * The width of the tab group.
+	 */
 	public int width;
+	/**
+	 * The height of the tab group.
+	 */
+	public int height;
+	/**
+	 * Callback when the tab got changed.
+	 */
+	public IFlxTab onChange;
 
-	public FlxTabGroup(float X, float Y, int Width)
+	/**
+	 * Create a new <code>FlxTabGroup</code> object.
+	 * @param X			The x-position.
+	 * @param Y			The y-position.
+	 * @param Width		The width of the tab group when placed horizontally. Default the width of the screen in game pixels.
+	 * @param Height	The height of the tab group when placed vertically. Default the height of the screen in game pixels.
+	 */
+	public FlxTabGroup(float X, float Y, int Width, int Height)
 	{
 		super(X, Y, "");
 		x = X;
 		y = Y;
-		width = Width;
-		label.setSize(12);		
+		width = (Width == 0) ? FlxG.width : Width;
+		height = (Height == 0) ? FlxG.height : Height; 
+		label.setSize(12);
 		add(_content = new FlxGroup());
 		add(_tabs = new FlxGroup());
 		add(_dividers = new FlxGroup());
@@ -35,21 +72,61 @@ public class FlxTabGroup extends FlxUIGroup
 		setDefault(0);
 	}
 	
+	/**
+	 * Create a new <code>FlxTabGroup</code> object.
+	 * @param X			The x-position.
+	 * @param Y			The y-position.
+	 * @param Width		The width of the tab group when placed horizontally. Default the width of the screen in game pixels.
+	 */
+	public FlxTabGroup(float X, float Y, int Width)
+	{
+		this(X, Y, 0, 0);
+	}
+	
+	/**
+	 * Create a new <code>FlxTabGroup</code> object.
+	 * @param X			The x-position.
+	 * @param Y			The y-position.
+	 */
 	public FlxTabGroup(float X, float Y)
 	{
-		this(X, 0, FlxG.width);
+		this(X, Y, 0, 0);
 	}
 	
+	/**
+	 * Create a new <code>FlxTabGroup</code> object.
+	 * @param X			The x-position.
+	 */
 	public FlxTabGroup(float X)
 	{
-		this(X, 0, FlxG.width);
+		this(X, 0, 0);
 	}
 	
+	/**
+	 * Create a new <code>FlxTabGroup</code> object.
+	 */
 	public FlxTabGroup()
 	{
-		this(0, 0, FlxG.width);
+		this(0, 0, 0, 0);
 	}
 	
+	@Override
+	public void destroy()
+	{
+		super.destroy();
+		if(_dividerSkin != null)
+			_dividerSkin.destroy();
+		_dividerSkin = null;
+		_tabs = null;
+		_dividers = null;
+		_content = null;
+		onChange = null;
+	}
+	
+	/**
+	 * Add tab to the group.
+	 * @param tab
+	 */
 	public void addTab(FlxTab tab)
 	{
 		_tabs.add(tab);
@@ -69,6 +146,10 @@ public class FlxTabGroup extends FlxUIGroup
 			setDefault(_current);
 	}
 	
+	/**
+	 * Remove a tab by index.
+	 * @param Index
+	 */
 	public void removeTab(int Index)
 	{
 		if(Index > _tabs.length - 1)
@@ -81,6 +162,9 @@ public class FlxTabGroup extends FlxUIGroup
 		resetTabs();
 	}
 	
+	/**
+	 * Resets the layout of the tabs.
+	 */
 	private void resetTabs()
 	{
 		FlxSprite divider;
@@ -107,6 +191,12 @@ public class FlxTabGroup extends FlxUIGroup
 		}
 	}
 	
+	/**
+	 * Load a skin for the divider.
+	 * @param Skin		The skin for the divider.
+	 * @param Width		The width of the skin.
+	 * @param Height	The height of the skin.
+	 */
 	public void loadDividerSkin(String Skin, int Width, int Height)
 	{
 		if(_dividerSkin == null)
@@ -123,36 +213,41 @@ public class FlxTabGroup extends FlxUIGroup
 		}
 	}
 	
+	/**
+	 * Load a skin for the divider.
+	 * @param Skin		The skin for the divider.
+	 */
+	public void loadDividerSkin(FlxUISkin Skin)
+	{
+		loadDividerSkin(Skin.image, Skin.width, Skin.height);
+	}
+	
+	/**
+	 * Load the default skin for the divider.
+	 */
+	public void loadDividerSkin()
+	{		
+		loadDividerSkin(ImgDivider, 1, 48);
+	}
+	
+	/**
+	 * Add content at given index.
+	 * @param Object	The object that needs to be added.
+	 * @param Index		The index where the object needs to be stored.
+	 */
 	public void addContent(FlxObject Object, int Index)
 	{
 		if(Index > _tabs.length - 1)
 			return;
-		/*if(align == ALIGN_HORIZONTAL)
-			Object.y += y + ((FlxTab)_tabs.members.get(0)).height; 
-		else if(align == x + ALIGN_VERTICAL)
-			Object.x += ((FlxTab)_tabs.members.get(0)).width;*/
 		if(_current != Index)
 			Object.visible = false;
 		((FlxGroup)_content.members.get(Index)).add(Object);
 	}
-	
-	public void loadSkin(String Skin, int Width, int Height, FlxUISkin params)
-	{
-		FlxUIComponent tab;
-		for(int i = 0; i < _tabs.length; i++)
-		{
-			tab = (FlxUIComponent) _tabs.members.get(i);
-			tab.loadGraphic(Skin, false, false, Width, Height);
-			if(params != null)
-				tab.skin = params;
-		}
-	}
-
-	public void loadSkin(String Skin, int Width, int Height)
-	{
-		loadSkin(Skin, Width, Height, null);
-	}
-	
+			
+	/**
+	 * This method will be called when tab got changed.
+	 * @param tab	The tab that will be set active.
+	 */
 	protected void onChange(FlxTab tab)
 	{
 		// Break if it's already selected.
@@ -176,6 +271,10 @@ public class FlxTabGroup extends FlxUIGroup
 			onChange.callback();
 	}
 	
+	/**
+	 * Set the default tab at given index.
+	 * @param Index		The index of the tab that needs to be set default.
+	 */
 	public void setDefault(int Index)
 	{
 		if(Index > _tabs.length-1)

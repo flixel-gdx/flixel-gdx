@@ -180,7 +180,7 @@ public class FlxRadioButtonGroup
 	 * Get the text of label from the selected radio button.
 	 * @return
 	 */
-	public String getSelectedLabel()
+	public CharSequence getSelectedLabel()
 	{
 		return _current.label.getText();
 	}

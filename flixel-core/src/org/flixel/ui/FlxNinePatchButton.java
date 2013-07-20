@@ -1,20 +1,26 @@
 package org.flixel.ui;
 
+import org.flixel.ui.FlxUISkin.NinePatch;
 import org.flixel.ui.event.IFlxUIListener;
 
 /**
- * Scalabe button.
+ * Scalable button.
  * @author Ka Wing Chin
  */
 public class FlxNinePatchButton extends FlxUITouchable
 {
+	private static final String ImgTopLeft = "org/flixel/data/pack:ninepatch_button_topleft";
+	private static final String ImgTopCenter = "org/flixel/data/pack:ninepatch_button_topcenter";
+	private static final String ImgTopRight = "org/flixel/data/pack:ninepatch_button_topright";
+	private static final String ImgBottomLeft = "org/flixel/data/pack:ninepatch_button_bottomleft";
+	private static final String ImgBottomCenter = "org/flixel/data/pack:ninepatch_button_bottomcenter";
+	private static final String ImgBottomRight= "org/flixel/data/pack:ninepatch_button_bottomright";
+	private static final String ImgMiddleLeft = "org/flixel/data/pack:ninepatch_button_middleleft";
+	private static final String ImgMiddleCenter = "org/flixel/data/pack:ninepatch_button_middlecenter";
+	private static final String ImgMiddleRight = "org/flixel/data/pack:ninepatch_button_middleright";
+		
 	/**
-	 * Y-position to vertical align the label in the middle.
-	 */
-	private float _verticalCenter;
-	
-	/**
-	 * Constructor
+	 * Create a <code>FlxNinePatchButton</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -23,18 +29,17 @@ public class FlxNinePatchButton extends FlxUITouchable
 	 * @param Height	The height of the component. Default auto.
 	 * @param onClick	The function to call whenever the button is clicked.
 	 */
-	public FlxNinePatchButton(float X, float Y, FlxUISkin skin, String Label, int Width, int Height, IFlxUIListener onClick)
+	public FlxNinePatchButton(float X, float Y, FlxUISkin Skin, String Label, int Width, int Height, IFlxUIListener onClick)
 	{
-		super(X, Y, skin, Label, Width, Height);
+		super(X, Y, Skin, Label, Width, Height);
 		onUp = onClick;
-		this.skin.labelPosition = FlxUISkin.LABEL_NONE;
+		
 		if(Width > 0)
 			label.width = Width;
-		label.setAlignment("center");
 	}
 	
 	/**
-	 * Constructor
+	 * Create a <code>FlxNinePatchButton</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -48,7 +53,7 @@ public class FlxNinePatchButton extends FlxUITouchable
 	}
 	
 	/**
-	 * Constructor
+	 * Create a <code>FlxNinePatchButton</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -61,7 +66,7 @@ public class FlxNinePatchButton extends FlxUITouchable
 	}
 	
 	/**
-	 * Constructor
+	 * Create a <code>FlxNinePatchButton</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -73,7 +78,7 @@ public class FlxNinePatchButton extends FlxUITouchable
 	}
 	
 	/**
-	 * Constructor
+	 * Create a <code>FlxNinePatchButton</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -84,13 +89,51 @@ public class FlxNinePatchButton extends FlxUITouchable
 	}
 	
 	/**
-	 * Constructor
+	 * Create a <code>FlxNinePatchButton</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 */
 	public FlxNinePatchButton(float X, float Y)
 	{
 		this(X, Y, null, null, 0, 0, null);
+	}
+	/**
+	 * Create a <code>FlxNinePatchButton</code> object.
+	 * @param X			The x-position of the component.
+	 */
+	public FlxNinePatchButton(float X)
+	{
+		this(X, 0, null, null, 0, 0, null);
+	}
+	
+	/**
+	 * Create a <code>FlxNinePatchButton</code> object.
+	 */
+	public FlxNinePatchButton()
+	{
+		this(0, 0, null, null, 0, 0, null);
+	}
+	
+	@Override
+	public void setDefaultSkin()
+	{
+		skin = new FlxUISkin();
+		skin.HIGHLIGHT_DISABLED = 3;
+		skin.DISABLED = 4;
+		skin.setFormat(null, 16);
+		skin.labelVerticalAlign = "center";
+		skin.labelAlign = "center";
+		skin.setImage(ImgMiddleCenter, 1, 1);
+		skin.setNinePatch(NinePatch.TOP_LEFT, ImgTopLeft, 8, 8);
+		skin.setNinePatch(NinePatch.TOP_CENTER, ImgTopCenter, 1, 8);
+		skin.setNinePatch(NinePatch.TOP_RIGHT, ImgTopRight, 8, 8);
+		skin.setNinePatch(NinePatch.MIDDLE_LEFT, ImgMiddleLeft, 8, 1);
+		skin.setNinePatch(NinePatch.MIDDLE_CENTER, ImgMiddleCenter, 1, 1);
+		skin.setNinePatch(NinePatch.MIDDLE_RIGHT, ImgMiddleRight, 8, 1);
+		skin.setNinePatch(NinePatch.BOTTOM_LEFT, ImgBottomLeft, 8, 8);
+		skin.setNinePatch(NinePatch.BOTTOM_CENTER, ImgBottomCenter, 1, 8);
+		skin.setNinePatch(NinePatch.BOTTOM_RIGHT, ImgBottomRight, 8, 8);
+		skin.labelOffset.y = 0;
 	}
 	
 	@Override
@@ -102,18 +145,7 @@ public class FlxNinePatchButton extends FlxUITouchable
 		if(label == null)
 			return;
 		
-		if(_height > 0)
-			label.y = _verticalCenter;
-		
 		if(status == skin.HIGHLIGHT_DISABLED || status == skin.DISABLED)
 			label.setAlpha(0.5f);
-	}
-	
-	@Override
-	public void stretch()
-	{
-		super.stretch();
-		if(_height > 0)
-			_verticalCenter = y + (height / 2f) - (label.height / 2f);
 	}
 }

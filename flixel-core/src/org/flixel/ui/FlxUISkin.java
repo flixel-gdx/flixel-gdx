@@ -106,13 +106,19 @@ public class FlxUISkin
 	 */
 	public int labelColor = 0xFFFFFF;
 	/**
-	 * Label size. Default 14.
+	 * Label size. Default 16.
 	 */
-	public float labelSize = 14;
+	public float labelSize = 16;
 	/**
-	 * Label alignment. Default "left".
+	 * Label horizontal alignment. Default "left". Others are "center" and "right.
 	 */
 	public String labelAlign = "left";
+	/**
+	 * Label vertical alignment. Default "top". Others are "center" and "bottom".
+	 * It only works when labelPosition is LABEL_NONE.
+	 */
+	public String labelVerticalAlign = "top";
+	
 	/**
 	 * Label shadow color. Default 0 (no shadow).
 	 */

@@ -118,7 +118,7 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 	{
 		if(text.length() > getMaxLength() && getMaxLength() != 0)
 			text = text.substring(0, getMaxLength());
-		textField.setText(filter(text));
+		textfield.setText(filter(text));
 		if(callback != null)
 			callback.onInput();
 		setActive(false);
@@ -141,7 +141,7 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 		if(overlapsPoint(_point.make(FlxG.mouse.x, FlxG.mouse.y)))
 		{
 			setActive(true);
-			Gdx.input.getTextInput(this, _title, textField.getText());
+			Gdx.input.getTextInput(this, _title, textfield.getText());
 		}
 	}	
 

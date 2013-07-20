@@ -1,7 +1,7 @@
 package org.flixel.ui;
 
 import org.flixel.FlxG;
-import org.flixel.FlxText;
+import org.flixel.ui.FlxUISkin.NinePatch;
 import org.flixel.ui.event.IFlxInputText;
 
 import com.badlogic.gdx.Gdx;
@@ -17,18 +17,27 @@ import flash.events.Listener;
  * @link http://creativecommons.org/licenses/by/3.0/us/ 
  * 
  * Input textfield extension for Flixel.
- * Heavely modified to get it work on flixel-gdx.
+ * Heavily modified to get it working on flixel-gdx.
  * Supports multiline and filters.
+ * @link http://forums.flixel.org/index.php/topic,272.0.html
  * 
  * @author Ka Wing Chin
  * @author Gama11
  * @author Mr_Walrus
- * @author Martin Sebastian Wain
- * 
- * @link http://forums.flixel.org/index.php/topic,272.0.html
+ * @author Martin Sebastian Wain (nitram_cero (2BAM))
  */
 public class FlxInputText extends FlxUITouchable
 {
+	private final String ImgTextAreaTopLeft = "org/flixel/data/pack:ninepatch_textarea_topleft";
+	private final String ImgTextAreaTopCenter = "org/flixel/data/pack:ninepatch_textarea_topcenter";
+	private final String ImgTextAreaTopRight = "org/flixel/data/pack:ninepatch_textarea_topright";
+	private final String ImgTextAreaMiddleLeft = "org/flixel/data/pack:ninepatch_textarea_middleleft";
+	private final String ImgTextAreaMiddleCenter = "org/flixel/data/pack:ninepatch_textarea_middlecenter";
+	private final String ImgTextAreaMiddleRight = "org/flixel/data/pack:ninepatch_textarea_middleright";
+	private final String ImgTextAreaBottomLeft = "org/flixel/data/pack:ninepatch_textarea_bottomleft";
+	private final String ImgTextAreaBottomCenter = "org/flixel/data/pack:ninepatch_textarea_bottomcenter";
+	private final String ImgTextAreaBottomRight = "org/flixel/data/pack:ninepatch_textarea_bottomright";
+		
 	/**
 	 * No filter
 	 */
@@ -82,7 +91,7 @@ public class FlxInputText extends FlxUITouchable
 	/**
 	 * The textfield that will be displayed.
 	 */
-	protected FlxTextCustom textField;
+	public FlxTextExt textfield;
 	/**
 	 * A function called when the enter key is pressed on this text box.
 	 */
@@ -91,6 +100,10 @@ public class FlxInputText extends FlxUITouchable
 	 * The max amount of characters the textfield can contain.
 	 */
 	private int _maxLength = 0;
+	/**
+	 * Internal, how many lines are allowed.
+	 */
+	private int _maxLines = 1;
 	/**
 	 * Whether the textfield is in password mode or not.
 	 */
@@ -113,7 +126,7 @@ public class FlxInputText extends FlxUITouchable
 	private boolean _isChanged;
 	
 	/**
-	 * Constructor
+	 * Create a new <code>FlxInputText</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -124,15 +137,16 @@ public class FlxInputText extends FlxUITouchable
 	public FlxInputText(float X, float Y, FlxUISkin skin, String Label, int Width, int Height)
 	{
 		super(X, Y, skin, Label, Width, Height);
-		textField = new FlxTextCustom(X, Y-6, Width, null, true);
-		textField.setFormat(null, 16);
+		textfield = new FlxTextExt(X, Y-6, Width, Height, null, true);		
+		textfield.offset.y = (skin == null) ? -12 : 0;
+		textfield.setFormat(null, 16);
 		textBuffer = new StringBuffer();
 		_passwordBuffer = new StringBuffer();
 		FlxG.getStage().addEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
 	}
-
+	
 	/**
-	 * Constructor
+	 * Create a new <code>FlxInputText</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -145,7 +159,7 @@ public class FlxInputText extends FlxUITouchable
 	}
 	
 	/**
-	 * Constructor
+	 * Create a new <code>FlxInputText</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -157,7 +171,7 @@ public class FlxInputText extends FlxUITouchable
 	}
 
 	/**
-	 * Constructor
+	 * Create a new <code>FlxInputText</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -168,7 +182,7 @@ public class FlxInputText extends FlxUITouchable
 	}
 	
 	/**
-	 * Constructor
+	 * Create a new <code>FlxInputText</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 */
@@ -176,12 +190,56 @@ public class FlxInputText extends FlxUITouchable
 	{
 		this(X, Y, null, null, 0, 0);
 	}
+	
+	/**
+	 * Create a new <code>FlxInputText</code> object.
+	 * @param X			The x-position of the component.
+	 */
+	public FlxInputText(float X)
+	{
+		this(X, 0, null, null, 0, 0);
+	}
+	
+	/**
+	 * Create a new <code>FlxInputText</code> object.
+	 */
+	public FlxInputText()
+	{
+		this(0, 0, null, null, 0, 0);
+	}
+	
+
+	@Override
+	public void setDefaultSkin()
+	{
+		skin = new FlxUISkin();
+		skin.DISABLED = 1;
+		skin.HIGHLIGHT = 2;
+		skin.PRESSED = 2;
+		skin.ACTIVE_NORMAL = 2;
+		skin.ACTIVE_HIGHTLIGHT = 2;
+		skin.ACTIVE_PRESSED = 2;
+		skin.labelPosition = FlxUISkin.LABEL_TOP;
+		skin.labelOffset.y = -3;
+		skin.labelWidth = 200;
+		skin.setFormat(null, 8, 0x0099CC);
+		
+		skin.setNinePatch(NinePatch.TOP_LEFT, ImgTextAreaTopLeft, 4, 2);
+		skin.setNinePatch(NinePatch.TOP_CENTER, ImgTextAreaTopCenter, 1, 2);
+		skin.setNinePatch(NinePatch.TOP_RIGHT, ImgTextAreaTopRight, 4, 2);
+		skin.setNinePatch(NinePatch.MIDDLE_LEFT, ImgTextAreaMiddleLeft, 4, 1);
+		skin.setNinePatch(NinePatch.MIDDLE_CENTER, ImgTextAreaMiddleCenter, 1, 1);
+		skin.setNinePatch(NinePatch.MIDDLE_RIGHT, ImgTextAreaMiddleRight, 4, 1);
+		skin.setNinePatch(NinePatch.BOTTOM_LEFT, ImgTextAreaBottomLeft, 4, 2);
+		skin.setNinePatch(NinePatch.BOTTOM_CENTER, ImgTextAreaBottomCenter, 1, 2);
+		skin.setNinePatch(NinePatch.BOTTOM_RIGHT, ImgTextAreaBottomRight, 4, 2);
+	}
 
 	@Override
 	public void draw()
 	{
 		super.draw();
-		textField.draw();
+		textfield.draw();
 	}
 
 	@Override
@@ -190,7 +248,7 @@ public class FlxInputText extends FlxUITouchable
 		checkFocus();
 		super.update();
 	}
-	
+		
 	/**
 	 * Check whether a click has been occurred outside the textfield. Hides the keyboard on mobile.
 	 */
@@ -252,8 +310,8 @@ public class FlxInputText extends FlxUITouchable
 				else if(key == Keys.ENTER)
 				{
 					if(callback != null)
-						callback.onEnter(textField.getText());
-					if(1 < textField.getMaxLines() && _currentLineCounter < textField.getMaxLines())
+						callback.onEnter(textfield.getText());
+					if(1 < _maxLines && _currentLineCounter < _maxLines)
 					{
 						textBuffer.append("\n");
 						_isChanged = true;
@@ -273,11 +331,11 @@ public class FlxInputText extends FlxUITouchable
 				if(_isChanged)
 				{
 					// Precalculate whether it fits the boundings or not.
-					textField.setText(textBuffer);
-					if(textField.getMaxLines() < textField.getTotalLines())
+					textfield.setText(textBuffer);
+					if(_maxLines < textfield.getTotalLines())
 						textBuffer.deleteCharAt(textBuffer.length()-1);
-					textField.setText(_passwordMode ? _passwordBuffer : textBuffer);
-					_currentLineCounter = textField.getTotalLines() == -1 ? 1 : textField.getTotalLines();
+					textfield.setText(_passwordMode ? _passwordBuffer : textBuffer);
+					_currentLineCounter = textfield.getTotalLines() == -1 ? 1 : textfield.getTotalLines();
 				}
 				_isChanged = false;
 			}
@@ -289,8 +347,8 @@ public class FlxInputText extends FlxUITouchable
 	{
 		super.destroy();
 		FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
-		textField.destroy();
-		textField = null;
+		textfield.destroy();
+		textfield = null;
 		callback = null;
 		textBuffer = null;
 		_passwordBuffer = null;
@@ -318,12 +376,12 @@ public class FlxInputText extends FlxUITouchable
 	}
 	
 	/**
-	 * Get the textfield.
-	 * @return	The textfield.
+	 * Set the maximum lines the textfield is allowed.
+	 * @param Lines
 	 */
-	public FlxText getTextField()
+	public void setMaxLines(int Lines)
 	{
-		return textField;
+		_maxLines = Lines;
 	}
 	
 	/**
@@ -342,7 +400,7 @@ public class FlxInputText extends FlxUITouchable
 	public void setForceCase(int Case)
 	{ 
 		_forceCase = Case;
-		textField.setText(filter(textField.getText()));
+		textfield.setText(filter(textfield.getText()));
 	}
 	
 	/**
@@ -351,7 +409,7 @@ public class FlxInputText extends FlxUITouchable
 	 */
 	public void setSize(float Size)
 	{
-		textField.setSize(Size);
+		textfield.setSize(Size);
 	}
 	
 	/**
@@ -361,8 +419,8 @@ public class FlxInputText extends FlxUITouchable
 	public void setMaxLength(int Length)
 	{
 		_maxLength = Length;
-		if (textField.getText().length() > _maxLength) 
-			textField.setText(textField.getText().substring(0, _maxLength));
+		if (textfield.getText().length() > _maxLength) 
+			textfield.setText(textfield.getText().substring(0, _maxLength));
 	}
 	
 	/**
@@ -372,15 +430,6 @@ public class FlxInputText extends FlxUITouchable
 	public int getMaxLength()
 	{
 		return _maxLength;
-	}
-	
-	/**
-	 * Set the maximum lines the textfield is allowed.
-	 * @param Lines
-	 */
-	public void setMaxLines(int Lines)
-	{
-		textField.setMaxLines(Lines);
 	}
 	
 	/**
@@ -409,7 +458,7 @@ public class FlxInputText extends FlxUITouchable
 	public void setFilterMode(String filterMode)
 	{
 		_filterMode = filterMode;
-		textField.setText(filter(textField.getText()));
+		textfield.setText(filter(textfield.getText()));
 	}
 	
 	/**
@@ -428,7 +477,7 @@ public class FlxInputText extends FlxUITouchable
 	 */
 	public void setText(CharSequence Text)
 	{
-		textField.setText(Text);
+		textfield.setText(Text);
 	}
 	
 	/**
@@ -436,99 +485,8 @@ public class FlxInputText extends FlxUITouchable
 	 */
 	public CharSequence getText()
 	{
-		return textField.getText();
-	}
-}
-
-/**
- * Just a custmized FlxText. It calculates the boundings and how many lines there are.
- * 
- * @author Ka Wing Chin
- */
-class FlxTextCustom extends FlxText
-{
-	/**
-	 * The amount of lines allowed in the textfield.
-	 */
-	private int _maxLines = 1;
-	/**
-	 * The line height of the first line.
-	 */
-	private float _firstLineHeight;
-	/**
-	 * The bounding height for each line.
-	 */
-	private float _lineHeight;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param	X				The X position of the text.
-	 * @param	Y				The Y position of the text.
-	 * @param	Width			The width of the text object (height is determined automatically).
-	 * @param	Text			The actual text you would like to display initially.
-	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not.
-	 */
-	public FlxTextCustom(float X, float Y, int Width, String Text, boolean EmbeddedFont)
-	{
-		super(X, Y, Width, Text, EmbeddedFont);		
+		return textfield.getText();
 	}
 	
-	@Override
-	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor, float ShadowX, float ShadowY)
-	{
-		super.setFormat(Font, Size, Color, Alignment, ShadowColor, ShadowX, ShadowY);
-		// Save text.
-		CharSequence text = getText();
-		
-		// Calculate lineheight.
-		_textField.setWrappedText("ABC", 2, 3, FlxG.width, _alignment);
-		_firstLineHeight = _textField.getBounds().height;
-		_textField.setWrappedText("ABC\nABC", 2, 3, FlxG.width, _alignment);
-		float doubleLine = _textField.getBounds().height;
-		_lineHeight = doubleLine - _firstLineHeight;
-		
-		// Set text back.
-		_text = text;
-		calcFrame();
-		return this;
-	}
 	
-	/**
-	 * Set the maximum lines.
-	 * @param Lines
-	 */
-	public void setMaxLines(int Lines)
-	{
-		if(_maxLines == 0)
-			return;
-		_maxLines = Lines;
-	}
-	
-	/**
-	 * Get the maximum lines.
-	 * @return
-	 */
-	public int getMaxLines()
-	{
-		return _maxLines;
-	}
-	
-	/**
-	 * Get the current bounding height of the textfield.
-	 * @return
-	 */
-	public float getHeight()
-	{
-		return _textField.getBounds().height;
-	}
-	
-	/**
-	 * Get the total lines of the textfield.
-	 * @return
-	 */
-	public int getTotalLines()
-	{
-		return (int) ((getHeight() - _firstLineHeight) / _lineHeight) + 1;
-	}
 }

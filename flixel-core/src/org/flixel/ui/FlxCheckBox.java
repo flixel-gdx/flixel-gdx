@@ -8,6 +8,8 @@ package org.flixel.ui;
  */
 public class FlxCheckBox extends FlxUITouchable
 {	
+	private final String ImgCheckBox = "org/flixel/data/pack:checkbox";
+	
 	/**
 	 * Creates a new <code>FlxCheckbox</code> object.
 	 * @param X			The x-position of the component.
@@ -44,6 +46,21 @@ public class FlxCheckBox extends FlxUITouchable
 	public FlxCheckBox(float X, float Y, String ID)
 	{
 		this(X, Y, ID, null, null);
+	}
+	
+	@Override
+	public void setDefaultSkin()
+	{
+		skin = new FlxUISkin();
+		skin.DISABLED = 3;
+		skin.HIGHLIGHT_DISABLED = 4;
+		skin.ACTIVE_NORMAL = 5;
+		skin.ACTIVE_HIGHTLIGHT = 6;
+		skin.ACTIVE_PRESSED = 7;
+		skin.ACTIVE_DISABLED = 8;
+		skin.ACTIVE_HIGHTLIGHT_DISABLED = 9;
+		skin.labelPosition = FlxUISkin.LABEL_RIGHT;
+		skin.setImage(ImgCheckBox, 32, 32);
 	}
 }
 

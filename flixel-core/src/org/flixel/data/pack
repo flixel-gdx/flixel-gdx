@@ -1,124 +1,382 @@
-
 pack.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-base
-  rotate: false
-  xy: 0, 43
-  size: 84, 84
-  orig: 84, 84
-  offset: 0, 0
-  index: -1
-button_a
-  rotate: false
-  xy: 0, 6
-  size: 111, 37
-  orig: 111, 37
-  offset: 0, 0
-  index: -1
-logo
-  rotate: false
-  xy: 0, 0
-  size: 6, 6
-  orig: 6, 6
-  offset: 0, 0
-  index: -1
-button
-  rotate: false
-  xy: 84, 67
-  size: 80, 60
-  orig: 80, 60
-  offset: 0, 0
-  index: -1
-autotiles
-  rotate: false
-  xy: 84, 59
-  size: 128, 8
-  orig: 128, 8
-  offset: 0, 0
-  index: -1
-autotiles_alt
-  rotate: false
-  xy: 84, 51
-  size: 128, 8
-  orig: 128, 8
-  offset: 0, 0
-  index: -1
-button_b
-  rotate: false
-  xy: 111, 14
-  size: 111, 37
-  orig: 111, 37
-  offset: 0, 0
-  index: -1
-button_c
-  rotate: false
-  xy: 164, 90
-  size: 111, 37
-  orig: 111, 37
-  offset: 0, 0
-  index: -1
 button_x
   rotate: false
-  xy: 212, 53
+  xy: 2, 110
   size: 111, 37
   orig: 111, 37
+  offset: 0, 0
+  index: -1
+label_topleft
+  rotate: false
+  xy: 502, 120
+  size: 4, 4
+  orig: 4, 4
+  offset: 0, 0
+  index: -1
+radiobutton
+  rotate: false
+  xy: 332, 2
+  size: 160, 64
+  orig: 160, 64
   offset: 0, 0
   index: -1
 default
   rotate: false
-  xy: 164, 74
+  xy: 494, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-button_y
+button_a
   rotate: false
-  xy: 275, 90
+  xy: 115, 149
   size: 111, 37
   orig: 111, 37
   offset: 0, 0
   index: -1
+ninepatch_textfield_middleleft
+  rotate: false
+  xy: 494, 54
+  size: 12, 32
+  orig: 12, 32
+  offset: 0, 0
+  index: -1
+label_middleright
+  rotate: false
+  xy: 316, 106
+  size: 4, 1
+  orig: 4, 1
+  offset: 0, 0
+  index: -1
+ninepatch_button_topright
+  rotate: false
+  xy: 444, 134
+  size: 40, 8
+  orig: 40, 8
+  offset: 0, 0
+  index: -1
+ninepatch_textfield_middlecenter
+  rotate: false
+  xy: 316, 109
+  size: 3, 32
+  orig: 3, 32
+  offset: 0, 0
+  index: -1
+autotiles
+  rotate: false
+  xy: 132, 100
+  size: 128, 8
+  orig: 128, 8
+  offset: 0, 0
+  index: -1
+ninepatch_textfield_middleright
+  rotate: false
+  xy: 494, 20
+  size: 12, 32
+  orig: 12, 32
+  offset: 0, 0
+  index: -1
 button_down
   rotate: false
-  xy: 222, 14
+  xy: 228, 154
   size: 87, 39
   orig: 87, 39
   offset: 0, 0
   index: -1
-button_up
+ninepatch_button_middleleft
   rotate: false
-  xy: 309, 17
-  size: 87, 36
-  orig: 87, 36
+  xy: 126, 219
+  size: 40, 1
+  orig: 40, 1
+  offset: 0, 0
+  index: -1
+ninepatch_textarea_topleft
+  rotate: false
+  xy: 494, 96
+  size: 12, 2
+  orig: 12, 2
+  offset: 0, 0
+  index: -1
+tab_divider
+  rotate: false
+  xy: 328, 100
+  size: 1, 48
+  orig: 1, 48
+  offset: 0, 0
+  index: -1
+switch
+  rotate: false
+  xy: 317, 173
+  size: 107, 68
+  orig: 107, 68
+  offset: 0, 0
+  index: -1
+ninepatch_textarea_middleright
+  rotate: false
+  xy: 494, 108
+  size: 12, 1
+  orig: 12, 1
+  offset: 0, 0
+  index: -1
+button
+  rotate: false
+  xy: 2, 219
+  size: 80, 60
+  orig: 80, 60
+  offset: 0, 0
+  index: -1
+base
+  rotate: false
+  xy: 426, 174
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+label_topcenter
+  rotate: false
+  xy: 321, 117
+  size: 1, 4
+  orig: 1, 4
+  offset: 0, 0
+  index: -1
+label_middlecenter
+  rotate: false
+  xy: 324, 123
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+button_c
+  rotate: false
+  xy: 115, 110
+  size: 111, 37
+  orig: 111, 37
+  offset: 0, 0
+  index: -1
+ninepatch_button_bottomleft
+  rotate: false
+  xy: 444, 164
+  size: 40, 8
+  orig: 40, 8
+  offset: 0, 0
+  index: -1
+ninepatch_button_topleft
+  rotate: false
+  xy: 444, 144
+  size: 40, 8
+  orig: 40, 8
+  offset: 0, 0
+  index: -1
+ninepatch_textarea_bottomright
+  rotate: false
+  xy: 494, 100
+  size: 12, 2
+  orig: 12, 2
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 494, 114
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+label_middleleft
+  rotate: false
+  xy: 322, 106
+  size: 4, 1
+  orig: 4, 1
+  offset: 0, 0
+  index: -1
+tab
+  rotate: false
+  xy: 508, 20
+  size: 1, 144
+  orig: 1, 144
+  offset: 0, 0
+  index: -1
+button_y
+  rotate: false
+  xy: 331, 134
+  size: 111, 37
+  orig: 111, 37
+  offset: 0, 0
+  index: -1
+label_topright
+  rotate: false
+  xy: 502, 114
+  size: 4, 4
+  orig: 4, 4
+  offset: 0, 0
+  index: -1
+ninepatch_textarea_middleleft
+  rotate: false
+  xy: 494, 111
+  size: 12, 1
+  orig: 12, 1
+  offset: 0, 0
+  index: -1
+textfield
+  rotate: false
+  xy: 2, 2
+  size: 328, 96
+  orig: 328, 96
+  offset: 0, 0
+  index: -1
+ninepatch_textfield_topright
+  rotate: false
+  xy: 494, 88
+  size: 12, 2
+  orig: 12, 2
+  offset: 0, 0
+  index: -1
+ninepatch_button_middleright
+  rotate: false
+  xy: 84, 219
+  size: 40, 1
+  orig: 40, 1
+  offset: 0, 0
+  index: -1
+ninepatch_textarea_topcenter
+  rotate: false
+  xy: 321, 109
+  size: 3, 2
+  orig: 3, 2
+  offset: 0, 0
+  index: -1
+label_bottomcenter
+  rotate: false
+  xy: 324, 117
+  size: 1, 4
+  orig: 1, 4
+  offset: 0, 0
+  index: -1
+ninepatch_button_topcenter
+  rotate: false
+  xy: 494, 122
+  size: 5, 8
+  orig: 5, 8
+  offset: 0, 0
+  index: -1
+ninepatch_textarea_topright
+  rotate: false
+  xy: 494, 92
+  size: 12, 2
+  orig: 12, 2
+  offset: 0, 0
+  index: -1
+dpad_center
+  rotate: false
+  xy: 228, 110
+  size: 29, 27
+  orig: 29, 27
+  offset: 0, 0
+  index: -1
+ninepatch_button_bottomcenter
+  rotate: false
+  xy: 501, 126
+  size: 5, 8
+  orig: 5, 8
   offset: 0, 0
   index: -1
 button_left
   rotate: false
-  xy: 323, 61
+  xy: 109, 188
   size: 105, 29
   orig: 105, 29
   offset: 0, 0
   index: -1
 button_right
   rotate: false
-  xy: 386, 98
+  xy: 2, 188
   size: 105, 29
   orig: 105, 29
   offset: 0, 0
   index: -1
+ninepatch_button_bottomright
+  rotate: false
+  xy: 444, 154
+  size: 40, 8
+  orig: 40, 8
+  offset: 0, 0
+  index: -1
+ninepatch_textarea_middlecenter
+  rotate: false
+  xy: 321, 123
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 stick
   rotate: false
-  xy: 396, 9
+  xy: 262, 100
   size: 52, 52
   orig: 52, 52
   offset: 0, 0
   index: -1
-dpad_center
+label_bottomleft
   rotate: false
-  xy: 428, 71
-  size: 29, 27
-  orig: 29, 27
+  xy: 322, 100
+  size: 4, 4
+  orig: 4, 4
+  offset: 0, 0
+  index: -1
+label_bottomright
+  rotate: false
+  xy: 316, 100
+  size: 4, 4
+  orig: 4, 4
+  offset: 0, 0
+  index: -1
+button_b
+  rotate: false
+  xy: 2, 149
+  size: 111, 37
+  orig: 111, 37
+  offset: 0, 0
+  index: -1
+button_up
+  rotate: false
+  xy: 216, 195
+  size: 87, 36
+  orig: 87, 36
+  offset: 0, 0
+  index: -1
+ninepatch_button_middlecenter
+  rotate: false
+  xy: 494, 132
+  size: 5, 1
+  orig: 5, 1
+  offset: 0, 0
+  index: -1
+checkbox
+  rotate: false
+  xy: 332, 68
+  size: 160, 64
+  orig: 160, 64
+  offset: 0, 0
+  index: -1
+ninepatch_textarea_bottomleft
+  rotate: false
+  xy: 494, 104
+  size: 12, 2
+  orig: 12, 2
+  offset: 0, 0
+  index: -1
+ninepatch_textarea_bottomcenter
+  rotate: false
+  xy: 321, 113
+  size: 3, 2
+  orig: 3, 2
+  offset: 0, 0
+  index: -1
+autotiles_alt
+  rotate: false
+  xy: 2, 100
+  size: 128, 8
+  orig: 128, 8
   offset: 0, 0
   index: -1

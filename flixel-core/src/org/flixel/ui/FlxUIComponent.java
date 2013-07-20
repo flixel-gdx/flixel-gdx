@@ -4,12 +4,12 @@ import org.flixel.FlxSprite;
 import org.flixel.ui.FlxUISkin.NinePatch;
 
 /**
- * This is a generic UI component. It supports single image and ninepatch.
+ * This is abstract UI component. It supports single image and ninepatch.
  * Needs skin to get it working. 
  * 
  * @author Ka Wing Chin
  */
-public class FlxUIComponent extends FlxSprite
+public abstract class FlxUIComponent extends FlxSprite
 {	
 	/**
 	 * The ID of the component. It may be required on some UI components like <code>FlxRadioButton</code>
@@ -24,7 +24,7 @@ public class FlxUIComponent extends FlxSprite
 	 */
 	protected boolean focused;
 	/**
-	 * Tracks whether the component is activiated. 
+	 * Tracks whether the component is activated. 
 	 */
 	protected boolean activated;	
 	/**
@@ -34,7 +34,7 @@ public class FlxUIComponent extends FlxSprite
 	/**
 	 * The <code>FlxLabel</code> for the component.
 	 */
-	public FlxLabel label;
+	public FlxTextExt label;
 	/**
 	 * The <code>FlxSkin</code> of the component
 	 */
@@ -43,7 +43,10 @@ public class FlxUIComponent extends FlxSprite
 	 * The status of the <code>FlxSkin</code>
 	 */
 	public int skinStatus;
-	
+	/**
+	 * Y-position to vertical align the label in the middle.
+	 */
+	private float _verticalCenter;
 	/**
 	 * Whether the component uses <code>NinePatch</code> or not.
 	 */
@@ -94,9 +97,13 @@ public class FlxUIComponent extends FlxSprite
 	 * Internal the height that is given in the constructor.
 	 */
 	protected float _height;
+	/**
+	 * Whether or not the component has initialized itself yet.
+	 */
+	private boolean _initialized;
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxUIComponent</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -108,17 +115,19 @@ public class FlxUIComponent extends FlxSprite
 	{
 		super(X, Y);
 		skin = UISkin;
+		if(skin == null)
+			setDefaultSkin();
 		
 		if(Label != null)
 		{
-			label = new FlxLabel(0, 0, Label, skin.labelWidth, skin.labelHeight);
-			label.setFormat(skin.labelFont,
-							skin.labelSize,
-							skin.labelColor,
-							skin.labelAlign,
-							skin.labelShadowColor,
-							skin.labelShadowPosition.x,
-							skin.labelShadowPosition.y);
+			label = new FlxTextExt(0, 0, skin.labelWidth, skin.labelHeight, Label, true);
+			label.setFormat(	skin.labelFont,
+								skin.labelSize,
+								skin.labelColor,
+								skin.labelAlign,
+								skin.labelShadowColor,
+								skin.labelShadowPosition.x,
+								skin.labelShadowPosition.y);
 			label.calcFrame();
 		}
 		// Single image
@@ -151,6 +160,13 @@ public class FlxUIComponent extends FlxSprite
 				_bottomRight = skin.patches.get(NinePatch.BOTTOM_RIGHT).loadGraphic();			
 			stretch();
 		}
+
+		if(skin.labelVerticalAlign.equals("top"))
+			_verticalCenter = y;
+		else if(skin.labelVerticalAlign.equals("center"))
+			_verticalCenter = y + (height / 2f) - (label.height / 2f);
+		else if(skin.labelVerticalAlign.equals("bottom"))
+			_verticalCenter = y + (height - label.height);
 		
 		scrollFactor.x = scrollFactor.y = 0;
 		moves = false;
@@ -161,7 +177,7 @@ public class FlxUIComponent extends FlxSprite
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxUIComponent</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -174,7 +190,7 @@ public class FlxUIComponent extends FlxSprite
 	}
 	
 	/**
-	 * Construtor
+	 * Creates a new <code>FlxUIComponent</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -186,7 +202,7 @@ public class FlxUIComponent extends FlxSprite
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxUIComponent</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -232,6 +248,22 @@ public class FlxUIComponent extends FlxSprite
 			if(_bottomRight != null)
 				_bottomRight.destroy();
 			_bottomRight = null;
+		}
+	}
+	
+	/**
+	 * Load the default skin.
+	 */
+	public abstract void setDefaultSkin();
+	
+	@Override
+	public void preUpdate()
+	{
+		super.preUpdate();
+		if(!_initialized)
+		{
+			_initialized = true;
+			label.calcFrame();
 		}
 	}
 	
@@ -297,6 +329,7 @@ public class FlxUIComponent extends FlxSprite
 				case FlxUISkin.LABEL_NONE:
 					label.x = x;
 					label.y = y;
+					label.y = _verticalCenter;
 					break;
 				case FlxUISkin.LABEL_TOP:
 					label.x = x;
@@ -314,18 +347,19 @@ public class FlxUIComponent extends FlxSprite
 					label.y += _bottomCenter != null ? _bottomCenter.height : 0; 
 					break;
 				case FlxUISkin.LABEL_LEFT:
-					label.x = x - width;
+					label.x = x - label.width;
 					label.x -= _middleLeft != null ? _middleLeft.width : 0;
 					label.y = y;
 					break;
 				default:
 					break;
 			}
-		}
-		if(skin.labelOffset != null)
-		{
-			label.x += skin.labelOffset.x;
-			label.y += skin.labelOffset.y;
+			
+			if(skin.labelOffset != null)
+			{
+				label.x += skin.labelOffset.x;
+				label.y += skin.labelOffset.y;
+			}
 		}
 	}
 	
