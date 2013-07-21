@@ -328,7 +328,7 @@ public abstract class FlxUIComponent extends FlxSprite
 			{
 				case FlxUISkin.LABEL_NONE:
 					label.x = x;
-					label.y = _verticalCenter;
+					label.y = _isNinePatch ? _verticalCenter : y + _verticalCenter;
 					break;
 				case FlxUISkin.LABEL_TOP:
 					label.x = x;

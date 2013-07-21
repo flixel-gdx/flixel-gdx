@@ -14,7 +14,8 @@ import org.flixel.ui.event.IFlxTab;
  */
 public class FlxTabGroup extends FlxUIGroup
 {
-	private final String ImgDivider = "org/flixel/data/holo_dark/tab_divider.png";
+	private final String ImgDivider = "org/flixel/data/pack:tab_divider";
+	private final String ImgDividerVertical = "org/flixel/data/holo_dark/tab_divider_vertical.png";
 	
 	/**
 	 * The divider skin.
@@ -45,6 +46,10 @@ public class FlxTabGroup extends FlxUIGroup
 	 */
 	public int height;
 	/**
+	 * The tab width when placed vertically.
+	 */
+	public int tabWidth;
+	/**
 	 * Callback when the tab got changed.
 	 */
 	public IFlxTab onChange;
@@ -55,14 +60,16 @@ public class FlxTabGroup extends FlxUIGroup
 	 * @param Y			The y-position.
 	 * @param Width		The width of the tab group when placed horizontally. Default the width of the screen in game pixels.
 	 * @param Height	The height of the tab group when placed vertically. Default the height of the screen in game pixels.
+	 * @param TabWidth	The width of the tab when placed vertically.
 	 */
-	public FlxTabGroup(float X, float Y, int Width, int Height)
+	public FlxTabGroup(float X, float Y, int Width, int Height, int TabWidth)
 	{
 		super(X, Y, "");
 		x = X;
 		y = Y;
 		width = (Width == 0) ? FlxG.width : Width;
-		height = (Height == 0) ? FlxG.height : Height; 
+		height = (Height == 0) ? FlxG.height : Height;
+		tabWidth = (TabWidth == 0) ? 48 : TabWidth;
 		label.setSize(12);
 		add(_content = new FlxGroup());
 		add(_tabs = new FlxGroup());
@@ -77,10 +84,22 @@ public class FlxTabGroup extends FlxUIGroup
 	 * @param X			The x-position.
 	 * @param Y			The y-position.
 	 * @param Width		The width of the tab group when placed horizontally. Default the width of the screen in game pixels.
+	 * @param Height	The height of the tab group when placed vertically. Default the height of the screen in game pixels.
+	 */
+	public FlxTabGroup(float X, float Y, int Width, int Height)
+	{
+		this(X, Y, Width, Height, 0);
+	}
+	
+	/**
+	 * Create a new <code>FlxTabGroup</code> object.
+	 * @param X			The x-position.
+	 * @param Y			The y-position.
+	 * @param Width		The width of the tab group when placed horizontally. Default the width of the screen in game pixels.
 	 */
 	public FlxTabGroup(float X, float Y, int Width)
 	{
-		this(X, Y, 0, 0);
+		this(X, Y, 0, 0, 0);
 	}
 	
 	/**
@@ -90,7 +109,7 @@ public class FlxTabGroup extends FlxUIGroup
 	 */
 	public FlxTabGroup(float X, float Y)
 	{
-		this(X, Y, 0, 0);
+		this(X, Y, 0, 0, 0);
 	}
 	
 	/**
@@ -99,7 +118,7 @@ public class FlxTabGroup extends FlxUIGroup
 	 */
 	public FlxTabGroup(float X)
 	{
-		this(X, 0, 0);
+		this(X, 0, 0, 0, 0);
 	}
 	
 	/**
@@ -107,7 +126,7 @@ public class FlxTabGroup extends FlxUIGroup
 	 */
 	public FlxTabGroup()
 	{
-		this(0, 0, 0, 0);
+		this(0, 0, 0, 0, 0);
 	}
 	
 	@Override
@@ -170,23 +189,35 @@ public class FlxTabGroup extends FlxUIGroup
 		FlxSprite divider;
 		FlxUIComponent tab;
 		int length = _tabs.length;
-		int tabWidth = this.width / length;
+		int tWidth = (align == ALIGN_HORIZONTAL) ? this.width / length : tabWidth;
 		for(int i = 0; i < length; i++)
 		{
 			tab = (FlxUIComponent) _tabs.members.get(i);
-			tab.width = tabWidth;
-			tab.scale.x = tabWidth;
+			tab.width = tWidth;
+			tab.scale.x = tWidth;
+			tab.x = x;
+			tab.y = y;
 			if(align == ALIGN_HORIZONTAL)
-				tab.x = i * tabWidth;
+				tab.x += i * tWidth;
 			else if(align == ALIGN_VERTICAL)
-				tab.y = i * tab.height;
-			tab.label.width = tabWidth;
+				tab.y += i * tab.height;
+			tab.label.width = tWidth;
 			tab.label.setAlignment(tab.skin.labelAlign);
 			
 			if(_dividerSkin != null && i < _tabs.length-1)
 			{
-				divider = (FlxSprite) _dividers.members.get(i);
-				divider.x = tab.x + tab.width;		
+				if(align == ALIGN_HORIZONTAL)
+				{
+					divider = (FlxSprite) _dividers.members.get(i);
+					divider.x = tab.x + tab.width;	
+					divider.y = tab.y;
+				}
+				else
+				{
+					divider = (FlxSprite) _dividers.members.get(i);
+					divider.x = tab.x;
+					divider.y = tab.y + tab.height;
+				}
 			}
 		}
 	}
@@ -227,7 +258,10 @@ public class FlxTabGroup extends FlxUIGroup
 	 */
 	public void loadDividerSkin()
 	{		
-		loadDividerSkin(ImgDivider, 1, 48);
+		if(align == ALIGN_HORIZONTAL)
+			loadDividerSkin(ImgDivider, 1, 48);
+		else
+			loadDividerSkin(ImgDividerVertical, 48, 1);
 	}
 	
 	/**
