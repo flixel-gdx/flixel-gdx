@@ -2,6 +2,8 @@ package org.flixel.system;
 
 import org.flixel.FlxObject;
 
+import com.badlogic.gdx.utils.Pool;
+
 /**
  * A miniature linked list class.
  * Useful for optimizing time-critical or highly repetitive tasks!
@@ -23,7 +25,7 @@ public class FlxList
 	/**
 	 * Internal, a pool of <code>FlxQuadTree</code>s to prevent constant <code>new</code> calls.
 	 */
-	static private FlxObjectPool<FlxList> _pool = new FlxObjectPool<FlxList>(){@Override protected FlxList create(){return new FlxList();}};
+	static private Pool<FlxList> _pool = new Pool<FlxList>(){@Override protected FlxList newObject(){return new FlxList();}};
 	
 	/**
 	 * Gets a new <code>FlxList</code> from the pool.
@@ -32,7 +34,7 @@ public class FlxList
 	 */
 	static public FlxList getNew()
 	{
-		return _pool.getNew();
+		return _pool.obtain();
 	}
 	
 	/**
@@ -54,6 +56,6 @@ public class FlxList
 			next.destroy();
 		next = null;
 		
-		_pool.dispose(this);
+		_pool.free(this);
 	}
 }

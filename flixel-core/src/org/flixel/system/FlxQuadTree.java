@@ -8,6 +8,7 @@ import org.flixel.event.IFlxCollision;
 import org.flixel.event.IFlxObject;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.
@@ -192,7 +193,7 @@ public class FlxQuadTree extends FlxRect
 	/**
 	 * Internal, a pool of <code>FlxQuadTree</code>s to prevent constant <code>new</code> calls.
 	 */
-	static private FlxObjectPool<FlxQuadTree> _pool = new FlxObjectPool<FlxQuadTree>(){@Override protected FlxQuadTree create(){return new FlxQuadTree();}};
+	static private Pool<FlxQuadTree> _pool = new Pool<FlxQuadTree>(){@Override protected FlxQuadTree newObject(){return new FlxQuadTree();}};
 	
 	/**
 	 * Get a new Quad Tree node from the pool.
@@ -207,13 +208,14 @@ public class FlxQuadTree extends FlxRect
 	 */
 	static public FlxQuadTree getNew(float X, float Y, float Width, float Height, FlxQuadTree Parent)
 	{
-		FlxQuadTree quadTree = _pool.getNew();
+		FlxQuadTree quadTree = _pool.obtain();
 		quadTree.init(X, Y, Width, Height, Parent);
 		return quadTree;
 	}
 	
 	private FlxQuadTree()
 	{
+		
 	}
 	
 	/**
@@ -330,7 +332,7 @@ public class FlxQuadTree extends FlxRect
 		_processingCallback = null;
 		_notifyCallback = null;
 		
-		_pool.dispose(this);
+		_pool.free(this);
 	}
 
 	/**
