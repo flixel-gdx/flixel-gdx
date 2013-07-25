@@ -270,7 +270,7 @@ public class FlxG
 	/**
 	 * Internal storage system to prevent assets from being used repeatedly in memory.
 	 */
-	static protected FlxAssetManager _cache;
+	static public FlxAssetManager _cache;
 	
 	/**
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
@@ -961,7 +961,9 @@ public class FlxG
 	 }
 	 
 	/**
-	 * @private
+	 * Set <code>volume</code> to a number between 0 and 1 to change the global volume.
+	 * 
+	 * @default 0.5
 	 */
 	static public void setVolume(float Volume)
 	{
@@ -983,7 +985,7 @@ public class FlxG
 	{
 		if((music != null) && (ForceDestroy || !music.survive))
 		{
-			music.destroy(true);
+			music.destroy();
 			music = null;
 		}
 		int i = 0;
@@ -993,7 +995,7 @@ public class FlxG
 		{
 			sound = (FlxSound) sounds.members.get(i++);
 			if((sound != null) && (ForceDestroy || !sound.survive))
-				sound.destroy(true);
+				sound.destroy();
 		}
 	}
 
@@ -2034,7 +2036,7 @@ public class FlxG
 		
 		FlxG.mute = false;
 		FlxG._volume = 0.5f;
-		FlxG.sounds = new FlxGroup();
+		FlxG.sounds = new FlxGroup(32);
 		FlxG.music = null;
 		FlxG.volumeHandler = null;
 		

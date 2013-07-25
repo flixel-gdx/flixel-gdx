@@ -17,20 +17,20 @@ public class MouseEvent extends Event
 	static public final String MOUSE_DOWN = "mouseDown";
 	
 	/**
-	 * The horizontal coordinate at which the event occurred in global Stage coordinates.
+	 * The horizontal coordinate at which the event occurred in global <code>Stage</code> coordinates.
 	 */
 	public int stageX;
 	/**
-	 * The vertical coordinate at which the event occurred in global Stage coordinates.
+	 * The vertical coordinate at which the event occurred in global <code>Stage</code> coordinates.
 	 */
 	public int stageY;
 	
 	/**
-	 * Creates an Event object that contains information about mouse events.
+	 * Creates an <code>Event</code> object that contains information about mouse events.
 	 * 
 	 * @param type		The type of event.
-	 * @param stageX	The horizontal coordinate at which the event occurred in global Stage coordinates.
-	 * @param stageY	The vertical coordinate at which the event occurred in global Stage coordinates.
+	 * @param stageX	The horizontal coordinate at which the event occurred in global <code>Stage</code> coordinates.
+	 * @param stageY	The vertical coordinate at which the event occurred in global <code>Stage</code> coordinates.
 	 */
 	public MouseEvent(String type, int stageX, int stageY)
 	{

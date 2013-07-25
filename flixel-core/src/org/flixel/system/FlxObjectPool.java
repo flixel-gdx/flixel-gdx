@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 /**
  * A very basic object pool. Used by <code>FlxQuadTree</code> and
  * <code>FlxList</code> to avoid costly instantiations every frame.
+ * TODO: libgdx has its own pool class, consider using that instead?
  * 
  * @author Thomas Weston
  *

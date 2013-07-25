@@ -1,9 +1,15 @@
 package org.flixel;
 
-import com.badlogic.gdx.Application.ApplicationType;
+import org.flixel.system.gdx.GdxMusic;
+import org.flixel.system.gdx.GdxSound;
+
+import flash.events.Event;
+import flash.events.IEventListener;
+import flash.media.Sound;
+import flash.media.SoundChannel;
+import flash.media.SoundTransform;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 	
 /**
@@ -66,22 +72,21 @@ public class FlxSound extends FlxBasic
 	public boolean autoDestroy;
 
 	/**
-	 * Internal tracker for a Gdx sound object.
+	 * Internal tracker for a Flash sound object.
 	 */
 	protected Sound _sound;
 	/**
-	 * Internal tracker for a Gdx music object.
+	 * Internal tracker for a Flash sound channel object.
 	 */
-	protected Music _music;
-	
+	protected SoundChannel _channel;
 	/**
-	 * Internal tracker for the id of the currently playing sound.
+	 * Internal tracker for a Flash sound transform object.
 	 */
-	protected long _soundId;
+	protected SoundTransform _transform;
 	/**
 	 * Internal tracker for the position in runtime of the music playback.
 	 */
-	protected float _position;
+	protected int _position;
 	/**
 	 * Internal tracker for how loud the sound is.
 	 */
@@ -107,10 +112,6 @@ public class FlxSound extends FlxBasic
 	 */
 	protected boolean _pan;
 	/**
-	 * Internal tracker for the left to right panning of the sound.
-	 */
-	protected float _panAmount;
-	/**
 	 * Internal timer used to keep track of requests to fade out the sound playback.
 	 */
 	protected float _fadeOutTimer;
@@ -130,15 +131,6 @@ public class FlxSound extends FlxBasic
 	 * Internal helper for fading in sounds.
 	 */
 	protected float _fadeInTotal;
-	/**
-	 * Internal helper for detecting when the sound has stopped.
-	 */
-	protected boolean _wasPlaying;
-
-	/**
-	 * Internal, store the sound file's location so we can dispose it later.
-	 */
-	protected String _filePath;
 		
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -157,11 +149,11 @@ public class FlxSound extends FlxBasic
 		destroy();
 		x = 0;
 		y = 0;
-		_panAmount = 0;
+		if(_transform == null)
+			_transform = new SoundTransform();
+		_transform.pan = 0f;
 		_sound = null;
-		_music = null;
-		_soundId = -1;
-		_position = -1;
+		_position = 0;
 		_volume = 1.0f;
 		_volumeAdjust = 1.0f;
 		_looped = false;
@@ -183,37 +175,23 @@ public class FlxSound extends FlxBasic
 		amplitudeRight = 0;
 		autoDestroy = false;
 		survive = false;
-		_wasPlaying = false;
 	}
 		
-	/**
-	 * Clean up memory.
-	 * 
-	 * @param	Dispose		Whether or not to dispose the sound file.
-	 */
-	public void destroy(boolean Dispose)
-	{
-		kill();
-		
-		if (Dispose && FlxG.checkCache(_filePath))
-			FlxG.disposeSound(_filePath);
-		
-		_sound = null;
-		_music = null;
-		_soundId = -1;
-		_target = null;
-		name = null;
-		artist = null;
-		
-		super.destroy();
-	}
-	
 	/**
 	 * Clean up memory.
 	 */
 	public void destroy()
 	{
-		destroy(false);
+		kill();
+		
+		_transform = null;
+		_sound = null;
+		_channel = null;
+		_target = null;
+		name = null;
+		artist = null;
+		
+		super.destroy();
 	}
 		
 	/**
@@ -237,7 +215,7 @@ public class FlxSound extends FlxBasic
 				float d = (x - _target.x)/_radius;
 				if(d < -1) d = -1;
 				else if(d > 1) d = 1;
-				_panAmount = d;
+				_transform.pan = d;
 			}
 		}
 		
@@ -273,21 +251,13 @@ public class FlxSound extends FlxBasic
 		//	amplitudeRight = _channel.rightPeak/_transform.volume;
 		//	amplitude = (amplitudeLeft+amplitudeRight)*0.5;
 		//}
-		
-		//Sound doesn't have an isPlaying property. Instead, we'll just destroy the sound automatically
-		//after playing for 20 seconds.
-		if (_position != -1)
-			_position += FlxG.elapsed;
-		
-		if ((_sound != null && _position > 20) || (_music != null && (_wasPlaying && !_music.isPlaying())))
-			stopped();
 	}
 		
 	@Override 
 	public void kill()
 	{
 		super.kill();
-		if ((_sound != null && _soundId != -1) || (_music != null && _music.isPlaying()))
+		if (_channel != null)
 			stop();
 	}
 	
@@ -308,26 +278,23 @@ public class FlxSound extends FlxBasic
 		
 		switch (Type)
 		{
+			case SFX:
+				_sound = new GdxSound(EmbeddedSound);
+				break;
+			
+			case MUSIC:
+				_sound = new GdxMusic(EmbeddedSound);
+				break;
+				
 			case AUTO:
+			default:
 				//If the type is not specified, make a guess based on the file size.
 				FileHandle file = Gdx.files.internal(EmbeddedSound);
 				Type = file.length() < 24576 ? SFX : MUSIC;
 				return loadEmbedded(EmbeddedSound, Looped, AutoDestroy, Type);
-				
-			case SFX:
-				_sound = FlxG._cache.load(EmbeddedSound, Sound.class);
-				break;
-			
-			case MUSIC:
-				_music = FlxG._cache.load(EmbeddedSound, Music.class);
-				break;
-				
-			default:
-				break;
 		}
 		
 		//NOTE: can't pull ID3 info from embedded sound currently
-		_filePath = EmbeddedSound;
 		_looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
@@ -469,6 +436,8 @@ public class FlxSound extends FlxBasic
 	 */
 	public void play(boolean ForceRestart)
 	{	
+		if(_position < 0)
+			return;
 		if(ForceRestart)
 		{
 			boolean oldAutoDestroy = autoDestroy;
@@ -478,46 +447,38 @@ public class FlxSound extends FlxBasic
 		}
 		if(_looped)
 		{
-			if(_sound != null && _soundId == -1)
+			if(_position == 0)
 			{
-				_soundId = attemptPlaySound(_sound, true);
-				
-				if(_soundId == -1)
+				if(_channel == null)
+					_channel = _sound.play(0f,9999,_transform);
+				if(_channel == null)
 					exists = false;
+				else
+					_channel.addEventListener(Event.SOUND_COMPLETE, stoppedListener);
 			}
-			else if(_music != null && !_music.isPlaying())
-			{
-				_music.setLooping(true);
-				_music.play();
-				
-				if(!_music.isPlaying())
-					exists = false;
-			}
+			else
+				_channel.resume();
 		}
 		else
 		{
-			if(_sound != null && _soundId == -1)
+			if(_position == 0)
 			{
-				_soundId = attemptPlaySound(_sound, false);
-				
-				if(_soundId == -1)
-					exists = false;
-					//TODO: Detect when Sound is finished.
+				if(_channel == null)
+				{
+					_channel = _sound.play(0f,0,_transform);
+					if(_channel == null)
+						exists = false;
+					else
+						//TODO: Event is only dispatched from Music.
+						_channel.addEventListener(Event.SOUND_COMPLETE, stoppedListener);
+				}
 			}
-			else if(_music != null && !_music.isPlaying())
-			{
-				_music.setLooping(false);
-				_music.play();
-				
-				if(!_music.isPlaying())
-					exists = false;
-			}
+			else
+				_channel.resume();
 		}
 		
-		active = ((_music != null && _music.isPlaying()) || _soundId != -1);
+		active = (_channel != null);
 		_position = 0;
-		
-		_wasPlaying = true;
 	}
 	
 	/**
@@ -534,44 +495,12 @@ public class FlxSound extends FlxBasic
 	 */
 	public void resume()
 	{
-		if(_soundId == -1 || (_music != null && !_music.isPlaying()))
+		if(_position <= 0)
 			return;
+		
+		_channel.resume();
 			
-		if(_looped)
-		{
-			if(_sound != null)
-			{
-				_soundId = attemptPlaySound(_sound, true);
-				
-				if(_soundId == -1)
-					exists = false;
-			}
-			else if(_music != null)
-			{
-				_music.play();
-				if(!_music.isPlaying())
-					exists = false;
-			}
-		}
-		else
-		{
-			if(_sound != null)
-			{
-				_soundId = attemptPlaySound(_sound, false);
-				
-				if(_soundId == -1)
-					exists = false;
-			}
-			else if(_music != null)
-			{
-				_music.play();
-				if(!_music.isPlaying())
-					exists = false;
-			}
-		}
-			
-		active = ((_music != null && _music.isPlaying()) || _soundId != -1);
-		_position = 0;
+		active = (_channel != null);
 	}
 		
 	/**
@@ -579,16 +508,13 @@ public class FlxSound extends FlxBasic
 	 */
 	public void pause()
 	{
-		if(_sound != null && _soundId != -1)
+		if(_channel == null)
 		{
-			_sound.stop(_soundId); // TODO: pause of sound. Now it stops it.
 			_position = -1;
+			return;
 		}
-		else if(_music != null)
-		{
-			_music.pause();	
-		}
-		
+		_position = 1;
+		_channel.pause();
 		active = false;
 	}
 		
@@ -597,14 +523,10 @@ public class FlxSound extends FlxBasic
 	 */
 	public void stop()
 	{
-		if (_sound != null && _soundId != -1)
+		_position = 0;
+		if (_channel != null)
 		{
-			_sound.stop(_soundId);
-			stopped();
-		}
-		else if (_music != null && _music.isPlaying())
-		{
-			_music.stop();
+			_channel.stop();
 			stopped();
 		}
 	}
@@ -656,7 +578,7 @@ public class FlxSound extends FlxBasic
 	}
 		
 	/**
-	 * @private
+	 * Set <code>volume</code> to a value between 0 and 1 to change how this sound is.
 	 */
 	public void setVolume(float Volume)
 	{
@@ -683,13 +605,9 @@ public class FlxSound extends FlxBasic
 	 */
 	protected void updateTransform()
 	{
-		float volume = (FlxG.mute?0:1)*FlxG.getVolume()*_volume*_volumeAdjust;
-		
-		if (_sound != null && _soundId != -1)
-			_sound.setPan(_soundId, _panAmount, volume);
-		//TODO: panning for Music
-		else if (_music != null)
-			_music.setVolume(volume);
+		_transform.volume = (FlxG.mute?0:1)*FlxG.getVolume()*_volume*_volumeAdjust;
+		if(_channel != null)
+			_channel.setSoundTransform(_transform);
 	}
 
 	/**
@@ -697,13 +615,11 @@ public class FlxSound extends FlxBasic
 	 */
 	protected void stopped()
 	{
-	    _soundId = -1;
-	    _position = -1;
+		_channel.removeEventListener(Event.SOUND_COMPLETE, stoppedListener);
+		_channel = null;
 		active = false;
 		if(autoDestroy)
 			destroy();
-		
-		_wasPlaying = false;
 	}
 		
 	/**
@@ -722,31 +638,12 @@ public class FlxSound extends FlxBasic
 		*/
 	}
 	
-	/**
-	 * Internal function to play a libgdx sound object. Returns a positive value if successful,
-	 * -1 if it fails.
-	 * 
-	 * @param SoundObject	The libgdx sound object.
-	 * @param Looped		Whether to loop the sound or not.
-	 * @return	Positive streamId if successful, -1 if not.
-	 */
-	protected long attemptPlaySound(Sound SoundObject, boolean Looped)
-	{	
-		if (Gdx.app.getType() != ApplicationType.Android)
-			return Looped ? _sound.loop() : _sound.play();
-		else
-		{
-			// On Android, the sound file is not guaranteed to be loaded
-			// by the time play is called. Our current workaround is to block
-			// the application until the file is successfully played. Usually this
-			// delay is not noticeable.
-			final int PLAY_TRY_LIMIT = 5000;
-		
-			int i = 0;
-			long soundId = -1;
-			while (soundId <= 0 && i++ < PLAY_TRY_LIMIT)
-				soundId = Looped ? _sound.loop() : _sound.play();
-			return (soundId <= 0) ? -1 : soundId;
+	private final IEventListener stoppedListener = new IEventListener()
+	{
+		@Override
+		public void onEvent(Event e) {
+			FlxSound.this.stopped();
+			
 		}
-	}
+	};
 }
