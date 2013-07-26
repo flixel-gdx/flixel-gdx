@@ -88,7 +88,7 @@ button_down
   index: -1
 ninepatch_button_middleleft
   rotate: false
-  xy: 44, 346
+  xy: 44, 349
   size: 40, 1
   orig: 40, 1
   offset: 0, 0
@@ -158,14 +158,14 @@ button_c
   index: -1
 ninepatch_button_bottomleft
   rotate: false
-  xy: 2, 343
+  xy: 2, 346
   size: 40, 8
   orig: 40, 8
   offset: 0, 0
   index: -1
 ninepatch_button_topleft
   rotate: false
-  xy: 2, 333
+  xy: 2, 336
   size: 40, 8
   orig: 40, 8
   offset: 0, 0
@@ -228,7 +228,7 @@ ninepatch_textfield_topright
   index: -1
 ninepatch_button_middleright
   rotate: false
-  xy: 44, 343
+  xy: 44, 346
   size: 40, 1
   orig: 40, 1
   offset: 0, 0
@@ -245,6 +245,13 @@ label_bottomcenter
   xy: 250, 137
   size: 1, 4
   orig: 1, 4
+  offset: 0, 0
+  index: -1
+tab_divider_vertical
+  rotate: false
+  xy: 2, 333
+  size: 70, 1
+  orig: 70, 1
   offset: 0, 0
   index: -1
 ninepatch_button_topcenter
@@ -291,7 +298,7 @@ button_right
   index: -1
 ninepatch_button_bottomright
   rotate: false
-  xy: 44, 333
+  xy: 44, 336
   size: 40, 8
   orig: 40, 8
   offset: 0, 0

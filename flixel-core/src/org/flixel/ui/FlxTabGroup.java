@@ -15,7 +15,7 @@ import org.flixel.ui.event.IFlxTab;
 public class FlxTabGroup extends FlxUIGroup
 {
 	private final String ImgDivider = "org/flixel/data/pack:tab_divider";
-	private final String ImgDividerVertical = "org/flixel/data/holo_dark/tab_divider_vertical.png";
+	private final String ImgDividerVertical = "org/flixel/data/pack:tab_divider_vertical";
 	
 	/**
 	 * The divider skin.
@@ -58,9 +58,9 @@ public class FlxTabGroup extends FlxUIGroup
 	 * Create a new <code>FlxTabGroup</code> object.
 	 * @param X			The x-position.
 	 * @param Y			The y-position.
-	 * @param Width		The width of the tab group when placed horizontally. Default the width of the screen in game pixels.
-	 * @param Height	The height of the tab group when placed vertically. Default the height of the screen in game pixels.
-	 * @param TabWidth	The width of the tab when placed vertically.
+	 * @param Width		The width of the tab group when placed horizontally. Default 0, the width of the screen in game pixels will be used.
+	 * @param Height	The height of the tab group when placed vertically. Default 0, the height of the screen in game pixels will be used.
+	 * @param TabWidth	The width of the tab when placed vertically. Default 0, is 70 px.
 	 */
 	public FlxTabGroup(float X, float Y, int Width, int Height, int TabWidth)
 	{
@@ -69,7 +69,7 @@ public class FlxTabGroup extends FlxUIGroup
 		y = Y;
 		width = (Width == 0) ? FlxG.width : Width;
 		height = (Height == 0) ? FlxG.height : Height;
-		tabWidth = (TabWidth == 0) ? 48 : TabWidth;
+		tabWidth = (TabWidth == 0) ? 70 : TabWidth;
 		label.setSize(12);
 		add(_content = new FlxGroup());
 		add(_tabs = new FlxGroup());
@@ -83,8 +83,8 @@ public class FlxTabGroup extends FlxUIGroup
 	 * Create a new <code>FlxTabGroup</code> object.
 	 * @param X			The x-position.
 	 * @param Y			The y-position.
-	 * @param Width		The width of the tab group when placed horizontally. Default the width of the screen in game pixels.
-	 * @param Height	The height of the tab group when placed vertically. Default the height of the screen in game pixels.
+	 * @param Width		The width of the tab group when placed horizontally. Default 0, the width of the screen in game pixels will be used.
+	 * @param Height	The height of the tab group when placed vertically. Default 0, the height of the screen in game pixels will be used.
 	 */
 	public FlxTabGroup(float X, float Y, int Width, int Height)
 	{
@@ -95,7 +95,7 @@ public class FlxTabGroup extends FlxUIGroup
 	 * Create a new <code>FlxTabGroup</code> object.
 	 * @param X			The x-position.
 	 * @param Y			The y-position.
-	 * @param Width		The width of the tab group when placed horizontally. Default the width of the screen in game pixels.
+	 * @param Width		The width of the tab group when placed horizontally. Default 0, the width of the screen in game pixels will be used.
 	 */
 	public FlxTabGroup(float X, float Y, int Width)
 	{
@@ -261,7 +261,7 @@ public class FlxTabGroup extends FlxUIGroup
 		if(align == ALIGN_HORIZONTAL)
 			loadDividerSkin(ImgDivider, 1, 48);
 		else
-			loadDividerSkin(ImgDividerVertical, 48, 1);
+			loadDividerSkin(ImgDividerVertical, 70, 1);
 	}
 	
 	/**
