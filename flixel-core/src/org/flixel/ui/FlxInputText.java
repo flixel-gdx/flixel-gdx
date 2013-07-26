@@ -8,8 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
 import flash.events.Event;
+import flash.events.IEventListener;
 import flash.events.KeyboardEvent;
-import flash.events.Listener;
 
 /**
  * Copyright (c) 2009 Martín Sebastián Wain
@@ -281,7 +281,7 @@ public class FlxInputText extends FlxUITouchable
 	 * 
 	 * @param e		The triggering keyboard event.
 	 */
-	Listener handleKeyDown = new Listener()
+	IEventListener handleKeyDown = new IEventListener()
 	{
 		@Override
 		public void onEvent(Event e) 

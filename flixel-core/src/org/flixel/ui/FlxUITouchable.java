@@ -6,7 +6,7 @@ import org.flixel.FlxSound;
 import org.flixel.ui.event.IFlxUIListener;
 
 import flash.events.Event;
-import flash.events.Listener;
+import flash.events.IEventListener;
 import flash.events.MouseEvent;
 
 /**
@@ -448,7 +448,7 @@ public class FlxUITouchable extends FlxUIComponent
 	/**
 	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxU.openURL()</code>).
 	 */
-	Listener onMouseUp = new Listener()
+	IEventListener onMouseUp = new IEventListener()
 	{
 		@Override
 		public void onEvent(Event e)
