@@ -1,10 +1,9 @@
 package org.flixel.plugin.flxbox2d;
 
-import java.util.Iterator;
-
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
+import org.flixel.plugin.flxbox2d.controllers.B2Controller;
 import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxJoint;
 import org.flixel.plugin.flxbox2d.managers.B2FlxContactManager;
 import org.flixel.plugin.flxbox2d.system.debug.B2FlxDebug;
@@ -67,12 +66,22 @@ public class B2FlxB
 	 * Preallocated gravity
 	 */
 	private final static Vector2 _gravity = new Vector2(0, 9.8f);
+
+	public static Array<B2Controller> controllers;
 	/**
-	 * An array of joints.
+	 * An array of <code>FlxJoint</code>s.
 	 */
-	public static Array<B2FlxJoint> joints;
+	public static Array<B2FlxJoint> flxJoints;
 	/**
-	 * Internal, track wether to use the debugger or not.
+	 * An array of <code>Body</code>s.
+	 */
+	public static Array<Body> bodies;
+	/**
+	 * An array of <code>Joint</code>s.
+	 */
+	public static Array<Joint> joints;
+	/**
+	 * Internal, track whether to use the debugger or not.
 	 */
 	private static boolean _drawDebug;
 		
@@ -100,12 +109,15 @@ public class B2FlxB
 		if(FlxG.debug)
 			B2FlxB.initDebugger();
 		
+		controllers = new Array<B2Controller>();
 		scheduledForRemoval = new Array<FlxBasic>();
 		scheduledForRevival = new Array<FlxBasic>();
 		scheduledForInActive = new Array<B2FlxShape>();
 		scheduledForActive = new Array<B2FlxShape>();
 		scheduledForMove = new Array<B2FlxShape>();
-		joints = new Array<B2FlxJoint>();
+		flxJoints = new Array<B2FlxJoint>();
+		bodies = new Array<Body>();
+		joints = new Array<Joint>();
 	}
 	
 	/**
@@ -114,36 +126,41 @@ public class B2FlxB
 	@SuppressWarnings("unchecked")
 	public static void destroy()
 	{
-		for(int i = 0; i < joints.size; i++)
+		contact.destroy();
+		contact = null;
+		for(int i = 0; i < flxJoints.size; i++)
 		{
-			joints.get(i).destroy();
+			flxJoints.get(i).destroy();
 		}
-		joints.clear();
-		joints = null;
+		flxJoints.clear();
+		flxJoints = null;
 		
-		Iterator<Body> bodies = world.getBodies();
+		world.getBodies(bodies);
 		ObjectMap<String, Object> userData;
-		while(bodies.hasNext())
+		int i = 0;
+		while(i < bodies.size)
 		{
-			Body body = bodies.next();
+			Body body = bodies.get(i);
 			if(body != null)
 			{
 				userData = (ObjectMap<String, Object>) body.getUserData();
 				if(userData != null)
 				{
 					if(!surviveWorld)
-						world.destroyBody(body);					
-					else if(surviveWorld && (Boolean)userData.get("survive") == false)
+						world.destroyBody(body);
+					else if(surviveWorld && (Boolean)userData.get("survive") != null && (Boolean)userData.get("survive") == false)
 						world.destroyBody(body);
 				}
 				else
 					world.destroyBody(body);
 			}
+			++i;
 		}
-		Iterator<Joint> joints = world.getJoints();
-		while(joints.hasNext())
+		i = 0;
+		world.getJoints(joints);
+		while(i < joints.size)
 		{
-			Joint joint = joints.next();
+			Joint joint = joints.get(i);
 			if(joint != null)
 			{
 				userData = (ObjectMap<String, Object>) joint.getUserData();
@@ -151,26 +168,33 @@ public class B2FlxB
 				{
 					if(!surviveWorld)
 						world.destroyJoint(joint);
-					else if(surviveWorld && (Boolean)userData.get("survive") == false)
+					else if(surviveWorld && (Boolean)userData.get("survive") != null && (Boolean)userData.get("survive") == false)
 						world.destroyJoint(joint);
 				}
 				else
 					world.destroyJoint(joint);
 			}
+			++i;
 		}
+		bodies.clear();
+		bodies = null;
+		joints.clear();
+		joints = null;
 		if(!surviveWorld)
 		{
 			world.dispose();
 			world = null;
 		}
-		contact.destroy();
-		contact = null;
+		
 		if(_drawDebug)
 		{
 			FlxG.getPlugin(B2FlxDebug.class).destroy();
 			FlxG.removePluginType(B2FlxDebug.class);			
 			_drawDebug = false;
-		}
+		}		
+		
+		controllers.clear();
+		controllers = null;
 		scheduledForRemoval.clear();
 		scheduledForRemoval = null;
 		scheduledForActive.clear();
@@ -391,5 +415,34 @@ public class B2FlxB
 	public static boolean getSurvive()
 	{
 		return surviveWorld;
+	}
+	
+	/**
+	 * Get all bodies currently in the simulation.  
+	 * @return an Array in which to place all bodies currently in the simulation.
+	 */
+	public static Array<Body> getBodies()
+	{
+		world.getBodies(bodies);
+		return bodies;
+	}
+	
+	/**
+	 * Get all joins currently in the simulation.
+	 * @return an Array in which to place all joints currently in the simulation.
+	 */
+	public static Array<Joint> getJoints()
+	{
+		world.getJoints(joints);
+		return joints;
+	}
+
+	/**
+	 * Add controller to the world.
+	 * @param controller	The controller that will be added.
+	 */
+	public static void addController(B2Controller controller)
+	{
+		controllers.add(controller);
 	}
 }

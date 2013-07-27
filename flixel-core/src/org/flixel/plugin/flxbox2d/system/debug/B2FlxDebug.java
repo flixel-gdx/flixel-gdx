@@ -92,9 +92,9 @@ public class B2FlxDebug extends FlxBasic
 			return;
 		if(drawJoints)
 		{
-			for(int i = 0; i < B2FlxB.joints.size; i++)
+			for(int i = 0; i < B2FlxB.flxJoints.size; i++)
 			{
-				B2FlxB.joints.get(i).drawDebug();
+				B2FlxB.flxJoints.get(i).drawDebug();
 			}
 		}
 		if(drawCollisions)

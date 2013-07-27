@@ -1,7 +1,5 @@
 package org.flixel.plugin.flxbox2d.plugin;
 
-import java.util.Iterator;
-
 import org.flixel.FlxBasic;
 import org.flixel.FlxGroup;
 import org.flixel.plugin.flxbox2d.B2FlxB;
@@ -60,10 +58,12 @@ public class ExplosionPlugin
 		}
 		else
 		{
-			Iterator<Body> bodies = B2FlxB.world.getBodies();		
-			while(bodies.hasNext())
+			B2FlxB.getBodies();
+			int i = 0;
+			while(i < B2FlxB.bodies.size)
 			{
-				applyExplosion(bodies.next(), x, y, coverage, impulseForce);
+				applyExplosion(B2FlxB.bodies.get(i), x, y, coverage, impulseForce);
+				++i;
 			}			
 		}		
 	}
