@@ -581,7 +581,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	 */
 	@Override
 	public void render()
-	{
+	{	
 		long mark = System.currentTimeMillis();
 		long elapsedMS = mark - _total;
 		_total = mark;
@@ -823,8 +823,13 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	{
 		long mark = System.currentTimeMillis();
 
+		FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		FlxG._gl.glClearColor(0, 0, 0, 1.0f);
+		FlxG._gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
 		int i = 0;
 		int l = FlxG._displayList.size;
+		
 		while (i < l)
 		{
 			FlxG._activeCamera = FlxG._displayList.get(i++);
