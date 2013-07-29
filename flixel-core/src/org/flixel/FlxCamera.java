@@ -401,8 +401,6 @@ public class FlxCamera extends FlxBasic
 					_fxShakeOffset.y = (float) ((FlxG.random()*_fxShakeIntensity*height*2-_fxShakeIntensity*height)*_zoom);
 			}
 		}
-		
-		_glCamera.update(false);
 	}
 	
 	/**
@@ -937,8 +935,6 @@ public class FlxCamera extends FlxBasic
 		}
 
 		_glCamera.setToOrtho(true, viewportWidth, viewportHeight);
-		_glCamera.position.x = _flashOffsetX - (x / getZoom());
-		_glCamera.position.y = _flashOffsetY - (y / getZoom());
 	}
 	
 	/**
@@ -997,10 +993,12 @@ public class FlxCamera extends FlxBasic
 			fill(((int)(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFadeAlpha)<<24)+(_fxFadeColor&0x00ffffff));
 		}
 		
-		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
-		{
-			_glCamera.position.x = _flashOffsetX - (x / getZoom()) + _fxShakeOffset.x;
-			_glCamera.position.y = _flashOffsetY - (y / getZoom()) + _fxShakeOffset.y;
-		}
+		//Changing the camera position after drawing causes problems.
+		//Shake offset is now applied in FlxG.lockCameras instead.
+		//if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
+		//{
+			//_glCamera.position.x = _flashOffsetX - (x / getZoom()) + _fxShakeOffset.x;
+			//_glCamera.position.y = _flashOffsetY - (y / getZoom()) + _fxShakeOffset.y;
+		//}
 	}	
 }

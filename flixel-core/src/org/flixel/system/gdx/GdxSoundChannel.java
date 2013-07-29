@@ -58,15 +58,13 @@ public class GdxSoundChannel extends EventDispatcher implements SoundChannel
 	@Override
 	public void pause()
 	{
-		_sound.stop(_soundId);
-		//TODO: Sound.pause() and Sound.resume are available in the latest libgdx nightlies.
-		//make sure this is changed to use them next time we update
+		_sound.pause(_soundId);
 	}
 	
 	@Override
 	public void resume()
 	{
-		_soundId = _sound.play(_soundTransform.volume, 1f, _soundTransform.pan);
+		_sound.resume(_soundId);
 	}
 	
 	/**

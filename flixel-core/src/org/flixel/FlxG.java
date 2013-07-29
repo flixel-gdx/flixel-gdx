@@ -2141,10 +2141,13 @@ public class FlxG
 			cam.fill(cam.bgColor);
 		}
 		
+		//Update camera matrices
+		cam._glCamera.update(false);
+		
 		//Set tint
 		_floatArray = FlxU.getRGBA(cam.getColor(), _floatArray);
 		FlxG.batch.setColor(_floatArray[0] * 0.00392f, _floatArray[1] * 0.00392f, _floatArray[2] * 0.00392f, 1.0f);
-		
+
 		//Set matrix
 		FlxG.batch.setProjectionMatrix(cam._glCamera.combined);
 		FlxG.flashGfx.setProjectionMatrix(cam._glCamera.combined);
@@ -2183,8 +2186,8 @@ public class FlxG
 			{
 				if(cam.active)
 					cam.update();
-				cam._glCamera.position.x = cam._flashOffsetX - (cam.x / cam.getZoom());
-				cam._glCamera.position.y = cam._flashOffsetY - (cam.y / cam.getZoom());
+				cam._glCamera.position.x = cam._flashOffsetX - ((cam.x - cam._fxShakeOffset.x) / cam.getZoom());
+				cam._glCamera.position.y = cam._flashOffsetY - ((cam.y - cam._fxShakeOffset.y) / cam.getZoom());
 			}
 		}
 	}
