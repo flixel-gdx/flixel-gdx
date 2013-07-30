@@ -12,7 +12,7 @@ import org.flixel.ui.FlxUISkin.NinePatch;
 public abstract class FlxUIComponent extends FlxSprite
 {	
 	/**
-	 * The ID of the component. It may be required on some UI components like <code>FlxRadioButton</code>
+	 * The ID of the component. It may be required by some UI components like <code>FlxRadioButton</code>
 	 */
 	public String ID;
 	/**

@@ -80,7 +80,7 @@ public class FlxUITouchable extends FlxUIComponent
 	private boolean _initialized;
 
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxUITouchable</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -108,7 +108,7 @@ public class FlxUITouchable extends FlxUIComponent
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxUITouchable</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -121,7 +121,7 @@ public class FlxUITouchable extends FlxUIComponent
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxUITouchable</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.
@@ -133,7 +133,7 @@ public class FlxUITouchable extends FlxUIComponent
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxUITouchable</code> object.
 	 * @param X			The x-position of the component.
 	 * @param Y			The y-position of the component.
 	 * @param UISkin	The skin that needs to be applied.

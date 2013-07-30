@@ -195,6 +195,9 @@ public class FlxG
 	static public Array<FlxSave> saves; 
 	static public int save;
 
+	/**
+	 * An InputProcessor that delegates to an ordered list of other InputProcessors.
+	 */
 	static public InputMultiplexer inputs;
 	/**
 	 * A reference to a <code>FlxMouse</code> object.  Important for input!

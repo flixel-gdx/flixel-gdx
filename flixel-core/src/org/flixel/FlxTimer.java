@@ -6,7 +6,7 @@ import org.flixel.plugin.TimerManager;
 /**
  * A simple timer class, leveraging the new plugins system.
  * Can be used with callbacks or by polling the <code>finished</code> flag.
- * Not intended to be added to a game state or group; the timer manager
+ * Not intended to be added to a game state or group; the <code>TimerManager</code>
  * is responsible for actually calling update(), not the user.
  * 
  * @author Ka Wing Chin
