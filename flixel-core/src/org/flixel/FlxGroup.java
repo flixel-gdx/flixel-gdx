@@ -547,7 +547,6 @@ public class FlxGroup extends FlxBasic
 		return -1;
 	}
 	
-	
 	/**
 	 * Call this function to retrieve the first object with exists == true in the group.
 	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.

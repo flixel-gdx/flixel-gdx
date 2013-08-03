@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import flash.events.Event;
-import flash.events.Listener;
+import flash.events.IEventListener;
 
 /**
  * A manager that handles the contact events.
@@ -133,7 +133,7 @@ public class B2FlxContactManager
 		postSolveData.add(new B2FlxContactData(categoryA, spriteB, listener));
 	}
 		
-	Listener handleBeginContact = new Listener()
+	IEventListener handleBeginContact = new IEventListener()
 	{
 		@Override
 		public void onEvent(Event event)
@@ -142,7 +142,7 @@ public class B2FlxContactManager
 		}
 	};
 	
-	Listener handleEndContact = new Listener()
+	IEventListener handleEndContact = new IEventListener()
 	{
 		@Override
 		public void onEvent(Event event)
@@ -151,7 +151,7 @@ public class B2FlxContactManager
 		}
 	};
 	
-	Listener handlePreSolve= new Listener()
+	IEventListener handlePreSolve= new IEventListener()
 	{
 		@Override
 		public void onEvent(Event event)
@@ -160,7 +160,7 @@ public class B2FlxContactManager
 		}
 	};
 	
-	Listener handlePostSolve = new Listener()
+	IEventListener handlePostSolve = new IEventListener()
 	{
 		@Override
 		public void onEvent(Event event)

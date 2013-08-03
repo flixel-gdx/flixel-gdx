@@ -21,7 +21,7 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 	private B2FlxContactEvent _event;
 
 	/**
-	 * Constructor
+	 * Create a new <code>B2FlxContactListener</code> object.
 	 */
 	public B2FlxContactListener()
 	{
@@ -34,6 +34,8 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 	@Override
 	public void beginContact(Contact contact)
 	{
+		if(_event == null)
+			return;
 		_event.oldManifold = null;
 		_event.impulse = null;
 		dispatch(contact, B2FlxContactEvent.BEGIN_CONTACT);
@@ -45,6 +47,8 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 	@Override
 	public void endContact(Contact contact)
 	{
+		if(_event == null)
+			return;
 		_event.oldManifold = null;
 		_event.impulse = null;
 		dispatch(contact, B2FlxContactEvent.END_CONTACT);
@@ -60,6 +64,8 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold)
 	{
+		if(_event == null)
+			return;
 		_event.impulse = null;
 		_event.oldManifold = oldManifold;
 		dispatch(contact, B2FlxContactEvent.PRE_SOLVE);
@@ -74,6 +80,8 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
+		if(_event == null)
+			return;
 		_event.oldManifold = null;
 		_event.impulse = impulse;
 		dispatch(contact, B2FlxContactEvent.POST_SOLVE);
@@ -91,6 +99,8 @@ public class B2FlxContactListener extends EventDispatcher implements ContactList
 		_event.contact = contact;
 		_event.fixtureA = contact.getFixtureA();
 		_event.fixtureB = contact.getFixtureB();
+		if(_event.fixtureA == null || _event.fixtureB == null)
+			return;
 		_event.sprite1 = (B2FlxShape) ((ObjectMap<String, Object>) _event.fixtureA.getBody().getUserData()).get("shape");
 		_event.sprite2 = (B2FlxShape) ((ObjectMap<String, Object>) _event.fixtureB.getBody().getUserData()).get("shape");
 		dispatchEvent(_event);

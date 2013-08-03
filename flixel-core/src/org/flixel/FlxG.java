@@ -195,6 +195,9 @@ public class FlxG
 	static public Array<FlxSave> saves; 
 	static public int save;
 
+	/**
+	 * An InputProcessor that delegates to an ordered list of other InputProcessors.
+	 */
 	static public InputMultiplexer inputs;
 	/**
 	 * A reference to a <code>FlxMouse</code> object.  Important for input!
@@ -270,7 +273,7 @@ public class FlxG
 	/**
 	 * Internal storage system to prevent assets from being used repeatedly in memory.
 	 */
-	static protected FlxAssetManager _cache;
+	static public FlxAssetManager _cache;
 	
 	/**
 	 * Global <code>SpriteBatch</code> for rendering sprites to the screen.
@@ -961,7 +964,9 @@ public class FlxG
 	 }
 	 
 	/**
-	 * @private
+	 * Set <code>volume</code> to a number between 0 and 1 to change the global volume.
+	 * 
+	 * @default 0.5
 	 */
 	static public void setVolume(float Volume)
 	{
@@ -983,7 +988,7 @@ public class FlxG
 	{
 		if((music != null) && (ForceDestroy || !music.survive))
 		{
-			music.destroy(true);
+			music.destroy();
 			music = null;
 		}
 		int i = 0;
@@ -993,7 +998,7 @@ public class FlxG
 		{
 			sound = (FlxSound) sounds.members.get(i++);
 			if((sound != null) && (ForceDestroy || !sound.survive))
-				sound.destroy(true);
+				sound.destroy();
 		}
 	}
 
@@ -2034,7 +2039,7 @@ public class FlxG
 		
 		FlxG.mute = false;
 		FlxG._volume = 0.5f;
-		FlxG.sounds = new FlxGroup();
+		FlxG.sounds = new FlxGroup(32);
 		FlxG.music = null;
 		FlxG.volumeHandler = null;
 		
@@ -2117,35 +2122,38 @@ public class FlxG
 	 */
 	public static void lockCameras()
 	{
-		FlxCamera camera = FlxG._activeCamera;
+		FlxCamera cam = FlxG._activeCamera;
 		
 		//Set the drawing area		
-		int scissorWidth = FlxU.ceil(camera.width * camera._screenScaleFactorX * camera.getZoom());
-		int scissorHeight = FlxU.ceil(camera.height * camera._screenScaleFactorY * camera.getZoom());
-		int scissorX = (int) (camera.x * camera._screenScaleFactorX);
-		int scissorY = (int) (FlxG.screenHeight - ((camera.y * camera._screenScaleFactorY) + scissorHeight));
+		int scissorWidth = FlxU.ceil(cam.width * cam._screenScaleFactorX * cam.getZoom());
+		int scissorHeight = FlxU.ceil(cam.height * cam._screenScaleFactorY * cam.getZoom());
+		int scissorX = (int) ((FlxG.screenWidth / 2f) - (cam._glCamera.position.x * cam._screenScaleFactorX) * cam.getZoom());
+		int scissorY = (int) (FlxG.screenHeight - (((FlxG.screenHeight / 2f) - (cam._glCamera.position.y * cam._screenScaleFactorY) * cam.getZoom()) + scissorHeight));
 		_gl.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
-		
+
 		//Clear the camera
-		if(((camera.bgColor >> 24) & 0xff) == 0xFF)
+		if(((cam.bgColor >> 24) & 0xff) == 0xFF)
 		{
-			int color = FlxU.multiplyColors(camera.bgColor, camera.getColor());
+			int color = FlxU.multiplyColors(cam.bgColor, cam.getColor());
 			_floatArray = FlxU.getRGBA(color, _floatArray);
 			_gl.glClearColor(_floatArray[0] * 0.00392f, _floatArray[1] * 0.00392f, _floatArray[2] * 0.00392f, 1.0f);
 			_gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		}
 		else
 		{
-			camera.fill(camera.bgColor);
+			cam.fill(cam.bgColor);
 		}
 		
-		//Set tint
-		_floatArray = FlxU.getRGBA(camera.getColor(), _floatArray);
-		FlxG.batch.setColor(_floatArray[0] * 0.00392f, _floatArray[1] * 0.00392f, _floatArray[2] * 0.00392f, 1.0f);
+		//Update camera matrices
+		cam._glCamera.update(false);
 		
+		//Set tint
+		_floatArray = FlxU.getRGBA(cam.getColor(), _floatArray);
+		FlxG.batch.setColor(_floatArray[0] * 0.00392f, _floatArray[1] * 0.00392f, _floatArray[2] * 0.00392f, 1.0f);
+
 		//Set matrix
-		FlxG.batch.setProjectionMatrix(camera._glCamera.combined);
-		FlxG.flashGfx.setProjectionMatrix(camera._glCamera.combined);
+		FlxG.batch.setProjectionMatrix(cam._glCamera.combined);
+		FlxG.flashGfx.setProjectionMatrix(cam._glCamera.combined);
 		
 		//Get ready for drawing
 		FlxG.batch.begin();
@@ -2157,12 +2165,12 @@ public class FlxG
 	 */
 	public static void unlockCameras()
 	{
-		FlxCamera camera = FlxG._activeCamera;
+		FlxCamera cam = FlxG._activeCamera;
 		
 		FlxG.batch.end();
 		FlxG.flashGfx.end();
 		
-		camera.drawFX();
+		cam.drawFX();
 	}
 	
 	/**
@@ -2181,8 +2189,8 @@ public class FlxG
 			{
 				if(cam.active)
 					cam.update();
-				cam._glCamera.position.x = cam._flashOffsetX - (cam.x / cam.getZoom());
-				cam._glCamera.position.y = cam._flashOffsetY - (cam.y / cam.getZoom());
+				cam._glCamera.position.x = cam._flashOffsetX - ((cam.x - cam._fxShakeOffset.x) / cam.getZoom());
+				cam._glCamera.position.y = cam._flashOffsetY - ((cam.y - cam._fxShakeOffset.y) / cam.getZoom());
 			}
 		}
 	}

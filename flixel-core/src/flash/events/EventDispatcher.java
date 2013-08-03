@@ -1,6 +1,9 @@
 package flash.events;
 
-import com.badlogic.gdx.utils.Array;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class replicates some of the EventDispatcher functionality from Flash.
@@ -9,40 +12,40 @@ import com.badlogic.gdx.utils.Array;
  */
 public class EventDispatcher implements IEventDispatcher
 {
-	/**
-	 * A collection of Event Listeners.
-	 */
-	protected Array<Listener> _listeners;
+	protected Map<String, List<IEventListener>> _listeners;
 	
-	/**
-	 * Constructor
-	 */
 	public EventDispatcher()
 	{
-		_listeners = new Array<Listener>();
+		_listeners = new HashMap<String, List<IEventListener>>();
 	}
 	
 	@Override
-	public void addEventListener(String type, Listener listener, boolean useCapture, int priority, boolean useWeakReference)
+	public void addEventListener(String type, IEventListener listener, boolean useCapture, int priority, boolean useWeakReference)
 	{
-		listener.type = type;
-		_listeners.add(listener);
+		List<IEventListener> listenersForType = _listeners.get(type);
+		
+		if(listenersForType == null)
+		{
+			listenersForType = new LinkedList<IEventListener>();
+			_listeners.put(type, listenersForType);
+		}
+		listenersForType.add(listener);
 	}
 
 	@Override
-	public void addEventListener(String type, Listener listener, boolean useCapture, int priority)
+	public void addEventListener(String type, IEventListener listener, boolean useCapture, int priority)
 	{
 		addEventListener(type, listener, useCapture, priority, false);
 	}
 
 	@Override
-	public void addEventListener(String type, Listener listener, boolean useCapture)
+	public void addEventListener(String type, IEventListener listener, boolean useCapture)
 	{
 		addEventListener(type, listener, useCapture, 0, false);
 	}
 
 	@Override
-	public void addEventListener(String type, Listener listener)
+	public void addEventListener(String type, IEventListener listener)
 	{
 		addEventListener(type, listener, false, 0, false);
 	}
@@ -50,38 +53,38 @@ public class EventDispatcher implements IEventDispatcher
 	@Override
 	public boolean dispatchEvent(Event event)
 	{
-		for(Listener listener : _listeners)
-		{
-			if(event.type.equals(listener.type))
-			{
-				listener.onEvent(event);
-			}
-		}
+		List<IEventListener> listenersForType = _listeners.get(event.type);
+		
+		if(listenersForType == null || listenersForType.size() <= 0)
+			return false;
+		
+		for(IEventListener listener : listenersForType)
+			listener.onEvent(event);
+		
 		return true;
 	}
 	
 	@Override
 	public boolean hasEventListener(String type)
 	{
-		for(Listener listener : _listeners)
-		{
-			if(type.equals(listener.type))
-				return true;
-		}
-		return false;
+		List<IEventListener> listenersForType = _listeners.get(type);
+		return listenersForType != null && listenersForType.size() > 0;
 	}
 
 	@Override
-	public void removeEventListener(String type, Listener listener, boolean useCapture)
+	public void removeEventListener(String type, IEventListener listener, boolean useCapture)
 	{
-		listener.type = type;
-		_listeners.removeValue(listener, false);		
+		List<IEventListener> listenersForType = _listeners.get(type);
+		
+		if(listenersForType == null)
+			return;
+		
+		while(listenersForType.remove(listener));
 	}
 
 	@Override
-	public void removeEventListener(String type, Listener listener)
+	public void removeEventListener(String type, IEventListener listener)
 	{
 		removeEventListener(type, listener, false);
 	}
 }
-

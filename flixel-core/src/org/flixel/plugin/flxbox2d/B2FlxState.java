@@ -49,7 +49,7 @@ public class B2FlxState extends FlxState
 	/**
 	 * Position iterations for the position constraint solver. 
 	 */
-	protected int positionIterations = 3;	
+	protected int positionIterations = 3;
 	
 	/**
 	 * Prepare the Box2D initial setup.
@@ -60,7 +60,7 @@ public class B2FlxState extends FlxState
 	public void create()
 	{			
 		// Setup required static variables.
-		B2FlxB.init();
+		B2FlxB.init();		
 		// Apply the correct time step
 		FIXED_TIMESTEP = 1f / FlxG.getFramerate();
 		// Apply the correct minimum time step.
@@ -83,6 +83,10 @@ public class B2FlxState extends FlxState
 			{
 				_deltaTime += _frameTime;
 				_frameTime = 0.0f;
+			}
+			for(int i = 0; i < B2FlxB.controllers.size; i++)
+			{
+				B2FlxB.controllers.get(i).step(_deltaTime);
 			}
 			B2FlxB.world.step(_deltaTime, velocityIterations, positionIterations);
 			_stepsPerformed++;
