@@ -5,34 +5,28 @@ import org.flixel.FlxPoint;
 import aurelienribon.tweenengine.TweenAccessor;
 
 /**
- * The tween accessor for FlxPoint. Don't call any methods from this class.
- * If you got other variables that needs to be tweened, you can override this class.
- * You'll need to register your TweenAccessor with the your own sprite class 
- * and tween accessor.
+ * The tween accessor for FlxPoint. Don't call any methods from this class. If
+ * you got other variables that needs to be tweened, you can override this
+ * class. You'll need to register your TweenAccessor with the your own sprite
+ * class and tween accessor.
  * 
- * @author Ka Wing Chin
  * @author Claudio Ficara
  */
 public class TweenPoint implements TweenAccessor<FlxPoint>
 {
 	/**
-	 *  The x-position from FlxObject.
+	 * The x-position from FlxObject.
 	 */
 	public static final int X = 1;
 	/**
-	 *  The y-position from FlxObject.
+	 * The y-position from FlxObject.
 	 */
 	public static final int Y = 2;
 	/**
 	 * The x- and y-position from FlxObject.
 	 */
 	public static final int XY = 3;
-	/**
-	 * The angle from FlxObject.
-	 */
 
-	
-	
 	@Override
 	public int getValues(FlxPoint target, int tweenType, float[] returnValues)
 	{
@@ -53,7 +47,7 @@ public class TweenPoint implements TweenAccessor<FlxPoint>
 				return -1;
 		}
 	}
-	
+
 	@Override
 	public void setValues(FlxPoint target, int tweenType, float[] newValues)
 	{
@@ -75,4 +69,3 @@ public class TweenPoint implements TweenAccessor<FlxPoint>
 		}
 	}
 }
-

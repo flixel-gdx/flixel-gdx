@@ -59,7 +59,7 @@ public class FlxAnalog extends FlxGroup
 	 */
 	private static Array<FlxAnalog> _analogs;
 	/**
-	 * This is just a pre-allocated x-y point container to be used however you like
+	 * This is just a pre-allocated x-y point container to be used however you like.
 	 */
 	protected FlxPoint _point;
 	/**
@@ -116,6 +116,12 @@ public class FlxAnalog extends FlxGroup
 	 * The speed of easing when the thumb is released.
 	 */
 	private float _ease;
+	/**
+	 * Internal
+	 */
+	private float dx;
+	private float dy;
+	private double dist;
 	
 		
 	/**
@@ -151,7 +157,7 @@ public class FlxAnalog extends FlxGroup
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxAnalog</code> object.
 	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	radius	The radius where the thumb can move. If 0, the background will be used as radius.
@@ -163,7 +169,7 @@ public class FlxAnalog extends FlxGroup
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxAnalog</code> object.
 	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	radius	The radius where the thumb can move. Default 0, the background will be used as radius.
@@ -174,7 +180,7 @@ public class FlxAnalog extends FlxGroup
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxAnalog</code> object.
 	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
 	 */
@@ -184,7 +190,7 @@ public class FlxAnalog extends FlxGroup
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxAnalog</code> object.
 	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
 	 */
 	public FlxAnalog(float x)
@@ -193,7 +199,7 @@ public class FlxAnalog extends FlxGroup
 	}
 	
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxAnalog</code> object.
 	 */
 	public FlxAnalog()
 	{
@@ -236,7 +242,7 @@ public class FlxAnalog extends FlxGroup
 	 */
 	protected void createZone()
 	{
-		if(_radius == 0)			
+		if(_radius == 0)
 			_radius = bg.width * .5f;
 		_zone = new Circle(x, y, _radius);
 	}
@@ -326,10 +332,10 @@ public class FlxAnalog extends FlxGroup
 					if(onPressed != null)
 						onPressed.callback();						
 					
-					float dx = _point.x-x;
-					float dy = _point.y-y;
+					dx = _point.x - x;
+					dy = _point.y - y;
 					
-					double dist = Math.sqrt(dx * dx + dy * dy);
+					dist = Math.sqrt(dx * dx + dy * dy);
 					if(dist < 1) 
 						dist = 0;
 					_direction = (float) MathUtils.atan2(dy, dx);

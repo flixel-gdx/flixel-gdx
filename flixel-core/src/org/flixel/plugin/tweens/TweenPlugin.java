@@ -2,7 +2,6 @@ package org.flixel.plugin.tweens;
 
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
 import aurelienribon.tweenengine.Tween;
