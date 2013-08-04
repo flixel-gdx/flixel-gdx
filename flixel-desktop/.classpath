@@ -7,5 +7,7 @@
 	<classpathentry exported="true" kind="lib" path="libs/gdx-natives.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/flixel-core"/>
 	<classpathentry kind="lib" path="libs/gdx-freetype-natives.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-controllers-desktop.jar" sourcepath="libs/gdx-controllers-desktop-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-controllers-desktop-natives.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
