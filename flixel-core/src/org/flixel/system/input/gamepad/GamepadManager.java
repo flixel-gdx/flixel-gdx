@@ -60,6 +60,8 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 		listener = null;
 		controllers.clear();
 		controllers = null;
+		for(int i = 0; i < mappings.size; i++)
+			mappings.get(i).destroy();
 		mappings.clear();
 		mappings = null;
 		for(int i = 0; i < pads.size; i++)
@@ -93,7 +95,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	}
 	
 	/**
-	 * A new gampad.
+	 * Add a new gamepad.
 	 * @param gamepad	The gamepad that will be added.
 	 */
 	public static void addGamepad(Gamepad gamepad)
@@ -114,15 +116,33 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 			Controller c = Controllers.getControllers().get(pads.size-1);
 			c.addListener(listener);
 			controllers.put(c, gamepad);
+			String controllerName = c.getName().toLowerCase();
+			String mappingName;
 			boolean mappingFound = false;
 			for(int i = 0; i < mappings.size; i++)
 			{
-				if(c.getName().equals(mappings.get(i).ID))
+				if(mappings.get(i).ID != null)
 				{
-					gamepad.setMapping(mappings.get(i));
-					gamepad.ID = c.getName();
-					mappingFound = true;
-					break;
+					if(controllerName.equals(mappings.get(i).ID.toLowerCase()))
+					{
+						gamepad.setMapping(mappings.get(i));
+						mappingFound = true;
+						break;
+					}					
+				}
+				if(mappings.get(i).IDs != null)
+				{
+					GamepadMapping mapping = mappings.get(i);
+					for(int ii = 0; ii < mapping.IDs.length; ii++)
+					{
+						mappingName = mapping.IDs[ii].toLowerCase();
+						if(controllerName.equals(mappingName))
+						{
+							gamepad.setMapping(mapping);
+							mappingFound = true;
+							break;
+						}
+					}
 				}
 			}
 			if(!mappingFound)

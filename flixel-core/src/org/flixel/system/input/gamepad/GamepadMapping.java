@@ -40,11 +40,12 @@ public class GamepadMapping
 	public int BUTTON_START = Keys.BUTTON_START;
 	public int BUTTON_SELECT = Keys.BUTTON_SELECT;
 	public int BUTTON_MODE = Keys.BUTTON_MODE;
-	public int AXIS_LEFT_X;
-	public int AXIS_LEFT_Y;
-	public int AXIS_RIGHT_X;
-	public int AXIS_RIGHT_Y;
+	public int AXIS_LEFT_X = -1;
+	public int AXIS_LEFT_Y = -1;
+	public int AXIS_RIGHT_X = -1;
+	public int AXIS_RIGHT_Y = -1;
 	public String ID;
+	public String[] IDs;
 		
 	/**
 	 * Creates a new <code>GamepadMapping</code> object.
@@ -53,6 +54,20 @@ public class GamepadMapping
 	public GamepadMapping(String ID)
 	{
 		this.ID = ID;
+	}
+	
+	/**
+	 * Creates a new <code>GamepadMapping</code> object. Some same controllers got different  
+	 * @param IDs	Multiple IDs that are equal to the <code>Controller.getName()</code>.
+	 */
+	public GamepadMapping(String[] IDs)
+	{
+		this.IDs = IDs;
+	}
+	
+	public void destroy()
+	{
+		IDs = null;
 	}
 }
 

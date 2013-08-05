@@ -178,6 +178,7 @@ public class Gamepad extends Input
 	 */
 	public void setMapping(GamepadMapping mapping)
 	{
+		ID = mapping.ID;		
 		addKey("NORTH", GamepadMapping.NORTH);
 		addKey("NORTH_EAST", GamepadMapping.NORTH_EAST);
 		addKey("NORTH_WEST", GamepadMapping.NORTH_WEST);
@@ -224,6 +225,8 @@ public class Gamepad extends Input
 	 */
 	public FlxPoint getAxisL()
 	{
+		if(ID == null || AXIS_LEFT_X == -1 || AXIS_LEFT_Y == -1)
+			return _point;
 		_point.x = axisData.get(AXIS_LEFT_X) * sensitivityL;
 		_point.y = axisData.get(AXIS_LEFT_Y) * sensitivityL;
 		return _point;
@@ -235,6 +238,8 @@ public class Gamepad extends Input
 	 */
 	public FlxPoint getAxisR()
 	{
+		if(ID == null || AXIS_RIGHT_X == -1 || AXIS_RIGHT_Y == -1)
+			return _point;
 		_point.x = axisData.get(AXIS_RIGHT_X) * sensitivityR;
 		_point.y = axisData.get(AXIS_RIGHT_Y) * sensitivityR;
 		return _point;
