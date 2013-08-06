@@ -16,7 +16,8 @@
 				<include name="gdx.jar"/>
 				<include name="sources/gdx-sources.jar"/>
 				<include name="extensions/gdx-freetype/gdx-freetype.jar"/>
-				<include name="extensions/gdx-freetype/sources/gdx-freetype-sources.jar"/>
+				<include name="extensions/gdx-controllers/gdx-controllers.jar"/>
+				<include name="extensions/gdx-controllers/sources/gdx-controllers-sources.jar"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
@@ -28,6 +29,8 @@
 			<patternset>
 				<include name="gdx-backend-android.jar"/>
 				<include name="sources/gdx-backend-android-sources.jar"/>
+				<include name="sources/gdx-controllers-android.jar"/>
+				<include name="sources/gdx-controllers-android-sources.jar"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
@@ -36,7 +39,6 @@
 		<unzip src="libgdx-nightly.zip" dest="flixel-android/libs/armeabi">
 			<patternset>
 				<include name="armeabi/libgdx.so"/>
-				<include name="armeabi/libandroidgl20.so"/>
 				<include name="extensions/gdx-freetype/armeabi/libgdx-freetype.so"/>
 			</patternset>
 			<mapper type="flatten"/>
@@ -46,7 +48,6 @@
 		<unzip src="libgdx-nightly.zip" dest="flixel-android/libs/armeabi-v7a">
 			<patternset>
 				<include name="armeabi-v7a/libgdx.so"/>
-				<include name="armeabi-v7a/libandroidgl20.so"/>
 				<include name="extensions/gdx-freetype/armeabi-v7a/libgdx-freetype.so"/>
 			</patternset>
 			<mapper type="flatten"/>
@@ -61,6 +62,9 @@
 				<include name="sources/gdx-backend-lwjgl-sources.jar"/>
 				<include name="gdx-natives.jar"/>
 				<include name="extensions/gdx-freetype/gdx-freetype-natives.jar"/>
+				<include name="extensions/gdx-freetype/gdx-controllers-desktop.jar"/>
+				<include name="extensions/gdx-freetype/gdx-controllers-natives.jar"/>
+				<include name="extensions/gdx-freetype/gdx-controllers-sources.jar"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>

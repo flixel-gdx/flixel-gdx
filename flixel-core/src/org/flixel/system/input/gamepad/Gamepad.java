@@ -187,8 +187,7 @@ public class Gamepad extends Input
 	 */
 	public void setMapping(GamepadMapping mapping)
 	{
-		ID = mapping.ID;		
-		FlxG.log(ID + mapping.BUTTON_B);
+		ID = mapping.ID;
 		addKey("UP", GamepadMapping.UP);
 		addKey("UP_RIGHT", GamepadMapping.UP_RIGHT);
 		addKey("UP_LEFT", GamepadMapping.UP_LEFT);

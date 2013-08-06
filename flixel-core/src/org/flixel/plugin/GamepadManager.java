@@ -44,9 +44,10 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	 */
 	public GamepadManager()
 	{
+		// TODO: error gdx-controllers-android can't be found.
 		SharedLibraryLoader loader = new SharedLibraryLoader();
 		if(FlxG.mobile)
-			loader.load("gdx-controllers-android");
+		{	/*loader.load("gdx-controllers-android");*/}
 		else
 			loader.load("gdx-controllers-desktop");
 	
