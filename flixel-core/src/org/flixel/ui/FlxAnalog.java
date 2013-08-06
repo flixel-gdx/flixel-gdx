@@ -1,5 +1,10 @@
-package org.flixel;
+package org.flixel.ui;
 
+import org.flixel.FlxG;
+import org.flixel.FlxGroup;
+import org.flixel.FlxPoint;
+import org.flixel.FlxSprite;
+import org.flixel.FlxU;
 import org.flixel.event.IFlxAnalog;
 
 import com.badlogic.gdx.math.Circle;

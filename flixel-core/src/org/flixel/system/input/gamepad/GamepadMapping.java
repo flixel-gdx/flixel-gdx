@@ -10,14 +10,14 @@ import com.badlogic.gdx.Input.Keys;
  */
 public class GamepadMapping
 {
-	public static final int NORTH = 200;
-	public static final int NORTH_EAST = 199;
-	public static final int NORTH_WEST = 198;
-	public static final int EAST = 197;
-	public static final int SOUTH = 196;
-	public static final int SOUTH_EAST = 195;
-	public static final int SOUTH_WEST = 194;
-	public static final int WEST = 193;
+	public static final int UP = 200;
+	public static final int UP_RIGHT = 199;
+	public static final int UP_LEFT = 198;
+	public static final int RIGHT = 197;
+	public static final int DOWN = 196;
+	public static final int DOWN_RIGHT = 195;
+	public static final int DOWN_LEFT = 194;
+	public static final int LEFT = 193;
 	public static final int CENTER = 192;
 	
 	public int BUTTON_DPAD_UP;

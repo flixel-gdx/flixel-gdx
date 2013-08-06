@@ -1,5 +1,9 @@
-package org.flixel;
+package org.flixel.ui;
 
+import org.flixel.FlxButton;
+import org.flixel.FlxG;
+import org.flixel.FlxGroup;
+import org.flixel.FlxSprite;
 import org.flixel.event.IFlxButton;
 
 /**

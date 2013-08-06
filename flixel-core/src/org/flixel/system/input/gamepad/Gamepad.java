@@ -4,6 +4,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.system.input.Input;
 
+import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
@@ -15,14 +16,14 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
  */
 public class Gamepad extends Input
 {
-	public boolean NORTH;
-	public boolean NORTH_EAST;
-	public boolean NORTH_WEST;	
-	public boolean EAST;
-	public boolean SOUTH;
-	public boolean SOUTH_EAST;
-	public boolean SOUTH_WEST;
-	public boolean WEST;
+	public boolean UP;
+	public boolean UP_RIGHT;
+	public boolean UP_LEFT;	
+	public boolean RIGHT;
+	public boolean DOWN;
+	public boolean DOWN_RIGHT;
+	public boolean DOWN_LEFT;
+	public boolean LEFT;
 	public boolean CENTER;
 	public boolean BUTTON_DPAD_UP;
 	public boolean BUTTON_DPAD_RIGHT;
@@ -51,13 +52,17 @@ public class Gamepad extends Input
 	private int AXIS_RIGHT_Y;
 		
 	/**
+	 * Tracks the current POV. 
+	 */
+	public PovDirection povDirection;
+	/**
 	 * This is just a pre-allocated x-y point container to be used however you like.
 	 */
 	private FlxPoint _point;
 	/**
-	 * Internal, put acceleration data from controller.
+	 * Put acceleration data from controller.
 	 */
-	IntMap<Float> axisData;
+	public IntMap<Float> axisData;
 	/**
 	 * The sensitivity of the L-axis. Default 100.
 	 */
@@ -78,6 +83,10 @@ public class Gamepad extends Input
 	 * The value of the accelerometer on its y-axis.
 	 */
 	public float z;
+	/**
+	 * Tracks whether the gamepad is connected or not.
+	 */
+	public boolean connected;
 	/**
 	 * The ID of the gamepad which is equal to the ID of the <code>Controller</code>.
 	 */
@@ -179,14 +188,15 @@ public class Gamepad extends Input
 	public void setMapping(GamepadMapping mapping)
 	{
 		ID = mapping.ID;		
-		addKey("NORTH", GamepadMapping.NORTH);
-		addKey("NORTH_EAST", GamepadMapping.NORTH_EAST);
-		addKey("NORTH_WEST", GamepadMapping.NORTH_WEST);
-		addKey("EAST", GamepadMapping.EAST);
-		addKey("SOUTH", GamepadMapping.SOUTH);
-		addKey("SOUTH_EAST", GamepadMapping.SOUTH_EAST);
-		addKey("SOUTH_WEST", GamepadMapping.SOUTH_WEST);
-		addKey("WEST", GamepadMapping.WEST);		
+		FlxG.log(ID + mapping.BUTTON_B);
+		addKey("UP", GamepadMapping.UP);
+		addKey("UP_RIGHT", GamepadMapping.UP_RIGHT);
+		addKey("UP_LEFT", GamepadMapping.UP_LEFT);
+		addKey("RIGHT", GamepadMapping.RIGHT);
+		addKey("DOWN", GamepadMapping.DOWN);
+		addKey("DOWN_RIGHT", GamepadMapping.DOWN_RIGHT);
+		addKey("DOWN_LEFT", GamepadMapping.DOWN_LEFT);
+		addKey("LEFT", GamepadMapping.LEFT);		
 		addKey("CENTER", GamepadMapping.CENTER);
 		addKey("BUTTON_DPAD_UP", mapping.BUTTON_DPAD_UP);
 		addKey("BUTTON_DPAD_RIGHT", mapping.BUTTON_DPAD_RIGHT);

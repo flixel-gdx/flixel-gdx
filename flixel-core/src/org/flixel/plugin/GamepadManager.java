@@ -1,7 +1,9 @@
-package org.flixel.system.input.gamepad;
+package org.flixel.plugin;
 
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
+import org.flixel.system.input.gamepad.Gamepad;
+import org.flixel.system.input.gamepad.GamepadMapping;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
@@ -75,7 +77,8 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	{
 		for(Gamepad pad : pads)
 		{
-			pad.update();
+			if(pad.connected)
+				pad.update();
 		}
 	}
 	
@@ -126,6 +129,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 					if(controllerName.equals(mappings.get(i).ID.toLowerCase()))
 					{
 						gamepad.setMapping(mappings.get(i));
+						gamepad.connected = true;
 						mappingFound = true;
 						break;
 					}					
@@ -139,6 +143,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 						if(controllerName.equals(mappingName))
 						{
 							gamepad.setMapping(mapping);
+							gamepad.connected = true;
 							mappingFound = true;
 							break;
 						}
@@ -158,6 +163,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	{		
 		if(pads.removeValue(gamepad, true))
 		{
+			gamepad.connected = false;
 			Controller c = controllers.findKey(gamepad, true);
 			if(c != null)
 				controllers.remove(c);
@@ -179,13 +185,25 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	@Override
 	public void connected(Controller controller)
 	{
-		FlxG.log("connected: " + controller.getName());
+		if(controllers.containsKey(controller))
+			controllers.get(controller).connected = true;
+		else
+		{
+			// add new controller
+			for(int i = 0; i < pads.size; i++)
+			{
+				if(pads.get(i).ID == null)
+					addGamepad(pads.get(i));
+			}
+		}
 	}
 
 	@Override
 	public void disconnected(Controller controller)
 	{
-		FlxG.log("disconnected: " + controller.getName());
+		Gamepad pad = controllers.get(controller);
+		if(pad != null)
+			pad.connected = false;
 	}
 
 	@Override
@@ -211,30 +229,32 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 
 	@Override
 	public boolean povMoved(Controller controller, int povCode, PovDirection value)
-	{
+	{		
+		Gamepad pad = controllers.get(controller);
+		if(value == PovDirection.center || pad.povDirection != value)
+		{
+			pad.handleKeyUp(GamepadMapping.UP);
+			pad.handleKeyUp(GamepadMapping.UP_RIGHT);
+			pad.handleKeyUp(GamepadMapping.UP_LEFT);
+			pad.handleKeyUp(GamepadMapping.RIGHT);
+			pad.handleKeyUp(GamepadMapping.DOWN);
+			pad.handleKeyUp(GamepadMapping.DOWN_RIGHT);
+			pad.handleKeyUp(GamepadMapping.DOWN_LEFT);
+			pad.handleKeyUp(GamepadMapping.LEFT);
+		}
 		switch(value)
 		{
-			case north:controllers.get(controller).handleKeyDown(GamepadMapping.NORTH);break;
-			case northEast:controllers.get(controller).handleKeyDown(GamepadMapping.NORTH_EAST);break;
-			case northWest:controllers.get(controller).handleKeyDown(GamepadMapping.NORTH_WEST);break;
-			case east:controllers.get(controller).handleKeyDown(GamepadMapping.EAST);break;
-			case south:controllers.get(controller).handleKeyDown(GamepadMapping.SOUTH);break;
-			case southEast:controllers.get(controller).handleKeyDown(GamepadMapping.SOUTH_EAST);break;
-			case southWest:controllers.get(controller).handleKeyDown(GamepadMapping.SOUTH_WEST);break;
-			case west:controllers.get(controller).handleKeyDown(GamepadMapping.WEST);break;				
+			case north:controllers.get(controller).handleKeyDown(GamepadMapping.UP);break;
+			case northEast:controllers.get(controller).handleKeyDown(GamepadMapping.UP_RIGHT);break;
+			case northWest:controllers.get(controller).handleKeyDown(GamepadMapping.UP_LEFT);break;
+			case east:controllers.get(controller).handleKeyDown(GamepadMapping.RIGHT);break;
+			case south:controllers.get(controller).handleKeyDown(GamepadMapping.DOWN);break;
+			case southEast:controllers.get(controller).handleKeyDown(GamepadMapping.DOWN_RIGHT);break;
+			case southWest:controllers.get(controller).handleKeyDown(GamepadMapping.DOWN_LEFT);break;
+			case west:controllers.get(controller).handleKeyDown(GamepadMapping.LEFT);break;				
 			default:break;
 		}
-		if(value == PovDirection.center)
-		{
-			controllers.get(controller).handleKeyUp(GamepadMapping.NORTH);
-			controllers.get(controller).handleKeyUp(GamepadMapping.NORTH_EAST);
-			controllers.get(controller).handleKeyUp(GamepadMapping.NORTH_WEST);
-			controllers.get(controller).handleKeyUp(GamepadMapping.EAST);
-			controllers.get(controller).handleKeyUp(GamepadMapping.SOUTH);
-			controllers.get(controller).handleKeyUp(GamepadMapping.SOUTH_EAST);
-			controllers.get(controller).handleKeyUp(GamepadMapping.SOUTH_WEST);
-			controllers.get(controller).handleKeyUp(GamepadMapping.WEST);
-		}
+		pad.povDirection = value;
 		return false;
 	}
 
