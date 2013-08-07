@@ -59,7 +59,11 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	
 	@Override
 	public void destroy()
-	{
+	{			
+		for(Controller c : Controllers.getControllers())
+		{
+			c.removeListener(listener);
+		}
 		listener = null;
 		controllers.clear();
 		controllers = null;
@@ -70,7 +74,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 		for(int i = 0; i < pads.size; i++)
 			pads.get(i).destroy();
 		pads.clear();
-		pads = null;		
+		pads = null;
 	}
 		
 	@Override
