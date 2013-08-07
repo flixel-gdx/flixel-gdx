@@ -111,26 +111,13 @@ public class Keyboard extends Input
 	public boolean VOLUME_DOWN;
 	public boolean VOLUME_UP;
 
-	// Android/GDX joystick and gamepad buttons
-	public boolean BUTTON_CIRCLE;
-	public boolean BUTTON_A; // OUYA = O
-	public boolean BUTTON_B; // OUYA = A
-	public boolean BUTTON_X; // OUYA = U
-	public boolean BUTTON_Y; // OUYA = Y
-	public boolean BUTTON_Z;
-	public boolean BUTTON_L1;
-	public boolean BUTTON_R1;
-	public boolean BUTTON_L2;
-	public boolean BUTTON_R2;
-	public boolean BUTTON_THUMBL;
-	public boolean BUTTON_THUMBR;
-	public boolean BUTTON_START;
-	public boolean BUTTON_SELECT;
-	public boolean BUTTON_MODE;
-
+	/**
+	 * Creates a new <code>Keyboard</code> object.
+	 */
 	public Keyboard()
 	{
 		super();
+		addKey("ZERO", Keys.NUM_0);
 
 		// LETTERS (A-Z)
 		addKey("A", Keys.A);
@@ -161,7 +148,6 @@ public class Keyboard extends Input
 		addKey("Z", Keys.Z);
 
 		// NUMBERS (0-9)
-		// addKey("ZERO");
 		addKey("NUMPADZERO", Keys.NUM_0);
 		addKey("NUMPADONE", Keys.NUM_1);
 		addKey("NUMPADTWO", Keys.NUM_2);
@@ -230,30 +216,11 @@ public class Keyboard extends Input
 		addKey("SEARCH", Keys.SEARCH);
 		addKey("VOLUME_DOWN", Keys.VOLUME_DOWN);
 		addKey("VOLUME_UP", Keys.VOLUME_UP);
-
-		// JOYSTICK & GAMEPAD BUTTONS
-		addKey("BUTTON_CIRCLE", Keys.BUTTON_CIRCLE);
-		addKey("BUTTON_A", Keys.BUTTON_A);
-		addKey("BUTTON_B", Keys.BUTTON_B);
-		addKey("BUTTON_X", Keys.BUTTON_X);
-		addKey("BUTTON_Y", Keys.BUTTON_Y);
-		addKey("BUTTON_Z", Keys.BUTTON_Z);
-		addKey("BUTTON_L1", Keys.BUTTON_L1);
-		addKey("BUTTON_R1", Keys.BUTTON_R1);
-		addKey("BUTTON_L2", Keys.BUTTON_L2);
-		addKey("BUTTON_R2", Keys.BUTTON_R2);
-		addKey("BUTTON_THUMBL", Keys.BUTTON_THUMBL);
-		addKey("BUTTON_THUMBR", Keys.BUTTON_THUMBR);
-		addKey("BUTTON_START", Keys.BUTTON_START);
-		addKey("BUTTON_SELECT", Keys.BUTTON_SELECT);
-		addKey("BUTTON_MODE", Keys.BUTTON_MODE);
 	}
 
 	/**
 	 * Event handler so FlxGame can toggle keys.
-	 * 
-	 * @param KeyCode
-	 *            The key code of the pressed key.
+	 * @param KeyCode	The key code of the pressed key.
 	 */
 	public void handleKeyDown(int KeyCode)
 	{
@@ -278,9 +245,7 @@ public class Keyboard extends Input
 
 	/**
 	 * Event handler so FlxGame can toggle keys.
-	 * 
-	 * @param KeyCode
-	 *            The key code of the pressed key.
+	 * @param KeyCode	The key code of the pressed key.
 	 */
 	public void handleKeyUp(int KeyCode)
 	{

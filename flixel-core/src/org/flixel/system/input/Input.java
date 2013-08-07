@@ -82,9 +82,9 @@ public class Input
 	 */
 	public boolean pressed(int Key)
 	{
-		if(Key > 0)
+		//if(Key > 0)
 			return _map.get(Key).current == 1;
-		return false;
+//		return false;
 	}
 	
 	/**
@@ -107,10 +107,10 @@ public class Input
 	 * @return Whether the key was just pressed
 	 */
 	public boolean justPressed(int Key)
-	{		
-		if(Key > 0)
+	{
+//		if(Key > 0)
 			return _map.get(Key).current == 2;
-		return false;
+//		return false;
 	}
 
 	/**

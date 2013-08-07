@@ -831,7 +831,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	/**
 	 * Goes through the game state and draws all the game objects and special effects.
 	 */
-	private void draw()
+	protected void draw()
 	{
 		long mark = System.currentTimeMillis();
 

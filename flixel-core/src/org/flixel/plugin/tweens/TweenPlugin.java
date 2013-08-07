@@ -2,6 +2,7 @@ package org.flixel.plugin.tweens;
 
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
+import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
 import aurelienribon.tweenengine.Tween;
@@ -39,6 +40,7 @@ public class TweenPlugin extends FlxBasic
 	{
 		manager = new TweenManager();
 		Tween.registerAccessor(FlxSprite.class, new TweenSprite());
+		Tween.registerAccessor(FlxPoint.class, new TweenPoint());
 	}
 	
 	/**
