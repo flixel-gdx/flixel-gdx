@@ -39,8 +39,9 @@ public class FlxList
 	
 	/**
 	 * Creates a new link, and sets <code>object</code> and <code>next</code> to <code>null</code>.
+	 * Has to be public for GWT reflection.
 	 */
-	private FlxList()
+	public FlxList()
 	{
 		object = null;
 		next = null;

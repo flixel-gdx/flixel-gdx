@@ -213,7 +213,10 @@ public class FlxQuadTree extends FlxRect
 		return quadTree;
 	}
 	
-	private FlxQuadTree()
+	/**
+	 * Has to be public for GWT reflection.
+	 */
+	public FlxQuadTree()
 	{
 		
 	}

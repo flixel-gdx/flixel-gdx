@@ -5,4 +5,8 @@
 	<source path=""/>
 	<inherits name="com.badlogic.gdx"/>
 	<inherits name="flash.flash"/>
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/font/nokiafc22.fnt" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/font/nokiafc22.png" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/pack" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/pack.png" />
 </module>

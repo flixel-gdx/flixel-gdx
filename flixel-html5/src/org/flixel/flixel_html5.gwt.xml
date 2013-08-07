@@ -3,5 +3,7 @@
 <module>
 	<inherits name="org.flixel.flixel_core"/>
 	<inherits name="com.badlogic.gdx.backends.gdx_backends_gwt"/>
+	<super-source path="emu"/>
 	<source path="client"/>
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel" />
 </module>

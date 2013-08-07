@@ -1,7 +1,5 @@
 package org.flixel;
 
-import java.util.Locale;
-
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
@@ -148,8 +146,8 @@ public class FlxText extends FlxSprite
 		_size = (int) Size;
 		
 		setColor(Color);
-		if (Alignment != null)
-			_alignment = HAlignment.valueOf(Alignment.toUpperCase(Locale.ENGLISH));		
+		if (Alignment != null)	// GWT doesn't support Locale. May cause problems?
+			_alignment = HAlignment.valueOf(Alignment.toUpperCase());//Locale.ENGLISH));		
 		_shadow = ShadowColor;
 		_shadowX = ShadowX;
 		_shadowY = ShadowY;
@@ -323,7 +321,7 @@ public class FlxText extends FlxSprite
 	 */
 	public String getAlignment()
 	{
-		return _alignment.toString().toLowerCase(Locale.ENGLISH);
+		return _alignment.toString().toLowerCase();//Locale.ENGLISH);
 	}
 	
 	/**
@@ -333,7 +331,7 @@ public class FlxText extends FlxSprite
 	{
 		if (Alignment == null)
 			return;
-		_alignment = HAlignment.valueOf(Alignment.toUpperCase(Locale.ENGLISH));
+		_alignment = HAlignment.valueOf(Alignment.toUpperCase());//Locale.ENGLISH));
 		calcFrame();
 	}
 	

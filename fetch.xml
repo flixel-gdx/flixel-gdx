@@ -11,11 +11,15 @@
 	<target name="extract">
 		<!-- core project -->
 		<mkdir dir="flixel-core/libs"/>
+		<delete>
+			<fileset dir="flixel-core/libs"/>
+		</delete>
 		<unzip src="libgdx-nightly.zip" dest="flixel-core/libs">
 			<patternset>
 				<include name="gdx.jar"/>
 				<include name="sources/gdx-sources.jar"/>
 				<include name="extensions/gdx-freetype/gdx-freetype.jar"/>
+				<include name="extensions/gdx-freetype/sources/gdx-freetype-sources.jar"/>
 				<include name="extensions/gdx-controllers/gdx-controllers.jar"/>
 				<include name="extensions/gdx-controllers/sources/gdx-controllers-sources.jar"/>
 			</patternset>
@@ -25,12 +29,16 @@
 		<unzip src="tween-engine.zip" dest="flixel-core/libs"/>
 		
 		<!-- android project -->
+		<mkdir dir="flixel-android/libs"/>
+		<delete>
+			<fileset dir="flixel-android/libs" excludes="**/*.properties"/>
+		</delete>
 		<unzip src="libgdx-nightly.zip" dest="flixel-android/libs">
 			<patternset>
 				<include name="gdx-backend-android.jar"/>
 				<include name="sources/gdx-backend-android-sources.jar"/>
-				<include name="sources/gdx-controllers-android.jar"/>
-				<include name="sources/gdx-controllers-android-sources.jar"/>
+				<include name="extensions/gdx-controllers/gdx-controllers-android.jar"/>
+				<include name="extensions/gdx-controllers/sources/gdx-controllers-android-sources.jar"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
@@ -55,6 +63,9 @@
 		
 		<!-- desktop project -->
 		<mkdir dir="flixel-desktop/libs"/>
+		<delete>
+			<fileset dir="flixel-desktop/libs"/>
+		</delete>
 		<unzip src="libgdx-nightly.zip" dest="flixel-desktop/libs">
 			<patternset>
 				<include name="gdx-backend-lwjgl.jar"/>
@@ -62,15 +73,18 @@
 				<include name="sources/gdx-backend-lwjgl-sources.jar"/>
 				<include name="gdx-natives.jar"/>
 				<include name="extensions/gdx-freetype/gdx-freetype-natives.jar"/>
-				<include name="extensions/gdx-freetype/gdx-controllers-desktop.jar"/>
-				<include name="extensions/gdx-freetype/gdx-controllers-natives.jar"/>
-				<include name="extensions/gdx-freetype/gdx-controllers-sources.jar"/>
+				<include name="extensions/gdx-controllers/gdx-controllers-desktop.jar"/>
+				<include name="extensions/gdx-controllers/sources/gdx-controllers-desktop-sources.jar"/>
+				<include name="extensions/gdx-controllers/gdx-controllers-desktop-natives.jar"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
 		
 		<!-- gwt project -->
 		<mkdir dir="flixel-html5/war/WEB-INF/lib"/>
+		<delete>
+			<fileset dir="flixel-html5/war/WEB-INF/lib"/>
+		</delete>
 		<unzip src="libgdx-nightly.zip" dest="flixel-html5/war/WEB-INF/lib">
 			<patternset>
 				<include name="gdx-backend-gwt.jar"/>

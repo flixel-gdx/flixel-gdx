@@ -638,9 +638,9 @@ public class Mouse extends FlxPoint
 	}
 	
 	/**
-	 * An internal helper class to store the state of the pointers in game.
+	 * A helper class to store the state of the pointers in game.
 	 */
-	protected class Pointer
+	public static class Pointer
 	{
 		/**
 		 * The current pressed state of the pointer.

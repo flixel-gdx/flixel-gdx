@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="org/flixel/emu/" kind="src" path="src"/>
+	<classpathentry kind="src" path="src/org/flixel/emu"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt.jar" sourcepath="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/flixel-core"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
-	<classpathentry kind="lib" path="/flixel-core/libs/gdx-sources.jar"/>
-	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+	<classpathentry exported="true" kind="lib" path="/flixel-core/libs/gdx-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

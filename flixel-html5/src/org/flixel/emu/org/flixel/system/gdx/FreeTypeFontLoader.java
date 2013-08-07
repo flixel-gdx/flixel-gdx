@@ -1,5 +1,6 @@
 package org.flixel.system.gdx;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
@@ -8,8 +9,6 @@ import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -31,24 +30,10 @@ public class FreeTypeFontLoader extends AsynchronousAssetLoader<BitmapFont, Free
 
 	@Override
 	public BitmapFont loadSync(AssetManager manager, String fileName, FileHandle file, FreeTypeFontParameter parameter)
-	{
-		BitmapFont font = null;
-		
-		String[] split = fileName.split(":");
-		if(split[0].endsWith(".ttf"))
-		{
-			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(resolve(split[0]));
-			FreeTypeBitmapFontData data = generator.generateData(Integer.parseInt(split[1]), parameter != null ? parameter.characters : FreeTypeFontGenerator.DEFAULT_CHARS, parameter != null ? parameter.flip : true);
-			generator.dispose();
-			font = new BitmapFont(data, data.getTextureRegion(), true);
-		}
-		else
-		{
-			font = _bitmapFontLoader.loadSync(manager, fileName, file, parameter);
-			if(parameter == null)
-				font.getData().flipped = true;
-		}
-		
+	{		
+		BitmapFont font = _bitmapFontLoader.loadSync(manager, fileName, file, parameter);
+		if(parameter == null)
+			font.getData().flipped = true;
 		return font;
 	}
 	
@@ -62,12 +47,13 @@ public class FreeTypeFontLoader extends AsynchronousAssetLoader<BitmapFont, Free
 	@Override
 	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, FreeTypeFontParameter parameter)
 	{
-		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
-	
-		if(fileName.endsWith(".fnt"))
-			deps = _bitmapFontLoader.getDependencies(fileName, file, parameter);
-
-		return deps;
+		if (fileName.endsWith(".ttf"))
+		{
+			Gdx.app.log("flixel", "TrueTypeFonts not supported in HTML5: " + fileName);
+			fileName = "org/flixel/data/font/nokiafc22.fnt";
+		}
+		
+		return _bitmapFontLoader.getDependencies(fileName, file, parameter);
 	}
 
 	static public class FreeTypeFontParameter extends BitmapFontParameter 
