@@ -52,7 +52,7 @@ public class Gamepad extends Input
 	private int AXIS_RIGHT_Y;
 		
 	/**
-	 * Tracks the current POV. 
+	 * Internal, tracks the current POV. 
 	 */
 	public PovDirection povDirection;
 	/**
@@ -60,7 +60,7 @@ public class Gamepad extends Input
 	 */
 	private FlxPoint _point;
 	/**
-	 * Put acceleration data from controller.
+	 * Internal, Put acceleration data from controller.
 	 */
 	public IntMap<Float> axisData;
 	/**
@@ -96,8 +96,7 @@ public class Gamepad extends Input
 	 * Creates a new <code>Gamepad</code> object.
 	 */
 	public Gamepad()
-	{
-		_map.shrink();
+	{		
 		_point = new FlxPoint();
 		axisData = new IntMap<Float>(4);
 	}
@@ -106,6 +105,7 @@ public class Gamepad extends Input
 	public void destroy()
 	{
 		super.destroy();
+		povDirection = null;
 		_point = null;
 		axisData.clear();
 		axisData = null;
@@ -216,7 +216,6 @@ public class Gamepad extends Input
 		addKey("BUTTON_START", mapping.BUTTON_START);
 		addKey("BUTTON_SELECT", mapping.BUTTON_SELECT);
 		addKey("BUTTON_MODE", mapping.BUTTON_MODE);
-		
 		AXIS_LEFT_X = mapping.AXIS_LEFT_X;
 		AXIS_LEFT_Y = mapping.AXIS_LEFT_Y;
 		AXIS_RIGHT_X = mapping.AXIS_RIGHT_X;
