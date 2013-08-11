@@ -6,8 +6,8 @@ import org.flixel.event.IFlxObject;
 import org.flixel.event.IFlxReplay;
 import org.flixel.event.IFlxVolume;
 import org.flixel.plugin.DebugPathDisplay;
-import org.flixel.plugin.TimerManager;
 import org.flixel.plugin.GestureManager;
+import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.gdx.ManagedTextureData;
@@ -28,7 +28,7 @@ import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -1106,7 +1106,7 @@ public class FlxG
 	 * 
 	 * @return The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion createBitmap(int Width, int Height, int Color, boolean Unique, String Key)
+	static public AtlasRegion createBitmap(int Width, int Height, int Color, boolean Unique, String Key)
 	{		
 		if(Key == null)
 		{
@@ -1138,7 +1138,7 @@ public class FlxG
 			parameter.textureData = new ManagedTextureData(pixmap);
 			_cache.load(Key, Texture.class, parameter);
 		}
-		return new TextureRegion(_cache.load(Key, Texture.class), Width, Height);
+		return new AtlasRegion(_cache.load(Key, Texture.class), 0, 0, Width, Height);
 	}
 	
 	/**
@@ -1151,7 +1151,7 @@ public class FlxG
 	 * 
 	 * @return The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion createBitmap(int Width, int Height, int Color, boolean Unique)
+	static public AtlasRegion createBitmap(int Width, int Height, int Color, boolean Unique)
 	{
 		return createBitmap(Width, Height, Color, Unique, null);
 	}
@@ -1165,7 +1165,7 @@ public class FlxG
 	 * 
 	 * @return The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion createBitmap(int Width, int Height, int Color)
+	static public AtlasRegion createBitmap(int Width, int Height, int Color)
 	{
 		return createBitmap(Width, Height, Color, false, null);
 	}
@@ -1180,7 +1180,7 @@ public class FlxG
 	 * 
 	 * @return	The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(String Graphic, boolean Reverse, boolean Unique, String Key)
+	static public AtlasRegion addBitmap(String Graphic, boolean Reverse, boolean Unique, String Key)
 	{
 		if(Key != null)
 		{
@@ -1201,13 +1201,14 @@ public class FlxG
 			}
 		}
 		
-		TextureRegion textureRegion = null;
+		AtlasRegion textureRegion = null;
 		String[] split = Graphic.split(":");
 		
 		//if no region has been specified, load as standard texture
 		if (split.length == 1)
 		{	
-			textureRegion = new TextureRegion(_cache.load(Graphic, Texture.class));
+			Texture texture = _cache.load(Graphic, Texture.class);
+			textureRegion = new AtlasRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
 		}
 		//otherwise, load as TextureAtlas
 		else if (split.length == 2)
@@ -1220,7 +1221,7 @@ public class FlxG
 			if (textureRegion == null)
 				throw new RuntimeException("Could not find region " + regionName + " in " + fileName);
 			
-			textureRegion = new TextureRegion(textureRegion);
+			textureRegion = new AtlasRegion(textureRegion);
 		}
 		else
 		{
@@ -1253,7 +1254,7 @@ public class FlxG
 				_cache.load(Key, Texture.class, parameter);
 			}
 	
-			textureRegion = new TextureRegion(_cache.load(Key, Texture.class), textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+			textureRegion = new AtlasRegion(_cache.load(Key, Texture.class), 0, 0, textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
 		}
 		
 		return textureRegion;
@@ -1268,7 +1269,7 @@ public class FlxG
 	 * 
 	 * @return	The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(String Graphic, boolean Reverse, boolean Unique)
+	static public AtlasRegion addBitmap(String Graphic, boolean Reverse, boolean Unique)
 	{
 		return addBitmap(Graphic, Reverse, Unique, null);
 	}
@@ -1281,7 +1282,7 @@ public class FlxG
 	 * 
 	 * @return	The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(String Graphic, boolean Reverse)
+	static public AtlasRegion addBitmap(String Graphic, boolean Reverse)
 	{
 		return addBitmap(Graphic, Reverse, false, null);
 	}
@@ -1293,7 +1294,7 @@ public class FlxG
 	 * 
 	 * @return	The <code>TextureRegion</code> we just created.
 	 */
-	static public TextureRegion addBitmap(String Graphic)
+	static public AtlasRegion addBitmap(String Graphic)
 	{
 		return addBitmap(Graphic, false, false, null);
 	}

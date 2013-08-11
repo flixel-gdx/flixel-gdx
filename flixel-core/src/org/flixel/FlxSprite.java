@@ -7,6 +7,7 @@ import org.flixel.system.gdx.ManagedTextureData;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
@@ -131,7 +132,7 @@ public class FlxSprite extends FlxObject
 	/**
 	 * Internal, stores the entire source graphic (not the current displayed animation frame), used with Flash getter/setter.
 	 */
-	protected TextureRegion _pixels;
+	protected AtlasRegion _pixels;
 	/**
 	 * Internal tracker for reloading the texture if its pixmap has been modified.
 	 */
@@ -261,9 +262,9 @@ public class FlxSprite extends FlxObject
 		if(Width == 0)
 		{
 			if(Animated)
-				Width = _pixels.getRegionHeight();
+				Width = _pixels.rotate ? _pixels.getRegionWidth() : _pixels.getRegionHeight();
 			else
-				Width = _pixels.getRegionWidth();
+				Width = _pixels.rotate ? _pixels.getRegionHeight() : _pixels.getRegionWidth();
 		}
 		width = frameWidth = Width;
 		if(Height == 0)
@@ -271,7 +272,7 @@ public class FlxSprite extends FlxObject
 			if(Animated)
 				Height = (int) width;
 			else
-				Height = _pixels.getRegionHeight();
+				Height = _pixels.rotate ? _pixels.getRegionWidth() : _pixels.getRegionHeight();
 		}
 		height = frameHeight = Height;
 		resetHelpers();
@@ -513,9 +514,11 @@ public class FlxSprite extends FlxObject
 	protected void resetHelpers()
 	{			
 		if(framePixels == null)
-			framePixels = new Sprite();
-		
-		framePixels.setRegion(_pixels, 0, 0, frameWidth, frameHeight);
+			framePixels = new Sprite(_pixels);
+		if(_pixels.rotate)
+			framePixels.setRegion(_pixels, 0, _pixels.getRegionHeight()-frameHeight, frameWidth, frameHeight);
+		else
+			framePixels.setRegion(_pixels, 0, 0, frameWidth, frameHeight);
 		framePixels.setSize(frameWidth, frameHeight);
 		framePixels.flip(false, true);
 		origin.make(frameWidth*0.5f,frameHeight*0.5f);
@@ -570,6 +573,10 @@ public class FlxSprite extends FlxObject
 		//tinting
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		framePixels.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
+		if(_pixels.rotate)
+		{
+			framePixels.rotate90(false);
+		}
 
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null || blend.equals(BlendMode.NORMAL)))
 		{ 	//Simple render
@@ -599,7 +606,12 @@ public class FlxSprite extends FlxObject
 		
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-				drawDebug(camera);
+			drawDebug(camera);
+		
+		if(_pixels.rotate)
+		{
+			framePixels.rotate90(true);			
+		}
 	}
 	
 	/**
@@ -1038,7 +1050,7 @@ public class FlxSprite extends FlxObject
 	 * Set <code>pixels</code> to any <code>TextureRegion</code> object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
-	public void setPixels(TextureRegion Pixels)
+	public void setPixels(AtlasRegion Pixels)
 	{
 		_pixels = Pixels;
 		width = frameWidth = _pixels.getRegionWidth();
@@ -1232,34 +1244,46 @@ public class FlxSprite extends FlxObject
 	 * Internal function to update the current animation frame.
 	 */
 	protected void calcFrame()
-	{
-		int indexX = _curIndex*frameWidth;
-		int indexY = 0;
-		
+	{		
+		int indexY;
+		int indexX;			
 		//Handle sprite sheets		
 		int widthHelper = _pixels.getRegionWidth();
-		int heightHelper = _pixels.getRegionHeight();
+		int heightHelper = _pixels.getRegionHeight();	
+		if(!_pixels.rotate)
+		{
+			indexX = _curIndex * frameWidth;
+			indexY = 0;			
+		}
+		else
+		{
+			indexY = (heightHelper - frameWidth) - (_curIndex * frameWidth);
+			indexX = 0;
+		}
 		if(indexX >= widthHelper)
 		{
-			indexY = (int)(indexX/widthHelper)*frameHeight;
+			indexY = (int)(indexX / widthHelper) * frameHeight;
 			indexX %= widthHelper;
 		}
-				
 		if(indexY >= heightHelper)
 		{
 			indexY = heightHelper - frameHeight;
 			indexX = widthHelper - frameWidth;
 		}
-		
-		//Update display bitmap		
-		framePixels.setRegion(indexX+_pixels.getRegionX(), indexY+_pixels.getRegionY(), frameWidth, frameHeight);
+		//Update display bitmap
+		if(!_pixels.rotate)
+			framePixels.setRegion(indexX+_pixels.getRegionX(), indexY+_pixels.getRegionY(), frameWidth, frameHeight);
+		else
+			framePixels.setRegion(indexX+_pixels.getRegionX(), indexY+_pixels.getRegionY(), frameHeight, frameWidth);
 
 		//handle reversed sprites.
-		if(_flipped > 0 && _facing == LEFT)
+		if(_flipped > 0 && _facing == LEFT && _pixels.rotate)
+			framePixels.flip(false, false);
+		else if(_flipped > 0 && _facing == LEFT)
 			framePixels.flip(true, true);
 		else
-			framePixels.flip(false, true);
-
+			framePixels.flip(false, true);			
+		
 		if(_callback != null)
 			_callback.callback(((_curAnim != null)?(_curAnim.name):null),_curFrame,_curIndex);
 		dirty = false;
