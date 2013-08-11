@@ -249,14 +249,14 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 		}
 		switch(value)
 		{
-			case north:controllers.get(controller).handleKeyDown(GamepadMapping.UP);break;
-			case northEast:controllers.get(controller).handleKeyDown(GamepadMapping.UP_RIGHT);break;
-			case northWest:controllers.get(controller).handleKeyDown(GamepadMapping.UP_LEFT);break;
-			case east:controllers.get(controller).handleKeyDown(GamepadMapping.RIGHT);break;
-			case south:controllers.get(controller).handleKeyDown(GamepadMapping.DOWN);break;
-			case southEast:controllers.get(controller).handleKeyDown(GamepadMapping.DOWN_RIGHT);break;
-			case southWest:controllers.get(controller).handleKeyDown(GamepadMapping.DOWN_LEFT);break;
-			case west:controllers.get(controller).handleKeyDown(GamepadMapping.LEFT);break;				
+			case north:pad.handleKeyDown(GamepadMapping.UP);break;
+			case northEast:pad.handleKeyDown(GamepadMapping.UP_RIGHT);break;
+			case northWest:pad.handleKeyDown(GamepadMapping.UP_LEFT);break;
+			case east:pad.handleKeyDown(GamepadMapping.RIGHT);break;
+			case south:pad.handleKeyDown(GamepadMapping.DOWN);break;
+			case southEast:pad.handleKeyDown(GamepadMapping.DOWN_RIGHT);break;
+			case southWest:pad.handleKeyDown(GamepadMapping.DOWN_LEFT);break;
+			case west:pad.handleKeyDown(GamepadMapping.LEFT);break;				
 			default:break;
 		}
 		pad.povDirection = value;
