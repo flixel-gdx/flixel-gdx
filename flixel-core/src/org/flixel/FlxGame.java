@@ -915,7 +915,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_keyboardEvent = new KeyboardEvent(null);
 		
 		//Detect whether or not we're running on a mobile device
-		FlxG.mobile = (Gdx.app.getType() != ApplicationType.Desktop);
+		FlxG.mobile = (Gdx.app.getType().equals(ApplicationType.Android) || Gdx.app.getType().equals(ApplicationType.iOS));
 		
 		//Let mobile devs opt out of unnecessary overlays.
 		if(!FlxG.mobile)
