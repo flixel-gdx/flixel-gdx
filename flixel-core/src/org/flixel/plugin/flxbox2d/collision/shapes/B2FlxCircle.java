@@ -91,7 +91,6 @@ public class B2FlxCircle extends B2FlxShape
 	
 	/**
 	 * Creates the body.
-	 * @return	This object. Handy for chaining stuff together.
 	 */
 	@Override
 	protected void createBody()
@@ -105,6 +104,9 @@ public class B2FlxCircle extends B2FlxShape
 		shape = null;
 	}
 	
+	/**
+	 * Creates a Circle body.
+	 */
 	@Override
 	public B2FlxCircle create()
 	{

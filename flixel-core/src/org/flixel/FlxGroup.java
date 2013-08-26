@@ -567,7 +567,7 @@ public class FlxGroup extends FlxBasic
 	}
 	
 	/**
-	 * Call this function to retrieve the first object with dead == false in the group.
+	 * Call this function to retrieve the first object with alive == true in the group.
 	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
 	 * 
 	 * @return	A <code>FlxBasic</code> currently flagged as not dead.
@@ -586,7 +586,7 @@ public class FlxGroup extends FlxBasic
 	}
 	
 	/**
-	 * Call this function to retrieve the first object with dead == true in the group.
+	 * Call this function to retrieve the first object with alive == false in the group.
 	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
 	 * 
 	 * @return	A <code>FlxBasic</code> currently flagged as dead.

@@ -108,8 +108,7 @@ public class B2FlxRopeJoint extends B2FlxJoint
 	@Override
 	public B2FlxRopeJoint setBodyA(Body bodyA){super.setBodyA(bodyA);return this;}	
 	@Override
-	public B2FlxRopeJoint setBodyB(Body bodyB){super.setBodyB(bodyB);return this;}	
-		
+	public B2FlxRopeJoint setBodyB(Body bodyB){super.setBodyB(bodyB);return this;}		
 	@Override
 	public B2FlxRopeJoint setCollideConnected(boolean collideConnected){super.setCollideConnected(collideConnected);return this;}
 	@Override

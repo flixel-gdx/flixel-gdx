@@ -132,7 +132,6 @@ public class B2FlxBox extends B2FlxShape
 
 	/**
 	 * Creates the body.
-	 * @return	This object. Handy for chaining stuff together.
 	 */
 	@Override
 	protected void createBody()
@@ -146,6 +145,9 @@ public class B2FlxBox extends B2FlxShape
 		shape = null;
 	}
 	
+	/**
+	 * Creates a Box body.
+	 */
 	@Override
 	public B2FlxBox create()
 	{

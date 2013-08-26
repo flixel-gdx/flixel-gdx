@@ -116,7 +116,6 @@ public class B2FlxEdge extends B2FlxShape
 	
 	/**
 	 * Creates the body.
-	 * @return This object. Handy for chaining stuff together.
 	 */
 	@Override
 	public void createBody()
@@ -137,6 +136,9 @@ public class B2FlxEdge extends B2FlxShape
 		shape = null;
 	}
 	
+	/**
+	 * Creates an Edge body.
+	 */
 	@Override
 	public B2FlxEdge create()
 	{

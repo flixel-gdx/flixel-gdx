@@ -16,6 +16,13 @@ import com.badlogic.gdx.graphics.TextureData;
 public class B2FlxTileblock extends B2FlxBox
 {
 
+	/**
+	 * Creates a tileblock in Box2D.
+	 * @param x			The x-position.
+	 * @param y			The y-position.
+	 * @param width		The width of the tileblock.
+	 * @param height	The height of the tileblock.
+	 */
 	public B2FlxTileblock(float x, float y, int width, int height)
 	{
 		super(x, y, width, height);
@@ -27,7 +34,6 @@ public class B2FlxTileblock extends B2FlxBox
 	
 	/**
 	 * Fills the block with a randomly arranged selection of graphics from the image provided.
-	 * 
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
 	 * @param	TileWidth		The width of a single tile in the graphic.
 	 * @param	TileHeight		The height of a single tile in the graphic.
@@ -102,7 +108,6 @@ public class B2FlxTileblock extends B2FlxBox
 	
 	/**
 	 * Fills the block with a randomly arranged selection of graphics from the image provided.
-	 * 
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
 	 * @param	TileWidth		The width of a single tile in the graphic.
 	 * @param	TileHeight		The height of a single tile in the graphic.
@@ -114,7 +119,6 @@ public class B2FlxTileblock extends B2FlxBox
 	
 	/**
 	 * Fills the block with a randomly arranged selection of graphics from the image provided.
-	 * 
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
 	 * @param	TileWidth		The width of a single tile in the graphic.
 	 */
@@ -125,13 +129,10 @@ public class B2FlxTileblock extends B2FlxBox
 	
 	/**
 	 * Fills the block with a randomly arranged selection of graphics from the image provided.
-	 * 
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
 	 */
 	public B2FlxTileblock loadTiles(String TileGraphic)
 	{
 		return loadTiles(TileGraphic, 0, 0, 0);
 	}
-
 }
-

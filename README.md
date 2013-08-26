@@ -1,21 +1,38 @@
-What is flixel-gdx?
------------------------
+![logo](http://s6.postimg.org/51ixndytt/flixel_gdx_banner.png)
 
-flixel-gdx is a port of the AS3 game framework [flixel](http://flixel.org) to Java and Andorid. It’s built on top of the well-known libgdx framework which allows apps to be deployed to both Android and Desktop. With libgdx the nasty OpenGL ES stuff is all hidden. Like the original flixel, its primary function is to provide some useful base classes that you can easily extend to make your own basic game objects.
+![Build Status](http://www.sylvain-grialou.name:8180/job/flixel-gdx/badge/icon)
+##What is flixel-gdx?
+flixel-gdx is an open source 2D game engine written in Java. Flixel-gdx is a port of AS3 [flixel](http://flixel.org) written by [Adam â€˜Atomicâ€™ Saltsman](http://adamatomic.com/) to the Java language. It is built on top of the powerful [libgdx](http://libgdx.badlogicgames.com/) framework which allows developers to build and distribute cross-platform games. The complex stuff like OpenGL ES is taken care by libgdx and flixel-gdx makes you creating games easy and fun.
 
+##Links
+-	[flixel-gdx.com](http://flixel-gdx.com 'flixel-gdx homepage')
+-	[@flixelgdx on Twitter](http://twitter.com/flixelgdx)
+-	[Wiki](https://github.com/flixel-gdx/flixel-gdx/wiki)
+-	[Demos](https://github.com/flixel-gdx/flixel-gdx-examples)
+-	[Project Setup](https://github.com/flixel-gdx/flixel-gdx/wiki/Project-Setup)
+-	[Quick Guide](https://github.com/flixel-gdx/flixel-gdx/wiki/Quick-Guide)
 
-Get Started
------------
+##Cross platform
+<table>
+    <tr>
+    	<th>Desktop</th>
+    	<td>Linux</td>
+        <td>Mac</td>
+        <td>Windows</td>
+    </tr>
+    <tr>
+    	<th>Mobile</th>
+        <td>Android</td>
+    </tr>
+    <tr>
+    	<th>HTML5</th>
+        <td>WebGL browsers</td>
+    </tr>
+</table>
+_Note: HTML5 is experimental_
 
-[Project Setup](https://github.com/flixel-gdx/flixel-gdx/wiki/Project-Setup)
-
-[Quick Guide](https://github.com/flixel-gdx/flixel-gdx/wiki/Quick-Guide)
-
-
-Forums
-------
-
-flixel-gdx doesn’t have its own message board, but you can use the forums of flixel and libgdx. Both have an active community. If you have any questions or feedback that are related to flixel please put it in the flixel community. They are more likely to help you out more quickly than at the libgdx. Questions about Android, OpenGL ES, rendering, etc. goes to libgdx.
+##Forums
+flixel-gdx doesn't have its own message board, but you can use the forums of flixel and libgdx. Both have an active community. If you have any questions or feedback that are related to flixel please put it in the flixel community. They are more likely to help you out more quickly than at the libgdx. Questions about Android, OpenGL ES, rendering, etc. goes to libgdx.
 
 [flixel forums](http://forums.flixel.org) | [libgdx forums](http://www.badlogicgames.com/forum)
 

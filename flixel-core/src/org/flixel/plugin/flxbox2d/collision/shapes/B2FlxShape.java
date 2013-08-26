@@ -1095,7 +1095,7 @@ public abstract class B2FlxShape extends FlxSprite
 	}
 
 	/**
-	 * Wether the body needs to be destroyed on state change or not.
+	 * Whether the body needs to be destroyed on state change or not.
 	 * When this is set to true, don't forget to set B2FlxB.suviveWorld to true
 	 * otherwise the body will still get destroyed.
 	 * @param survive

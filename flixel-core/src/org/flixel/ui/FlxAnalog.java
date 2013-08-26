@@ -130,7 +130,7 @@ public class FlxAnalog extends FlxGroup
 	
 		
 	/**
-	 * Constructor
+	 * Creates a new <code>FlxAnalog</code> object.
 	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	radius	The radius where the thumb can move. Default 0, the background will be used as radius.
@@ -166,7 +166,7 @@ public class FlxAnalog extends FlxGroup
 	 * @param	X		The X-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	Y		The Y-coordinate of the point in space. The position doesn't start at top-left, but the center of the thumb.
  	 * @param	radius	The radius where the thumb can move. If 0, the background will be used as radius.
- 	 * @param	dragRadius	The radius where the thumb can move.
+ 	 * @param	dragRadius	The radius where the pointer can move while dragging the thumb.
 	 */
 	public FlxAnalog(float x, float y, float radius, float dragRadius)
 	{

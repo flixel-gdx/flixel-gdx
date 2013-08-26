@@ -157,7 +157,6 @@ public class B2FlxChain extends B2FlxShape
 	
 	/**
 	 * Creates the body.
-	 * @return This object. Handy for chaining stuff together.
 	 */
 	@Override
 	protected void createBody()
@@ -171,8 +170,11 @@ public class B2FlxChain extends B2FlxShape
 		shape = null;
 	}
 	
+	/**
+	 * Creates a chain body.
+	 */
 	@Override
-	public B2FlxShape create()
+	public B2FlxChain create()
 	{
 		super.create();
 		return this;

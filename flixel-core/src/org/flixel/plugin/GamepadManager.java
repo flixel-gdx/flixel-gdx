@@ -171,7 +171,10 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 			gamepad.connected = false;
 			Controller c = controllers.findKey(gamepad, true);
 			if(c != null)
+			{
 				controllers.remove(c);
+				c.removeListener(listener);
+			}
 		}
 	}	
 	
@@ -206,9 +209,17 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	@Override
 	public void disconnected(Controller controller)
 	{
-		Gamepad pad = controllers.get(controller);
-		if(pad != null)
-			pad.connected = false;
+		Gamepad gamepad = controllers.get(controller);
+		if(gamepad != null)
+		{
+			gamepad.connected = false;
+			Controller c = controllers.findKey(gamepad, true);
+			if(c != null)
+			{
+				controllers.remove(c);
+				c.removeListener(listener);
+			}
+		}
 	}
 
 	@Override
