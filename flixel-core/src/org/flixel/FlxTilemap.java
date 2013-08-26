@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 import flash.display.Graphics;
 
@@ -1093,7 +1094,7 @@ public class FlxTilemap extends FlxObject
 						overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
 					if(overlapFound)
 					{
-						if((tile.callback != null) && ((tile.filter == null) || (tile.filter.isInstance(Object))))
+						if((tile.callback != null) && ((tile.filter == null) || ClassReflection.isInstance(tile.filter, Object)))
 						{
 							tile.mapIndex = rowStart+column;
 							tile.callback.callback(tile,Object);
@@ -1101,7 +1102,7 @@ public class FlxTilemap extends FlxObject
 						results = true;
 					}
 				}
-				else if((tile.callback != null) && ((tile.filter == null) || (tile.filter.isInstance(Object))))
+				else if((tile.callback != null) && ((tile.filter == null) || ClassReflection.isInstance(tile.filter, Object)))
 				{
 					tile.mapIndex = rowStart+column;
 					tile.callback.callback(tile,Object);

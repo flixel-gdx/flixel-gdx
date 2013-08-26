@@ -139,12 +139,20 @@ public class FlxText extends FlxSprite
 		
 		if (!Font.equals(_font) || Size != _size)
 		{			
-			_textField = new BitmapFontCache(FlxG.loadFont(Font, FlxU.round(Size)));			
+			try
+			{
+				_textField = new BitmapFontCache(FlxG.loadFont(Font, FlxU.round(Size)));
+			}
+			catch(Exception e)
+			{
+				FlxG.log(e.getMessage());
+				_textField = new BitmapFontCache(FlxG.loadFont("org/flixel/data/font/nokiafc.fnt", 22));
+			}
+			
+			_font = Font;
+			_size = FlxU.round(Size);
 		}
  
-		_font = Font;
-		_size = (int) Size;
-		
 		setColor(Color);
 		if (Alignment != null)	// GWT doesn't support Locale. May cause problems?
 			_alignment = HAlignment.valueOf(Alignment.toUpperCase());//Locale.ENGLISH));		

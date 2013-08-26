@@ -1,4 +1,4 @@
-package org.flixel.system.gdx;
+package org.flixel.system.gdx.loaders;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;

@@ -1,8 +1,7 @@
 package org.flixel.system;
 
-import org.flixel.system.gdx.FlxFileHandleResolver;
-import org.flixel.system.gdx.FreeTypeFontLoader;
-
+import org.flixel.system.gdx.loaders.FlxFileHandleResolver;
+import org.flixel.system.gdx.loaders.FontLoader;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -36,7 +35,7 @@ public class FlxAssetManager
 	{	
 		FileHandleResolver resolver = new FlxFileHandleResolver();		
 		_assetManager = new AssetManager(resolver);
-		_assetManager.setLoader(BitmapFont.class, new FreeTypeFontLoader(resolver));
+		_assetManager.setLoader(BitmapFont.class, new FontLoader(resolver));
 	}
 	
 	/**

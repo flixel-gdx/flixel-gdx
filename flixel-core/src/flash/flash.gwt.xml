@@ -4,4 +4,5 @@
 <module>
   <source path="display"/>
   <source path="events"/>
+  <source path="media"/>
 </module>

@@ -17,6 +17,7 @@ import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver.Resolution;
 import com.badlogic.gdx.graphics.GL10;
@@ -1378,7 +1379,18 @@ public class FlxG
 	 */
 	static public BitmapFont loadFont(String Path, int Size)
 	{
-		return _cache.load(Path + ":" + Size, BitmapFont.class);
+		BitmapFontParameter parameter = new BitmapFontParameter();
+		parameter.flip = true;
+		
+		String bitmapFontExtension = ".fnt";
+		
+		if(Path.endsWith(bitmapFontExtension))
+		{
+			Path = Path.substring(0, Path.length() - bitmapFontExtension.length()) + Size + bitmapFontExtension;
+			return _cache.load(Path, BitmapFont.class, parameter);
+		}
+		else
+			return _cache.load(Size + ":" + Path, BitmapFont.class, parameter);
 	}
 	
 	/**
@@ -1389,7 +1401,15 @@ public class FlxG
 	 */
 	static public void disposeFont(String Path, int Size)
 	{
-		_cache.unload(Path + ":" + Size);
+		String bitmapFontExtension = ".fnt";
+		
+		if(Path.endsWith(bitmapFontExtension))
+		{
+			Path = Path.substring(0, Path.length() - bitmapFontExtension.length()) + Size + bitmapFontExtension;
+			_cache.unload(Path);
+		}
+		else
+			_cache.unload(Size + ":" + Path);
 	}
 	
 	/**
