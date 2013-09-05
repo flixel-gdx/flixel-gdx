@@ -58,7 +58,9 @@ public class EventDispatcher implements IEventDispatcher
 		if(listenersForType == null || listenersForType.size() <= 0)
 			return false;
 		
-		for(IEventListener listener : listenersForType)
+		List<IEventListener> listenersForTypeCopy = new LinkedList<IEventListener>(listenersForType);
+		
+		for(IEventListener listener : listenersForTypeCopy)
 			listener.onEvent(event);
 		
 		return true;
