@@ -25,7 +25,7 @@ radiobutton
   index: -1
 default
   rotate: false
-  xy: 224, 245
+  xy: 224, 279
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -46,7 +46,7 @@ ninepatch_textfield_middleleft
   index: -1
 label_middleright
   rotate: false
-  xy: 250, 190
+  xy: 242, 200
   size: 4, 1
   orig: 4, 1
   offset: 0, 0
@@ -60,7 +60,7 @@ ninepatch_button_topright
   index: -1
 ninepatch_textfield_middlecenter
   rotate: false
-  xy: 250, 196
+  xy: 242, 203
   size: 3, 32
   orig: 3, 32
   offset: 0, 0
@@ -177,16 +177,9 @@ ninepatch_textarea_bottomright
   orig: 12, 2
   offset: 0, 0
   index: -1
-logo
-  rotate: false
-  xy: 242, 190
-  size: 6, 6
-  orig: 6, 6
-  offset: 0, 0
-  index: -1
 label_middleleft
   rotate: false
-  xy: 250, 193
+  xy: 248, 200
   size: 4, 1
   orig: 4, 1
   offset: 0, 0
@@ -233,6 +226,13 @@ ninepatch_button_middleright
   orig: 40, 1
   offset: 0, 0
   index: -1
+cursor
+  rotate: false
+  xy: 224, 245
+  size: 24, 32
+  orig: 24, 32
+  offset: 0, 0
+  index: -1
 ninepatch_textarea_topcenter
   rotate: false
   xy: 242, 167
@@ -256,7 +256,7 @@ tab_divider_vertical
   index: -1
 ninepatch_button_topcenter
   rotate: false
-  xy: 242, 198
+  xy: 242, 190
   size: 5, 8
   orig: 5, 8
   offset: 0, 0
@@ -277,7 +277,7 @@ dpad_center
   index: -1
 ninepatch_button_bottomcenter
   rotate: false
-  xy: 242, 208
+  xy: 249, 190
   size: 5, 8
   orig: 5, 8
   offset: 0, 0
@@ -368,7 +368,7 @@ ninepatch_textarea_bottomleft
   index: -1
 ninepatch_textarea_bottomcenter
   rotate: false
-  xy: 242, 218
+  xy: 247, 203
   size: 3, 2
   orig: 3, 2
   offset: 0, 0

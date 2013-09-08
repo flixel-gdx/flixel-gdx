@@ -60,7 +60,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	/**
 	 * Mouse cursor.
 	 */
-	TextureRegion _mouse;
+	FlxGroup _mouse;
 	
 	/**
 	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
@@ -209,6 +209,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 	{
 		//super high priority init stuff (focus, mouse, etc)
 		_lostFocus = false;
+		_mouse = new FlxGroup();
 		
 		// basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom, ScaleMode);
@@ -852,19 +853,25 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			
 			FlxG.drawPlugins();
 		}
-				
+		
+		FlxG.batch.setProjectionMatrix(_fontCamera.combined);
+		FlxG.batch.begin();
+		FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		if (_mouse.visible)
+			_mouse.draw();
+		
 		//Draw fps display TODO: needs to be deleted some day.
 		if(FlxG.debug)
 		{	
-			FlxG.batch.setProjectionMatrix(_fontCamera.combined);
-			FlxG.batch.begin();
-			FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			
 			_stringBuffer.delete(0, _stringBuffer.length());
 			_stringBuffer.append("fps:");
 			_stringBuffer.append(Gdx.graphics.getFramesPerSecond());
 			_font.draw(FlxG.batch, _stringBuffer, Gdx.graphics.getWidth() - 80, 0);
-			FlxG.batch.end();
+			
 		}
+		FlxG.batch.end();
 		if(_debuggerUp)
 			_debugger.perf.flixelDraw((int) (System.currentTimeMillis()-mark));
 	}
@@ -897,10 +904,10 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			((GL10) FlxG._gl).glShadeModel(GL10.GL_FLAT);		
 		FlxG._gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 		FlxG._gl.glDisable(GL10.GL_CULL_FACE);
-        FlxG._gl.glDisable(GL10.GL_DITHER);
-        FlxG._gl.glDisable(GL10.GL_LIGHTING);
-        FlxG._gl.glDisable(GL10.GL_DEPTH_TEST);
-        FlxG._gl.glDisable(GL10.GL_FOG);
+		FlxG._gl.glDisable(GL10.GL_DITHER);
+		FlxG._gl.glDisable(GL10.GL_LIGHTING);
+		FlxG._gl.glDisable(GL10.GL_DEPTH_TEST);
+		FlxG._gl.glDisable(GL10.GL_FOG);
 		FlxG._gl.glEnable(GL10.GL_SCISSOR_TEST);
 		
 		FileTextureData.copyToPOT = true;
@@ -916,7 +923,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		
 		//Detect whether or not we're running on a mobile device
 		FlxG.mobile = (Gdx.app.getType().equals(ApplicationType.Android) || Gdx.app.getType().equals(ApplicationType.iOS));
-		
+				
 		//Let mobile devs opt out of unnecessary overlays.
 		if(!FlxG.mobile)
 		{

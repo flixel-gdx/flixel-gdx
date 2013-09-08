@@ -2,7 +2,9 @@ package org.flixel.system.input;
 
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
+import org.flixel.FlxGroup;
 import org.flixel.FlxPoint;
+import org.flixel.FlxSprite;
 import org.flixel.system.replay.MouseRecord;
 
 import com.badlogic.gdx.Gdx;
@@ -18,6 +20,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Mouse extends FlxPoint
 {
+	protected String ImgDefaultCursor = "org/flixel/data/pack:cursor";
+	
 	/**
 	 * Current "delta" value of mouse wheel.  If the wheel was just scrolled up, it will have a positive value.  If it was just scrolled down, it will have a negative value.  If it wasn't just scroll this frame, it will be 0.
 	 */
@@ -30,6 +34,16 @@ public class Mouse extends FlxPoint
 	 * Current Y position of the pointer on the screen. For multi-touch devices this is the first pointer.
 	 */
 	public int screenY;	
+	
+	/**
+	 * A display container for the mouse cursor.
+	 * This container is a child of FlxGame and sits at the right "height".
+	 */
+	protected FlxGroup _cursorContainer;
+	/**
+	 * This is just a reference to the current cursor image, if there is one.
+	 */
+	protected FlxSprite _cursor;
 	
 	/**
 	 * Helper variables for recording purposes.
@@ -47,12 +61,14 @@ public class Mouse extends FlxPoint
 	/**
 	 * Constructor
 	 */
-	public Mouse()
+	public Mouse(FlxGroup CursorContainer)
 	{
 		super();
+		_cursorContainer = CursorContainer;
 		screenX = 0;
 		screenY = 0;
 		_lastWheel = wheel = 0;	
+		_cursor = null;
 		_point = new FlxPoint();
 		_pointers = new Array<Pointer>();
 		_pointers.add(new Pointer());
@@ -64,6 +80,8 @@ public class Mouse extends FlxPoint
 	 */
 	public void destroy()
 	{
+		_cursorContainer = null;
+		_cursor = null;
 		_point = null;
 		_pointers.clear();
 		_pointers = null;
@@ -79,11 +97,11 @@ public class Mouse extends FlxPoint
 	 */
 	public void show(String Graphic,float Scale,int XOffset,int YOffset)
 	{
-		//_cursorContainer.visible = true;
-		//if(Graphic != null)
-			//load(Graphic,Scale,XOffset,YOffset);
-		//else if(_cursor == null)
-			//load();
+		_cursorContainer.visible = true;
+		if(Graphic != null)
+			load(Graphic,Scale,XOffset,YOffset);
+		else if(_cursor == null)
+			load();
 	}
 	
 	/**
@@ -132,7 +150,7 @@ public class Mouse extends FlxPoint
 	 */
 	public void hide()
 	{
-		//_cursorContainer.visible = false;
+		_cursorContainer.visible = false;
 	}
 	
 	/**
@@ -140,7 +158,7 @@ public class Mouse extends FlxPoint
 	 */
 	public boolean getVisible()
 	{
-		return true;//_cursorContainer.visible;
+		return _cursorContainer.visible;
 	}
 	
 	/**
@@ -153,20 +171,18 @@ public class Mouse extends FlxPoint
 	 */
 	public void load(String Graphic,float Scale,int XOffset,int YOffset)
 	{
-		/*
 		if(_cursor != null)
-			_cursorContainer.removeChild(_cursor);
-
+			_cursorContainer.remove(_cursor);
+		
 		if(Graphic == null)
 			Graphic = ImgDefaultCursor;
-		_cursor = new Graphic();
-		_cursor.x = XOffset;
-		_cursor.y = YOffset;
-		_cursor.scaleX = Scale;
-		_cursor.scaleY = Scale;
+		_cursor = new FlxSprite(screenX, screenY, Graphic);
+		_cursor.offset.x = XOffset;
+		_cursor.offset.y = YOffset;
+		_cursor.scale.x = Scale;
+		_cursor.scale.y = Scale;
 		
-		_cursorContainer.addChild(_cursor);
-		*/
+		_cursorContainer.add(_cursor);
 	}
 	
 	/**
@@ -216,18 +232,16 @@ public class Mouse extends FlxPoint
 	 */
 	public void unload()
 	{
-		/*
 		if(_cursor != null)
 		{
 			if(_cursorContainer.visible)
 				load();
 			else
 			{
-				_cursorContainer.removeChild(_cursor)
+				_cursorContainer.remove(_cursor);
 				_cursor = null;
 			}
 		}
-		*/
 	}
 	
 	/**
@@ -267,8 +281,11 @@ public class Mouse extends FlxPoint
 		Pointer o = _pointers.get(0);
 		
 		//actually position the flixel mouse cursor graphic
-		//_cursorContainer.x = o.globalScreenPosition.x;
-		//_cursorContainer.y = o.globalScreenPosition.y;
+		if(_cursor != null)
+		{
+			_cursor.x = o.screenPosition.x;
+			_cursor.y = o.screenPosition.y;
+		}
 		
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()

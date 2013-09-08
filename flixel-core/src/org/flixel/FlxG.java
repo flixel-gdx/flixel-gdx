@@ -2077,7 +2077,7 @@ public class FlxG
 		addPlugin(new DebugPathDisplay());
 		addPlugin(new TimerManager());
 		
-		FlxG.mouse = new Mouse();
+		FlxG.mouse = new Mouse(FlxG._game._mouse);
 		FlxG.keys = new Keyboard();
 		FlxG.sensor = new Sensor();
 		FlxG.inputs = new InputMultiplexer();
