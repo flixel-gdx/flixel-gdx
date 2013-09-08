@@ -515,15 +515,19 @@ public class FlxSprite extends FlxObject
 	{			
 		if(framePixels == null)
 			framePixels = new Sprite(_pixels);
-		if(_pixels.rotate)
-			framePixels.setRegion(_pixels, 0, _pixels.getRegionHeight()-frameHeight, frameWidth, frameHeight);
-		else
-			framePixels.setRegion(_pixels, 0, 0, frameWidth, frameHeight);
+		framePixels.setRegion(_pixels, 0, 0, frameWidth, frameHeight);
 		framePixels.setSize(frameWidth, frameHeight);
 		framePixels.flip(false, true);
 		origin.make(frameWidth*0.5f,frameHeight*0.5f);
 		frames = (int) ((_pixels.getRegionWidth() / frameWidth) * (_pixels.getRegionHeight() / frameHeight));
 		_curIndex = 0;
+		
+		// rotated texture region.
+		if(_pixels.rotate)
+		{
+			framePixels.setRegion(_pixels.getRegionX(), _pixels.getRegionY(), frameHeight, frameWidth);
+			framePixels.flip(false, true);			
+		}		
 	}
 	
 	/**
@@ -573,10 +577,10 @@ public class FlxSprite extends FlxObject
 		//tinting
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		framePixels.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
+		
+		//rotate
 		if(_pixels.rotate)
-		{
 			framePixels.rotate90(false);
-		}
 
 		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null || blend.equals(BlendMode.NORMAL)))
 		{ 	//Simple render
@@ -604,14 +608,14 @@ public class FlxSprite extends FlxObject
 			}
 		}
 		
+		//re-rotate 
+		if(_pixels.rotate)
+			framePixels.rotate90(true);
+		
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
 			drawDebug(camera);
 		
-		if(_pixels.rotate)
-		{
-			framePixels.rotate90(true);			
-		}
 	}
 	
 	/**
@@ -1047,7 +1051,7 @@ public class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Set <code>pixels</code> to any <code>TextureRegion</code> object.
+	 * Set <code>pixels</code> to any <code>AtlasRegion</code> object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
 	public void setPixels(AtlasRegion Pixels)
@@ -1055,6 +1059,18 @@ public class FlxSprite extends FlxObject
 		_pixels = Pixels;
 		width = frameWidth = _pixels.getRegionWidth();
 		height = frameHeight = _pixels.getRegionHeight();
+		resetHelpers();
+	}
+	
+	/**
+	 * Set <code>pixels</code> to any <code>TextureRegion</code> object.
+	 * Automatically adjust graphic size and render helpers.
+	 */
+	public void setPixels(TextureRegion Pixels)
+	{
+		width = frameWidth = Pixels.getRegionWidth();
+		height = frameHeight = Pixels.getRegionHeight();
+		_pixels.setRegion(Pixels, 0, 0, (int)width, (int)height);
 		resetHelpers();
 	}
 	
