@@ -377,24 +377,24 @@ public class FlxGame implements ApplicationListener, InputProcessor
 				switch(c)
 				{
 					case Keys.NUM_0:
-					//case Keys.NUM_0:
+					case Keys.NUMPAD_0:
 						FlxG.mute = !FlxG.mute;
 						if(FlxG.volumeHandler != null)
 							FlxG.volumeHandler.callback(FlxG.mute?0:FlxG.getVolume());
 						showSoundTray();
-						return true;
+						break;
 					case Keys.MINUS:
 					//case Keys.UNDERSCORE:
 						FlxG.mute = false;
 						FlxG.setVolume(FlxG.getVolume() - 0.1f);
 						showSoundTray();
-						return true;
+						break;
 					case Keys.PLUS:
 					case Keys.EQUALS:
 						FlxG.mute = false;
 						FlxG.setVolume(FlxG.getVolume() + 0.1f);
 						showSoundTray();
-						return true;
+						break;
 					default:
 						break;
 				}
@@ -858,7 +858,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.batch.begin();
 		FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
-		if (_mouse.visible)
+		if (!FlxG.mobile && _mouse.visible)
 			_mouse.draw();
 		
 		//Draw fps display TODO: needs to be deleted some day.
