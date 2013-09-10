@@ -8,6 +8,8 @@ import org.flixel.system.FlxTilemapBuffer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -74,7 +76,11 @@ public class FlxTilemap extends FlxObject
 	/**
 	 * Internal reference to the bitmap data object that stores the original tile graphics.
 	 */
-	protected TextureRegion _tiles;
+	protected AtlasRegion _tiles;
+	/**
+	 * The actual Flash <code>BitmapData</code> object representing the current display state of the sprite.
+	 */
+	public Sprite framePixels;
 	/**
 	 * Internal list of buffers, one for each camera, used for drawing the tilemaps.
 	 */
@@ -218,6 +224,8 @@ public class FlxTilemap extends FlxObject
 		
 		//Figure out the size of the tiles
 		_tiles = FlxG.addBitmap(TileGraphic);
+		framePixels = new Sprite(_tiles);
+		framePixels.setSize(TileWidth, TileHeight);		
 		_tileWidth = TileWidth;
 		if(_tileWidth == 0)
 			_tileWidth = (int) _tiles.getRegionHeight();
@@ -401,6 +409,7 @@ public class FlxTilemap extends FlxObject
 		int columnIndex;
 		FlxTile tile;
 		Graphics gfx = FlxG.flashGfx;
+				
 		while(row < screenRows)
 		{
 			columnIndex = rowIndex;
@@ -410,8 +419,14 @@ public class FlxTilemap extends FlxObject
 			{
 				_textureRegion = _regions.get(columnIndex);
 				if(_textureRegion != null)
-				{
-					FlxG.batch.draw(_textureRegion, _flashPoint.x + _point.x, _flashPoint.y + _point.y);
+				{					
+					framePixels.setRegion(_textureRegion);
+					if(_tiles.rotate)
+						framePixels.rotate90(false);
+					framePixels.setPosition(_flashPoint.x + _point.x, _flashPoint.y + _point.y);
+					framePixels.draw(FlxG.batch);
+					if(_tiles.rotate)
+						framePixels.rotate90(true);
 					//Buffer.addTile(_textureRegion, _flashPoint.x + _point.x, _flashPoint.y + _point.y);
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{
@@ -1700,6 +1715,33 @@ public class FlxTilemap extends FlxObject
 	}
 	
 	/**
+	 * Converts a one-dimensional array of tile data to a comma-separated string.
+	 * 
+	 * @param	Data		An array full of integer tile references.
+	 * @param	Width		The number of tiles in each row.
+	 * @param	Invert		Recommended only for 1-bit arrays - changes 0s to 1s and vice versa.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+	static public String arrayToCSV(int[] Data,int Width,boolean Invert)
+	{
+		return arrayToCSV(new IntArray(Data),Width,Invert);
+	}
+	
+	/**
+	 * Converts a one-dimensional array of tile data to a comma-separated string.
+	 * 
+	 * @param	Data		An array full of integer tile references.
+	 * @param	Width		The number of tiles in each row.
+	 * 
+	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
+	 */
+	static public String arrayToCSV(int[] Data,int Width)
+	{
+		return arrayToCSV(Data,Width,false);
+	}
+	
+	/**
 	 * Converts a <code>TiledMap</code> object to a comma-separated string.
 	 * 
 	 * @param Map		A <code>TiledMap</code> instance.
@@ -2107,7 +2149,12 @@ public class FlxTilemap extends FlxObject
 			ry = (int) ((rx/_tiles.getRegionWidth())*_tileHeight);
 			rx %= _tiles.getRegionWidth();
 		}
-		_textureRegion = new TextureRegion(_tiles, rx, ry, _tileWidth, _tileHeight);
+		
+		_textureRegion = new TextureRegion(_tiles);
+		if(_tiles.rotate)
+			_textureRegion.setRegion(_tiles, rx, (_tiles.getRegionHeight()-_tileHeight)-ry, _tileWidth, _tileHeight);
+		else
+			_textureRegion.setRegion(_tiles, rx, ry, _tileWidth, _tileHeight);		
 		_textureRegion.flip(false, true);
 		_regions.set(Index, _textureRegion);
 	}
