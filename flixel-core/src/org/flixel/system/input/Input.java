@@ -82,9 +82,7 @@ public class Input
 	 */
 	public boolean pressed(int Key)
 	{
-		//if(Key > 0)
-			return _map.get(Key).current == 1;
-//		return false;
+		return _map.get(Key).current == 1;
 	}
 	
 	/**
@@ -108,9 +106,7 @@ public class Input
 	 */
 	public boolean justPressed(int Key)
 	{
-//		if(Key > 0)
-			return _map.get(Key).current == 2;
-//		return false;
+		return _map.get(Key).current == 2;
 	}
 
 	/**
@@ -149,6 +145,43 @@ public class Input
 	public boolean justReleased(String Key)
 	{
 		return justReleased(_lookup.get(Key, 0));
+	}
+	
+	/**
+	 * Check to see if any keys were just pressed.
+	 * 
+	 * @return	Whether the key were just pressed.
+	 */
+	public boolean justPressedAny()
+	{
+		int i = 0;
+		KeyState state;
+		while(i < _total)
+		{
+			state = _map.get(i++);
+			if((state != null) && (state.current == 2))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Check to see if any keys were just released.
+	 *  
+	 * @return	Whether any keys were just released.
+	 */
+	public boolean justReleasedAny()
+	{
+		int i = 0;
+		KeyState state;
+		while(i < _total)
+		{
+			state = _map.get(i++);
+			if((state != null) && (state.current == -1))
+				return true;
+		}		
+		return false;
 	}
 
 	/**
