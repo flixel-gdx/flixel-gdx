@@ -421,13 +421,16 @@ public class FlxTilemap extends FlxObject
 				_textureRegion = _regions.get(columnIndex);
 				if(_textureRegion != null)
 				{					
-					framePixels.setRegion(_textureRegion);
 					if(_tiles.rotate)
+					{
+						framePixels.setRegion(_textureRegion);
 						framePixels.rotate90(false);
-					framePixels.setPosition(_flashPoint.x + _point.x, _flashPoint.y + _point.y);
-					framePixels.draw(FlxG.batch);
-					if(_tiles.rotate)
-						framePixels.rotate90(true);
+						framePixels.setPosition(_flashPoint.x + _point.x, _flashPoint.y + _point.y);
+						framePixels.draw(FlxG.batch);
+						framePixels.rotate90(true);						
+					}
+					else
+						FlxG.batch.draw(_textureRegion, _flashPoint.x + _point.x, _flashPoint.y + _point.y);
 					//Buffer.addTile(_textureRegion, _flashPoint.x + _point.x, _flashPoint.y + _point.y);
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{
