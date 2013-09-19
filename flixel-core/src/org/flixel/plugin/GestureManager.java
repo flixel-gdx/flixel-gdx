@@ -174,6 +174,17 @@ public class GestureManager extends FlxBasic implements GestureListener
 		updateGestures(FlxGesture.PAN, data);
 		return false;
 	}
+	
+	@Override
+	public boolean panStop(float x, float y, int pointer, int button)
+	{
+		data.clear();
+		data.x = x;
+		data.y = y;
+		data.pointer = pointer;
+		data.button = button;
+		return false;
+	}
 
 	@Override
 	public boolean zoom(float originalDistance, float currentDistance)

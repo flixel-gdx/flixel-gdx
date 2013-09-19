@@ -1,7 +1,5 @@
 package org.flixel.plugin.flxbox2d.controllers;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.ChainShape;
@@ -10,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * The buoyancy calculations originated from wck which in turn came from Boris the Brave's work. iforce2d has an
@@ -189,8 +188,8 @@ public class B2BuoyancyController extends B2Controller
       {
          for (int i = 0; i < m_bodyList.size; i++)
          {
-            ArrayList<Fixture> fixtureList = m_bodyList.get(i).getFixtureList();
-            for (int j = 0; j < fixtureList.size(); j++)
+            Array<Fixture> fixtureList = m_bodyList.get(i).getFixtureList();
+            for (int j = 0; j < fixtureList.size; j++)
             {
                ApplyToFixture(fixtureList.get(j));
             }

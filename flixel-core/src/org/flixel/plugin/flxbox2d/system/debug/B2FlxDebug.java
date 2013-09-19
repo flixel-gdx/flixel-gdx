@@ -106,7 +106,7 @@ public class B2FlxDebug extends FlxBasic
 			renderer.begin(ShapeType.Filled);
 			float[] rgba = FlxU.getRGBA(CONTACT_COLOR);
 			renderer.setColor(rgba[0] * 0.00392f, rgba[1] * 0.00392f, rgba[2] * 0.00392f, 1);
-			int length = B2FlxB.world.getContactList().size();
+			int length = B2FlxB.world.getContactList().size;
 			for(int i = 0; i < length; i++)
 				drawContact(renderer, B2FlxB.world.getContactList().get(i));
 			renderer.end();

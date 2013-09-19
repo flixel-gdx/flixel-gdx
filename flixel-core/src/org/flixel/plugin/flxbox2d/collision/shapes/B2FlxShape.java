@@ -1,7 +1,5 @@
 package org.flixel.plugin.flxbox2d.collision.shapes;
 
-import java.util.ArrayList;
-
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
@@ -120,7 +118,7 @@ public abstract class B2FlxShape extends FlxSprite
 	/**
 	 * A list of fixtures that are attached to the body.
 	 */
-	private static ArrayList<Fixture> _fixtures;
+	private static Array<Fixture> _fixtures;
 	/**
 	 * The fixture that is used for debug drawing.
 	 */
@@ -386,7 +384,7 @@ public abstract class B2FlxShape extends FlxSprite
 		if(camera == null)
 			camera = FlxG.camera;
 		
-		int length = body.getFixtureList().size();
+		int length = body.getFixtureList().size;
 		_fixtures = body.getFixtureList();
 		boolean onScreen = false;
 		for(int i = 0; i < length; i++)
@@ -554,7 +552,7 @@ public abstract class B2FlxShape extends FlxSprite
 			Transform transform = body.getTransform();
 			if(B2FlxDebug.drawBodies)
 			{
-				for(int i = 0; i < _fixtures.size(); i++)
+				for(int i = 0; i < _fixtures.size; i++)
 				{
 					_fixtureDebug = _fixtures.get(i);
 					if(body.isActive() == false)
