@@ -526,7 +526,8 @@ public class FlxSprite extends FlxObject
 		if(_pixels.rotate)
 		{
 			framePixels.setRegion(_pixels.getRegionX(), _pixels.getRegionY(), frameHeight, frameWidth);
-			framePixels.flip(false, true);			
+			framePixels.flip(false, true);
+			dirty = true;
 		}		
 	}
 	
