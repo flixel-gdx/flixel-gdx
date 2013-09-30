@@ -331,8 +331,8 @@ public class FlxCamera extends FlxBasic
 			else
 			{
 				float edge;
-				float targetX = target.x + ((target.x > 0)?0.0000001f:-0.0000001f);
-				float targetY = target.y + ((target.y > 0)?0.0000001f:-0.0000001f);
+				float targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001f:-0.0000001f));
+				float targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001f:-0.0000001f));
 				
 				edge = targetX - deadzone.x;
 				if(scroll.x > edge)
