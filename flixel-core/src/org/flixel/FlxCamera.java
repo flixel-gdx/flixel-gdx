@@ -334,7 +334,7 @@ public class FlxCamera extends FlxBasic
 				float targetX;
 				float targetY;
 				
-				if(((FlxSprite)target).getSimpleRender())
+				if(target instanceof FlxSprite && ((FlxSprite)target).getSimpleRender())
 				{
 					targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001f:-0.0000001f));
 					targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001f:-0.0000001f));					
@@ -424,11 +424,13 @@ public class FlxCamera extends FlxBasic
 	{
 		target = Target;
 		float helper;
+		float w = 0;
+		float h = 0;
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
-				float w = width/8f;
-				float h = height/3f;
+				w = width/8f;
+				h = height/3f;
 				deadzone = new FlxRect((width-w)/2f,(height-h)/2f - h*0.25f,w,h);
 				break;
 			case STYLE_TOPDOWN:
@@ -440,6 +442,13 @@ public class FlxCamera extends FlxBasic
 				deadzone = new FlxRect((width-helper)/2f,(height-helper)/2f,helper,helper);
 				break;
 			case STYLE_LOCKON:
+				if (target != null) 
+				{	
+					w = target.width;
+					h = target.height;
+				}
+				deadzone = new FlxRect((width-w)/2f,(height-h)/2f - h * 0.25f,w,h);				
+				break;
 			default:
 				deadzone = null;
 				break;
@@ -463,8 +472,8 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void focusOn(FlxPoint Point)
 	{
-		Point.x += FlxU.ceil((Point.x > 0)?0.0000001f:-0.0000001f);
-		Point.y += FlxU.ceil((Point.y > 0)?0.0000001f:-0.0000001f);
+		Point.x += (Point.x > 0)?0.0000001f:-0.0000001f;
+		Point.y += (Point.y > 0)?0.0000001f:-0.0000001f;
 		scroll.make(Point.x - width*0.5f,Point.y - height*0.5f);
 	}
 	
