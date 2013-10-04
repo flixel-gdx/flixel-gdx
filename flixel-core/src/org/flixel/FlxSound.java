@@ -267,7 +267,7 @@ public class FlxSound extends FlxBasic
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
-	 * @param	Type			Whether this sound is a sound effect or a music track.
+	 * @param	Type			Whether this sound is a sound effect or a music track, FlxSound.AUTO, SFX or MUSIC. If the file is larger than 24 KB, MUSIC will be chosen if AUTO is set.
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -304,6 +304,7 @@ public class FlxSound extends FlxBasic
 	
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
+	 * If the file is larger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
@@ -318,6 +319,7 @@ public class FlxSound extends FlxBasic
 	
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
+	 * If the file is larger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
@@ -331,6 +333,7 @@ public class FlxSound extends FlxBasic
 	
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
+	 * If the file is larger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * 

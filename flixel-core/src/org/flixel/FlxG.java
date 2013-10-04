@@ -739,9 +739,10 @@ public class FlxG
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @param	AutoPlay		Whether to play the sound.
-	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
+	 * @param	URL				Load a sound from an external web resource instead. Only used if EmbeddedSound = null.
+	 * @param	Type			Whether this sound is a sound effect or a music track, FlxSound.AUTO, SFX or MUSIC. If the file is larger than 24 KB, MUSIC will be chosen if AUTO is set.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
@@ -763,18 +764,30 @@ public class FlxG
 		return sound;
 	}
 	
+	/**
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
+	 * 
+	 * @param	EmbeddedSound	The embedded sound resource you want to play. To stream, use the optional URL parameter instead.
+	 * @param	Volume			How loud to play it (0 to 1).
+	 * @param	Looped			Whether to loop this sound.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoPlay		Whether to play the sound.
+	 * @param	URL				Load a sound from an external web resource instead. Only used if EmbeddedSound = null.
+	 * 
+	 * @return	A <code>FlxSound</code> object.
+	 */
 	static public FlxSound loadSound(String EmbeddedSound,float Volume,boolean Looped,boolean AutoDestroy,boolean AutoPlay,String URL)
 	{
 		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, AutoPlay, URL, FlxSound.AUTO);
 	}
 
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the file is larger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @param	AutoPlay		Whether to play the sound.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
@@ -785,12 +798,12 @@ public class FlxG
 	}
 	
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
 	 * 
-	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
+	 * @param	EmbeddedSound	The embedded sound resource you want to play. To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
@@ -800,7 +813,7 @@ public class FlxG
 	}
 	
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
@@ -814,9 +827,9 @@ public class FlxG
 	}
 	
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
 	 * 
-	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
+	 * @param	EmbeddedSound	The embedded sound resource you want to play. To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * 
 	 * @return	A <code>FlxSound</code> object.
@@ -827,9 +840,9 @@ public class FlxG
 	}
 	
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
 	 * 
-	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
+	 * @param	EmbeddedSound	The embedded sound resource you want to play. To stream, use the optional URL parameter instead.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
@@ -845,7 +858,7 @@ public class FlxG
 	 * @param	EmbeddedSound	The sound you want to play.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
