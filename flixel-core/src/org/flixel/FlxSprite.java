@@ -583,10 +583,10 @@ public class FlxSprite extends FlxObject
 		if(_pixels.rotate)
 			framePixels.rotate90(false);
 
-		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null || blend.equals(BlendMode.NORMAL)))
+		if(getSimpleRender())
 		{ 	//Simple render
 			framePixels.setPosition(_point.x, _point.y);
-			framePixels.draw(FlxG.batch);			
+			framePixels.draw(FlxG.batch);
 		}
 		else
 		{ 	//Advanced render
@@ -1258,6 +1258,14 @@ public class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Whether the sprite is being rendered in simple mode or not.
+	 */
+	public boolean getSimpleRender()
+	{ 
+		return ((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null);
+	}
+	
+	/**
 	 * Internal function to update the current animation frame.
 	 */
 	protected void calcFrame()
@@ -1266,7 +1274,7 @@ public class FlxSprite extends FlxObject
 		int indexX;			
 		//Handle sprite sheets		
 		int widthHelper = _pixels.getRegionWidth();
-		int heightHelper = _pixels.getRegionHeight();	
+		int heightHelper = _pixels.getRegionHeight();
 		if(!_pixels.rotate)
 		{
 			indexX = _curIndex * frameWidth;
@@ -1304,5 +1312,6 @@ public class FlxSprite extends FlxObject
 		if(_callback != null)
 			_callback.callback(((_curAnim != null)?(_curAnim.name):null),_curFrame,_curIndex);
 		dirty = false;
+		
 	}
 }

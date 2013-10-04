@@ -331,9 +331,20 @@ public class FlxCamera extends FlxBasic
 			else
 			{
 				float edge;
-				float targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001f:-0.0000001f));
-				float targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001f:-0.0000001f));
+				float targetX;
+				float targetY;
 				
+				if(((FlxSprite)target).getSimpleRender())
+				{
+					targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001f:-0.0000001f));
+					targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001f:-0.0000001f));					
+				}
+				else
+				{
+					targetX = target.x + ((target.x > 0)?0.0000001f:-0.0000001f);
+					targetY = target.y + ((target.y > 0)?0.0000001f:-0.0000001f);
+				}
+								
 				edge = targetX - deadzone.x;
 				if(scroll.x > edge)
 					scroll.x = edge;
@@ -452,8 +463,8 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void focusOn(FlxPoint Point)
 	{
-		Point.x += (Point.x > 0)?0.0000001f:-0.0000001f;
-		Point.y += (Point.y > 0)?0.0000001f:-0.0000001f;
+		Point.x += FlxU.ceil((Point.x > 0)?0.0000001f:-0.0000001f);
+		Point.y += FlxU.ceil((Point.y > 0)?0.0000001f:-0.0000001f);
 		scroll.make(Point.x - width*0.5f,Point.y - height*0.5f);
 	}
 	
