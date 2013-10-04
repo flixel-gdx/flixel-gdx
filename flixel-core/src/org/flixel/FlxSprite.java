@@ -1257,11 +1257,9 @@ public class FlxSprite extends FlxObject
 		return pixelsOverlapPoint(Point, 0xFF, null);
 	}
 	
-	/**
-	 * Whether the sprite is being rendered in simple mode or not.
-	 */
+	@Override
 	public boolean getSimpleRender()
-	{ 
+	{
 		return ((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null);
 	}
 	
