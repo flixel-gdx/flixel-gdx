@@ -331,20 +331,15 @@ public class FlxCamera extends FlxBasic
 			else
 			{
 				float edge;
-				float targetX;
-				float targetY;
+				float targetX = target.x + ((target.x > 0)?0.0000001f:-0.0000001f);
+				float targetY = target.y + ((target.y > 0)?0.0000001f:-0.0000001f);
 				
 				if(target.getSimpleRender())
 				{
-					targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001f:-0.0000001f));
-					targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001f:-0.0000001f));					
+					targetX = FlxU.ceil(targetX);
+					targetY = FlxU.ceil(targetY);					
 				}
-				else
-				{
-					targetX = target.x + ((target.x > 0)?0.0000001f:-0.0000001f);
-					targetY = target.y + ((target.y > 0)?0.0000001f:-0.0000001f);
-				}
-								
+				
 				edge = targetX - deadzone.x;
 				if(scroll.x > edge)
 					scroll.x = edge;
@@ -447,7 +442,7 @@ public class FlxCamera extends FlxBasic
 					w = target.width;
 					h = target.height;
 				}
-				deadzone = new FlxRect((width-w)/2f,(height-h)/2f - h * 0.25f,w,h);				
+				deadzone = new FlxRect((width-w)/2f,((height-h)/2f),w,h);
 				break;
 			default:
 				deadzone = null;
