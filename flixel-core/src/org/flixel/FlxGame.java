@@ -888,16 +888,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_total = System.currentTimeMillis();
 		
 		//Set up OpenGL
-		if(Gdx.graphics.isGL20Available())
-		{
-			FlxG._gl = Gdx.gl20;
-		}
-		else if(Gdx.graphics.isGL11Available())
-		{
-			FlxG._gl = Gdx.gl11;
-		}
-		else
-			FlxG._gl = Gdx.gl10;
+		FlxG._gl = Gdx.graphics.isGL20Available() ? Gdx.gl20 : Gdx.gl10;
 		
 		// Common OpenGL
 		if(!Gdx.graphics.isGL20Available())
@@ -912,6 +903,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		
 		FileTextureData.copyToPOT = true;
 		
+		FlxG.defaultShader = SpriteBatch.createDefaultShader();
+		FlxG.currentShader = FlxG.defaultShader;
 		FlxG.batch = new SpriteBatch();
 		FlxG.flashGfx = new Graphics();
 		
@@ -1072,5 +1065,8 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.disposeAssetManager();
 		FlxG.batch.dispose();
 		FlxG.flashGfx.dispose();
+		FlxG.defaultShader.dispose();
+		if(FlxG.currentShader != null)
+			FlxG.currentShader.dispose();
 	}
 }

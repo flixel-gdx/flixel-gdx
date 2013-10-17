@@ -4,11 +4,13 @@ import org.flixel.event.IFlxAnim;
 import org.flixel.system.FlxAnim;
 import org.flixel.system.gdx.ManagedTextureData;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 
 import flash.display.BlendMode;
@@ -136,7 +138,9 @@ public class FlxSprite extends FlxObject
 	/**
 	 * Internal tracker for reloading the texture if its pixmap has been modified.
 	 */
-	protected ManagedTextureData _newTextureData;	
+	protected ManagedTextureData _newTextureData;
+
+	public ShaderProgram shader;
 	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
@@ -236,6 +240,7 @@ public class FlxSprite extends FlxObject
 		_callback = null;
 		_newTextureData = null;
 		framePixels = null;
+		shader = null;
 		super.destroy();
 	}
 	
@@ -583,7 +588,7 @@ public class FlxSprite extends FlxObject
 		if(_pixels.rotate)
 			framePixels.rotate90(false);
 
-		if(getSimpleRender())
+		if(isSimpleRender())
 		{ 	//Simple render
 			framePixels.setPosition(_point.x, _point.y);
 			framePixels.draw(FlxG.batch);
@@ -602,9 +607,25 @@ public class FlxSprite extends FlxObject
 				framePixels.draw(FlxG.batch);
 				blendFunc = BlendMode.getOpenGLBlendMode(BlendMode.NORMAL);
 				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
+				// TODO: don't turn back to NORMAL if the next sprite is still using the same blending.
 			}
-			else
+			else if(FlxG._gl == Gdx.gl20 && (shader != null && !FlxG.currentShader.equals(shader)))
 			{
+				FlxG.currentShader = shader;
+				FlxG.batch.setShader(shader);
+				framePixels.draw(FlxG.batch);
+				// TODO: give user more control over the drawing order.
+			}
+			else // TODO: clean this
+			{
+				if(FlxG._gl == Gdx.gl20)
+				{
+					if(shader == null)
+					{
+						FlxG.currentShader = FlxG.defaultShader;
+						FlxG.batch.setShader(FlxG.defaultShader);
+					}
+				}
 				framePixels.draw(FlxG.batch);
 			}
 		}
@@ -615,8 +636,7 @@ public class FlxSprite extends FlxObject
 		
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
-			drawDebug(camera);
-		
+			drawDebug(camera);		
 	}
 	
 	/**
@@ -1258,9 +1278,21 @@ public class FlxSprite extends FlxObject
 	}
 	
 	@Override
-	public boolean getSimpleRender()
+	public boolean isSimpleRender()
 	{
-		return ((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null);
+		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (shader == FlxG.defaultShader || shader == null))
+		{
+			if(FlxG._gl == Gdx.gl20)
+			{
+				if(!FlxG.currentShader.equals(FlxG.defaultShader))
+				{
+					FlxG.currentShader = FlxG.defaultShader;
+					FlxG.batch.setShader(FlxG.defaultShader);
+				}
+			}	
+			return true;
+		}
+		return false;
 	}
 	
 	/**

@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -292,6 +293,9 @@ public class FlxG
 	 * Internal, a pre-allocated array to prevent <code>new</code> calls.
 	 */
 	static float[] _floatArray;
+	
+	static public ShaderProgram defaultShader;
+	static public ShaderProgram currentShader;
 	
 	static public String getLibraryName()
 	{
@@ -2306,6 +2310,28 @@ public class FlxG
 	public static void stopVibrate()
 	{
 		Gdx.input.cancelVibrate();
+	}
+	
+	/**
+	 * Check whether the ShaderProgram compiled successfully.
+	 * It will also log any warnings if they exist.
+	 * @param program	The ShaderProgram that needs to checked.
+	 * @return boolean
+	 */
+	public static boolean isCompiled(ShaderProgram program)
+	{
+		if(!program.isCompiled())
+		{
+			log(program.getLog());
+			System.exit(0);
+			return false;
+		}
+		if(program.getLog().length() != 0)
+		{
+			log(program.getLog());
+			return false;
+		}
+		return true;
 	}
 	
 	/**

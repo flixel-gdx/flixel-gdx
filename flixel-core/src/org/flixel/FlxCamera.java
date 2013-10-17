@@ -334,7 +334,7 @@ public class FlxCamera extends FlxBasic
 				float targetX = target.x + ((target.x > 0)?0.0000001f:-0.0000001f);
 				float targetY = target.y + ((target.y > 0)?0.0000001f:-0.0000001f);
 				
-				if(target.getSimpleRender())
+				if(target.isSimpleRender())
 				{
 					targetX = FlxU.ceil(targetX);
 					targetY = FlxU.ceil(targetY);					

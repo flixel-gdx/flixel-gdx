@@ -165,7 +165,7 @@ public class FlxBasic
 	/**
 	 * Whether the sprite is being rendered in simple mode or not.
 	 */
-	public boolean getSimpleRender()
+	public boolean isSimpleRender()
 	{
 		return false;
 	}
