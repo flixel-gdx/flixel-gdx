@@ -953,6 +953,14 @@ public class FlxCamera extends FlxBasic
 	}
 	
 	/**
+	 * Get the actual libgdx camera.
+	 */
+	public OrthographicCamera getCamera()
+	{
+		return _glCamera;
+	}
+	
+	/**
 	 * Fill the camera with the specified color.
 	 * 
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.

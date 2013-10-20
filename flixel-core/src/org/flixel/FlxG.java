@@ -294,9 +294,6 @@ public class FlxG
 	 */
 	static float[] _floatArray;
 	
-	static public ShaderProgram defaultShader;
-	static public ShaderProgram currentShader;
-	
 	static public String getLibraryName()
 	{
 		return FlxG.LIBRARY_NAME + " v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION;
@@ -2318,7 +2315,7 @@ public class FlxG
 	 * @param program	The ShaderProgram that needs to checked.
 	 * @return boolean
 	 */
-	public static boolean isCompiled(ShaderProgram program)
+	public static boolean isShaderCompiled(ShaderProgram program)
 	{
 		if(!program.isCompiled())
 		{

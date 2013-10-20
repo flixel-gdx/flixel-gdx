@@ -867,7 +867,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 			
 			_stringBuffer.delete(0, _stringBuffer.length());
 			_stringBuffer.append("fps:");
-			_stringBuffer.append(Gdx.graphics.getFramesPerSecond());
+			_stringBuffer.append(Gdx.graphics.getFramesPerSecond());			
 			_font.draw(FlxG.batch, _stringBuffer, Gdx.graphics.getWidth() - 80, 0);
 			
 		}
@@ -903,8 +903,6 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		
 		FileTextureData.copyToPOT = true;
 		
-		FlxG.defaultShader = SpriteBatch.createDefaultShader();
-		FlxG.currentShader = FlxG.defaultShader;
 		FlxG.batch = new SpriteBatch();
 		FlxG.flashGfx = new Graphics();
 		
@@ -1065,8 +1063,5 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		FlxG.disposeAssetManager();
 		FlxG.batch.dispose();
 		FlxG.flashGfx.dispose();
-		FlxG.defaultShader.dispose();
-		if(FlxG.currentShader != null)
-			FlxG.currentShader.dispose();
 	}
 }

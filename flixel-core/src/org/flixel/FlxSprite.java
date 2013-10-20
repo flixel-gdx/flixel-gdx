@@ -5,7 +5,9 @@ import org.flixel.system.FlxAnim;
 import org.flixel.system.gdx.ManagedTextureData;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -24,7 +26,18 @@ import flash.display.BlendMode;
  */
 public class FlxSprite extends FlxObject
 {
+	/**
+	 * The default image that will be used if no image is provided.
+	 */
 	static protected String ImgDefault = "org/flixel/data/pack:default";
+	/**
+	 * Internal tracker for the current GLES10 blend mode that is used.
+	 */
+	static String currentBlend;
+	/**
+	 * Internal tracker for the current shader that is used.
+	 */
+	static ShaderProgram currentShader;
 	
 	/**
 	 * WARNING: The origin of the sprite will default to its center.
@@ -83,6 +96,10 @@ public class FlxSprite extends FlxObject
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
 	 */
 	public boolean dirty;
+	/**
+	 * The shader program the object is using.
+	 */
+	public ShaderProgram shader;
 	
 	/**
 	 * Internal, stores all the animations that were added to this sprite.
@@ -139,8 +156,6 @@ public class FlxSprite extends FlxObject
 	 * Internal tracker for reloading the texture if its pixmap has been modified.
 	 */
 	protected ManagedTextureData _newTextureData;
-
-	public ShaderProgram shader;
 	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
@@ -240,7 +255,13 @@ public class FlxSprite extends FlxObject
 		_callback = null;
 		_newTextureData = null;
 		framePixels = null;
+		currentBlend = null;
 		shader = null;
+		if(currentShader != null)
+		{
+			currentShader.dispose();
+			currentShader = null;
+		}
 		super.destroy();
 	}
 	
@@ -600,34 +621,20 @@ public class FlxSprite extends FlxObject
 			if((angle != 0) && (_bakedRotation <= 0))
 				framePixels.setRotation(angle);
 			framePixels.setPosition(_point.x, _point.y);
-			if(blend != null && !blend.equals(BlendMode.NORMAL))
-			{
+			if(blend != null && currentBlend != blend)
+			{				
+				currentBlend = blend;
 				int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
-				framePixels.draw(FlxG.batch);
-				blendFunc = BlendMode.getOpenGLBlendMode(BlendMode.NORMAL);
-				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
-				// TODO: don't turn back to NORMAL if the next sprite is still using the same blending.
 			}
-			else if(FlxG._gl == Gdx.gl20 && (shader != null && !FlxG.currentShader.equals(shader)))
+			else if(FlxG._gl == Gdx.gl20)
 			{
-				FlxG.currentShader = shader;
-				FlxG.batch.setShader(shader);
-				framePixels.draw(FlxG.batch);
-				// TODO: give user more control over the drawing order.
+				if((shader != null && currentShader != shader))
+					FlxG.batch.setShader(currentShader = shader);
+				else if(shader == null && currentShader != null)
+					FlxG.batch.setShader(currentShader = null);
 			}
-			else // TODO: clean this
-			{
-				if(FlxG._gl == Gdx.gl20)
-				{
-					if(shader == null)
-					{
-						FlxG.currentShader = FlxG.defaultShader;
-						FlxG.batch.setShader(FlxG.defaultShader);
-					}
-				}
-				framePixels.draw(FlxG.batch);
-			}
+			framePixels.draw(FlxG.batch);
 		}
 		
 		//re-rotate 
@@ -1280,19 +1287,20 @@ public class FlxSprite extends FlxObject
 	@Override
 	public boolean isSimpleRender()
 	{
-		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (shader == FlxG.defaultShader || shader == null))
+		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (shader == null))
 		{
-			if(FlxG._gl == Gdx.gl20)
-			{
-				if(!FlxG.currentShader.equals(FlxG.defaultShader))
-				{
-					FlxG.currentShader = FlxG.defaultShader;
-					FlxG.batch.setShader(FlxG.defaultShader);
-				}
-			}	
+			if(currentBlend != null)
+				FlxG.batch.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+			if(FlxG._gl == Gdx.gl20 && currentShader != null)
+				FlxG.batch.setShader(currentShader = null);				
 			return true;
 		}
 		return false;
+	}
+	
+	public Texture getTexture()
+	{
+		return _pixels.getTexture();
 	}
 	
 	/**
