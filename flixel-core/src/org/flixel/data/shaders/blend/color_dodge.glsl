@@ -10,11 +10,12 @@ uniform sampler2D u_texture1;
 
 varying vec2 v_texCoord;
 
-const vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
+const vec4 white = vec4(1.0);
+const float num1 = 1.0;
 
 void main() 
 {	
 	vec4 base = texture2D(u_texture, v_texCoord);
 	vec4 blend = texture2D(u_texture1, v_texCoord);	
-	gl_FragColor = ((blend == 1.0) ? blend : min(base / (1.0 - blend), 1.0));
+	gl_FragColor = ((blend == num1) ? blend : min(base / (num1 - blend), num1));
 }

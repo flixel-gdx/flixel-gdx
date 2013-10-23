@@ -10,7 +10,7 @@ uniform sampler2D u_texture1;
 
 varying vec2 v_texCoord;
 
-const vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
+const vec4 white = vec4(1.0);
 const vec4 lumCoeff = vec4(0.2125, 0.7154, 0.0721, 1.0);
 
 void main() 

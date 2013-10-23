@@ -7,15 +7,16 @@
 
 uniform sampler2D u_texture;
 uniform sampler2D u_texture1;
-uniform float u_noiseScale;
-uniform float u_opacity;
 
 varying vec2 v_texCoord;
 
+const vec4 white = vec4(1.0);
+
 void main() 
-{
+{	
 	vec4 base = texture2D(u_texture, v_texCoord);
 	vec4 blend = texture2D(u_texture1, v_texCoord);
-	float noise = (noise1(vec2(v_texCoord[0] * u_noiseScale)) + 1.0) * 0.5;
-	gl_FragColor = (noise < u_opacity) ? blend : base;
+	vec4 result = white - abs(white - base - blend);
+	result.a = 1.0;
+	gl_FragColor = result;
 }

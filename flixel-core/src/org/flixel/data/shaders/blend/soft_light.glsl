@@ -15,12 +15,6 @@ void main()
 {	
 	vec4 base = texture2D(u_texture, v_texCoord);
 	vec4 blend = texture2D(u_texture1, v_texCoord);
-	if(lessThan(blend, vec4(0.5)) == true)
-	{	 
-		gl_FragColor = (2.0 * base * blend + base * base * (1.0 - 2.0 * blend));
-	}
-	else
-	{
-		gl_FragColor = (sqrt(base) * (2.0 * blend - 1.0) + 2.0 * base * (1.0 - blend));
-	}
+			
+	gl_FragColor = 2.0 * base * blend + base * base - 2.0 * base * base * blend;
 }
