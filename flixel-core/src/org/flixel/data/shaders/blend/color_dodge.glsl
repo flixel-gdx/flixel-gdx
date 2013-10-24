@@ -10,7 +10,6 @@ uniform sampler2D u_texture1;
 
 varying vec2 v_texCoord;
 
-const vec4 white = vec4(1.0);
 const float num1 = 1.0;
 
 void main() 

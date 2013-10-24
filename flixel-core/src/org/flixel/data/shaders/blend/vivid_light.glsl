@@ -19,7 +19,6 @@ varying vec2 v_texCoord;
 void main() 
 {	
 	vec4 base = texture2D(u_texture, v_texCoord);
-	vec4 blend = texture2D(u_texture1, v_texCoord); 
-    
+	vec4 blend = texture2D(u_texture1, v_texCoord);    
 	gl_FragColor = BlendVividLight(base, blend);
 }

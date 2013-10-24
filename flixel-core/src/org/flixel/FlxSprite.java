@@ -65,6 +65,19 @@ public class FlxSprite extends FlxObject
 	 */
 	public String blend;
 	/**
+	 * WARNING: Requires GLES20. 
+	 * GLES20 Blending modes, just like Photoshop or whatever.
+	 * Use <code>BlendModeGL20.blend()</code> to create a blend.
+	 * @default null
+	 */
+	public ShaderProgram blendGL20;
+	/**
+	 * WARNING: Requires GLES20. 
+	 * The sprite that will be blended with the base.
+	 * @default null
+	 */
+	public FlxSprite spriteBlend;
+	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
 	 */
@@ -261,6 +274,11 @@ public class FlxSprite extends FlxObject
 		{
 			currentShader.dispose();
 			currentShader = null;
+		}
+		if(blendGL20 != null)
+		{
+			blendGL20.dispose();
+			blendGL20 = null;
 		}
 		super.destroy();
 	}
@@ -628,11 +646,19 @@ public class FlxSprite extends FlxObject
 				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 			}
 			else if(FlxG._gl == Gdx.gl20)
-			{
+			{	// OpenGL ES 2.0 shader render
 				if((shader != null && currentShader != shader))
 					FlxG.batch.setShader(currentShader = shader);
 				else if(shader == null && currentShader != null)
 					FlxG.batch.setShader(currentShader = null);
+				// OpenGL ES 2.0 blend mode render
+				if(blendGL20 != null)
+				{
+					FlxG.batch.setShader(blendGL20);
+					getTexture().bind(1);
+					spriteBlend.getTexture().bind(2);						
+					Gdx.gl.glActiveTexture(GL10.GL_TEXTURE0);
+				}
 			}
 			framePixels.draw(FlxG.batch);
 		}
@@ -1287,7 +1313,12 @@ public class FlxSprite extends FlxObject
 	@Override
 	public boolean isSimpleRender()
 	{
-		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (shader == null))
+		if(	  ((angle == 0) || (_bakedRotation > 0)) 
+			&& (scale.x == 1) 
+			&& (scale.y == 1) 
+			&& (blend == null) 
+			&& (shader == null)
+			&& (blendGL20 == null))
 		{
 			if(currentBlend != null)
 				FlxG.batch.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);

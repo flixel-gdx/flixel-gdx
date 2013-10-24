@@ -10,11 +10,11 @@ uniform sampler2D u_texture1;
 
 varying vec2 v_texCoord;
 
+const vec4 white = vec4(1.0);
+
 void main() 
 {	
 	vec4 base = texture2D(u_texture, v_texCoord);
 	vec4 blend = texture2D(u_texture1, v_texCoord);
-	vec4 result = base - blend;
-	result.a = 1.0;	
-	gl_FragColor = result;
+	gl_FragColor = white - (white - blend) / base;
 }
