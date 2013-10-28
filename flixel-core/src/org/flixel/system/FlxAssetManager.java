@@ -1,12 +1,14 @@
 package org.flixel.system;
 
+import org.flixel.gles20.FlxShaderProgram;
 import org.flixel.system.gdx.loaders.FlxFileHandleResolver;
 import org.flixel.system.gdx.loaders.FontLoader;
+import org.flixel.system.gdx.loaders.ShaderLoader;
+
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver.Resolution;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,6 +38,7 @@ public class FlxAssetManager
 		FileHandleResolver resolver = new FlxFileHandleResolver();		
 		_assetManager = new AssetManager(resolver);
 		_assetManager.setLoader(BitmapFont.class, new FontLoader(resolver));
+		_assetManager.setLoader(FlxShaderProgram.class, new ShaderLoader(resolver));
 	}
 	
 	/**
@@ -87,7 +90,7 @@ public class FlxAssetManager
 	 */
 	public void addResolutionResolver(Resolution[] resolutions)
 	{
-		_assetManager.setLoader(Texture.class, new TextureLoader(new ResolutionFileResolver(new InternalFileHandleResolver(), resolutions)));
+		_assetManager.setLoader(Texture.class, new TextureLoader(new ResolutionFileResolver(new FlxFileHandleResolver(), resolutions)));
 	}
 	
 	/**

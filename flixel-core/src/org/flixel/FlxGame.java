@@ -576,6 +576,7 @@ public class FlxGame implements ApplicationListener, InputProcessor
 		_lostFocus /*= _focus.visible*/ = false;
 		//stage.frameRate = _flashFramerate;
 		FlxG.resumeSounds();
+		FlxG.restoreShaders();
 	}
 	
 	/**

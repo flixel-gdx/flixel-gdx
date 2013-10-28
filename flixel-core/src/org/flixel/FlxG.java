@@ -1,16 +1,21 @@
 package org.flixel;
 
+import java.util.Iterator;
+
 import org.flixel.event.IFlxCamera;
 import org.flixel.event.IFlxCollision;
 import org.flixel.event.IFlxObject;
 import org.flixel.event.IFlxReplay;
 import org.flixel.event.IFlxVolume;
+import org.flixel.event.IFlxShaderProgram;
+import org.flixel.gles20.FlxShaderProgram;
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.GestureManager;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.gdx.ManagedTextureData;
+import org.flixel.system.gdx.loaders.ShaderLoader.ShaderProgramParameter;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
@@ -35,6 +40,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 import flash.display.Graphics;
@@ -252,6 +258,11 @@ public class FlxG
 	 * @default false
 	 */
 	static public boolean useBufferLocking;
+	
+	/**
+	 * An array container for <code>ShaderProgram</code>s. 
+	 */
+	static public ObjectMap<String, FlxShaderProgram> shaders;
 	
 	/**
 	 * An array container for plugins.
@@ -2101,6 +2112,9 @@ public class FlxG
 		FlxG.scores = new IntArray();
 		FlxG.visualDebug = false;
 		
+		if(_gl == Gdx.gl20)
+			FlxG.shaders = new ObjectMap<String, FlxShaderProgram>();
+		
 		FlxG._floatArray = new float[4];
 		
 		GestureManager manager = new GestureManager();
@@ -2116,6 +2130,7 @@ public class FlxG
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
+		FlxG.destroyShaders();
 		
 		try
 		{
@@ -2310,7 +2325,49 @@ public class FlxG
 	}
 	
 	/**
-	 * Check whether the ShaderProgram compiled successfully.
+	 * Load <code>ShaderProgram</code> from file and cache it.
+	 * @param Name		The name of the shader program.
+	 * @param Vertex	The path to the vertex file.
+	 * @param Fragment	The path to the fragment file.
+	 * @param callback	The callback that will be fired on resume.
+	 * @return			The <code>Shader Program</code> that needed to be loaded.
+	 */
+	public static FlxShaderProgram loadShader(String Name, String Vertex, String Fragment, IFlxShaderProgram callback)
+	{
+		ShaderProgramParameter parameter = new ShaderProgramParameter();
+		parameter.vertex = Vertex;
+		parameter.fragment = Fragment;
+		parameter.callback = callback;
+		
+		FlxShaderProgram shader = FlxG._cache.load(Name, FlxShaderProgram.class, parameter);
+		shaders.put(Name, shader);
+		return shader;
+	}
+	
+	/**
+	 * Load <code>ShaderProgram</code> from file and cache it.
+	 * @param Name		The name of the shader program.
+	 * @param Vertex	The path to the vertex file.
+	 * @param Fragment	The path to the fragment file.
+	 * @return			The <code>Shader Program</code> that needed to be loaded.
+	 */
+	public static FlxShaderProgram loadShader(String Name, String Vertex, String Fragment)
+	{
+		return loadShader(Name, Vertex, Fragment, null);
+	}
+	
+	/**
+	 * Free memory by disposing a <code>ShaderProgram</code> and removing it from the cache if there are no dependencies.
+	 * @param Name		The name of the shader. 
+	 */
+	public static void disposeShader(String Name)
+	{
+		FlxG._cache.unload(Name);
+		shaders.remove(Name);
+	}
+	
+	/**
+	 * Check whether the <code>ShaderProgram</code> compiled successfully.
 	 * It will also log any warnings if they exist.
 	 * @param program	The ShaderProgram that needs to checked.
 	 * @return boolean
@@ -2329,6 +2386,33 @@ public class FlxG
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Restores the data for the <code>ProgramShader</code>s.
+	 * Isn't applied to desktop.
+	 */
+	public static void restoreShaders()
+	{
+		if(_gl != Gdx.gl20 || !FlxG.mobile)
+			return;
+		
+		Iterator<FlxShaderProgram> entries = shaders.values().iterator();
+		while(entries.hasNext())
+		{
+			entries.next().loadShaderSettings();
+		}
+	}
+	
+	/**
+	 * Destroys all shaders.
+	 */
+	public static void destroyShaders()
+	{
+		if(_gl != Gdx.gl20)
+			return;
+		FlxG._cache.disposeAssets(FlxShaderProgram.class);
+		shaders.clear();
 	}
 	
 	/**

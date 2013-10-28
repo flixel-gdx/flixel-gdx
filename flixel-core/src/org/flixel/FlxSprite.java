@@ -36,9 +36,9 @@ public class FlxSprite extends FlxObject
 	static String currentBlend;
 	/**
 	 * Internal tracker for the current shader that is used.
+	 * NOTE: Requires GLES20.
 	 */
 	static ShaderProgram currentShader;
-	
 	/**
 	 * WARNING: The origin of the sprite will default to its center.
 	 * If you change this, the visuals and the collisions will likely be
@@ -65,18 +65,18 @@ public class FlxSprite extends FlxObject
 	 */
 	public String blend;
 	/**
-	 * WARNING: Requires GLES20. 
 	 * GLES20 Blending modes, just like Photoshop or whatever.
 	 * Use <code>BlendModeGL20.blend()</code> to create a blend.
+	 * NOTE: Requires GLES20. 
 	 * @default null
 	 */
 	public ShaderProgram blendGL20;
 	/**
-	 * WARNING: Requires GLES20. 
 	 * The sprite that will be blended with the base.
+	 * NOTE: Requires GLES20. 
 	 * @default null
 	 */
-	public FlxSprite spriteBlend;
+	public Texture blendTexture;
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
@@ -269,17 +269,12 @@ public class FlxSprite extends FlxObject
 		_newTextureData = null;
 		framePixels = null;
 		currentBlend = null;
-		shader = null;
-		if(currentShader != null)
-		{
-			currentShader.dispose();
-			currentShader = null;
-		}
-		if(blendGL20 != null)
-		{
-			blendGL20.dispose();
-			blendGL20 = null;
-		}
+		shader = null;		
+		currentShader = null;
+		blendGL20 = null;
+		if(blendTexture != null)
+			blendTexture.dispose();
+		blendTexture = null;
 		super.destroy();
 	}
 	
@@ -646,19 +641,11 @@ public class FlxSprite extends FlxObject
 				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 			}
 			else if(FlxG._gl == Gdx.gl20)
-			{	// OpenGL ES 2.0 shader render
-				if((shader != null && currentShader != shader))
-					FlxG.batch.setShader(currentShader = shader);
-				else if(shader == null && currentShader != null)
-					FlxG.batch.setShader(currentShader = null);
+			{	
+				// OpenGL ES 2.0 shader render
+				renderShader();
 				// OpenGL ES 2.0 blend mode render
-				if(blendGL20 != null)
-				{
-					FlxG.batch.setShader(blendGL20);
-					getTexture().bind(1);
-					spriteBlend.getTexture().bind(2);						
-					Gdx.gl.glActiveTexture(GL10.GL_TEXTURE0);
-				}
+				renderBlend();
 			}
 			framePixels.draw(FlxG.batch);
 		}
@@ -670,6 +657,31 @@ public class FlxSprite extends FlxObject
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
 			drawDebug(camera);		
+	}
+	
+	/**
+	 * Override this method to customize the texture and shader bindings.
+	 */
+	public void renderShader()
+	{
+		if((shader != null && currentShader != shader))
+			FlxG.batch.setShader(currentShader = shader);
+		else if(shader == null && currentShader != null)
+			FlxG.batch.setShader(currentShader = null);
+	}
+	
+	/**
+	 * Override this method to customize the blending.
+	 */
+	public void renderBlend()
+	{
+		if(blendGL20 != null && blendTexture != null)
+		{
+			FlxG.batch.setShader(blendGL20);
+			getTexture().bind(1);
+			blendTexture.bind(2);
+			Gdx.gl.glActiveTexture(GL10.GL_TEXTURE0);
+		}
 	}
 	
 	/**
@@ -1322,8 +1334,13 @@ public class FlxSprite extends FlxObject
 		{
 			if(currentBlend != null)
 				FlxG.batch.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-			if(FlxG._gl == Gdx.gl20 && currentShader != null)
-				FlxG.batch.setShader(currentShader = null);				
+			if(FlxG._gl == Gdx.gl20)
+			{
+				if(currentShader != null)
+					FlxG.batch.setShader(currentShader = null);
+				if(blendGL20 == null)
+					FlxG.batch.setShader(null);
+			}
 			return true;
 		}
 		return false;
