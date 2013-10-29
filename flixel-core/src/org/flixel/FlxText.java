@@ -1,5 +1,6 @@
 package org.flixel;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
@@ -446,10 +447,17 @@ public class FlxText extends FlxSprite
 		}
 		
 		//blending
-		if (blend != null && !blend.equals(BlendMode.NORMAL))
+		if(blend != null && currentBlend != blend)
 		{
 			int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 			FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
+		}
+		else if(Gdx.graphics.isGL20Available() && (FlxG.batchShader == null || ignoreBatchShader))
+		{
+			// OpenGL ES 2.0 shader render
+			renderShader();
+			// OpenGL ES 2.0 blend mode render
+			renderBlend();
 		}
 		
 		//Render shadow behind the text
@@ -468,14 +476,7 @@ public class FlxText extends FlxSprite
 		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 		
 		_textField.draw(FlxG.batch);
-		
-		//blending
-		if (blend != null && !blend.equals(BlendMode.NORMAL))
-		{
-			int[] blendFunc = BlendMode.getOpenGLBlendMode(BlendMode.NORMAL);
-			FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
-		}
-		
+						
 		//rotation
 		if (angle != 0)
 			FlxG.batch.setTransformMatrix(_matrix);

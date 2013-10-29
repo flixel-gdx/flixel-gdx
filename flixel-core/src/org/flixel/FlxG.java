@@ -263,6 +263,10 @@ public class FlxG
 	 * An array container for <code>ShaderProgram</code>s. 
 	 */
 	static public ObjectMap<String, FlxShaderProgram> shaders;
+	/**
+	 * This <code>ShaderProgram</code> will be used for <code>SpriteBatch.setShader()</code> only.
+	 */
+	static public ShaderProgram batchShader;
 	
 	/**
 	 * An array container for plugins.
@@ -2334,6 +2338,8 @@ public class FlxG
 	 */
 	public static FlxShaderProgram loadShader(String Name, String Vertex, String Fragment, IFlxShaderProgram callback)
 	{
+		if(!Gdx.graphics.isGL20Available())
+			throw new RuntimeException("OpenGL ES 2.0 is not available, forgot to turn it on?");
 		ShaderProgramParameter parameter = new ShaderProgramParameter();
 		parameter.vertex = Vertex;
 		parameter.fragment = Fragment;
@@ -2346,6 +2352,7 @@ public class FlxG
 	
 	/**
 	 * Load <code>ShaderProgram</code> from file and cache it.
+	 * WARNING: the uniforms will be lost if there is no callback set.
 	 * @param Name		The name of the shader program.
 	 * @param Vertex	The path to the vertex file.
 	 * @param Fragment	The path to the fragment file.
@@ -2413,13 +2420,14 @@ public class FlxG
 			return;
 		FlxG._cache.disposeAssets(FlxShaderProgram.class);
 		shaders.clear();
+		batchShader = null;
 	}
 	
 	/**
 	 * Internal callback function for collision.
 	 */
 	protected static IFlxObject separate = new IFlxObject()
-	{				
+	{
 		@Override
 		public boolean callback(FlxObject Object1, FlxObject Object2)
 		{
