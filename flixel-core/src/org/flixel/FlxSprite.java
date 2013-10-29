@@ -1339,7 +1339,10 @@ public class FlxSprite extends FlxObject
 			)
 		{
 			if(currentBlend != null)
+			{
+				currentBlend = null;
 				FlxG.batch.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+			}
 			if(FlxG._gl == Gdx.gl20)
 			{
 				if(FlxG.batchShader != null && !ignoreBatchShader)

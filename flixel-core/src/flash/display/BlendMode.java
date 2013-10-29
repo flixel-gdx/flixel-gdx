@@ -5,6 +5,9 @@ import java.util.Map;
 
 import com.badlogic.gdx.graphics.GL10;
 
+/**
+ * A class that provides constant values for visual blend mode effects.
+ */
 public class BlendMode
 {
 	/**
@@ -107,12 +110,12 @@ public class BlendMode
 		addBlendMode(ALPHA, GL10.GL_SRC_ALPHA, GL10.GL_ONE);
 		//_blendMap.put(DARKEN, new int[]{GL10.GL_DST_COLOR, GL10.GL_ZERO});
 		//_blendMap.put(DIFFERENCE, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
-		addBlendMode(ERASE, GL10.GL_ONE_MINUS_SRC_ALPHA, GL10.GL_SRC_ALPHA);
+		addBlendMode(ERASE, GL10.GL_ZERO, GL10.GL_SRC_ALPHA);
 		//_blendMap.put(HARDLIGHT, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(INVERT, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(LAYER, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		//_blendMap.put(LIGHTEN, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
-		addBlendMode(MULTIPLY, GL10.GL_DST_COLOR, GL10.GL_ZERO);
+		addBlendMode(MULTIPLY, GL10.GL_DST_COLOR, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		addBlendMode(NORMAL, GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		//_blendMap.put(OVERLAY, new int[]{GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA});
 		addBlendMode(SCREEN, GL10.GL_SRC_ALPHA, GL10.GL_ONE);

@@ -50,4 +50,11 @@ public class FlxShaderProgram extends ShaderProgram
 		if(callback != null)
 			callback.loadShaderSettings(this);
 	}
+	
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		callback = null;
+	}
 }

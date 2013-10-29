@@ -209,21 +209,6 @@ public class BlendModeGL20
 	 */
 	public static FlxShaderProgram blend(FlxShaderProgram shader, FlxSprite base, Texture blend)
 	{		
-		IFlxShaderProgram callback = new IFlxShaderProgram()
-		{			
-			@Override
-			public void loadShaderSettings(ShaderProgram shader)
-			{
-				shader.begin();
-				if(shader.hasUniform("u_texture"))
-					shader.setUniformi("u_texture", 1);
-				if(shader.hasUniform("u_texture1"))
-					shader.setUniformi("u_texture1", 2);
-				shader.end();
-			}
-		};
-		callback.loadShaderSettings(shader);
-		shader.callback = callback;
 		base.blendGL20 = shader;
 		base.blendTexture = blend;		
 		return shader;
@@ -275,7 +260,24 @@ public class BlendModeGL20
 		if(FlxG._cache.containsAsset(name, FlxShaderProgram.class))
 			shader = FlxG._cache.load(name, FlxShaderProgram.class);
 		else
-			shader = FlxG.loadShader(name, VERTEX, name);				
+		{
+			shader = FlxG.loadShader(name, VERTEX, name);			
+			IFlxShaderProgram callback = new IFlxShaderProgram()
+			{			
+				@Override
+				public void loadShaderSettings(ShaderProgram shader)
+				{
+					shader.begin();
+					if(shader.hasUniform("u_texture"))
+						shader.setUniformi("u_texture", 1);
+					if(shader.hasUniform("u_texture1"))
+						shader.setUniformi("u_texture1", 2);
+					shader.end();
+				}
+			};
+			callback.loadShaderSettings(shader);
+			shader.callback = callback;
+		}
 		return shader;
 	}
 	
