@@ -2369,6 +2369,8 @@ public class FlxG
 	 */
 	public static void disposeShader(String Name)
 	{
+		if(_gl != Gdx.gl20)
+			return;
 		FlxG._cache.unload(Name);
 		shaders.remove(Name);
 	}

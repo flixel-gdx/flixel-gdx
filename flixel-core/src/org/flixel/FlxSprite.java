@@ -72,8 +72,8 @@ public class FlxSprite extends FlxObject
 	 */
 	public ShaderProgram blendGL20;
 	/**
-	 * The sprite that will be blended with the base.
-	 * NOTE: Requires GLES20. 
+	 * The sprite that will be blended with the base. Only used with <code>blendGL20</code>.
+	 * NOTE: Requires GLES20.
 	 * @default null
 	 */
 	public Texture blendTexture;

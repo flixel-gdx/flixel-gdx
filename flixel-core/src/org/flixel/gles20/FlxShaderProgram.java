@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * A shader program encapsulates a vertex and fragment shader pair linked to form a 
- * shader program usable with OpenGL ES 2.0. It restores the uniforms when the context
+ * shader program usable with OpenGL ES 2.0. It restores the shader settings when the context
  * is lost.
  * 
  * @author Ka Wing Chin
