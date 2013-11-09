@@ -4,6 +4,7 @@ dist/
 gwt-unitCache/
 deploy/
 classes/
+.gwt/
 
 *.jar
 *.so
