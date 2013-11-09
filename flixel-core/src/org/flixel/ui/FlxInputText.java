@@ -142,7 +142,7 @@ public class FlxInputText extends FlxUITouchable
 		textfield.setFormat(null, 16);
 		textBuffer = new StringBuffer();
 		_passwordBuffer = new StringBuffer();
-		FlxG.getStage().addEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
+		//FlxG.getStage().addEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
 	}
 	
 	/**
@@ -346,7 +346,7 @@ public class FlxInputText extends FlxUITouchable
 	public void destroy()
 	{
 		super.destroy();
-		FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
+		//FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
 		textfield.destroy();
 		textfield = null;
 		callback = null;

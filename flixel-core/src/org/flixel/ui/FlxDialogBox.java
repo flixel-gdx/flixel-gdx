@@ -6,8 +6,6 @@ import org.flixel.ui.event.IFlxDialogBox;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 
-import flash.events.KeyboardEvent;
-
 /**
  * Skinnable DialogBox. When clicked a dialog will be opened.
  * For desktop it will be Swing dialog.
@@ -40,7 +38,7 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 	{
 		super(X, Y, skin, Label, Width, Height);
 		_title = Title;
-		FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
+		//FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
 	}
 
 	/**

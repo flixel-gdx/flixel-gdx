@@ -2,8 +2,8 @@ package org.flixel.plugin;
 
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
-import org.flixel.system.input.gamepad.Gamepad;
-import org.flixel.system.input.gamepad.GamepadMapping;
+import org.flixel.system.input.Gamepad;
+import org.flixel.system.input.GamepadMapping;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;

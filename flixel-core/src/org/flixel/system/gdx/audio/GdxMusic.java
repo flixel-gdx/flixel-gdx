@@ -1,8 +1,9 @@
-package org.flixel.system.gdx;
+package org.flixel.system.gdx.audio;
 
 import org.flixel.FlxG;
 
 import com.badlogic.gdx.audio.Music;
+
 import flash.media.Sound;
 import flash.media.SoundChannel;
 import flash.media.SoundTransform;

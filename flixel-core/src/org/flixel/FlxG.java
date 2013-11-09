@@ -10,17 +10,16 @@ import org.flixel.plugin.GestureManager;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
+import org.flixel.system.gdx.GdxGraphics;
 import org.flixel.system.gdx.ManagedTextureData;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver.Resolution;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -30,7 +29,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
@@ -197,10 +195,6 @@ public class FlxG
 	static public int save;
 
 	/**
-	 * An InputProcessor that delegates to an ordered list of other InputProcessors.
-	 */
-	static public InputMultiplexer inputs;
-	/**
 	 * A reference to a <code>FlxMouse</code> object.  Important for input!
 	 */
 	static public Mouse mouse;
@@ -288,10 +282,6 @@ public class FlxG
 	 * The camera currently being drawn.
 	 */
 	static FlxCamera _activeCamera;
-	/**
-	 * Internal, a pre-allocated array to prevent <code>new</code> calls.
-	 */
-	static float[] _floatArray;
 	
 	static public String getLibraryName()
 	{
@@ -302,7 +292,7 @@ public class FlxG
 	 * Log data to the debugger.
 	 * 
 	 * @param	Tag		Handy if you want to use filter in LogCat.
-	 * @param	Data	Anything you want to log to the console.
+	 * @param	Data		Anything you want to log to the console.
 	 */
 	public static void log(String Tag, Object Data)
 	{
@@ -2060,12 +2050,14 @@ public class FlxG
 		
 		FlxG.mute = false;
 		FlxG._volume = 0.5f;
-		FlxG.sounds = new FlxGroup(32);
+		FlxG.sounds = new FlxGroup();
 		FlxG.music = null;
 		FlxG.volumeHandler = null;
 		
 		//FlxG.clearBitmapCache();
 		FlxG._cache = new FlxAssetManager();
+		
+		FlxG.flashGfx = _game.stage.getGraphics();
 		
 		FlxCamera.defaultZoom = Zoom;
 		FlxCamera.defaultScaleMode = ScaleMode;
@@ -2081,16 +2073,12 @@ public class FlxG
 		FlxG.mouse = new Mouse(FlxG._game._mouse);
 		FlxG.keys = new Keyboard();
 		FlxG.sensor = new Sensor();
-		FlxG.inputs = new InputMultiplexer();
 		
 		FlxG.levels = new Array<Object>();
 		FlxG.scores = new IntArray();
 		FlxG.visualDebug = false;
 		
-		FlxG._floatArray = new float[4];
-		
 		GestureManager manager = new GestureManager();
-		FlxG.inputs.addProcessor(new GestureDetector(manager));
 		addPlugin(manager);
 	}
 	
@@ -2145,6 +2133,9 @@ public class FlxG
 	{
 		FlxCamera cam = FlxG._activeCamera;
 		
+		//Update camera matrices
+		cam._glCamera.update(false);
+		
 		//Set the drawing area		
 		int scissorWidth = FlxU.ceil(cam.width * cam._screenScaleFactorX * cam.getZoom());
 		int scissorHeight = FlxU.ceil(cam.height * cam._screenScaleFactorY * cam.getZoom());
@@ -2153,32 +2144,18 @@ public class FlxG
 		_gl.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
 
 		//Clear the camera
-		if(((cam.bgColor >> 24) & 0xff) == 0xFF)
-		{
-			int color = FlxU.multiplyColors(cam.bgColor, cam.getColor());
-			_floatArray = FlxU.getRGBA(color, _floatArray);
-			_gl.glClearColor(_floatArray[0] * 0.00392f, _floatArray[1] * 0.00392f, _floatArray[2] * 0.00392f, 1.0f);
-			_gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		}
-		else
-		{
-			cam.fill(cam.bgColor);
-		}
-		
-		//Update camera matrices
-		cam._glCamera.update(false);
+		cam.fill(cam.bgColor);
 		
 		//Set tint
-		_floatArray = FlxU.getRGBA(cam.getColor(), _floatArray);
-		FlxG.batch.setColor(_floatArray[0] * 0.00392f, _floatArray[1] * 0.00392f, _floatArray[2] * 0.00392f, 1.0f);
+		FlxG.batch.setColor(((cam.getColor() >> 16) & 0xFF) * 0.00392f, ((cam.getColor() >> 8) & 0xFF) * 0.00392f, (cam.getColor() & 0xFF) * 0.00392f, 1.0f);
 
 		//Set matrix
 		FlxG.batch.setProjectionMatrix(cam._glCamera.combined);
-		FlxG.flashGfx.setProjectionMatrix(cam._glCamera.combined);
+		((GdxGraphics)FlxG.flashGfx).setProjectionMatrix(cam._glCamera.combined);
 		
 		//Get ready for drawing
 		FlxG.batch.begin();
-		FlxG.flashGfx.begin();
+		((GdxGraphics)FlxG.flashGfx).begin();
 	}
 	
 	/**
@@ -2189,7 +2166,7 @@ public class FlxG
 		FlxCamera cam = FlxG._activeCamera;
 		
 		FlxG.batch.end();
-		FlxG.flashGfx.end();
+		((GdxGraphics)FlxG.flashGfx).end();
 		
 		cam.drawFX();
 	}
@@ -2237,9 +2214,7 @@ public class FlxG
 	 * Used by the game object to call <code>draw()</code> on all the plugins.
 	 */
 	public static void drawPlugins()
-	{
-		FlxG.flashGfx.begin();
-		
+	{		
 		FlxBasic plugin;
 		Array<FlxBasic> pluginList = FlxG.plugins;
 		int i = 0;
@@ -2250,8 +2225,6 @@ public class FlxG
 			if(plugin.exists && plugin.visible)
 				plugin.draw();
 		}
-		
-		FlxG.flashGfx.end();
 	}
 	
 	/**

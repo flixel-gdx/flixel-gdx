@@ -325,7 +325,7 @@ public class FlxU
 	 * Loads an array with the RGBA values of a Flash <code>int</code> color.
 	 * RGB values are stored 0-255.  Alpha is stored as a floating point number between 0 and 1.
 	 * 
-	 * @param	Color	The color you want to break into components.
+	 * @param	Color		The color you want to break into components.
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * 
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
@@ -345,7 +345,7 @@ public class FlxU
 	 * Loads an array with the RGBA values of a Flash <code>int</code> color.
 	 * RGB values are stored 0-255.  Alpha is stored as a floating point number between 0 and 1.
 	 * 
-	 * @param	Color	The color you want to break into components.
+	 * @param	Color		The color you want to break into components.
 	 * 
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */

@@ -1,6 +1,7 @@
 package org.flixel;
 
 import org.flixel.event.IFlxCamera;
+import org.flixel.system.gdx.GdxGraphics;
 
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -223,11 +224,11 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
 	 * 
-	 * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-	 * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param X				X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param Y				Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
 	 * @param Width		The width of the camera display in pixels.
-	 * @param Height	The height of the camera display in pixels.
-	 * @param Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
+	 * @param Height		The height of the camera display in pixels.
+	 * @param Zoom			The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
 	 * @param ScaleMode	The initial scale mode of the camera.
 	 */
 	public FlxCamera(int X, int Y, int Width, int Height, float Zoom, int ScaleMode)
@@ -274,11 +275,11 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
 	 * 
-	 * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-	 * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param X				X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param Y				Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
 	 * @param Width		The width of the camera display in pixels.
-	 * @param Height	The height of the camera display in pixels.
-	 * @param Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
+	 * @param Height		The height of the camera display in pixels.
+	 * @param Zoom			The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
 	 */
 	public FlxCamera(int X, int Y, int Width, int Height, float Zoom)
 	{
@@ -288,10 +289,10 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
 	 * 
-	 * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-	 * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param X				X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param Y				Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
 	 * @param Width		The width of the camera display in pixels.
-	 * @param Height	The height of the camera display in pixels.
+	 * @param Height		The height of the camera display in pixels.
 	 */
 	public FlxCamera(int X, int Y, int Width, int Height)
 	{
@@ -407,7 +408,7 @@ public class FlxCamera extends FlxBasic
 	 * Tells this camera object what <code>FlxObject</code> to track.
 	 * 
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
-	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
+	 * @param	Style			Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
 	 */
 	public void follow(FlxObject Target, int Style)
 	{
@@ -448,7 +449,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Move the camera focus to this location instantly.
 	 * 
-	 * @param	Point		Where you want the camera to focus.
+	 * @param	Point			Where you want the camera to focus.
 	 */
 	public void focusOn(FlxPoint Point)
 	{
@@ -460,9 +461,9 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Specify the boundaries of the level or where the camera is allowed to move.
 	 * 
-	 * @param	X				The smallest X value of your level (usually 0).
-	 * @param	Y				The smallest Y value of your level (usually 0).
-	 * @param	Width			The largest X value of your level (usually the level width).
+	 * @param	X					The smallest X value of your level (usually 0).
+	 * @param	Y					The smallest Y value of your level (usually 0).
+	 * @param	Width				The largest X value of your level (usually the level width).
 	 * @param	Height			The largest Y value of your level (usually the level height).
 	 * @param	UpdateWorld		Whether the global quad-tree's dimensions should be updated to match (default: false).
 	 */
@@ -479,9 +480,9 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Specify the boundaries of the level or where the camera is allowed to move.
 	 * 
-	 * @param	X				The smallest X value of your level (usually 0).
-	 * @param	Y				The smallest Y value of your level (usually 0).
-	 * @param	Width			The largest X value of your level (usually the level width).
+	 * @param	X					The smallest X value of your level (usually 0).
+	 * @param	Y					The smallest Y value of your level (usually 0).
+	 * @param	Width				The largest X value of your level (usually the level width).
 	 * @param	Height			The largest Y value of your level (usually the level height).
 	 */
 	public void setBounds(float X, float Y, float Width, float Height)
@@ -492,9 +493,9 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Specify the boundaries of the level or where the camera is allowed to move.
 	 * 
-	 * @param	X				The smallest X value of your level (usually 0).
-	 * @param	Y				The smallest Y value of your level (usually 0).
-	 * @param	Width			The largest X value of your level (usually the level width).
+	 * @param	X					The smallest X value of your level (usually 0).
+	 * @param	Y					The smallest Y value of your level (usually 0).
+	 * @param	Width				The largest X value of your level (usually the level width).
 	 */
 	public void setBounds(float X, float Y, float Width)
 	{
@@ -504,8 +505,8 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Specify the boundaries of the level or where the camera is allowed to move.
 	 * 
-	 * @param	X				The smallest X value of your level (usually 0).
-	 * @param	Y				The smallest Y value of your level (usually 0).
+	 * @param	X					The smallest X value of your level (usually 0).
+	 * @param	Y					The smallest Y value of your level (usually 0).
 	 */
 	public void setBounds(float X, float Y)
 	{
@@ -515,7 +516,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Specify the boundaries of the level or where the camera is allowed to move.
 	 * 
-	 * @param	X				The smallest X value of your level (usually 0).
+	 * @param	X					The smallest X value of your level (usually 0).
 	 */
 	public void setBounds(float X)
 	{
@@ -533,10 +534,10 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The screen is filled with this color and gradually returns to normal.
 	 * 
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the flash to fade.
-	 * @param	OnComplete	A function you want to run when the flash finishes.
-	 * @param	Force		Force the effect to reset.
+	 * @param	Color				The color you want to use.
+	 * @param	Duration			How long it takes for the flash to fade.
+	 * @param	OnComplete		A function you want to run when the flash finishes.
+	 * @param	Force				Force the effect to reset.
 	 */
 	public void flash(int Color, float Duration, IFlxCamera OnComplete, boolean Force)
 	{
@@ -553,9 +554,9 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The screen is filled with this color and gradually returns to normal.
 	 * 
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the flash to fade.
-	 * @param	OnComplete	A function you want to run when the flash finishes.
+	 * @param	Color				The color you want to use.
+	 * @param	Duration			How long it takes for the flash to fade.
+	 * @param	OnComplete		A function you want to run when the flash finishes.
 	 */
 	public void flash(int Color, float Duration, IFlxCamera OnComplete)
 	{
@@ -565,8 +566,8 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The screen is filled with this color and gradually returns to normal.
 	 * 
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the flash to fade.
+	 * @param	Color				The color you want to use.
+	 * @param	Duration			How long it takes for the flash to fade.
 	 */
 	public void flash(int Color, float Duration)
 	{
@@ -576,7 +577,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The screen is filled with this color and gradually returns to normal.
 	 * 
-	 * @param	Color		The color you want to use.
+	 * @param	Color				The color you want to use.
 	 */
 	public void flash(int Color)
 	{
@@ -594,10 +595,10 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The screen is gradually filled with this color.
 	 * 
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the fade to finish.
-	 * @param	OnComplete	A function you want to run when the fade finishes.
-	 * @param	Force		Force the effect to reset.
+	 * @param	Color				The color you want to use.
+	 * @param	Duration			How long it takes for the fade to finish.
+	 * @param	OnComplete		A function you want to run when the fade finishes.
+	 * @param	Force				Force the effect to reset.
 	 */
 	public void fade(int Color, float Duration, IFlxCamera OnComplete, boolean Force)
 	{
@@ -614,9 +615,9 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The screen is gradually filled with this color.
 	 * 
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the fade to finish.
-	 * @param	OnComplete	A function you want to run when the fade finishes.
+	 * @param	Color				The color you want to use.
+	 * @param	Duration			How long it takes for the fade to finish.
+	 * @param	OnComplete		A function you want to run when the fade finishes.
 	 */
 	public void fade(int Color, float Duration, IFlxCamera OnComplete)
 	{
@@ -626,8 +627,8 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The screen is gradually filled with this color.
 	 * 
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the fade to finish.
+	 * @param	Color				The color you want to use.
+	 * @param	Duration			How long it takes for the fade to finish.
 	 */
 	public void fade(int Color, float Duration)
 	{
@@ -637,7 +638,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * The screen is gradually filled with this color.
 	 * 
-	 * @param	Color		The color you want to use.
+	 * @param	Color				The color you want to use.
 	 */
 	public void fade(int Color)
 	{
@@ -655,11 +656,11 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * A simple screen-shake effect.
 	 * 
-	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
-	 * @param	Duration	The length in seconds that the shaking effect should last.
-	 * @param	OnComplete	A function you want to run when the shake effect finishes.
-	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
+	 * @param	Intensity		Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param	Duration			The length in seconds that the shaking effect should last.
+	 * @param	OnComplete		A function you want to run when the shake effect finishes.
+	 * @param	Force				Force the effect to reset (default = true, unlike flash() and fade()!).
+	 * @param	Direction		Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
 	 */
 	public void shake(float Intensity, float Duration, IFlxCamera OnComplete, boolean Force, int Direction)
 	{
@@ -675,10 +676,10 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * A simple screen-shake effect.
 	 * 
-	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
-	 * @param	Duration	The length in seconds that the shaking effect should last.
-	 * @param	OnComplete	A function you want to run when the shake effect finishes.
-	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
+	 * @param	Intensity		Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param	Duration			The length in seconds that the shaking effect should last.
+	 * @param	OnComplete		A function you want to run when the shake effect finishes.
+	 * @param	Force				Force the effect to reset (default = true, unlike flash() and fade()!).
 	 */
 	public void shake(float Intensity, float Duration, IFlxCamera OnComplete, boolean Force)
 	{
@@ -688,9 +689,9 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * A simple screen-shake effect.
 	 * 
-	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
-	 * @param	Duration	The length in seconds that the shaking effect should last.
-	 * @param	OnComplete	A function you want to run when the shake effect finishes.
+	 * @param	Intensity		Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param	Duration			The length in seconds that the shaking effect should last.
+	 * @param	OnComplete		A function you want to run when the shake effect finishes.
 	 */
 	public void shake(float Intensity, float Duration, IFlxCamera OnComplete)
 	{
@@ -700,8 +701,8 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * A simple screen-shake effect.
 	 * 
-	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
-	 * @param	Duration	The length in seconds that the shaking effect should last.
+	 * @param	Intensity		Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param	Duration			The length in seconds that the shaking effect should last.
 	 */
 	public void shake(float Intensity, float Duration)
 	{
@@ -711,7 +712,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * A simple screen-shake effect.
 	 * 
-	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param	Intensity		Percentage of screen size representing the maximum distance that the screen can move while shaking.
 	 */
 	public void shake(float Intensity)
 	{
@@ -741,7 +742,7 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Copy the bounds, focus object, and deadzone info from an existing camera.
 	 * 
-	 * @param	Camera	The camera you want to copy from.
+	 * @param	Camera		The camera you want to copy from.
 	 * 
 	 * @return	A reference to this <code>FlxCamera</code> object.
 	 */
@@ -779,7 +780,7 @@ public class FlxCamera extends FlxBasic
 	}
 	
 	/**
-	 * @private
+	 * The zoom level of this camera. 1 = 1:1, 2 = 2x zoom, etc.
 	 */
 	public void setZoom(float Zoom)
 	{
@@ -799,7 +800,7 @@ public class FlxCamera extends FlxBasic
 	}
 	
 	/**
-	 * @private
+	 * The scale mode of this camera.
 	 */
 	public void setScaleMode(int ScaleMode)
 	{
@@ -889,7 +890,7 @@ public class FlxCamera extends FlxBasic
 	public FlxPoint getScale()
 	{
 		Stage stage = FlxG.getStage();
-		return _point.make(stage.stageWidth/_glCamera.viewportWidth,stage.stageHeight/_glCamera.viewportHeight);
+		return _point.make(stage.getStageWidth()/_glCamera.viewportWidth,stage.getStageHeight()/_glCamera.viewportHeight);
 	}
 	
 	/**
@@ -899,7 +900,8 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void setScale(float X, float Y)
 	{
-		Stage stage = FlxG.getStage();
+		int stageWidth = FlxG.getStage().getStageWidth();
+		int stageHeight = FlxG.getStage().getStageHeight();
 		float screenAspectRatio = FlxG.screenWidth / (float)FlxG.screenHeight;
 		
 		switch(_scaleMode)
@@ -913,24 +915,24 @@ public class FlxCamera extends FlxBasic
 				
 			default:	
 			case STRETCH:
-				_screenScaleFactorY = (float)FlxG.screenHeight / stage.stageHeight;
-				_screenScaleFactorX = (float)FlxG.screenWidth / stage.stageWidth;
-				viewportWidth = (int) (stage.stageWidth/X);
-				viewportHeight = (int) (stage.stageHeight/Y);
+				_screenScaleFactorY = (float)FlxG.screenHeight / stageHeight;
+				_screenScaleFactorX = (float)FlxG.screenWidth / stageWidth;
+				viewportWidth = (int) (stageWidth/X);
+				viewportHeight = (int) (stageHeight/Y);
 				break;
 				
 			case FILL_X:
-				_screenScaleFactorX = (float)FlxG.screenWidth / (stage.stageHeight * screenAspectRatio);
-				_screenScaleFactorY = (float)FlxG.screenHeight / stage.stageHeight;
-				viewportWidth = (int) ((stage.stageHeight * screenAspectRatio)/X);
-				viewportHeight = (int) (stage.stageHeight/Y);
+				_screenScaleFactorX = (float)FlxG.screenWidth / (stageHeight * screenAspectRatio);
+				_screenScaleFactorY = (float)FlxG.screenHeight / stageHeight;
+				viewportWidth = (int) ((stageHeight * screenAspectRatio)/X);
+				viewportHeight = (int) (stageHeight/Y);
 				break;
 				
 			case FILL_Y:
-				_screenScaleFactorX = (float)FlxG.screenWidth / stage.stageWidth;
-				_screenScaleFactorY = (float)FlxG.screenHeight / (stage.stageWidth / screenAspectRatio);
-				viewportWidth = (int) (stage.stageWidth/X);
-				viewportHeight = (int) ((stage.stageWidth / screenAspectRatio)/Y);
+				_screenScaleFactorX = (float)FlxG.screenWidth / stageWidth;
+				_screenScaleFactorY = (float)FlxG.screenHeight / (stageWidth / screenAspectRatio);
+				viewportWidth = (int) (stageWidth/X);
+				viewportHeight = (int) ((stageWidth / screenAspectRatio)/Y);
 				break;
 		}
 
@@ -940,26 +942,32 @@ public class FlxCamera extends FlxBasic
 	/**
 	 * Fill the camera with the specified color.
 	 * 
-	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
+	 * @param	Color			The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
 	public void fill(int Color, boolean BlendAlpha)
 	{
-		if (BlendAlpha)
+		int color = FlxU.multiplyColors(Color, _color);
+		
+		if (((Color >> 24) & 0xff) == 0xFF || !BlendAlpha)
+		{
+			FlxG._gl.glDisable(GL10.GL_BLEND);
+			FlxG._gl.glClearColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((Color >> 24) & 0xFF) * 0.00392f);
+			FlxG._gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		}
+		else
 		{
 			FlxG._gl.glEnable(GL10.GL_BLEND);
 			FlxG._gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		}
-		else
-			FlxG._gl.glDisable(GL10.GL_BLEND);
 		
-		ShapeRenderer flashGfx = FlxG.flashGfx.getShapeRenderer();
-		flashGfx.setProjectionMatrix(_glCamera.combined);
-		flashGfx.begin(ShapeType.Filled);
-		int color = FlxU.multiplyColors(Color, _color);
-		flashGfx.setColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((Color >> 24) & 0xFF) * 0.00392f);
-		flashGfx.rect(0, 0, width, height);
-		flashGfx.end();
+			ShapeRenderer flashGfx = ((GdxGraphics)FlxG.flashGfx).getShapeRenderer();
+			flashGfx.setProjectionMatrix(_glCamera.combined);
+			flashGfx.begin(ShapeType.Filled);
+		
+			flashGfx.setColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((Color >> 24) & 0xFF) * 0.00392f);
+			flashGfx.rect(0, 0, width, height);
+			flashGfx.end();
+		}
 	}
 	
 	/**

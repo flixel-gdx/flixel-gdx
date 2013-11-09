@@ -14,9 +14,12 @@ public class EventDispatcher implements IEventDispatcher
 {
 	protected Map<String, List<IEventListener>> _listeners;
 	
+	private List<IEventListener> _listenersForTypeCopy;
+	
 	public EventDispatcher()
 	{
 		_listeners = new HashMap<String, List<IEventListener>>();
+		_listenersForTypeCopy = new LinkedList<IEventListener>();
 	}
 	
 	@Override
@@ -58,10 +61,12 @@ public class EventDispatcher implements IEventDispatcher
 		if(listenersForType == null || listenersForType.size() <= 0)
 			return false;
 		
-		List<IEventListener> listenersForTypeCopy = new LinkedList<IEventListener>(listenersForType);
+		_listenersForTypeCopy.addAll(listenersForType);
 		
-		for(IEventListener listener : listenersForTypeCopy)
+		for(IEventListener listener : _listenersForTypeCopy)
 			listener.onEvent(event);
+		
+		_listenersForTypeCopy.clear();
 		
 		return true;
 	}

@@ -8,12 +8,13 @@ import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 import org.flixel.plugin.flxbox2d.system.debug.B2FlxDebug;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.utils.ObjectMap;
+
+import flash.display.Graphics;
 
 
 /**
@@ -340,17 +341,18 @@ public abstract class B2FlxJoint extends FlxBasic
 	 */
 	protected void drawJoint(FlxCamera camera, float lineThickness, int lineColor, float lineAlpha)
 	{
-		ShapeRenderer segment = FlxG.flashGfx.getShapeRenderer();
-		FlxG.flashGfx.lineStyle(lineThickness, lineColor, lineAlpha);
+		Graphics graphics = FlxG.flashGfx;
+		graphics.lineStyle(lineThickness, lineColor, lineAlpha);
 		x1.set(bodyA.getTransform().getPosition().scl(B2FlxB.RATIO));
 		x2.set(bodyB.getTransform().getPosition().scl(B2FlxB.RATIO));
 		x1.x -= camera.scroll.x * scrollFactor.x;
 		x1.y -= camera.scroll.y * scrollFactor.y;
 		x2.x -= camera.scroll.x * scrollFactor.x;
 		x2.y -= camera.scroll.y * scrollFactor.y;
-		segment.line(x1.x, x1.y, p1.x, p1.y);
-		segment.line(p1.x, p1.y, p2.x, p2.y);
-		segment.line(x2.x, x2.y, p2.x, p2.y);
+		graphics.moveTo(x1.x, x1.y);
+		graphics.lineTo(p1.x, p1.y);
+		graphics.lineTo(p2.x, p2.y);
+		graphics.lineTo(x2.x, x2.y);
 	}
 	
 	/**

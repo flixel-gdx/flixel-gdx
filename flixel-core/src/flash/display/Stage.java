@@ -1,33 +1,25 @@
 package flash.display;
 
-import flash.events.EventDispatcher;
+import flash.events.IEventDispatcher;
 
 /**
  * This class replicates some of the <code>Stage</code> functionality from Flash.
  * 
  * @author Thomas Weston
  */
-public class Stage extends EventDispatcher
+public interface Stage extends IEventDispatcher
 {
-	/**
-	 * The current height, in pixels, of the <code>Stage</code>.
-	 */
-	public int stageHeight;
-	
 	/**
 	 * The current width, in pixels, of the <code>Stage</code>.
 	 */
-	public int stageWidth;	
+	public int getStageWidth();
 	/**
-	 * Creates a new <code>Stage</code> with the specified width and height.
-	 * 
-	 * @param	width	The width of the <code>Stage</code> in pixels.
-	 * @param	height	The height of the <code>Stage</code> in pixels.
+	 * The current height, in pixels, of the <code>Stage</code>.
 	 */
-	public Stage(int width, int height)
-	{
-		super();
-		stageWidth = width;
-		stageHeight = height;
-	}
+	public int getStageHeight();
+	
+	/**
+	 * Specifies the Graphics object that belongs to this sprite where vector drawing commands can occur.
+	 */
+	public Graphics getGraphics ();
 }

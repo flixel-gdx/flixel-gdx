@@ -1,4 +1,4 @@
-package org.flixel.system.input.gamepad;
+package org.flixel.system.input;
 
 import com.badlogic.gdx.Input.Keys;
 

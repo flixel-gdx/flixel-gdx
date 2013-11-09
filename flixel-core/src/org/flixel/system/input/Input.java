@@ -3,6 +3,7 @@ package org.flixel.system.input;
 import org.flixel.FlxG;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectIntMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
@@ -13,11 +14,19 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
  */
 public class Input
 {
-	private ObjectIntMap<String> _lookup;
+	/**
+	 * @private
+	 */
+	ObjectIntMap<String> _lookup;
+	/**
+	 * @private
+	 */
+	IntMap<KeyState> _map;
+	/**
+	 * @private
+	 */
+	final int _total = 256;
 	
-	private final int _total = 256;
-	
-	protected Array<KeyState> _map;
 	/**
 	 * Helper variable for tracking whether a key was just pressed or just
 	 * released.
@@ -30,9 +39,7 @@ public class Input
 	public Input()
 	{
 		_lookup = new ObjectIntMap<String>(_total);
-		_map = new Array<KeyState>(_total);
-		for (int i = 0; i < _total; ++i)
-			_map.add(new KeyState("", 0, 0));
+		_map = new IntMap<KeyState>(_total);
 	}
 	
 	/**
@@ -40,8 +47,11 @@ public class Input
 	 */
 	public void update()
 	{
-		for(KeyState o : _map)
+		int i = 0;
+		while(i < _total)
 		{
+			KeyState o = _map.get(i++);
+			if(o == null) continue;
 			if((o.last == -1) && (o.current == -1))
 				o.current = 0;
 			else if((o.last == 2) && (o.current == 2))
@@ -55,11 +65,11 @@ public class Input
 	 */
 	public void reset()
 	{
-		for(KeyState o : _map)
+		int i = 0;
+		while(i < _total)
 		{
-			if (o.name.length() == 0)
-				continue;
-			
+			KeyState o = _map.get(i++);
+			if (o == null) continue;
 			try 
 			{
 				ClassReflection.getField(Keyboard.class, o.name).set(this, false);
@@ -76,75 +86,37 @@ public class Input
 	/**
 	 * Check to see if this key is pressed.
 	 * 
-	 * @param Key One of the key constants listed above (e.g. "LEFT" or "A").
+	 * @param	Key	One of the key constants listed above (e.g. "LEFT" or "A").
 	 * 
-	 * @return Whether the key is pressed
-	 */
-	public boolean pressed(int Key)
-	{
-		return _map.get(Key).current == 1;
-	}
-	
-	/**
-	 * Check to see if this key is pressed.
-	 * 
-	 * @param Key One of the key constants listed above (e.g. "LEFT" or "A").
-	 * 
-	 * @return Whether the key is pressed
+	 * @return	Whether the key is pressed
 	 */
 	public boolean pressed(String Key)
 	{
-		return pressed(_lookup.get(Key, 0));
-	}
-	
-	/**
-	 * Check to see if this key was just pressed.
-	 * 
-	 * @param Key One of the key constants listed above (e.g. "LEFT" or "A").
-	 * 
-	 * @return Whether the key was just pressed
-	 */
-	public boolean justPressed(int Key)
-	{
-		return _map.get(Key).current == 2;
+		return _map.get(_lookup.get(Key, 0)).current == 1;
 	}
 
 	/**
 	 * Check to see if this key was just pressed.
 	 * 
-	 * @param Key One of the key constants listed above (e.g. "LEFT" or "A").
+	 * @param	Key	One of the key constants listed above (e.g. "LEFT" or "A").
 	 * 
-	 * @return Whether the key was just pressed
+	 * @return	Whether the key was just pressed
 	 */
 	public boolean justPressed(String Key)
 	{		
-		return justPressed(_lookup.get(Key, 0));
+		return _map.get(_lookup.get(Key, 0)).current == 2;
 	}
 	
 	/**
 	 * Check to see if this key is just released.
 	 * 
-	 * @param Key One of the key constants listed above (e.g. "LEFT" or "A").
+	 * @param	Key	One of the key constants listed above (e.g. "LEFT" or "A").
 	 * 
-	 * @return Whether the key is just released.
-	 */
-	public boolean justReleased(int Key)
-	{
-		if(Key > 0)
-			return _map.get(Key).current == -1;
-		return false;
-	}
-	
-	/**
-	 * Check to see if this key is just released.
-	 * 
-	 * @param Key One of the key constants listed above (e.g. "LEFT" or "A").
-	 * 
-	 * @return Whether the key is just released.
+	 * @return	Whether the key is just released.
 	 */
 	public boolean justReleased(String Key)
 	{
-		return justReleased(_lookup.get(Key, 0));
+		return _map.get(_lookup.get(Key, 0)).current == -1;
 	}
 	
 	/**
@@ -223,6 +195,7 @@ public class Input
 			o2 = _map.get(o.code);
 			o2.current = o.value;
 			if(o.value > 0)
+			{
 				try 
 				{
 					ClassReflection.getField(Keyboard.class, o2.name).set(this, true);
@@ -231,6 +204,7 @@ public class Input
 				{
 					FlxG.log("Input", e.getMessage());
 				}
+			}
 		}
 	}
 	
@@ -253,9 +227,11 @@ public class Input
 	 */
 	public boolean any()
 	{
-		for (KeyState o : _map)
+		int i = 0;
+		while(i < _total)
 		{
-			if(o.current > 0)
+			KeyState o = _map.get(i++);
+			if((o != null) && (o.current > 0))
 				return true;
 		}
 		return false;
@@ -264,13 +240,13 @@ public class Input
 	/**
 	 * An internal helper function used to build the key array.
 	 * 
-	 * @param KeyName String name of the key (e.g. "LEFT" or "A")
-	 * @param KeyCode The numeric Flash code for this key.
+	 * @param	KeyName	String name of the key (e.g. "LEFT" or "A")
+	 * @param	KeyCode	The numeric Flash code for this key.
 	 */
 	protected void addKey(String KeyName, int KeyCode)
 	{
 		_lookup.put(KeyName, KeyCode);
-		_map.set(KeyCode, new KeyState(KeyName, 0, 0));
+		_map.put(KeyCode, new KeyState(KeyName, 0, 0));
 	}
 	
 	/**
@@ -297,4 +273,3 @@ public class Input
 		public int value;
 	}
 }
-

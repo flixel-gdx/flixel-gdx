@@ -1,4 +1,6 @@
-package org.flixel.system.gdx;
+package org.flixel.system.gdx.audio;
+
+import org.flixel.system.gdx.utils.EventPool;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
@@ -15,16 +17,22 @@ public class GdxMusicChannel extends EventDispatcher implements SoundChannel, On
 	
 	private Music _music;
 	
-	private static final Pool<GdxMusicChannel> _pool = new Pool<GdxMusicChannel>(){@Override protected GdxMusicChannel newObject() {return new GdxMusicChannel();}};
+	private static final Pool<GdxMusicChannel> _channels;
+	private static final EventPool _events;
+	
+	static
+	{
+		 _channels = new Pool<GdxMusicChannel>(){@Override protected GdxMusicChannel newObject() {return new GdxMusicChannel();}};
+		 _events = new EventPool(2);	
+	}
 	
 	public static GdxMusicChannel getNew()
 	{
-		return _pool.obtain();
+		return _channels.obtain();
 	}
 	
-	public GdxMusicChannel()
+	private GdxMusicChannel()
 	{
-		
 	}
 	
 	void play(Music music, float startTime, int loops, SoundTransform sndTransform)
@@ -59,7 +67,7 @@ public class GdxMusicChannel extends EventDispatcher implements SoundChannel, On
 	public void stop()
 	{
 		_music.stop();
-		_pool.free(this);
+		_channels.free(this);
 	}
 	
 	@Override
@@ -79,6 +87,6 @@ public class GdxMusicChannel extends EventDispatcher implements SoundChannel, On
 	public void onCompletion(Music music) 
 	{
 		stop();
-		dispatchEvent(new Event(Event.SOUND_COMPLETE));
+		dispatchEvent(_events.obtain(Event.SOUND_COMPLETE));
 	}
 }

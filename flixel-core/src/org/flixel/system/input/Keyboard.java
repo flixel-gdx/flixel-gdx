@@ -2,8 +2,9 @@ package org.flixel.system.input;
 
 import org.flixel.FlxG;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+
+import flash.events.KeyboardEvent;
 
 /**
  * Keeps track of what keys are pressed and how with handy booleans or strings.
@@ -103,10 +104,8 @@ public class Keyboard extends Input
 	public boolean DOWN;
 	public boolean LEFT;
 	public boolean RIGHT;
-	public boolean APP_SWITCH;
 	public boolean BACK;
 	public boolean MENU;
-	public boolean POWER;
 	public boolean SEARCH;
 	public boolean VOLUME_DOWN;
 	public boolean VOLUME_UP;
@@ -116,126 +115,128 @@ public class Keyboard extends Input
 	 */
 	public Keyboard()
 	{
-		super();
-		addKey("ZERO", Keys.NUM_0);
-
+		int i;
+		
 		// LETTERS (A-Z)
-		addKey("A", Keys.A);
-		addKey("B", Keys.B);
-		addKey("C", Keys.C);
-		addKey("D", Keys.D);
-		addKey("E", Keys.E);
-		addKey("F", Keys.F);
-		addKey("G", Keys.G);
-		addKey("H", Keys.H);
-		addKey("I", Keys.I);
-		addKey("J", Keys.J);
-		addKey("K", Keys.K);
-		addKey("L", Keys.L);
-		addKey("M", Keys.M);
-		addKey("N", Keys.N);
-		addKey("O", Keys.O);
-		addKey("P", Keys.P);
-		addKey("Q", Keys.Q);
-		addKey("R", Keys.R);
-		addKey("S", Keys.S);
-		addKey("T", Keys.T);
-		addKey("U", Keys.U);
-		addKey("V", Keys.V);
-		addKey("W", Keys.W);
-		addKey("X", Keys.X);
-		addKey("Y", Keys.Y);
-		addKey("Z", Keys.Z);
-
+		i = 65;
+		addKey("A", i++);
+		addKey("B", i++);
+		addKey("C", i++);
+		addKey("D", i++);
+		addKey("E", i++);
+		addKey("F", i++);
+		addKey("G", i++);
+		addKey("H", i++);
+		addKey("I", i++);
+		addKey("J", i++);
+		addKey("K", i++);
+		addKey("L", i++);
+		addKey("M", i++);
+		addKey("N", i++);
+		addKey("O", i++);
+		addKey("P", i++);
+		addKey("Q", i++);
+		addKey("R", i++);
+		addKey("S", i++);
+		addKey("T", i++);
+		addKey("U", i++);
+		addKey("V", i++);
+		addKey("W", i++);
+		addKey("X", i++);
+		addKey("Y", i++);
+		addKey("Z", i++);
+		
 		// NUMBERS (0-9)
-		addKey("NUMPADZERO", Keys.NUM_0);
-		addKey("NUMPADONE", Keys.NUM_1);
-		addKey("NUMPADTWO", Keys.NUM_2);
-		addKey("NUMPADTHREE", Keys.NUM_3);
-		addKey("NUMPADFOUR", Keys.NUM_4);
-		addKey("NUMPADFIVE", Keys.NUM_5);
-		addKey("NUMPADSIX", Keys.NUM_6);
-		addKey("NUMPADSEVEN", Keys.NUM_7);
-		addKey("NUMPADEIGHT", Keys.NUM_8);
-		addKey("NUMPADNINE", Keys.NUM_9);
-		addKey("PAGEUP", Keys.PAGE_UP);
-		addKey("PAGEDOWN", Keys.PAGE_DOWN);
-		addKey("HOME", Keys.HOME);
-		addKey("END", Keys.END);
-		addKey("INSERT", Keys.INSERT);
+		i = 48;
+		addKey("ZERO", i++);
+		addKey("ONE", i++);
+		addKey("TWO", i++);
+		addKey("THREE", i++);
+		addKey("FOUR", i++);
+		addKey("FIVE", i++);
+		addKey("SIX", i++);
+		addKey("SEVEN", i++);
+		addKey("EIGHT", i++);
+		addKey("NINE", i++);
+		i = 96;
+		addKey("NUMPADZERO", i++);
+		addKey("NUMPADONE", i++);
+		addKey("NUMPADTWO", i++);
+		addKey("NUMPADTHREE", i++);
+		addKey("NUMPADFOUR", i++);
+		addKey("NUMPADFIVE", i++);
+		addKey("NUMPADSIX", i++);
+		addKey("NUMPADSEVEN", i++);
+		addKey("NUMPADEIGHT", i++);
+		addKey("NUMPADNINE", i++);
+		addKey("PAGEUP", 33);
+		addKey("PAGEDOWN", 34);
+		addKey("HOME", 36);
+		addKey("END", 35);
+		addKey("INSERT", 45);
 
 		// FUNCTION KEYS (F1-F12)
-		addKey("F1", Keys.F1);
-		addKey("F2", Keys.F2);
-		addKey("F3", Keys.F3);
-		addKey("F4", Keys.F4);
-		addKey("F5", Keys.F5);
-		addKey("F6", Keys.F6);
-		addKey("F7", Keys.F7);
-		addKey("F8", Keys.F8);
-		addKey("F9", Keys.F9);
-		addKey("F10", Keys.F10);
-		addKey("F11", Keys.F11);
-		addKey("F12", Keys.F12);
+		i = 1;
+		while(i <= 12)
+			addKey("F"+i,111+(i++));
 
 		// SPECIAL KEYS + PUNCTUATION
-		addKey("ESCAPE", Keys.ESCAPE);
-		addKey("MINUS", Keys.MINUS);
-		// addKey("NUMPADMINUS", Keys.MINUS);
-		addKey("PLUS", Keys.PLUS);
-		// addKey("NUMPADPLUS",Keys.PLUS);
-		addKey("DELETE", Keys.DEL);
-		addKey("BACKSPACE", Keys.BACKSPACE);
-		addKey("LBRACKET", Keys.LEFT_BRACKET);
-		addKey("RBRACKET", Keys.RIGHT_BRACKET);
-		addKey("BACKSLASH", Keys.BACKSLASH);
-		// addKey("CAPSLOCK",Keys.CAPS_LOCK);
-		addKey("SEMICOLON", Keys.SEMICOLON);
-		addKey("QUOTE", Keys.APOSTROPHE);
-		addKey("ENTER", Keys.ENTER);
-		addKey("SHIFT", Keys.SHIFT_LEFT);
-		addKey("COMMA", Keys.COMMA);
-		addKey("PERIOD", Keys.PERIOD);
-		// addKey("NUMPADPERIOD",Keys.PERIOD);
-		addKey("SLASH", Keys.SLASH);
-		// addKey("NUMPADSLASH",Keys.SLASH);
-		addKey("CONTROL", Keys.CONTROL_LEFT);
-		addKey("ALT", Keys.ALT_LEFT);
-		addKey("SPACE", Keys.SPACE);
-		addKey("UP", Keys.UP);
-		addKey("DOWN", Keys.DOWN);
-		addKey("LEFT", Keys.LEFT);
-		addKey("RIGHT", Keys.RIGHT);
-		addKey("TAB", Keys.TAB);
+		addKey("ESCAPE",27);
+		addKey("MINUS",189);
+		addKey("NUMPADMINUS",109);
+		addKey("PLUS",187);
+		addKey("NUMPADPLUS",107);
+		addKey("DELETE",46);
+		addKey("BACKSPACE",8);
+		addKey("LBRACKET",219);
+		addKey("RBRACKET",221);
+		addKey("BACKSLASH",220);
+		addKey("CAPSLOCK",20);
+		addKey("SEMICOLON",186);
+		addKey("QUOTE",222);
+		addKey("ENTER",13);
+		addKey("SHIFT",16);
+		addKey("COMMA",188);
+		addKey("PERIOD",190);
+		addKey("NUMPADPERIOD",110);
+		addKey("SLASH",191);
+		addKey("NUMPADSLASH",191);
+		addKey("CONTROL",17);
+		addKey("ALT",18);
+		addKey("SPACE",32);
+		addKey("UP",38);
+		addKey("DOWN",40);
+		addKey("LEFT",37);
+		addKey("RIGHT",39);
+		addKey("TAB",9);
 
 		// MOBILE KEYS
-		addKey("APP_SWITCH", 187);
-		addKey("BACK", Keys.BACK);
-		addKey("MENU", Keys.MENU);
-		addKey("POWER", Keys.POWER);
-		addKey("SEARCH", Keys.SEARCH);
-		addKey("VOLUME_DOWN", Keys.VOLUME_DOWN);
-		addKey("VOLUME_UP", Keys.VOLUME_UP);
+		addKey("BACK", flash.ui.Keyboard.BACK);
+		addKey("MENU", flash.ui.Keyboard.MENU);
+		addKey("SEARCH", flash.ui.Keyboard.SEARCH);
+		//addKey("VOLUME_DOWN", flash.ui.Keyboard.VOLUME_DOWN);
+		//addKey("VOLUME_UP", flash.ui.Keyboard.VOLUME_UP);
 	}
 
 	/**
 	 * Event handler so FlxGame can toggle keys.
-	 * @param KeyCode	The key code of the pressed key.
+	 * 
+	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
 	 */
-	public void handleKeyDown(int KeyCode)
+	public void handleKeyDown(KeyboardEvent FlashEvent)
 	{
-		KeyState o = _map.get(KeyCode);
-		if(o.name.length() == 0)
+		KeyState object = _map.get(FlashEvent.keyCode);
+		
+		if(object == null)
 			return;
-
-		if(o.current > 0)
-			o.current = 1;
+		if(object.current > 0)
+			object.current = 1;
 		else
-			o.current = 2;
+			object.current = 2;
 
 		try
 		{
-			ClassReflection.getField(Keyboard.class, o.name).set(this, true);
+			ClassReflection.getField(Keyboard.class, object.name).set(this, true);
 		}
 		catch(Exception e)
 		{
@@ -245,22 +246,23 @@ public class Keyboard extends Input
 
 	/**
 	 * Event handler so FlxGame can toggle keys.
-	 * @param KeyCode	The key code of the pressed key.
+	 * 
+	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
 	 */
-	public void handleKeyUp(int KeyCode)
+	public void handleKeyUp(KeyboardEvent FlashEvent)
 	{
-		KeyState o = _map.get(KeyCode);
-		if(o.name.length() == 0)
+		KeyState object = _map.get(FlashEvent.keyCode);
+		
+		if(object == null)
 			return;
-
-		if(o.current > 0)
-			o.current = -1;
+		if(object.current > 0)
+			object.current = -1;
 		else
-			o.current = 0;
-
+			object.current = 0;
+		
 		try
 		{
-			ClassReflection.getField(Keyboard.class, o.name).set(this, false);
+			ClassReflection.getField(Keyboard.class, object.name).set(this, false);
 		}
 		catch(Exception e)
 		{

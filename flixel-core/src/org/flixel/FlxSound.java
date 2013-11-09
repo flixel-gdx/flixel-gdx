@@ -1,7 +1,7 @@
 package org.flixel;
 
-import org.flixel.system.gdx.GdxMusic;
-import org.flixel.system.gdx.GdxSound;
+import org.flixel.system.gdx.audio.GdxMusic;
+import org.flixel.system.gdx.audio.GdxSound;
 
 import flash.events.Event;
 import flash.events.IEventListener;
@@ -131,6 +131,11 @@ public class FlxSound extends FlxBasic
 	 * Internal helper for fading in sounds.
 	 */
 	protected float _fadeInTotal;
+	
+	/**
+	 * Internal event listener.
+	 */
+	protected final IEventListener stoppedListener = new IEventListener(){@Override	public void onEvent(Event e){stopped();}};
 		
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -267,7 +272,7 @@ public class FlxSound extends FlxBasic
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
-	 * @param	Type			Whether this sound is a sound effect or a music track.
+	 * @param	Type				Whether this sound is a sound effect or a music track.
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -469,7 +474,6 @@ public class FlxSound extends FlxBasic
 					if(_channel == null)
 						exists = false;
 					else
-						//TODO: Event is only dispatched from Music.
 						_channel.addEventListener(Event.SOUND_COMPLETE, stoppedListener);
 				}
 			}
@@ -636,14 +640,5 @@ public class FlxSound extends FlxBasic
 			artist = _sound.id3.artist;
 		_sound.removeEventListener(Event.ID3, gotID3);
 		*/
-	}
-	
-	private final IEventListener stoppedListener = new IEventListener()
-	{
-		@Override
-		public void onEvent(Event e) {
-			FlxSound.this.stopped();
-			
-		}
-	};
+	}	
 }

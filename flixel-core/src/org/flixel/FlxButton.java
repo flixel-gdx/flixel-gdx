@@ -91,7 +91,12 @@ public class FlxButton extends FlxSprite
 	/**
 	 * Whether or not the button has initialized itself yet.
 	 */
-	private boolean _initialized;	
+	private boolean _initialized;
+	
+	/**
+	 * Internal event listener.
+	 */
+	private final IEventListener mouseUpListener = new IEventListener(){@Override public void onEvent(Event e){onMouseUp((MouseEvent)e);}};
 	
 	/**
 	 * Creates a new <code>FlxButton</code> object with a gray background
@@ -100,7 +105,7 @@ public class FlxButton extends FlxSprite
 	 * @param	X			The X position of the button.
 	 * @param	Y			The Y position of the button.
 	 * @param	Label		The text that you want to appear on the button.
-	 * @param	OnClick		The function to call whenever the button is clicked.
+	 * @param	OnClick	The function to call whenever the button is clicked.
 	 */
 	public FlxButton(float X, float Y, String Label, IFlxButton onClick)
 	{
@@ -178,7 +183,7 @@ public class FlxButton extends FlxSprite
 	public void destroy()
 	{		
 		if(FlxG.getStage() != null)
-			FlxG.getStage().removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			FlxG.getStage().removeEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
 		if(label != null)
 		{
 			label.destroy();
@@ -208,7 +213,7 @@ public class FlxButton extends FlxSprite
 		{
 			if(FlxG.getStage() != null)
 			{
-				FlxG.getStage().addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				FlxG.getStage().addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
 				_initialized = true;
 			}
 		}
@@ -362,14 +367,14 @@ public class FlxButton extends FlxSprite
 	 * sound variables can be used after this for more fine-tuning,
 	 * such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.
-	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
-	 * @param SoundDownVolume	How load the that sound should be.
-	 * @param SoundUp			What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.
-	 * @param SoundUpVolume		How load the that sound should be.
+	 * @param	SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param	SoundOverVolume	How load the that sound should be.
+	 * @param	SoundOut				What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param	SoundOutVolume		How load the that sound should be.
+	 * @param	SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
+	 * @param	SoundDownVolume	How load the that sound should be.
+	 * @param	SoundUp				What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.
+	 * @param	SoundUpVolume		How load the that sound should be.
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume, String SoundDown, float SoundDownVolume, String SoundUp, float SoundUpVolume)
 	{
@@ -389,13 +394,13 @@ public class FlxButton extends FlxSprite
 	 * sound variables can be used after this for more fine-tuning,
 	 * such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.
-	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
-	 * @param SoundDownVolume	How load the that sound should be.
-	 * @param SoundUp			What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.	 
+	 * @param	SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param	SoundOverVolume	How load the that sound should be.
+	 * @param	SoundOut				What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param	SoundOutVolume		How load the that sound should be.
+	 * @param	SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
+	 * @param	SoundDownVolume	How load the that sound should be.
+	 * @param	SoundUp				What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.	 
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume, String SoundDown, float SoundDownVolume, String SoundUp)
 	{
@@ -408,12 +413,12 @@ public class FlxButton extends FlxSprite
 	 * sound variables can be used after this for more fine-tuning,
 	 * such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.
-	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
-	 * @param SoundDownVolume	How load the that sound should be.	 
+	 * @param	SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param	SoundOverVolume	How load the that sound should be.
+	 * @param	SoundOut				What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param	SoundOutVolume		How load the that sound should be.
+	 * @param	SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
+	 * @param	SoundDownVolume	How load the that sound should be.	 
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume, String SoundDown, float SoundDownVolume)
 	{
@@ -426,11 +431,11 @@ public class FlxButton extends FlxSprite
 	 * sound variables can be used after this for more fine-tuning,
 	 * such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.
-	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.	 
+	 * @param	SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param	SoundOverVolume	How load the that sound should be.
+	 * @param	SoundOut				What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param	SoundOutVolume		How load the that sound should be.
+	 * @param	SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.	 
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume, String SoundDown)
 	{
@@ -443,10 +448,10 @@ public class FlxButton extends FlxSprite
 	 * sound variables can be used after this for more fine-tuning,
 	 * such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.	 
+	 * @param	SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param	SoundOverVolume	How load the that sound should be.
+	 * @param	SoundOut				What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param	SoundOutVolume		How load the that sound should be.	 
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume)
 	{
@@ -459,9 +464,9 @@ public class FlxButton extends FlxSprite
 	 * sound variables can be used after this for more fine-tuning,
 	 * such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param	SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param	SoundOverVolume	How load the that sound should be.
+	 * @param	SoundOut				What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut)
 	{
@@ -474,8 +479,8 @@ public class FlxButton extends FlxSprite
 	 * sound variables can be used after this for more fine-tuning,
 	 * such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
+	 * @param	SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
+	 * @param	SoundOverVolume	How load the that sound should be.
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume)
 	{
@@ -488,7 +493,7 @@ public class FlxButton extends FlxSprite
 	 * sound variables can be used after this for more fine-tuning,
 	 * such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.	 
+	 * @param	SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.	 
 	 */
 	public void setSounds(String SoundOver)
 	{
@@ -515,7 +520,7 @@ public class FlxButton extends FlxSprite
 	}
 	
 	/**
-	 * @private
+	 * Use this to toggle checkbox-style behavior.
 	 */
 	public void setOn(boolean On)
 	{
@@ -525,17 +530,13 @@ public class FlxButton extends FlxSprite
 	/**
 	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxU.openURL()</code>).
 	 */
-	IEventListener onMouseUp = new IEventListener()
+	protected void onMouseUp(MouseEvent e)
 	{
-		@Override
-		public void onEvent(Event e)
-		{
-			if(!exists || !visible || !active || (status != PRESSED))
-				return;
-			if(onUp != null)
-				onUp.callback();
-			if(soundUp != null)
-				soundUp.play(true);
-		}
-	};
+		if(!exists || !visible || !active || (status != PRESSED))
+			return;
+		if(onUp != null)
+			onUp.callback();
+		if(soundUp != null)
+			soundUp.play(true);
+	}
 }

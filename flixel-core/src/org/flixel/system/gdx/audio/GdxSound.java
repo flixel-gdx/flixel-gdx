@@ -1,4 +1,4 @@
-package org.flixel.system.gdx;
+package org.flixel.system.gdx.audio;
 
 import org.flixel.FlxG;
 

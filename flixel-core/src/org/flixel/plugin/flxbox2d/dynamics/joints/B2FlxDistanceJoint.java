@@ -5,12 +5,13 @@ import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+
+import flash.display.Graphics;
 
 /**
  * A distance joint constrains two points on two bodies to remain at a fixed 
@@ -80,9 +81,10 @@ public class B2FlxDistanceJoint extends B2FlxJoint
 	@Override
 	protected void drawJoint(FlxCamera camera, float lineThickness, int lineColor, float lineAlpha)
 	{
-		ShapeRenderer segment = FlxG.flashGfx.getShapeRenderer();
-		FlxG.flashGfx.lineStyle(lineThickness, lineColor, lineAlpha);
-		segment.line(p1.x, p1.y, p2.x, p2.y);
+		Graphics graphics = FlxG.flashGfx;
+		graphics.lineStyle(lineThickness, lineColor, lineAlpha);
+		graphics.moveTo(p1.x, p1.y);
+		graphics.lineTo(p2.x, p2.y);
 		
 	}
 	

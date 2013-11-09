@@ -205,7 +205,7 @@ public class B2FlxB
 		scheduledForMove = null;
 	}
 	
-	public static void initDebugger()
+	private static void initDebugger()
 	{
 		if(_drawDebug)
 			return;

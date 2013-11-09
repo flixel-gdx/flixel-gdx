@@ -28,6 +28,6 @@ public class FlxHtml5Application extends GwtApplication
 	@Override
 	public ApplicationListener getApplicationListener()
 	{
-		return _game;
+		return (ApplicationListener)_game.stage;
 	}
 }

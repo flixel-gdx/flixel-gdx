@@ -2,11 +2,8 @@ package org.flixel.plugin.flxbox2d.system.debug;
 
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
-import org.flixel.FlxU;
 import org.flixel.plugin.flxbox2d.B2FlxB;
-
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
@@ -99,17 +96,19 @@ public class B2FlxDebug extends FlxBasic
 		}
 		if(drawCollisions)
 		{
-			ShapeRenderer renderer = FlxG.flashGfx.getShapeRenderer();
-			renderer.end();
-			renderer.setProjectionMatrix(FlxG.batch.getProjectionMatrix().scale(32f, 32f, 0));
-									
-			renderer.begin(ShapeType.Filled);
-			float[] rgba = FlxU.getRGBA(CONTACT_COLOR);
-			renderer.setColor(rgba[0] * 0.00392f, rgba[1] * 0.00392f, rgba[2] * 0.00392f, 1);
-			int length = B2FlxB.world.getContactList().size;
-			for(int i = 0; i < length; i++)
-				drawContact(renderer, B2FlxB.world.getContactList().get(i));
-			renderer.end();
+			//TODO: Setting the projection matrix here seems to zooms in drawing sprites
+			//disabling until I can work out why.
+			
+			//ShapeRenderer renderer = ((GdxGraphics)FlxG.flashGfx).getShapeRenderer();
+			//renderer.end();
+			//renderer.setProjectionMatrix(FlxG.batch.getProjectionMatrix().cpy().scale(32f, 32f, 0));
+			//renderer.begin(ShapeType.Filled);
+			//float[] rgba = FlxU.getRGBA(CONTACT_COLOR);
+			//renderer.setColor(rgba[0] * 0.00392f, rgba[1] * 0.00392f, rgba[2] * 0.00392f, 1);
+			//int length = B2FlxB.world.getContactList().size;
+			//for(int i = 0; i < length; i++)
+				//drawContact(renderer, B2FlxB.world.getContactList().get(i));
+			//renderer.end();
 		}
 	}
 	
@@ -118,7 +117,7 @@ public class B2FlxDebug extends FlxBasic
 	 * @param renderer	The shape renderer.
 	 * @param contact	The contact.
 	 */
-	private void drawContact(ShapeRenderer renderer, Contact contact) 
+	protected void drawContact(ShapeRenderer renderer, Contact contact) 
 	{
 		WorldManifold worldManifold = contact.getWorldManifold();
 		if(worldManifold.getNumberOfContactPoints() == 0) 

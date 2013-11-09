@@ -6,7 +6,6 @@ import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.system.debug.B2FlxDebug;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -17,6 +16,8 @@ import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.utils.ObjectMap;
+
+import flash.display.Graphics;
 
 /**
  * The mouse joint handles the mouse events in box2d world. It can drag bodies if they are draggable.
@@ -257,8 +258,9 @@ public class B2FlxMouseJoint extends FlxBasic
 		a.y -= camera.scroll.y; 
 		b.x -= camera.scroll.x; 
 		b.y -= camera.scroll.y; 
-		ShapeRenderer segment = FlxG.flashGfx.getShapeRenderer();
-		FlxG.flashGfx.lineStyle(1, B2FlxDebug.JOINT_COLOR, 1);
-		segment.line(a.x, a.y, b.x, b.y);
+		Graphics graphics = FlxG.flashGfx;
+		graphics.lineStyle(1, B2FlxDebug.JOINT_COLOR, 1);
+		graphics.moveTo(a.x, a.y);
+		graphics.lineTo(b.x, b.y);
 	}
 }

@@ -10,6 +10,9 @@ import org.flixel.system.replay.MouseRecord;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
+import flash.events.MouseEvent;
+import flash.events.TouchEvent;
+
 /**
  * This class helps contain and track the pointers in your game.
  * Automatically accounts for parallax scrolling, etc.
@@ -181,6 +184,7 @@ public class Mouse extends FlxPoint
 		_cursor.offset.y = YOffset;
 		_cursor.scale.x = Scale;
 		_cursor.scale.y = Scale;
+		_cursor.ignoreDrawDebug = true;
 		
 		_cursorContainer.add(_cursor);
 	}
@@ -555,50 +559,14 @@ public class Mouse extends FlxPoint
 	/**
 	 * Event handler so FlxGame can update the pointer.
 	 * 
-	 * @param	X	The x position of the pointer.
-	 * @param	Y	The y position of the pointer.
-	 * @param	Pointer	The pointer id.
-	 * @param	Button	Which mouse button was released.
+	 * @param	FlashEvent	A <code>TouchEvent</code> object.
 	 */
-	public void handleMouseUp(int X, int Y, int Pointer, int Button)
+	public void handleMouseDown(TouchEvent FlashEvent)
 	{
-		Pointer o;
-		
-		if (Pointer >= _pointers.size)
-		{
-			o = new Pointer();
-			_pointers.add(o);
-		}
-		else
-			o = _pointers.get(Pointer);
-		
-		if(o.current > 0)
-			o.current = -1;
-		else 
-			o.current = 0;
-		
-		activePointers--;
-	}
+		if (FlashEvent.touchPointID >= _pointers.size)
+			_pointers.add(new Pointer());
 	
-	/**
-	 * Event handler so FlxGame can update the pointer.
-	 * 
-	 * @param	X	The x position of the pointer.
-	 * @param	Y	The y position of the pointer.
-	 * @param	Pointer	The pointer id.
-	 * @param	Button	Which mouse button was pressed.
-	 */
-	public void handleMouseDown(int X, int Y, int Pointer, int Button)
-	{
-		Pointer o;
-		
-		if (Pointer >= _pointers.size)
-		{
-			o = new Pointer();
-			_pointers.add(o);
-		}
-		else
-			o = _pointers.get(Pointer);
+		Pointer o = _pointers.get(FlashEvent.touchPointID);
 		
 		if(o.current > 0) 
 			o.current = 1;
@@ -611,11 +579,31 @@ public class Mouse extends FlxPoint
 	/**
 	 * Event handler so FlxGame can update the pointer.
 	 * 
-	 * @param	Amount	The amount the wheel was scrolled.
+	 * @param	FlashEvent	A <code>TouchEvent</code> object.
 	 */
-	public void handleMouseWheel(int Amount)
+	public void handleMouseUp(TouchEvent FlashEvent)
 	{
-		wheel = Amount;
+		if (FlashEvent.touchPointID >= _pointers.size)
+			_pointers.add(new Pointer());
+		
+		Pointer o = _pointers.get(FlashEvent.touchPointID);
+		
+		if(o.current > 0)
+			o.current = -1;
+		else 
+			o.current = 0;
+		
+		activePointers--;
+	}
+	
+	/**
+	 * Event handler so FlxGame can update the mouse.
+	 * 
+	 * @param	FlashEvent	A <code>MouseEvent</code> object.
+	 */
+	public void handleMouseWheel(MouseEvent FlashEvent)
+	{
+		wheel = FlashEvent.delta;
 	}
 		
 	/**

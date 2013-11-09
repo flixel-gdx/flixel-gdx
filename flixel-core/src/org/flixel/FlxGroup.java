@@ -151,7 +151,7 @@ public class FlxGroup extends FlxBasic
 	}
 	
 	/**
-	 * @private
+	 * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
 	 */
 	public void setMaxSize(int Size)
 	{
@@ -245,7 +245,7 @@ public class FlxGroup extends FlxBasic
 	 * 
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
 	 * 
-	 * @return A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
+	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
 	public FlxBasic recycle(Class<? extends FlxBasic> ObjectClass)
 	{
@@ -304,7 +304,7 @@ public class FlxGroup extends FlxBasic
 	 * and no object class was provided, it will return null
 	 * instead of a valid object!</p>
 	 * 
-	 * @return A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
+	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
 	public FlxBasic recycle()
 	{
@@ -444,7 +444,7 @@ public class FlxGroup extends FlxBasic
 	 * Go through and set the specified variable to the specified value on all members of the group.
 	 * 
 	 * @param	VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
-	 * @param	Value			The value you want to assign to that variable.
+	 * @param	Value				The value you want to assign to that variable.
 	 */
 	public void setAll(String VariableName, Object Value)
 	{

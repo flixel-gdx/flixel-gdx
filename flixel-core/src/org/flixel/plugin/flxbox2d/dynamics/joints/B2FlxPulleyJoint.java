@@ -5,12 +5,13 @@ import org.flixel.FlxG;
 import org.flixel.plugin.flxbox2d.B2FlxB;
 import org.flixel.plugin.flxbox2d.collision.shapes.B2FlxShape;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.PulleyJoint;
 import com.badlogic.gdx.physics.box2d.joints.PulleyJointDef;
+
+import flash.display.Graphics;
 
 /**
  * The pulley joint is connected to two bodies and two fixed ground points. The pulley 
@@ -141,11 +142,14 @@ public class B2FlxPulleyJoint extends B2FlxJoint
 	@Override
 	protected void drawJoint(FlxCamera camera, float lineThickness, int lineColor, float lineAlpha)
 	{
-		ShapeRenderer segment = FlxG.flashGfx.getShapeRenderer();
-		FlxG.flashGfx.lineStyle(lineThickness, lineColor, lineAlpha);
-		segment.line(x1.x, x1.y, p1.x, p1.y);
-		segment.line(x2.x, x2.y, p2.x, p2.y);
-		segment.line(x1.x, x1.y, x2.x, x2.y);
+		Graphics graphics = FlxG.flashGfx;
+		graphics.lineStyle(lineThickness, lineColor, lineAlpha);
+		graphics.moveTo(x1.x, x1.y);
+		graphics.lineTo(p1.x, p1.y);
+		graphics.moveTo(x2.x, x2.y);
+		graphics.lineTo(p2.x, p2.y);
+		graphics.moveTo(x1.x, x1.y);
+		graphics.lineTo(x2.x, x2.y);
 	}
 	
 	public B2FlxPulleyJoint setGroundAnchorA(Vector2 groundAnchorA)

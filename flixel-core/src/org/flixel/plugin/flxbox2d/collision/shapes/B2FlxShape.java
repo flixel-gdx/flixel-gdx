@@ -11,7 +11,6 @@ import org.flixel.plugin.flxbox2d.common.math.B2FlxMath;
 import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxJoint;
 import org.flixel.plugin.flxbox2d.system.debug.B2FlxDebug;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -30,6 +29,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import flash.display.BlendMode;
+import flash.display.Graphics;
 
 /**
  * This is an abstract or parent class for all shapes. It contains the required variables for 
@@ -688,8 +688,8 @@ public abstract class B2FlxShape extends FlxSprite
 		if(camera == null)
 			camera = FlxG.camera;
 		
-		ShapeRenderer renderer = FlxG.flashGfx.getShapeRenderer();
-		FlxG.flashGfx.lineStyle(1, color, 1);
+		Graphics graphics = FlxG.flashGfx;
+		graphics.lineStyle(1, color, 1);
 		for(int i = 0; i < vertexCount; i++) 
 		{
 			Vector2 v = vertices[i].scl(B2FlxB.RATIO);
@@ -697,21 +697,20 @@ public abstract class B2FlxShape extends FlxSprite
 			v.y -= (camera.scroll.y * scrollFactor.y) - offset.y;
 			if(i == 0) 
 			{
-				lv.set(v);
 				f.set(v);
+				graphics.moveTo(v.x, v.y);
 				continue;
 			}			
-			renderer.line(lv.x, lv.y, v.x, v.y);
-			lv.set(v);
+			graphics.lineTo(v.x, v.y);
 		}
-		renderer.line(f.x, f.y, lv.x, lv.y);
+		graphics.lineTo(f.x, f.y);
 	}
 	
 	/*
 	 * Debug-only: draw a circle for circle shape.
-	 * @param center	The center of the circle.
-	 * @param radius	The radius of the circle.
-	 * @param axis		The axis of the circle.
+	 * @param center		The center of the circle.
+	 * @param radius		The radius of the circle.
+	 * @param axis			The axis of the circle.
 	 * @param color		The color of the circle.
 	 */
 	protected void drawSolidCircle (Vector2 center, float radius, Vector2 axis, int color) 
@@ -722,7 +721,7 @@ public abstract class B2FlxShape extends FlxSprite
 		
 		float angle = 0;
 		float angleInc = 2 * MathUtils.PI / 20f;
-		ShapeRenderer renderer = FlxG.flashGfx.getShapeRenderer();
+		Graphics graphics = FlxG.flashGfx;
 		FlxG.flashGfx.lineStyle(1, color, 1);
 		for(int i = 0; i < 20; i++, angle += angleInc) 
 		{
@@ -731,19 +730,20 @@ public abstract class B2FlxShape extends FlxSprite
 			v.y -= (camera.scroll.y * scrollFactor.y) - offset.y;
 			if (i == 0) 
 			{
-				lv.set(v);
 				f.set(v);
+				graphics.moveTo(v.x, v.y);
 				continue;
 			}
-			renderer.line(lv.x, lv.y, v.x, v.y);
+			graphics.lineTo(v.x, v.y);
 			lv.set(v);
 		}
-		renderer.line(f.x, f.y, lv.x, lv.y);
+		graphics.lineTo(f.x, f.y);
 		center.scl(B2FlxB.RATIO);
 		axis.scl(B2FlxB.RATIO);
 		center.x -= (camera.scroll.x * scrollFactor.x) - offset.x;
 		center.y -= (camera.scroll.y * scrollFactor.y) - offset.y;
-		renderer.line(center.x, center.y, 0, center.x + axis.x * radius, center.y + axis.y * radius, 0);
+		graphics.moveTo(center.x, center.y);
+		graphics.lineTo(center.x + axis.x * radius, center.y + axis.y * radius);
 	}
 	
 	/**

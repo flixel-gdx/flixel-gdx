@@ -1,8 +1,11 @@
-package org.flixel.system.gdx;
+package org.flixel.system.gdx.audio;
+
+import org.flixel.system.gdx.utils.EventPool;
+import org.flixel.system.gdx.utils.RotationPool;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.utils.Pool;
 
+import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.media.SoundChannel;
 import flash.media.SoundTransform;
@@ -14,16 +17,28 @@ public class GdxSoundChannel extends EventDispatcher implements SoundChannel
 	private Sound _sound;
 	private long _soundId;
 	
-	private static final Pool<GdxSoundChannel> _pool = new Pool<GdxSoundChannel>(){@Override protected GdxSoundChannel newObject() {return new GdxSoundChannel();}};
+	private static final RotationPool<GdxSoundChannel> _channels;
+	private static final EventPool _events;
+	
+	static
+	{
+		_channels = new RotationPool<GdxSoundChannel>(16){@Override protected GdxSoundChannel newObject() {return new GdxSoundChannel();}};
+		_events = new EventPool(2);
+	}
 	
 	public static GdxSoundChannel getNew()
 	{
-		return _pool.obtain();
+		GdxSoundChannel channel = _channels.obtain();
+		if(channel._sound != null)
+		{
+			channel.stop();
+			channel.dispatchEvent(_events.obtain(Event.SOUND_COMPLETE));
+		}
+		return channel;
 	}
 	
 	private GdxSoundChannel()
 	{
-		
 	}
 	
 	long play(Sound sound, float startTime, int loops, SoundTransform sndTransform)
@@ -52,7 +67,6 @@ public class GdxSoundChannel extends EventDispatcher implements SoundChannel
 	public void stop()
 	{
 		_sound.stop(_soundId);
-		_pool.free(this);
 	}
 	
 	@Override

@@ -5,4 +5,5 @@
   <source path="display"/>
   <source path="events"/>
   <source path="media"/>
+  <source path="ui"/>
 </module>

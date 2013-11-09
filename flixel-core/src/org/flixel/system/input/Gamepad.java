@@ -1,8 +1,7 @@
-package org.flixel.system.input.gamepad;
+package org.flixel.system.input;
 
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
-import org.flixel.system.input.Input;
 
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.utils.IntMap;
@@ -111,44 +110,25 @@ public class Gamepad extends Input
 		axisData = null;
 	}
 
-	@Override
-	public void reset()
-	{
-		for(KeyState o : _map)
-		{
-			if (o.name.length() == 0)
-				continue;			
-			try 
-			{
-				ClassReflection.getField(Gamepad.class, o.name).set(this, false);
-			} 
-			catch (Exception e) 
-			{
-				FlxG.log("Gamepad", e.getMessage());
-			}
-			o.current = 0;
-			o.last = 0;
-		}
-	}
-
 	/**
 	 * Event handler so GamepadManager can toggle keys.
 	 * @param buttonCode	The button code of the pressed key.
 	 */
 	public void handleKeyDown(int buttonCode)
 	{
-		KeyState o = _map.get(buttonCode);
-		if(o.name.length() == 0)
+		KeyState object = _map.get(buttonCode);
+		
+		if(object == null)
 			return;
 
-		if(o.current > 0)
-			o.current = 1;
+		if(object.current > 0)
+			object.current = 1;
 		else
-			o.current = 2;
+			object.current = 2;
 		
 		try
 		{
-			ClassReflection.getField(Gamepad.class, o.name).set(this, true);
+			ClassReflection.getField(Gamepad.class, object.name).set(this, true);
 		}
 		catch(Exception e)
 		{
@@ -162,18 +142,19 @@ public class Gamepad extends Input
 	 */
 	public void handleKeyUp(int buttonCode)
 	{
-		KeyState o = _map.get(buttonCode);
-		if(o.name.length() == 0)
+		KeyState object = _map.get(buttonCode);
+		
+		if(object == null)
 			return;
 
-		if(o.current > 0)
-			o.current = -1;
+		if(object.current > 0)
+			object.current = -1;
 		else
-			o.current = 0;
+			object.current = 0;
 
 		try
 		{
-			ClassReflection.getField(Gamepad.class, o.name).set(this, false);
+			ClassReflection.getField(Gamepad.class, object.name).set(this, false);
 		}
 		catch(Exception e)
 		{
