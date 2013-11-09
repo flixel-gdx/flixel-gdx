@@ -11,6 +11,7 @@ import org.flixel.plugin.flxbox2d.common.math.B2FlxMath;
 import org.flixel.plugin.flxbox2d.dynamics.joints.B2FlxJoint;
 import org.flixel.plugin.flxbox2d.system.debug.B2FlxDebug;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -508,7 +509,7 @@ public abstract class B2FlxShape extends FlxSprite
 			int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 			framePixels.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 			
-			if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null || blend.equals(BlendMode.NORMAL)))
+			if(isSimpleRender())
 			{ 	//Simple render
 				framePixels.setPosition(_point.x, _point.y);
 				framePixels.draw(FlxG.batch);
@@ -520,18 +521,20 @@ public abstract class B2FlxShape extends FlxSprite
 				if((angle != 0) && (_bakedRotation <= 0))
 					framePixels.setRotation(angle);
 				framePixels.setPosition(_point.x, _point.y);
-				if(blend != null && !blend.equals(BlendMode.NORMAL))
-				{
+				if(blend != null && currentBlend != blend)
+				{				
+					currentBlend = blend;
 					int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 					FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
-					framePixels.draw(FlxG.batch);
-					blendFunc = BlendMode.getOpenGLBlendMode(BlendMode.NORMAL);
-					FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 				}
-				else
+				else if(Gdx.graphics.isGL20Available() && (FlxG.batchShader == null || ignoreBatchShader))
 				{
-					framePixels.draw(FlxG.batch);
+					// OpenGL ES 2.0 shader render
+					renderShader();
+					// OpenGL ES 2.0 blend mode render
+					renderBlend();
 				}
+				framePixels.draw(FlxG.batch);
 			}			
 		}		
 		if(FlxG.visualDebug && !ignoreDrawDebug)

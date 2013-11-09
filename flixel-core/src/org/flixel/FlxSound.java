@@ -309,6 +309,7 @@ public class FlxSound extends FlxBasic
 	
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
+	 * If the file is larger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
@@ -323,6 +324,7 @@ public class FlxSound extends FlxBasic
 	
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
+	 * If the file is larger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
@@ -336,6 +338,7 @@ public class FlxSound extends FlxBasic
 	
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
+	 * If the file is larger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * 

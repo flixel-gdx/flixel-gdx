@@ -510,6 +510,7 @@ public class FlxGame
 		_lostFocus /*= _focus.visible*/ = false;
 		//stage.frameRate = _flashFramerate;
 		FlxG.resumeSounds();
+		FlxG.restoreShaders();
 	}
 	
 	/**
@@ -798,7 +799,7 @@ public class FlxGame
 		{	
 			_stringBuffer.delete(0, _stringBuffer.length());
 			_stringBuffer.append("fps:");
-			_stringBuffer.append(Gdx.graphics.getFramesPerSecond());
+			_stringBuffer.append(Gdx.graphics.getFramesPerSecond());			
 			_font.draw(FlxG.batch, _stringBuffer, Gdx.graphics.getWidth() - 80, 0);
 		}
 		FlxG.batch.end();
@@ -819,16 +820,7 @@ public class FlxGame
 		_total = System.currentTimeMillis();
 		
 		//Set up OpenGL
-		if(Gdx.graphics.isGL20Available())
-		{
-			FlxG._gl = Gdx.gl20;
-		}
-		else if(Gdx.graphics.isGL11Available())
-		{
-			FlxG._gl = Gdx.gl11;
-		}
-		else
-			FlxG._gl = Gdx.gl10;
+		FlxG._gl = Gdx.graphics.isGL20Available() ? Gdx.gl20 : Gdx.gl10;
 		
 		FlxG.batch = new SpriteBatch();
 		

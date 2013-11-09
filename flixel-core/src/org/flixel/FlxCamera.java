@@ -335,6 +335,12 @@ public class FlxCamera extends FlxBasic
 				float targetX = target.x + ((target.x > 0)?0.0000001f:-0.0000001f);
 				float targetY = target.y + ((target.y > 0)?0.0000001f:-0.0000001f);
 				
+				if(target.isSimpleRender())
+				{
+					targetX = FlxU.ceil(targetX);
+					targetY = FlxU.ceil(targetY);					
+				}
+				
 				edge = targetX - deadzone.x;
 				if(scroll.x > edge)
 					scroll.x = edge;
@@ -414,11 +420,13 @@ public class FlxCamera extends FlxBasic
 	{
 		target = Target;
 		float helper;
+		float w = 0;
+		float h = 0;
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
-				float w = width/8f;
-				float h = height/3f;
+				w = width/8f;
+				h = height/3f;
 				deadzone = new FlxRect((width-w)/2f,(height-h)/2f - h*0.25f,w,h);
 				break;
 			case STYLE_TOPDOWN:
@@ -430,6 +438,13 @@ public class FlxCamera extends FlxBasic
 				deadzone = new FlxRect((width-helper)/2f,(height-helper)/2f,helper,helper);
 				break;
 			case STYLE_LOCKON:
+				if (target != null) 
+				{	
+					w = target.width;
+					h = target.height;
+				}
+				deadzone = new FlxRect((width-w)/2f,((height-h)/2f),w,h);
+				break;
 			default:
 				deadzone = null;
 				break;
@@ -937,6 +952,14 @@ public class FlxCamera extends FlxBasic
 		}
 
 		_glCamera.setToOrtho(true, viewportWidth, viewportHeight);
+	}
+	
+	/**
+	 * Get the actual libgdx camera.
+	 */
+	public OrthographicCamera getCamera()
+	{
+		return _glCamera;
 	}
 	
 	/**

@@ -1,10 +1,14 @@
 package org.flixel;
 
+import java.util.Iterator;
+
 import org.flixel.event.IFlxCamera;
 import org.flixel.event.IFlxCollision;
 import org.flixel.event.IFlxObject;
 import org.flixel.event.IFlxReplay;
 import org.flixel.event.IFlxVolume;
+import org.flixel.event.IFlxShaderProgram;
+import org.flixel.gles20.FlxShaderProgram;
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.GestureManager;
 import org.flixel.plugin.TimerManager;
@@ -12,6 +16,7 @@ import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.gdx.GdxGraphics;
 import org.flixel.system.gdx.ManagedTextureData;
+import org.flixel.system.gdx.loaders.ShaderLoader.ShaderProgramParameter;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 import org.flixel.system.input.Sensor;
@@ -29,9 +34,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 import flash.display.Graphics;
@@ -245,6 +252,15 @@ public class FlxG
 	 * @default false
 	 */
 	static public boolean useBufferLocking;
+	
+	/**
+	 * An array container for <code>ShaderProgram</code>s. 
+	 */
+	static public ObjectMap<String, FlxShaderProgram> shaders;
+	/**
+	 * This <code>ShaderProgram</code> will be used for <code>SpriteBatch.setShader()</code> only.
+	 */
+	static public ShaderProgram batchShader;
 	
 	/**
 	 * An array container for plugins.
@@ -729,9 +745,10 @@ public class FlxG
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @param	AutoPlay		Whether to play the sound.
-	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
+	 * @param	URL				Load a sound from an external web resource instead. Only used if EmbeddedSound = null.
+	 * @param	Type			Whether this sound is a sound effect or a music track, FlxSound.AUTO, SFX or MUSIC. If the file is larger than 24 KB, MUSIC will be chosen if AUTO is set.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
@@ -753,18 +770,30 @@ public class FlxG
 		return sound;
 	}
 	
+	/**
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
+	 * 
+	 * @param	EmbeddedSound	The embedded sound resource you want to play. To stream, use the optional URL parameter instead.
+	 * @param	Volume			How loud to play it (0 to 1).
+	 * @param	Looped			Whether to loop this sound.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoPlay		Whether to play the sound.
+	 * @param	URL				Load a sound from an external web resource instead. Only used if EmbeddedSound = null.
+	 * 
+	 * @return	A <code>FlxSound</code> object.
+	 */
 	static public FlxSound loadSound(String EmbeddedSound,float Volume,boolean Looped,boolean AutoDestroy,boolean AutoPlay,String URL)
 	{
 		return loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, AutoPlay, URL, FlxSound.AUTO);
 	}
 
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the file is larger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @param	AutoPlay		Whether to play the sound.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
@@ -775,12 +804,12 @@ public class FlxG
 	}
 	
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
 	 * 
-	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
+	 * @param	EmbeddedSound	The embedded sound resource you want to play. To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
@@ -790,7 +819,7 @@ public class FlxG
 	}
 	
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
 	 * 
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
@@ -804,9 +833,9 @@ public class FlxG
 	}
 	
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
 	 * 
-	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
+	 * @param	EmbeddedSound	The embedded sound resource you want to play. To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * 
 	 * @return	A <code>FlxSound</code> object.
@@ -817,9 +846,9 @@ public class FlxG
 	}
 	
 	/**
-	 * Creates a new sound object.
+	 * Creates a new sound object. If the resource is bigger than 24 KB, the type will be MUSIC.
 	 * 
-	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
+	 * @param	EmbeddedSound	The embedded sound resource you want to play. To stream, use the optional URL parameter instead.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
@@ -835,7 +864,7 @@ public class FlxG
 	 * @param	EmbeddedSound	The sound you want to play.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * 
 	 * @return	A <code>FlxSound</code> object.
 	 */
@@ -2077,6 +2106,9 @@ public class FlxG
 		FlxG.levels = new Array<Object>();
 		FlxG.scores = new IntArray();
 		FlxG.visualDebug = false;
+
+		if(_gl == Gdx.gl20)
+			FlxG.shaders = new ObjectMap<String, FlxShaderProgram>();
 		
 		GestureManager manager = new GestureManager();
 		addPlugin(manager);
@@ -2090,6 +2122,7 @@ public class FlxG
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
+		FlxG.destroyShaders();
 		
 		try
 		{
@@ -2269,10 +2302,107 @@ public class FlxG
 	}
 	
 	/**
+	 * Load <code>ShaderProgram</code> from file and cache it.
+	 * @param Name		The name of the shader program.
+	 * @param Vertex	The path to the vertex file.
+	 * @param Fragment	The path to the fragment file.
+	 * @param callback	The callback that will be fired on resume.
+	 * @return			The <code>Shader Program</code> that needed to be loaded.
+	 */
+	public static FlxShaderProgram loadShader(String Name, String Vertex, String Fragment, IFlxShaderProgram callback)
+	{
+		if(!Gdx.graphics.isGL20Available())
+			throw new RuntimeException("OpenGL ES 2.0 is not available, forgot to turn it on?");
+		ShaderProgramParameter parameter = new ShaderProgramParameter();
+		parameter.vertex = Vertex;
+		parameter.fragment = Fragment;
+		parameter.callback = callback;
+		
+		FlxShaderProgram shader = FlxG._cache.load(Name, FlxShaderProgram.class, parameter);
+		shaders.put(Name, shader);
+		return shader;
+	}
+	
+	/**
+	 * Load <code>ShaderProgram</code> from file and cache it.
+	 * WARNING: the uniforms will be lost if there is no callback set.
+	 * @param Name		The name of the shader program.
+	 * @param Vertex	The path to the vertex file.
+	 * @param Fragment	The path to the fragment file.
+	 * @return			The <code>Shader Program</code> that needed to be loaded.
+	 */
+	public static FlxShaderProgram loadShader(String Name, String Vertex, String Fragment)
+	{
+		return loadShader(Name, Vertex, Fragment, null);
+	}
+	
+	/**
+	 * Free memory by disposing a <code>ShaderProgram</code> and removing it from the cache if there are no dependencies.
+	 * @param Name		The name of the shader. 
+	 */
+	public static void disposeShader(String Name)
+	{
+		if(_gl != Gdx.gl20)
+			return;
+		FlxG._cache.unload(Name);
+		shaders.remove(Name);
+	}
+	
+	/**
+	 * Check whether the <code>ShaderProgram</code> compiled successfully.
+	 * It will also log any warnings if they exist.
+	 * @param program	The ShaderProgram that needs to checked.
+	 * @return boolean
+	 */
+	public static boolean isShaderCompiled(ShaderProgram program)
+	{
+		if(!program.isCompiled())
+		{
+			log(program.getLog());
+			System.exit(0);
+			return false;
+		}
+		if(program.getLog().length() != 0)
+		{
+			log(program.getLog());
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Restores the data for the <code>ProgramShader</code>s.
+	 * Isn't applied to desktop.
+	 */
+	public static void restoreShaders()
+	{
+		if(_gl != Gdx.gl20 || !FlxG.mobile)
+			return;
+		
+		Iterator<FlxShaderProgram> entries = shaders.values().iterator();
+		while(entries.hasNext())
+		{
+			entries.next().loadShaderSettings();
+		}
+	}
+	
+	/**
+	 * Destroys all shaders.
+	 */
+	public static void destroyShaders()
+	{
+		if(_gl != Gdx.gl20)
+			return;
+		FlxG._cache.disposeAssets(FlxShaderProgram.class);
+		shaders.clear();
+		batchShader = null;
+	}
+	
+	/**
 	 * Internal callback function for collision.
 	 */
 	protected static IFlxObject separate = new IFlxObject()
-	{				
+	{
 		@Override
 		public boolean callback(FlxObject Object1, FlxObject Object2)
 		{

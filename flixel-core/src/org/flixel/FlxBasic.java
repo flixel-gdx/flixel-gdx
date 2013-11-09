@@ -161,4 +161,12 @@ public class FlxBasic
 	{
 		return FlxU.getClassName(this,true);
 	}
+	
+	/**
+	 * Whether the sprite is being rendered in simple mode or not.
+	 */
+	public boolean isSimpleRender()
+	{
+		return false;
+	}
 }
