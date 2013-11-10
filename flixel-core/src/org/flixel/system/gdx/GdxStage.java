@@ -6,6 +6,7 @@ import org.flixel.system.gdx.utils.EventPool;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 
 import flash.display.Graphics;
@@ -23,13 +24,12 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	private int _stageWidth;
 	private int _stageHeight;
 	
-	/**
-	 * Pool to reuse event objects.
-	 */
 	private EventPool _applicationEvents;
 	
 	private GdxInput _input;
 	private GdxGraphics _graphics;
+	
+	private static Pixmap _blankCursor;
 	
 	/**
 	 * Creates a new <code>Stage</code> with the specified width and height.
@@ -122,7 +122,19 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	public void dispose()
 	{
 		_graphics.dispose();
-		
+		_blankCursor.dispose();
 		dispatchEvent(_applicationEvents.obtain(Event.REMOVED_FROM_STAGE));
+	}
+	
+	public static void hideMouse()
+	{
+		if (_blankCursor == null)
+			_blankCursor = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
+		Gdx.input.setCursorImage(_blankCursor, 0, 0);
+	}
+	
+	public static void showMouse()
+	{
+		Gdx.input.setCursorImage(null, 0, 0);
 	}
 }

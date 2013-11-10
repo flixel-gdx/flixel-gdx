@@ -217,9 +217,8 @@ public class FlxGame
 		_state = null;
 		useSoundHotKeys = true;
 		useSystemCursor = UseSystemCursor;
-		//TODO: hide cursor without catching it.
 		//if(!useSystemCursor)
-			//Gdx.input.setCursorCatched(true);
+			//flash.ui.Mouse.hide();
 		forceDebugger = false;
 		_debuggerUp = false;
 
@@ -357,10 +356,10 @@ public class FlxGame
 			{
 				_debugger.visible = !_debugger.visible;
 				_debuggerUp = _debugger.visible;
-				/*if(_debugger.visible)
+				if(_debugger.visible)
 					flash.ui.Mouse.show();
 				else if(!useSystemCursor)
-					flash.ui.Mouse.hide();*/
+					flash.ui.Mouse.hide();
 				//_console.toggle();
 				return;
 			}
@@ -504,8 +503,8 @@ public class FlxGame
 	 */
 	protected void onFocus(Event FlashEvent)
 	{
-		//if(!_debuggerUp && !useSystemCursor)
-			//flash.ui.Mouse.hide();
+		if(!_debuggerUp && !useSystemCursor)
+			flash.ui.Mouse.hide();
 		FlxG.resetInput();
 		_lostFocus /*= _focus.visible*/ = false;
 		//stage.frameRate = _flashFramerate;
@@ -520,7 +519,7 @@ public class FlxGame
 	 */
 	protected void onFocusLost(Event FlashEvent)
 	{
-		//flash.ui.Mouse.show();
+		flash.ui.Mouse.show();
 		_lostFocus = /*_focus.visible =*/ true;
 		//stage.frameRate = 10;
 		FlxG.pauseSounds();
@@ -791,10 +790,12 @@ public class FlxGame
 		FlxG.batch.begin();
 		FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+		//TODO: This is a little silly. Is it worth making a Flash Sprite class for this instead?
+		FlxG._activeCamera = _mouse.getFirstAlive().cameras.first();
 		if (!FlxG.mobile && _mouse.visible)
 			_mouse.draw();
 		
-		//Draw fps display TODO: needs to be deleted some day.
+		//Draw fps display TODO: needs to be moved to debugger some day.
 		if(FlxG.debug)
 		{	
 			_stringBuffer.delete(0, _stringBuffer.length());
@@ -818,6 +819,10 @@ public class FlxGame
 			return;
 		stage.removeEventListener(Event.ADDED_TO_STAGE, addedToStageListener);		
 		_total = System.currentTimeMillis();
+		
+		//TODO: Move this back up to constructor
+		if(!useSystemCursor)
+			flash.ui.Mouse.hide();
 		
 		//Set up OpenGL
 		FlxG._gl = Gdx.graphics.isGL20Available() ? Gdx.gl20 : Gdx.gl10;

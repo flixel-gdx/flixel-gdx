@@ -7,7 +7,6 @@ import org.flixel.FlxSprite;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
-
 /**
  * A tween plugin for flixel. It uses the Universal Tween Engine by Aurelien Ribon.
  * It supports different tweens, timeline, parallel and many callbacks.

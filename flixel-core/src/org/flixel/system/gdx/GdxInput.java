@@ -166,17 +166,17 @@ public class GdxInput implements InputProcessor
 	//TODO: convert to pointer position to stage coordinates here
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{		
-		boolean processed = _eventDispatcher.dispatchEvent(_touchEvents.obtain(TouchEvent.TOUCH_BEGIN, screenX, screenY, pointer)) ||
-									_eventDispatcher.dispatchEvent(_mouseEvents.obtain(MouseEvent.MOUSE_DOWN, screenX, screenY, 0));
-		return processed;
+		boolean touchProcessed = _eventDispatcher.dispatchEvent(_touchEvents.obtain(TouchEvent.TOUCH_BEGIN, screenX, screenY, pointer));
+		boolean mouseProcessed = _eventDispatcher.dispatchEvent(_mouseEvents.obtain(MouseEvent.MOUSE_DOWN, screenX, screenY, 0));
+		return touchProcessed || mouseProcessed;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{		
-		boolean processed = _eventDispatcher.dispatchEvent(_touchEvents.obtain(TouchEvent.TOUCH_END, screenX, screenY, pointer)) ||
-									_eventDispatcher.dispatchEvent(_mouseEvents.obtain(MouseEvent.MOUSE_UP, screenX, screenY, 0));
-		return processed;
+		boolean touchProcessed = _eventDispatcher.dispatchEvent(_touchEvents.obtain(TouchEvent.TOUCH_END, screenX, screenY, pointer));
+		boolean mouseProcessed = _eventDispatcher.dispatchEvent(_mouseEvents.obtain(MouseEvent.MOUSE_UP, screenX, screenY, 0));
+		return touchProcessed || mouseProcessed;
 	}
 
 	@Override
