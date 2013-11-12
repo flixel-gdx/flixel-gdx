@@ -125,9 +125,15 @@ public class GdxGraphics implements Graphics
 	 * Dispose this <code>Graphics</code> instance.
 	 */
 	public void dispose()
-	{
-		_shapeRenderer.dispose();
-		_shapeRenderer = null;
+	{		
+		try
+		{
+			_shapeRenderer.dispose();
+			_shapeRenderer = null;
+		}
+		catch(Exception e)
+		{
+		}
 		_drawingPosition = null;
 	}
 }

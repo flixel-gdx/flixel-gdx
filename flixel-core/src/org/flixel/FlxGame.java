@@ -791,7 +791,7 @@ public class FlxGame
 		FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		//TODO: This is a little silly. Is it worth making a Flash Sprite class for this instead?
-		FlxG._activeCamera = _mouse.getFirstAlive().cameras.first();
+		//FlxG._activeCamera = _mouse.getFirstAlive().cameras.first();
 		if (!FlxG.mobile && _mouse.visible)
 			_mouse.draw();
 		
@@ -851,12 +851,12 @@ public class FlxGame
 
 			//Volume display tab
 			createSoundTray();
-			
-			//Focus gained/lost monitoring
-			stage.addEventListener(Event.DEACTIVATE, new IEventListener(){@Override public void onEvent(Event e){onFocusLost(e);}});
-			stage.addEventListener(Event.ACTIVATE, new IEventListener(){@Override public void onEvent(Event e){onFocus(e);}});
 			createFocusScreen();
 		}
+		
+		//Focus gained/lost monitoring
+		stage.addEventListener(Event.DEACTIVATE, new IEventListener(){@Override public void onEvent(Event e){onFocusLost(e);}});
+		stage.addEventListener(Event.ACTIVATE, new IEventListener(){@Override public void onEvent(Event e){onFocus(e);}});
 		
 		//More event listeners
 		stage.addEventListener(Event.RESIZE, new IEventListener(){@Override public void onEvent(Event e){onResize();}});

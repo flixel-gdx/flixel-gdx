@@ -121,8 +121,14 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	@Override
 	public void dispose()
 	{
-		_graphics.dispose();
-		_blankCursor.dispose();
+		_graphics.dispose();		
+		try
+		{
+			_blankCursor.dispose();
+		}
+		catch(Exception e)
+		{
+		}
 		dispatchEvent(_applicationEvents.obtain(Event.REMOVED_FROM_STAGE));
 	}
 	
