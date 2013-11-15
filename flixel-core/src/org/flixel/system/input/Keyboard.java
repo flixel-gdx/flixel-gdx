@@ -235,7 +235,7 @@ public class Keyboard extends Input
 			object.current = 2;
 
 		try
-		{
+		{	//TODO: Reflection is fairly slow, could we use a BooleanMap instead?
 			ClassReflection.getField(Keyboard.class, object.name).set(this, true);
 		}
 		catch(Exception e)

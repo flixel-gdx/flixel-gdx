@@ -5,6 +5,8 @@ import org.flixel.FlxG;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectIntMap;
+import com.badlogic.gdx.utils.IntMap.Entries;
+import com.badlogic.gdx.utils.IntMap.Entry;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 /**
@@ -47,10 +49,10 @@ public class Input
 	 */
 	public void update()
 	{
-		int i = 0;
-		while(i < _total)
+		Entries<KeyState> entries = _map.entries();
+		while(entries.hasNext())
 		{
-			KeyState o = _map.get(i++);
+			KeyState o = entries.next().value;
 			if(o == null) continue;
 			if((o.last == -1) && (o.current == -1))
 				o.current = 0;
@@ -65,10 +67,10 @@ public class Input
 	 */
 	public void reset()
 	{
-		int i = 0;
-		while(i < _total)
+		Entries<KeyState> entries = _map.entries();
+		while(entries.hasNext())
 		{
-			KeyState o = _map.get(i++);
+			KeyState o = entries.next().value;
 			if (o == null) continue;
 			try 
 			{
@@ -126,12 +128,11 @@ public class Input
 	 */
 	public boolean justPressedAny()
 	{
-		int i = 0;
-		KeyState state;
-		while(i < _total)
+		Entries<KeyState> entries = _map.entries();
+		while(entries.hasNext())
 		{
-			state = _map.get(i++);
-			if((state != null) && (state.current == 2))
+			KeyState o = entries.next().value;
+			if((o != null) && (o.current == 2))
 				return true;
 		}
 		
@@ -145,12 +146,11 @@ public class Input
 	 */
 	public boolean justReleasedAny()
 	{
-		int i = 0;
-		KeyState state;
-		while(i < _total)
+		Entries<KeyState> entries = _map.entries();
+		while(entries.hasNext())
 		{
-			state = _map.get(i++);
-			if((state != null) && (state.current == -1))
+			KeyState o = entries.next().value;
+			if((o != null) && (o.current == -1))
 				return true;
 		}		
 		return false;
@@ -165,16 +165,19 @@ public class Input
 	 */
 	public Array<KeyData> record()
 	{
-		Array<KeyData> data = new Array<KeyData>();
-		int i = 0;
-		while(i < _total)
+		Array<KeyData> data = null;
+		Entries<KeyState> entries = _map.entries();
+		while(entries.hasNext())
 		{
-			KeyState o = _map.get(i++);
+			Entry<KeyState> entry = entries.next();
+			KeyState o = entry.value;
 			if((o == null) || (o.current == 0))
 				continue;
-			data.add(new KeyData(i-1, o.current));
+			if(data == null)
+				data = new Array<KeyData>();
+			data.add(new KeyData(entry.key, o.current));
 		}
-		return data.size > 0 ? data: null;
+		return data;
 	}
 	
 	/**
@@ -227,10 +230,10 @@ public class Input
 	 */
 	public boolean any()
 	{
-		int i = 0;
-		while(i < _total)
+		Entries<KeyState> entries = _map.entries();
+		while(entries.hasNext())
 		{
-			KeyState o = _map.get(i++);
+			KeyState o = entries.next().value;
 			if((o != null) && (o.current > 0))
 				return true;
 		}

@@ -791,9 +791,12 @@ public class FlxGame
 		FlxG._gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		//TODO: This is a little silly. Is it worth making a Flash Sprite class for this instead?
-		//FlxG._activeCamera = _mouse.getFirstAlive().cameras.first();
 		if (!FlxG.mobile && _mouse.visible)
+		{
+			if(_mouse.length > 0)
+				FlxG._activeCamera = _mouse.getFirstAlive().cameras.first();
 			_mouse.draw();
+		}
 		
 		//Draw fps display TODO: needs to be moved to debugger some day.
 		if(FlxG.debug)

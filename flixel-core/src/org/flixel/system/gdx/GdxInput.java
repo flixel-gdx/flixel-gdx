@@ -16,7 +16,7 @@ import flash.events.TouchEvent;
 import flash.ui.Keyboard;
 
 /**
- * Handles keyboard input.
+ * Converts libgdx input to Flash events.
  * 
  * @author Thomas Weston
  */
