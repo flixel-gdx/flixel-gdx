@@ -162,15 +162,10 @@ public class FlxGroup extends FlxBasic
 			return;
 		
 		//If the max size has shrunk, we need to get rid of some objects
-		FlxBasic basic;
-		int i = _maxSize;
-		int l = members.size;
-		while(i < l)
+		while(members.size > _maxSize)
 		{
-			basic = members.pop();
-			if(basic != null)
-				basic.destroy();
-			++i;
+			FlxBasic basic = members.pop();
+			if(basic != null) basic.destroy();
 		}
 		length = _maxSize;
 		members.shrink();
@@ -191,6 +186,12 @@ public class FlxGroup extends FlxBasic
 	 */
 	public FlxBasic add(FlxBasic Object)
 	{
+		if(Object == null)
+		{
+			FlxG.log("WARNING: Cannot add 'null' object to a FlxGroup.");
+			return null;
+		}
+		
 		//Don't bother adding an object twice.
 		if(members.indexOf(Object, true) >= 0)
 			return Object;

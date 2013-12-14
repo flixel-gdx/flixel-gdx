@@ -197,8 +197,8 @@ public class FlxObject extends FlxBasic
 	
 	/**
 	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
-	 * FlxObject and FlxSprite default to true.
-	 * FlxText, FlxTileblock and FlxTilemap default to false.
+	 * FlxObject, FlxSprite and FlxText default to true.
+	 * FlxTileblock and FlxTilemap default to false.
 	 */
 	public boolean moves;
 	/**
@@ -591,6 +591,8 @@ public class FlxObject extends FlxBasic
 	public void stopFollowingPath(boolean DestroyPath)
 	{
 		pathSpeed = 0;
+		velocity.x = 0;
+		velocity.y = 0;
 		if(DestroyPath && (path != null))
 		{
 			path.destroy();
@@ -632,7 +634,8 @@ public class FlxObject extends FlxBasic
 			if(_pathNodeIndex < 0)
 			{
 				_pathNodeIndex = 0;
-				pathSpeed = 0;
+				stopFollowingPath(false);
+
 			}
 		}
 		else if((_pathMode & PATH_LOOP_FORWARD) > 0)
@@ -676,7 +679,8 @@ public class FlxObject extends FlxBasic
 			if(_pathNodeIndex >= path.nodes.size)
 			{
 				_pathNodeIndex = path.nodes.size-1;
-				pathSpeed = 0;
+				stopFollowingPath(false);
+
 			}
 		}
 
@@ -785,17 +789,21 @@ public class FlxObject extends FlxBasic
 		if(ObjectOrGroup instanceof FlxGroup)
 		{
 			boolean results = false;
-			FlxBasic basic = null;
 			int i = 0;
-			Array<FlxBasic> members = ((FlxGroup)ObjectOrGroup).members;
-			int length = ((FlxGroup)ObjectOrGroup).length;
+			FlxGroup group = (FlxGroup) ObjectOrGroup;
+			Array<FlxBasic> members = group.members;
+			int length = group.length;
+			FlxBasic basic = null;
+
+
+
 			while(i < length)
 			{
 				basic = members.get(i++);
-				if((basic != null) && basic.exists)
+				if((basic != null) && basic.exists && overlaps(basic,InScreenSpace,Camera))
 				{
-					if(overlaps(basic,InScreenSpace,Camera))
-						results = true;
+
+					results = true;
 				}
 			}
 			return results;
@@ -870,17 +878,21 @@ public class FlxObject extends FlxBasic
 		if(ObjectOrGroup instanceof FlxGroup)
 		{
 			boolean results = false;
-			FlxBasic basic = null;
 			int i = 0;
-			Array<FlxBasic> members = ((FlxGroup)(ObjectOrGroup)).members;
-			int length = ((FlxGroup)(ObjectOrGroup)).length;
+			FlxGroup group = (FlxGroup) ObjectOrGroup;
+			Array<FlxBasic> members = group.members;
+			int length = group.length;
+			FlxBasic basic = null;
+
+
+
 			while(i < length)
 			{
 				basic = members.get(i++);
-				if((basic != null) && basic.exists)
+				if((basic != null) && basic.exists && overlapsAt(X, Y, basic,InScreenSpace,Camera))
 				{
-					if(overlapsAt(X, Y, basic,InScreenSpace,Camera))
-						results = true;
+
+					results = true;
 				}
 			}
 			return results;

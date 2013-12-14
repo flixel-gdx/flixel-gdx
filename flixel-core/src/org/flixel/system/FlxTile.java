@@ -64,8 +64,8 @@ public class FlxTile extends FlxObject
 	@Override
 	public void destroy()
 	{		
-		super.destroy();
 		callback = null;
 		tilemap = null;
+		super.destroy();
 	}
 }

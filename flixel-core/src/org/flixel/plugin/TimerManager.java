@@ -81,14 +81,17 @@ public class TimerManager extends FlxBasic
 	 */
 	public void clear()
 	{
-		int i = _timers.size-1;
-		FlxTimer timer;
-		while(i >= 0)
+		if(_timers != null)
 		{
-			timer = _timers.get(i--);
-			if(timer != null)
-				timer.destroy();
-		}		
-		_timers.clear();
+			int i = _timers.size-1;
+			FlxTimer timer;
+			while(i >= 0)
+			{
+				timer = _timers.get(i--);
+				if(timer != null)
+					timer.destroy();
+			}		
+			_timers.clear();			
+		}
 	}
 }

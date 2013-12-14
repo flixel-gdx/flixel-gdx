@@ -69,7 +69,7 @@ public class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public int LIBRARY_MINOR_VERSION = 55;
+	static public int LIBRARY_MINOR_VERSION = 56;
 	
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
@@ -313,12 +313,9 @@ public class FlxG
 	public static void log(String Tag, Object Data)
 	{
 		if((Gdx.app != null)/* && (_game._debugger != null)*/)
-		{
-			if(Data != null)
-				Gdx.app.log(Tag, Data.toString());
-			else
-				Gdx.app.log(Tag, "null");
-		}
+			Gdx.app.log(Tag, (Data == null) 
+					? "ERROR: null object" : (Data instanceof Array<?>) 
+						? FlxU.formatArray((Array<?>) Data) : Data.toString());
 	}
 	
 	/**
@@ -420,6 +417,19 @@ public class FlxG
 		_game._maxAccumulation = (int) (2000f/_game._flashFramerate - 1);
 		if(_game._maxAccumulation < _game._step)
 			_game._maxAccumulation = (int) _game._step;
+	}
+	
+	/**
+	 * Switch to full-screen display.
+	 * TODO: Add function to trigger full-screen support
+	 */
+	static public void fullscreen()
+	{
+		/*FlxG.stage.displayState = "fullScreen";
+		var fsw:uint = FlxG.width*FlxG.camera.zoom;
+		var fsh:uint = FlxG.height*FlxG.camera.zoom;
+		FlxG.camera.x = (FlxG.stage.fullScreenWidth - fsw)/2;
+		FlxG.camera.y = (FlxG.stage.fullScreenHeight - fsh)/2;*/
 	}
 
 	/**

@@ -149,24 +149,46 @@ public class FlxTilemap extends FlxObject
 	@Override
 	public void destroy()
 	{
+		clearTilemap();
 		_flashPoint = null;
 		_textureRegion = null;
-		_tiles = null;
-		int i = 0;
-		int l = _tileObjects.size;
-		while(i < l)
-			_tileObjects.get(i++).destroy();
-		_tileObjects.clear();
-		_tileObjects = null;
-		i = 0;
-		l = _buffers.size;
-		while(i < l)
-			_buffers.get(i++).destroy();
-		_buffers.clear();
-		_buffers = null;
+		_tiles = null;	
 		_data = null;
 		_regions = null;
 		super.destroy();
+	}
+
+	/**
+	 * An internal function for clearing all the variables used by the tilemap.
+	 */
+	protected void clearTilemap()
+	{
+		widthInTiles = 0;
+		heightInTiles = 0;
+		totalTiles = 0;
+		_data = null;
+		_tileWidth = 0;
+		_tileHeight = 0;
+		_tiles = null;
+		
+		int i;
+		int l;
+		if(_tileObjects != null)
+		{
+			i = 0;
+			l = _tileObjects.size;
+			while(i < l)
+				(_tileObjects.get(i++)).destroy();
+			_tileObjects.clear();
+		}
+		if(_buffers != null)
+		{
+			i = 0;
+			l = _buffers.size;
+			while(i < l)
+				(_buffers.get(i++)).destroy();
+			_buffers.clear();
+		}
 	}
 	
 	/**
@@ -185,12 +207,15 @@ public class FlxTilemap extends FlxObject
 	 */
 	public FlxTilemap loadMap(String MapData, String TileGraphic, int TileWidth, int TileHeight, int AutoTile, int StartingIndex, int DrawIndex, int CollideIndex)
 	{
+		clearTilemap();
+		
 		auto = AutoTile;
 		_startingIndex = StartingIndex;
 
 		//Figure out the map dimensions based on the data string
 		String[] columns;
 		String[] rows = MapData.split("\r?\n|\r");
+		widthInTiles = 0;
 		heightInTiles = rows.length;
 		_data = new IntArray();
 		int row = 0;
@@ -257,6 +282,9 @@ public class FlxTilemap extends FlxObject
 			_regions.add(null);
 			updateTile(i++);
 		}
+		
+		active = true;
+		visible = true;
 
 		return this;
 	}
@@ -959,10 +987,11 @@ public class FlxTilemap extends FlxObject
 		if(ObjectOrGroup instanceof FlxGroup)
 		{
 			boolean results = false;
-			FlxBasic basic = null;
 			int i = 0;
-			Array<FlxBasic> members = ((FlxGroup)ObjectOrGroup).members;
-			int length = ((FlxGroup)ObjectOrGroup).length;
+			FlxGroup group = (FlxGroup) ObjectOrGroup;
+			Array<FlxBasic> members = group.members;
+			int length = group.length;
+			FlxBasic basic = null;
 			while(i < length)
 			{
 				basic = members.get(i++);
@@ -976,7 +1005,7 @@ public class FlxTilemap extends FlxObject
 					else
 					{
 						if(overlaps(basic,InScreenSpace,Camera))
-						results = true;
+							results = true;
 					}
 				}
 			}
@@ -1006,10 +1035,11 @@ public class FlxTilemap extends FlxObject
 		if(ObjectOrGroup instanceof FlxGroup)
 		{
 			boolean results = false;
-			FlxBasic basic = null;
 			int i = 0;
-			Array<FlxBasic> members = ((FlxGroup)ObjectOrGroup).members;
-			int length = ((FlxGroup)ObjectOrGroup).length;
+			FlxGroup group = (FlxGroup) ObjectOrGroup;
+			Array<FlxBasic> members = group.members;
+			int length = group.length;
+			FlxBasic basic = null;
 			while(i < length)
 			{
 				basic = members.get(i++);
@@ -1045,14 +1075,14 @@ public class FlxTilemap extends FlxObject
 	 * and calls the specified callback function (if there is one).
 	 * Also calls the tile's registered callback if the filter matches.
 	 * 
-	 * @param	Object				The <code>FlxObject</code> you are checking for overlaps against.
+	 * @param	TargetObject				The <code>FlxObject</code> you are checking for overlaps against.
 	 * @param	Callback			An optional function that takes the form "myCallback(Object1:FlxObject,Object2:FlxObject)", where Object1 is a FlxTile object, and Object2 is the object passed in in the first parameter of this method.
 	 * @param	FlipCallbackParams	Used to preserve A-B list ordering from FlxObject.separate() - returns the FlxTile object as the second parameter instead.
 	 * @param	Position			Optional, specify a custom position for the tilemap (useful for overlapsAt()-type funcitonality).
 	 * 
 	 * @return	Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	public boolean overlapsWithCallback(FlxObject Object, IFlxObject Callback,boolean FlipCallbackParams,FlxPoint Position)
+	public boolean overlapsWithCallback(FlxObject TargetObject, IFlxObject Callback,boolean FlipCallbackParams,FlxPoint Position)
 	{		
 		boolean results = false;
 		
@@ -1065,10 +1095,10 @@ public class FlxTilemap extends FlxObject
 		}
 		
 		//Figure out what tiles we need to check against
-		int selectionX = (int) FlxU.floor((Object.x - X)/(float)_tileWidth);
-		int selectionY = (int) FlxU.floor((Object.y - Y)/(float)_tileHeight);
-		int selectionWidth = selectionX + (int)FlxU.ceil(Object.width/(float)_tileWidth) + 1;
-		int selectionHeight = selectionY + (int)FlxU.ceil(Object.height/(float)_tileHeight) + 1;
+		int selectionX = (int) FlxU.floor((TargetObject.x - X)/(float)_tileWidth);
+		int selectionY = (int) FlxU.floor((TargetObject.y - Y)/(float)_tileHeight);
+		int selectionWidth = selectionX + (int)FlxU.ceil(TargetObject.width/(float)_tileWidth) + 1;
+		int selectionHeight = selectionY + (int)FlxU.ceil(TargetObject.height/(float)_tileHeight) + 1;
 
 		//Then bound these coordinates by the map edges
 		if(selectionX < 0)
@@ -1093,37 +1123,31 @@ public class FlxTilemap extends FlxObject
 			column = selectionX;
 			while(column < selectionWidth)
 			{
-				overlapFound = false;
 				tile = _tileObjects.get(_data.get(rowStart+column));
+				tile.x = X+column*_tileWidth;
+				tile.y = Y+row*_tileHeight;
+				tile.last.x = tile.x - deltaX;
+				tile.last.y = tile.y - deltaY;
+				overlapFound = (TargetObject.x + TargetObject.width > tile.x) && (TargetObject.x < tile.x + tile.width) && (TargetObject.y + TargetObject.height > tile.y) && (TargetObject.y < tile.y + tile.height);
+				
 				if(tile.allowCollisions != NONE)
-				{
-					tile.x = X+column*_tileWidth;
-					tile.y = Y+row*_tileHeight;
-					tile.last.x = tile.x - deltaX;
-					tile.last.y = tile.y - deltaY;
+				{					
 					if(Callback != null)
 					{
 						if(FlipCallbackParams)
-							overlapFound = Callback.callback(Object,tile);
+							overlapFound = Callback.callback(TargetObject,tile);
 						else
-							overlapFound = Callback.callback(tile,Object);
-					}
-					else
-						overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
-					if(overlapFound)
-					{
-						if((tile.callback != null) && ((tile.filter == null) || ClassReflection.isInstance(tile.filter, Object)))
-						{
-							tile.mapIndex = rowStart+column;
-							tile.callback.callback(tile,Object);
-						}
-						results = true;
-					}
+							overlapFound = Callback.callback(tile,TargetObject);
+					}					
 				}
-				else if((tile.callback != null) && ((tile.filter == null) || ClassReflection.isInstance(tile.filter, Object)))
+				if(overlapFound)
 				{
-					tile.mapIndex = rowStart+column;
-					tile.callback.callback(tile,Object);
+					if((tile.callback != null) && ((tile.filter == null) || ClassReflection.isInstance(tile.filter, TargetObject)))
+					{
+						tile.mapIndex = rowStart+column;
+						tile.callback.callback(tile,TargetObject);
+					}
+					results = true;
 				}
 				column++;
 			}

@@ -31,9 +31,9 @@ public class DebugPathDisplay extends FlxBasic
 	@Override
 	public void destroy()
 	{
-		super.destroy();
 		clear();
 		_paths = null;
+		super.destroy();
 	}
 	
 	/**
@@ -118,14 +118,17 @@ public class DebugPathDisplay extends FlxBasic
 	 */
 	public void clear()
 	{
-		int i = _paths.size-1;
-		FlxPath path;
-		while(i >= 0)
+		if(_paths != null)
 		{
-			path = _paths.get(i--);
-			if(path != null)
-				path.destroy();
+			int i = _paths.size-1;
+			FlxPath path;
+			while(i >= 0)
+			{
+				path = _paths.get(i--);
+				if(path != null)
+					path.destroy();
+			}
+			_paths.clear();			
 		}
-		_paths.clear();
 	}
 }

@@ -1,6 +1,7 @@
 package org.flixel;
 
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 /**
  * <code>FlxEmitter</code> is a lightweight particle emitter.
@@ -79,11 +80,6 @@ public class FlxEmitter extends FlxGroup
 	 */
 	public float bounce;
 	/**
-	 * Set your own particle class type here.
-	 * Default is <code>FlxParticle</code>.
-	 */
-	public Class<? extends FlxParticle> particleClass;
-	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
 	protected int _quantity;
@@ -103,6 +99,10 @@ public class FlxEmitter extends FlxGroup
 	 * Internal point object, handy for reusing for memory mgmt purposes.
 	 */
 	protected FlxPoint _point;
+	/**
+	 * Internal variable for tracking the class to create when generating particles.
+	 */
+	protected Class<? extends FlxParticle> _particleClass;
 		
 	/**
 	 * Creates a new <code>FlxEmitter</code> object at a specific position.
@@ -124,7 +124,7 @@ public class FlxEmitter extends FlxGroup
 		minRotation = -360;
 		maxRotation = 360;
 		gravity = 0;
-		particleClass = FlxParticle.class;
+		_particleClass = FlxParticle.class;
 		particleDrag = new FlxPoint();
 		frequency = 0.1f;
 		lifespan = 3;
@@ -177,7 +177,7 @@ public class FlxEmitter extends FlxGroup
 		minParticleSpeed = null;
 		maxParticleSpeed = null;
 		particleDrag = null;
-		particleClass = null;
+		_particleClass = null;
 		_point = null;
 		super.destroy();
 	}
@@ -185,7 +185,7 @@ public class FlxEmitter extends FlxGroup
 	/**
 	 * This function generates a new array of particle sprites to attach to the emitter.
 	 * 
-	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxParticle objects, you can simply pass in a particle image or sprite sheet.
 	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
 	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
 	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
@@ -212,7 +212,7 @@ public class FlxEmitter extends FlxGroup
 		while(i < Quantity)
 		{	
 			try {
-				particle = ClassReflection.newInstance(particleClass);
+				particle = ClassReflection.newInstance(_particleClass);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -252,7 +252,7 @@ public class FlxEmitter extends FlxGroup
 	/**
 	 * This function generates a new array of particle sprites to attach to the emitter.
 	 * 
-	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxParticle objects, you can simply pass in a particle image or sprite sheet.
 	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
 	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
 	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
@@ -267,7 +267,7 @@ public class FlxEmitter extends FlxGroup
 	/**
 	 * This function generates a new array of particle sprites to attach to the emitter.
 	 * 
-	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxParticle objects, you can simply pass in a particle image or sprite sheet.
 	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
 	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
 	 * 
@@ -281,7 +281,7 @@ public class FlxEmitter extends FlxGroup
 	/**
 	 * This function generates a new array of particle sprites to attach to the emitter.
 	 * 
-	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxParticle objects, you can simply pass in a particle image or sprite sheet.
 	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
 	 * 
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
@@ -294,7 +294,7 @@ public class FlxEmitter extends FlxGroup
 	/**
 	 * This function generates a new array of particle sprites to attach to the emitter.
 	 * 
-	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxParticle objects, you can simply pass in a particle image or sprite sheet.
 	 * 
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -422,7 +422,7 @@ public class FlxEmitter extends FlxGroup
 	 */
 	public void emitParticle()
 	{			
-		FlxParticle	particle = (FlxParticle) recycle(particleClass);
+		FlxParticle	particle = (FlxParticle) recycle(_particleClass);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
 		particle.reset(x - ((int)particle.width>>1) + FlxG.random()*width, y - ((int)particle.height>>1) + FlxG.random()*height);
@@ -448,6 +448,36 @@ public class FlxEmitter extends FlxGroup
 		particle.drag.x = particleDrag.x;
 		particle.drag.y = particleDrag.y;
 		particle.onEmit();
+	}
+	
+	/**
+	 * Set your own particle class type here. The custom class must extend <code>FlxParticle</code>.
+	 * Default is <code>FlxParticle</code>.
+	 */
+	public Class<? extends FlxParticle> getParticleClass()
+	{
+		return _particleClass;
+	}
+	
+	public void setParticleClass(Class<? extends FlxParticle> value)
+	{
+		Object testParticle = null;
+		try
+		{
+			testParticle = ClassReflection.newInstance(value);
+		}
+		catch(ReflectionException e)
+		{
+			e.printStackTrace();
+		}
+		if (testParticle instanceof FlxParticle)
+		{
+			_particleClass = value;
+		}
+		else
+		{
+			FlxG.log("ERROR: " + FlxU.getClassName(testParticle, true) + " must extend FlxParticle in order to be used in a FlxEmitter.");
+		}
 	}
 	
 	/**

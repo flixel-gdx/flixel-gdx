@@ -105,7 +105,7 @@ public class Log extends FlxWindow
 	@Override
 	public void destroy()
 	{
-		//removeChild(_text);
+		//if(_text != null) removeChild(_text);
 		//_text = null;
 		_lines = null;
 		super.destroy();

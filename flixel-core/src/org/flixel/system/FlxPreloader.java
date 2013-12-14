@@ -166,7 +166,8 @@ public class FlxPreloader extends FlxState
 	public void destroy()
 	{
 		/*
-		removeChild(_buffer);
+		if(_buffer != null)
+			removeChild(_buffer);
 		_buffer = null;
 		_bmpBar = null;
 		_text = null;

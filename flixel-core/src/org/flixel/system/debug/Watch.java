@@ -117,15 +117,18 @@ public class Watch extends FlxWindow
 	@Override 
 	public void destroy()
 	{
-		//removeChild(_names);
+		//if(_names != null) removeChild(_names);
 		//_names = null;
-		//removeChild(_values);
+		//if(_values != null) removeChild(_values);
 		//_values = null;
-		int i = 0;
-		int l = _watching.size;
-		while(i < l)
-			_watching.get(i++).destroy();
-		_watching = null;
+		if(_watching != null)
+		{
+			int i = 0;
+			int l = _watching.size;
+			while(i < l)
+				_watching.get(i++).destroy();
+			_watching = null;			
+		}
 		super.destroy();
 	}
 

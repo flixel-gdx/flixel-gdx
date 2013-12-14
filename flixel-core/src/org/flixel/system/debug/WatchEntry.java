@@ -106,9 +106,12 @@ public class WatchEntry
 		//nameDisplay = null;
 		field = null;
 		custom = null;
-		//valueDisplay.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
-		//valueDisplay.removeEventListener(KeyboardEvent.KEY_UP,onKeyUp);
-		//valueDisplay = null;
+		//if(valueDisplay != null)
+		//{
+		//	valueDisplay.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+		//	valueDisplay.removeEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+		//	valueDisplay = null;
+		//}
 	}
 
 	/**

@@ -67,12 +67,13 @@ public class FlxReplay
 	 */
 	public void destroy()
 	{
-		if(_frames == null)
-			return;
-		int i = frameCount-1;
-		while(i >= 0)
-			_frames.get(i--).destroy();
-		_frames = null;
+		if(_frames != null)
+		{
+			int i = frameCount-1;
+			while(i >= 0)
+				_frames.get(i--).destroy();
+			_frames = null;			
+		}
 	}
 		
 	/**

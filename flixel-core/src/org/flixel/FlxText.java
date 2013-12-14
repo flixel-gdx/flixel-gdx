@@ -78,7 +78,6 @@ public class FlxText extends FlxSprite
 		width = frameWidth = Width;
 		_text = Text;
 		allowCollisions = NONE;
-		moves = false;
 		setFormat("org/flixel/data/font/nokiafc22.ttf", 8, 0xFFFFFF, "left", 0, 1f, 1f);
 	}
 	

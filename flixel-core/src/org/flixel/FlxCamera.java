@@ -337,8 +337,8 @@ public class FlxCamera extends FlxBasic
 				
 				if(target.isSimpleRender())
 				{
-					targetX = FlxU.ceil(targetX);
-					targetY = FlxU.ceil(targetY);					
+					targetX = FlxU.floor(targetX);
+					targetY = FlxU.floor(targetY);					
 				}
 				
 				edge = targetX - deadzone.x;
@@ -419,33 +419,33 @@ public class FlxCamera extends FlxBasic
 	public void follow(FlxObject Target, int Style)
 	{
 		target = Target;
-		float helper;
-		float w = 0;
-		float h = 0;
+		if(target == null)
+		{
+			deadzone = null;
+			return;
+		}
+		
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
-				w = width/8f;
-				h = height/3f;
-				deadzone = new FlxRect((width-w)/2f,(height-h)/2f - h*0.25f,w,h);
+				float cameraPaddingX = width/8f;
+				float cameraPaddingY = height/3f;
+				deadzone = new FlxRect((width-cameraPaddingX)/2,(height-cameraPaddingY)/2 - cameraPaddingY*0.25f,cameraPaddingX,cameraPaddingY);
 				break;
 			case STYLE_TOPDOWN:
-				helper = FlxU.max(width,height)/4;
-				deadzone = new FlxRect((width-helper)/2f,(height-helper)/2f,helper,helper);
-				break;
 			case STYLE_TOPDOWN_TIGHT:
-				helper = FlxU.max(width,height)/8;
-				deadzone = new FlxRect((width-helper)/2f,(height-helper)/2f,helper,helper);
+				float tdTightness = (Style == STYLE_TOPDOWN_TIGHT) ? 8 : 4;
+				float tdHelper = FlxU.max(width,height)/tdTightness;
+				deadzone = new FlxRect((width-tdHelper)/2,(height-tdHelper)/2,tdHelper,tdHelper);
 				break;
 			case STYLE_LOCKON:
-				if (target != null) 
-				{	
-					w = target.width;
-					h = target.height;
-				}
-				deadzone = new FlxRect((width-w)/2f,((height-h)/2f),w,h);
+				float targetWidth = target.width;
+				float targetHeight= target.height;
+				deadzone = new FlxRect((width-targetWidth)/2,(height-targetHeight)/2,targetWidth,targetHeight);
 				break;
 			default:
+				FlxG.log("[FlxCamera#follow()] WARNING: Invalid follow style of value: " + Style + "'. Defaulting to centering on the target.");
+				target = null;
 				deadzone = null;
 				break;
 		}
