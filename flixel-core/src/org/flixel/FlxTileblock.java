@@ -45,7 +45,7 @@ public class FlxTileblock extends FlxSprite
 		FlxSprite sprite = new FlxSprite().loadGraphic(TileGraphic,true,false,TileWidth,TileHeight);		
 		int spriteWidth = (int) sprite.width;
 		int spriteHeight = (int) sprite.height;
-		int total = sprite.frames + Empties;
+		int total = sprite.getNumFrames() + Empties;
 
 		//Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		boolean regen = false;

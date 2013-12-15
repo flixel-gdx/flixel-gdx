@@ -202,7 +202,7 @@ public class FlxEmitter extends FlxGroup
 		{ 
 			FlxSprite sprite = new FlxSprite();
 			sprite.loadGraphic(Graphics,true);
-			totalFrames = sprite.frames;
+			totalFrames = sprite.getNumFrames();
 			sprite.destroy();
 		}
 

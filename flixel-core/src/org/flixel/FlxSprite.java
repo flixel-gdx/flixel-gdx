@@ -29,7 +29,7 @@ public class FlxSprite extends FlxObject
 	/**
 	 * The default image that will be used if no image is provided.
 	 */
-	static protected String ImgDefault = "org/flixel/data/pack:default";
+	public static String ImgDefault = "org/flixel/data/pack:default";
 	/**
 	 * Internal tracker for the current GLES10 blend mode that is used.
 	 */
@@ -106,10 +106,6 @@ public class FlxSprite extends FlxObject
 	 */
 	public int frameHeight;
 	/**
-	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
-	 */
-	public int frames;
-	/**
 	 * The actual Flash <code>BitmapData</code> object representing the current display state of the sprite.
 	 */
 	public Sprite framePixels;
@@ -140,6 +136,15 @@ public class FlxSprite extends FlxObject
 	 * Internal, keeps track of the current index into the tile sheet based on animation or rotation.
 	 */
 	protected int _curIndex;
+	/**
+	 * Internal, tracker for the maximum number of frames that can fit on the tile sheet, used with read-only getter.
+	 * WARNING: assumes each row in the sprite sheet is full!
+	 */
+	protected int _maxFrames;
+	/**
+	 * Internal, tracker for the number of frames on the tile sheet, used with Flash getter/setter.
+	 */
+	protected int _numFrames;
 	/**
 	 * Internal, used to time each frame of animation.
 	 */
@@ -205,6 +210,8 @@ public class FlxSprite extends FlxObject
 		_curAnim = null;
 		_curFrame = 0;
 		_curIndex = 0;
+		_numFrames = 0;
+		_maxFrames = 0;
 		_frameTimer = 0;
 		
 		_callback = null;
@@ -564,8 +571,14 @@ public class FlxSprite extends FlxObject
 		framePixels.setSize(frameWidth, frameHeight);
 		framePixels.flip(false, true);
 		origin.make(frameWidth*0.5f,frameHeight*0.5f);
-		frames = (int) ((_pixels.getRegionWidth() / frameWidth) * (_pixels.getRegionHeight() / frameHeight));
 		_curIndex = 0;
+		_numFrames = 0;
+				
+		int widthHelper = _pixels.rotate ? _pixels.getRegionHeight() : _pixels.getRegionWidth();
+		int maxFramesX = FlxU.floor(widthHelper / frameWidth);
+		int maxFramesY = FlxU.floor((_pixels.rotate ? _pixels.getRegionWidth() : _pixels.getRegionHeight()) / frameHeight);		
+		_maxFrames = maxFramesX * maxFramesY;
+		
 		
 		// rotated texture region.
 		if(_pixels.rotate)
@@ -573,7 +586,7 @@ public class FlxSprite extends FlxObject
 			framePixels.setRegion(_pixels.getRegionX(), _pixels.getRegionY(), frameHeight, frameWidth);
 			framePixels.flip(false, true);
 			dirty = true;
-		}		
+		}
 	}
 	
 	/**
@@ -877,8 +890,7 @@ public class FlxSprite extends FlxObject
 				}
 				else
 					_curFrame++;
-				_curIndex = _curAnim.frames.get(_curFrame);
-				dirty = true;
+				trySetIndex(_curAnim.frames.get(_curFrame));
 			}
 		}
 		
@@ -981,8 +993,7 @@ public class FlxSprite extends FlxObject
 					finished = true;
 				else
 					finished = false;
-				_curIndex = _curAnim.frames.get(_curFrame);
-				dirty = true;
+				trySetIndex(_curAnim.frames.get(_curFrame));
 				return;
 			}
 			i++;
@@ -1020,8 +1031,7 @@ public class FlxSprite extends FlxObject
 	public void randomFrame()
 	{
 		_curAnim = null;
-		_curIndex = (int) (FlxG.random()*(_pixels.getRegionWidth()/frameWidth));
-		dirty = true;
+		trySetIndex((int) (FlxG.random() * getNumFrames())); // Shouldn't ever throw an error.
 	}
 	
 	/**
@@ -1226,9 +1236,82 @@ public class FlxSprite extends FlxObject
 	 */
 	public void setFrame(int Frame)
 	{
+		if(Frame >= getNumFrames())
+		{
+			FlxG.log("WARNING: The frame number of a FlxSprite must be less than its `numFrames` value.");
+			Frame = getNumFrames() - 1;
+		}
 		_curAnim = null;
 		_curIndex = Frame;
 		dirty = true;
+	}
+		
+	/**
+	 * Try setting the `_curIndex` value to the specified value, extracted out to avoid duplicate code.
+	 * If it is outside of the allowed bounds, it will still set the variable to the nearest
+	 * possible value, but will return false, allowing internal code to throw its own error messages (if necessary).
+	 * Will re-draw even if the frame hasn't changed (Adam had it that way, I'll just assume he did that on purpose).
+	 */
+	private boolean trySetIndex(int Value)
+	{
+		_curIndex = Value;
+		dirty = true;
+
+		if(_curIndex >= getNumFrames())
+		{
+			_curIndex = getNumFrames();
+			FlxG.log("WARNING: A FlxSprite animation is trying to set the frame number of its FlxSprite out of bounds.");
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * The maximum number of frames that can fit on the sprite sheet, calculated
+	 * based on the size of the each frame and the
+	 */
+	public int getMaxFrames()
+	{
+		return _maxFrames;
+	}
+
+	/**
+	 * The number of frames that are on the sprite sheet. Defaults to
+	 * <code>maxFrames</code> if no value is set.
+	 * 
+	 * @param NumFrames
+	 *            The number of frames on the sprite sheet. Has to be a value
+	 *            between <code>1</code> and <code>maxFrames</code>.
+	 */
+	public int getNumFrames()
+	{		
+		return (_numFrames == 0) ? getMaxFrames() : _numFrames;
+	}
+	
+	/**
+	 * @private
+	 */
+	public void setNumFrames(int NumFrames)
+	{
+		if(NumFrames < 1)
+		{
+			FlxG.log("ERROR: Cannot set the number of frames on a FlxSprite to less than 1.");
+			_numFrames = 1;
+			return;
+		}
+
+		if(NumFrames > _maxFrames)
+		{
+			FlxG.log("ERROR: Cannot set the number of frames on a FlxSprite to higher than its `maxFrames` value (" + _maxFrames + ").");
+			_numFrames = _maxFrames;
+			return;
+		}
+
+		// Will only re-render if the current frame number has changed
+		if(_curIndex >= _numFrames)
+		{
+			_curIndex = _numFrames - 1;
+		}
 	}
 	
 	/**
