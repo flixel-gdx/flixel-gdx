@@ -106,6 +106,11 @@ public class FlxTimer
 		TimerManager timerManager = getManager();
 		if(timerManager != null)
 			timerManager.add(this);
+		else
+		{
+			FlxG.log("WARNING: Did you forgot to plug-in TimerManager?");
+			return null;
+		}
 		
 		if(paused)
 		{

@@ -1,6 +1,5 @@
 package org.flixel.system.gdx;
 
-import org.flixel.system.gdx.GdxInput;
 import org.flixel.system.gdx.utils.EventPool;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -141,5 +140,10 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	public static void showMouse()
 	{
 		Gdx.input.setCursorImage(null, 0, 0);
+	}
+
+	public GdxInput getInput()
+	{
+		return _input;
 	}
 }
