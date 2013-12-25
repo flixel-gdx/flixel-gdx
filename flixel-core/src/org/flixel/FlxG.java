@@ -9,6 +9,8 @@ import org.flixel.event.IFlxReplay;
 import org.flixel.event.IFlxShaderProgram;
 import org.flixel.event.IFlxVolume;
 import org.flixel.gles20.FlxShaderProgram;
+import org.flixel.plugin.DebugPathDisplay;
+import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.gdx.GdxGraphics;
@@ -2097,7 +2099,9 @@ public class FlxG
 		FlxG.camera = null;
 		useBufferLocking = false;
 		
-		plugins = new Array<FlxBasic>();		
+		plugins = new Array<FlxBasic>();
+		addPlugin(new DebugPathDisplay());
+		addPlugin(new TimerManager());
 		
 		FlxG.mouse = new Mouse(FlxG._game._mouse);
 		FlxG.keys = new Keyboard();
