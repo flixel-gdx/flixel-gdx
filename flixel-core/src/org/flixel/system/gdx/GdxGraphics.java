@@ -54,6 +54,12 @@ public class GdxGraphics implements Graphics
 	}
 	
 	@Override
+	public void drawCircle(float x, float y, float radius)
+	{
+		_shapeRenderer.circle(x, y, radius, 360);	
+	}
+	
+	@Override
 	public void drawRect(float x, float y, float width, float height)
 	{
 		_shapeRenderer.rect(x, y, width, height);
