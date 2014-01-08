@@ -464,7 +464,7 @@ public class FlxText extends FlxSprite
 		{
 			//tinting
 			int tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
-			_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, ((_shadow >> 24) & 0xFF) * _alpha * 0.00392f);
+			_textField.setColors(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, ((_shadow >> 24) & 0xFF) * _alpha * 0.00392f);
 			_textField.translate(_shadowX, _shadowY);
 			_textField.draw(FlxG.batch);
 			_textField.translate(-_shadowX, -_shadowY);
@@ -472,7 +472,7 @@ public class FlxText extends FlxSprite
 		
 		//tinting
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
-		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
+		_textField.setColors(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 		
 		_textField.draw(FlxG.batch);
 						

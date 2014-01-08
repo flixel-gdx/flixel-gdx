@@ -1,7 +1,6 @@
 package org.flixel.ui;
 
 import org.flixel.FlxPoint;
-import org.flixel.FlxSprite;
 
 import com.badlogic.gdx.utils.Array;
 
@@ -134,7 +133,7 @@ public class FlxUISkin
 	/**
 	 * An array which holds <code>Ninepatch</coded>es.
 	 */
-	public Array<NinePatch> patches;
+	public Array<FlxNinePatch> patches;
 	
 	/**
 	 * Clean the memory.
@@ -165,7 +164,7 @@ public class FlxUISkin
 	 * Set an array of NinePatches.
 	 * @param Patches
 	 */
-	public void setNinePatch(Array<NinePatch> Patches)
+	public void setNinePatch(Array<FlxNinePatch> Patches)
 	{
 		patches = Patches;
 	}
@@ -181,12 +180,12 @@ public class FlxUISkin
 	{
 		if(patches == null)
 		{
-			patches = new Array<NinePatch>(9);
+			patches = new Array<FlxNinePatch>(9);
 			for(int i = 0; i < 9; i++)
 				patches.add(null);
 		}
-		patches.set(Position, new NinePatch(Position, Img, Width, Height));
-		if(Position == NinePatch.MIDDLE_CENTER)
+		patches.set(Position, new FlxNinePatch(Position, Img, Width, Height));
+		if(Position == FlxNinePatch.MIDDLE_CENTER)
 			setImage(Img, Width, Height);
 	}
 	
@@ -316,56 +315,6 @@ public class FlxUISkin
 	public void setFormat()
 	{
 		setFormat(null, 8, 0xFFFFFFFF, "left", 0, 1f, 1f);
-	}
-	
-	/**
-	 * The NinePatch class which only holds the data of an image.
-	 * 
-	 * @author Ka Wing Chin
-	 */
-	public class NinePatch
-	{
-		public static final int TOP_LEFT = 0;
-		public static final int TOP_CENTER = 1;
-		public static final int TOP_RIGHT = 2;
-		public static final int MIDDLE_LEFT = 3;
-		public static final int MIDDLE_CENTER = 4;
-		public static final int MIDDLE_RIGHT = 5;
-		public static final int BOTTOM_LEFT = 6;
-		public static final int BOTTOM_CENTER = 7;
-		public static final int BOTTOM_RIGHT = 8;
-		
-		public int position;
-		public String image;
-		public int width;
-		public int height;
-		
-		/**
-		 * Creates a new <code>FlxUISkin</code> object.
-		 * @param Position		The position of the ninepatch (e.g. NinePatch.TOP_LEFT).
-		 * @param Img			The image of the ninepatch.
-		 * @param Width			The width of the image.
-		 * @param Height		The height of the image.
-		 */
-		public NinePatch(int Position, String Img, int Width, int Height)
-		{
-			position = Position;
-			image = Img;
-			width = Width;
-			height = Height;
-		}
-		
-		/**
-		 * Creates a FlxSprite from the data that is provided in the constructor.
-		 */
-		public FlxSprite loadGraphic()
-		{
-			FlxSprite sprite = new FlxSprite().loadGraphic(image, false, false, width, height);
-			sprite.immovable = true;
-			sprite.scrollFactor.x = sprite.scrollFactor.y = 0;
-			sprite.setOriginToCorner();
-			return sprite;
-		}
 	}
 }
 

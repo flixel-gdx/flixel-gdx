@@ -644,7 +644,7 @@ public class FlxSprite extends FlxObject
 		if(isSimpleRender())
 		{ 	//Simple render
 			framePixels.setPosition(_point.x, _point.y);
-			framePixels.draw(FlxG.batch);
+			renderSprite();
 		}
 		else
 		{ 	//Advanced render
@@ -666,7 +666,7 @@ public class FlxSprite extends FlxObject
 				// OpenGL ES 2.0 blend mode render
 				renderBlend();
 			}
-			framePixels.draw(FlxG.batch);
+			renderSprite();
 		}
 		
 		//re-rotate 
@@ -676,6 +676,14 @@ public class FlxSprite extends FlxObject
 		_VISIBLECOUNT++;
 		if(FlxG.visualDebug && !ignoreDrawDebug)
 			drawDebug(camera);		
+	}
+	
+	/**
+	 * Override this method to customize the rendering before it got drawn on screen.
+	 */
+	public void renderSprite()
+	{
+		framePixels.draw(FlxG.batch);
 	}
 	
 	/**

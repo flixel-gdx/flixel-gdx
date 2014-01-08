@@ -1,6 +1,5 @@
 package org.flixel.ui;
 
-import org.flixel.ui.FlxUISkin.NinePatch;
 import org.flixel.ui.event.IFlxUIListener;
 
 /**
@@ -123,16 +122,15 @@ public class FlxNinePatchButton extends FlxUITouchable
 		skin.setFormat(null, 16);
 		skin.labelVerticalAlign = "middle";
 		skin.labelAlign = "center";
-		skin.setImage(ImgMiddleCenter, 1, 1);
-		skin.setNinePatch(NinePatch.TOP_LEFT, ImgTopLeft, 8, 8);
-		skin.setNinePatch(NinePatch.TOP_CENTER, ImgTopCenter, 1, 8);
-		skin.setNinePatch(NinePatch.TOP_RIGHT, ImgTopRight, 8, 8);
-		skin.setNinePatch(NinePatch.MIDDLE_LEFT, ImgMiddleLeft, 8, 1);
-		skin.setNinePatch(NinePatch.MIDDLE_CENTER, ImgMiddleCenter, 1, 1);
-		skin.setNinePatch(NinePatch.MIDDLE_RIGHT, ImgMiddleRight, 8, 1);
-		skin.setNinePatch(NinePatch.BOTTOM_LEFT, ImgBottomLeft, 8, 8);
-		skin.setNinePatch(NinePatch.BOTTOM_CENTER, ImgBottomCenter, 1, 8);
-		skin.setNinePatch(NinePatch.BOTTOM_RIGHT, ImgBottomRight, 8, 8);
+		skin.setNinePatch(FlxNinePatch.TOP_LEFT, ImgTopLeft, 8, 8);
+		skin.setNinePatch(FlxNinePatch.TOP_CENTER, ImgTopCenter, 1, 8);
+		skin.setNinePatch(FlxNinePatch.TOP_RIGHT, ImgTopRight, 8, 8);
+		skin.setNinePatch(FlxNinePatch.MIDDLE_LEFT, ImgMiddleLeft, 8, 1);
+		skin.setNinePatch(FlxNinePatch.MIDDLE_CENTER, ImgMiddleCenter, 1, 1);
+		skin.setNinePatch(FlxNinePatch.MIDDLE_RIGHT, ImgMiddleRight, 8, 1);
+		skin.setNinePatch(FlxNinePatch.BOTTOM_LEFT, ImgBottomLeft, 8, 8);
+		skin.setNinePatch(FlxNinePatch.BOTTOM_CENTER, ImgBottomCenter, 1, 8);
+		skin.setNinePatch(FlxNinePatch.BOTTOM_RIGHT, ImgBottomRight, 8, 8);
 		skin.labelOffset.y = 0;
 	}
 	

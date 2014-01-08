@@ -1,7 +1,6 @@
 package org.flixel.ui;
 
 import org.flixel.FlxSprite;
-import org.flixel.ui.FlxUISkin.NinePatch;
 
 /**
  * This is an abstract UI component. It supports single image and ninepatch.
@@ -54,40 +53,40 @@ public abstract class FlxUIComponent extends FlxSprite
 	/**
 	 * Top left of the <code>Ninepatch</code>.
 	 */
-	protected FlxSprite _topLeft;
+	protected FlxNinePatch _topLeft;
 	/**
 	 * Top center of the <code>Ninepatch</code>.
 	 */
-	protected FlxSprite _topCenter;
+	protected FlxNinePatch _topCenter;
 	/**
 	 * Top right of the <code>Ninepatch</code>.
 	 */
-	protected FlxSprite _topRight;
+	protected FlxNinePatch _topRight;
 	/**
 	 * Middle left of the <code>Ninepatch</code>.
 	 */
-	protected FlxSprite _middleLeft;
+	protected FlxNinePatch _middleLeft;
 	/**
 	 * Middle center of the <code>Ninepatch</code>. 
 	 * If this is not null, it will be used as base graphic for this component.
 	 */
-	protected FlxSprite _middleCenter;
+	protected FlxNinePatch _middleCenter;
 	/**
 	 * Middle right of the <code>Ninepatch</code>.
 	 */
-	protected FlxSprite _middleRight;
+	protected FlxNinePatch _middleRight;
 	/**
 	 * Bottom left of the <code>Ninepatch</code>.
 	 */
-	protected FlxSprite _bottomLeft;
+	protected FlxNinePatch _bottomLeft;
 	/**
 	 * Bottom center of the <code>Ninepatch</code>.
 	 */
-	protected FlxSprite _bottomCenter;
+	protected FlxNinePatch _bottomCenter;
 	/**
 	 * Bottom right of the <code>Ninepatch</code>.
 	 */
-	protected FlxSprite _bottomRight;
+	protected FlxNinePatch _bottomRight;
 	
 	/**
 	 * Internal, the width that is given in the constructor.
@@ -101,6 +100,15 @@ public abstract class FlxUIComponent extends FlxSprite
 	 * Whether or not the component has initialized itself yet.
 	 */
 	private boolean _initialized;
+	/**
+	 * Just cached variables for positioning.
+	 */
+	private float _endX;
+	private float _endY;
+	private float _startX;
+	private float _startY;
+	private float _patchWidth;
+	private float _patchHeight;
 	
 	/**
 	 * Creates a new <code>FlxUIComponent</code> object.
@@ -140,25 +148,28 @@ public abstract class FlxUIComponent extends FlxSprite
 			_isNinePatch = true;
 			_height = Height; 
 			_width = Width;
-			if(skin.patches.get(NinePatch.TOP_LEFT) != null)
-				_topLeft = skin.patches.get(NinePatch.TOP_LEFT).loadGraphic();
-			if(skin.patches.get(NinePatch.TOP_CENTER) != null)
-				_topCenter = skin.patches.get(NinePatch.TOP_CENTER).loadGraphic();
-			if(skin.patches.get(NinePatch.TOP_RIGHT) != null)
-				_topRight = skin.patches.get(NinePatch.TOP_RIGHT).loadGraphic();
-			if(skin.patches.get(NinePatch.MIDDLE_LEFT) != null)
-				_middleLeft = skin.patches.get(NinePatch.MIDDLE_LEFT).loadGraphic();
-			if(skin.patches.get(NinePatch.MIDDLE_CENTER) != null)
-				_middleCenter = skin.patches.get(NinePatch.MIDDLE_CENTER).loadGraphic();
-			if(skin.patches.get(NinePatch.MIDDLE_RIGHT) != null)
-				_middleRight = skin.patches.get(NinePatch.MIDDLE_RIGHT).loadGraphic();
-			if(skin.patches.get(NinePatch.BOTTOM_LEFT) != null)
-				_bottomLeft = skin.patches.get(NinePatch.BOTTOM_LEFT).loadGraphic();
-			if(skin.patches.get(NinePatch.BOTTOM_CENTER) != null)
-				_bottomCenter = skin.patches.get(NinePatch.BOTTOM_CENTER).loadGraphic();
-			if(skin.patches.get(NinePatch.BOTTOM_RIGHT) != null)
-				_bottomRight = skin.patches.get(NinePatch.BOTTOM_RIGHT).loadGraphic();			
-			stretch();
+			if(skin.patches.get(FlxNinePatch.TOP_LEFT) != null)
+				setPatchDimension(_topLeft = skin.patches.get(FlxNinePatch.TOP_LEFT));
+			if(skin.patches.get(FlxNinePatch.TOP_CENTER) != null)
+				_topCenter = skin.patches.get(FlxNinePatch.TOP_CENTER);
+			if(skin.patches.get(FlxNinePatch.TOP_RIGHT) != null)
+				setPatchDimension(_topRight = skin.patches.get(FlxNinePatch.TOP_RIGHT));
+			
+			if(skin.patches.get(FlxNinePatch.BOTTOM_LEFT) != null)
+				setPatchDimension(_bottomLeft = skin.patches.get(FlxNinePatch.BOTTOM_LEFT));
+			if(skin.patches.get(FlxNinePatch.BOTTOM_CENTER) != null)
+				_bottomCenter = skin.patches.get(FlxNinePatch.BOTTOM_CENTER);
+			if(skin.patches.get(FlxNinePatch.BOTTOM_RIGHT) != null)
+				setPatchDimension(_bottomRight = skin.patches.get(FlxNinePatch.BOTTOM_RIGHT));			
+			
+			if(skin.patches.get(FlxNinePatch.MIDDLE_LEFT) != null)
+				setPatchDimension(_middleLeft = skin.patches.get(FlxNinePatch.MIDDLE_LEFT));
+			if(skin.patches.get(FlxNinePatch.MIDDLE_CENTER) != null)
+				_middleCenter = skin.patches.get(FlxNinePatch.MIDDLE_CENTER);
+			if(skin.patches.get(FlxNinePatch.MIDDLE_RIGHT) != null)
+				setPatchDimension(_middleRight = skin.patches.get(FlxNinePatch.MIDDLE_RIGHT));
+			
+			adjustDimension();
 		}
 
 		if(skin.labelVerticalAlign.equals("top"))
@@ -210,6 +221,12 @@ public abstract class FlxUIComponent extends FlxSprite
 	public FlxUIComponent(float X, float Y, FlxUISkin Skin)
 	{
 		this(X, Y, Skin, null, 0, 0);
+	}
+	
+	private void setPatchDimension(FlxNinePatch patch)
+	{
+		if(_patchWidth == 0) _patchWidth = patch.width;
+		if(_patchHeight == 0) _patchHeight = patch.height;
 	}
 		
 	@Override
@@ -273,44 +290,54 @@ public abstract class FlxUIComponent extends FlxSprite
 		// If it's a ninepatch, place the parts correctly.
 		if(_isNinePatch)
 		{
+			_startX = x - _patchWidth;
+			_startY = y - _patchHeight;
+			_endX = x + width;
+			_endY = y + height;
+			
 			if(_topLeft != null)
 			{
-				_topLeft.x = x - _topLeft.width;
-				_topLeft.y = y - _topLeft.height;				
+				_topLeft.x = _startX;
+				_topLeft.y = _startY;				
 			}
 			if(_topCenter != null)
 			{
 				_topCenter.x = x;
-				_topCenter.y = y - _topCenter.height;				
+				_topCenter.y = _startY;				
 			}
 			if(_topRight != null)
 			{
-				_topRight.x = x + width;
-				_topRight.y = y - _topRight.height;				
+				_topRight.x = _endX;
+				_topRight.y = _startY;				
 			}
 			if(_bottomLeft != null)
 			{
-				_bottomLeft.x = x - _bottomLeft.width;
-				_bottomLeft.y = y + height;				
+				_bottomLeft.x = _startX;
+				_bottomLeft.y = _endY;				
 			}
 			if(_bottomCenter != null)
 			{
 				_bottomCenter.x = x;
-				_bottomCenter.y = y + height;				
+				_bottomCenter.y = _endY;				
 			}
 			if(_bottomRight != null)
 			{
-				_bottomRight.x = x + width;
-				_bottomRight.y = y + height;				
+				_bottomRight.x = _endX;
+				_bottomRight.y = _endY;				
 			}
 			if(_middleLeft != null)
 			{
-				_middleLeft.x = x - _middleLeft.width;
+				_middleLeft.x = _startX;
 				_middleLeft.y = y;				
+			}
+			if(_middleCenter != null)
+			{
+				_middleCenter.x = x;
+				_middleCenter.y = y;
 			}
 			if(_middleRight != null)
 			{
-				_middleRight.x = x + width;
+				_middleRight.x = _endX;
 				_middleRight. y = y;				
 			}
 		}
@@ -365,7 +392,6 @@ public abstract class FlxUIComponent extends FlxSprite
 	@Override
 	public void draw()
 	{
-		super.draw();
 		if(_isNinePatch)
 		{
 			if(_topLeft != null)
@@ -376,8 +402,8 @@ public abstract class FlxUIComponent extends FlxSprite
 				_topRight.draw();
 			if(_middleLeft != null)
 				_middleLeft.draw();
-//			if(_middleCenter != null)
-//				_middleCenter.draw();
+			if(_middleCenter != null)
+				_middleCenter.draw();
 			if(_middleRight != null)
 				_middleRight.draw();
 			if(_bottomLeft != null)
@@ -387,6 +413,9 @@ public abstract class FlxUIComponent extends FlxSprite
 			if(_bottomRight != null)
 				_bottomRight.draw();
 		}
+		else
+			super.draw();
+		
 		if(label != null)
 		{
 			label.scrollFactor = scrollFactor;
@@ -396,27 +425,26 @@ public abstract class FlxUIComponent extends FlxSprite
 	}
 	
 	/**
-	 * Stretch the component
+	 * Adjust the dimension of the component
 	 */
-	public void stretch()
+	private void adjustDimension()
 	{
 		label.calcFrame();
 		width = (_width == 0) ? label.width : _width; 
 		height = (_height == 0) ? label.height : _height;
-		
 		if(_middleCenter != null)
-			scale.x = width / _middleCenter.width;		
+			_middleCenter.width = width;		
 		if(_topCenter != null)
-			_topCenter.scale.x = width / _topCenter.width;		
+			_topCenter.width = width;		
 		if(_bottomCenter != null)
-			_bottomCenter.scale.x = width / _bottomCenter.width;
+			_bottomCenter.width = width;
 		
 		if(_middleCenter != null)
-			scale.y = height / _middleCenter.height;
+			_middleCenter.height = height;
 		if(_middleLeft != null)
-			_middleLeft.scale.y = height / _middleLeft.height;
+			_middleLeft.height = height;
 		if(_middleRight != null)
-			_middleRight.scale.y = height / _middleRight.height;
+			_middleRight.height = height;
 	}
 	
 	@Override
@@ -425,9 +453,10 @@ public abstract class FlxUIComponent extends FlxSprite
 		if(Frame == -1)
 			return;
 		skinStatus = Frame;
-		super.setFrame(Frame);
 		if(_isNinePatch)
 			setNinePatchStatus(Frame);
+		else
+			super.setFrame(Frame);
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package org.flixel.ui;
 
 import org.flixel.FlxG;
-import org.flixel.ui.FlxUISkin.NinePatch;
 import org.flixel.ui.event.IFlxInputText;
 
 import com.badlogic.gdx.Gdx;
@@ -32,7 +31,6 @@ public class FlxInputText extends FlxUITouchable
 	private final String ImgTextAreaTopCenter = "org/flixel/data/pack:ninepatch_textarea_topcenter";
 	private final String ImgTextAreaTopRight = "org/flixel/data/pack:ninepatch_textarea_topright";
 	private final String ImgTextAreaMiddleLeft = "org/flixel/data/pack:ninepatch_textarea_middleleft";
-	private final String ImgTextAreaMiddleCenter = "org/flixel/data/pack:ninepatch_textarea_middlecenter";
 	private final String ImgTextAreaMiddleRight = "org/flixel/data/pack:ninepatch_textarea_middleright";
 	private final String ImgTextAreaBottomLeft = "org/flixel/data/pack:ninepatch_textarea_bottomleft";
 	private final String ImgTextAreaBottomCenter = "org/flixel/data/pack:ninepatch_textarea_bottomcenter";
@@ -224,15 +222,14 @@ public class FlxInputText extends FlxUITouchable
 		skin.labelWidth = 200;
 		skin.setFormat(null, 8, 0x0099CC);
 		
-		skin.setNinePatch(NinePatch.TOP_LEFT, ImgTextAreaTopLeft, 4, 2);
-		skin.setNinePatch(NinePatch.TOP_CENTER, ImgTextAreaTopCenter, 1, 2);
-		skin.setNinePatch(NinePatch.TOP_RIGHT, ImgTextAreaTopRight, 4, 2);
-		skin.setNinePatch(NinePatch.MIDDLE_LEFT, ImgTextAreaMiddleLeft, 4, 1);
-		skin.setNinePatch(NinePatch.MIDDLE_CENTER, ImgTextAreaMiddleCenter, 1, 1);
-		skin.setNinePatch(NinePatch.MIDDLE_RIGHT, ImgTextAreaMiddleRight, 4, 1);
-		skin.setNinePatch(NinePatch.BOTTOM_LEFT, ImgTextAreaBottomLeft, 4, 2);
-		skin.setNinePatch(NinePatch.BOTTOM_CENTER, ImgTextAreaBottomCenter, 1, 2);
-		skin.setNinePatch(NinePatch.BOTTOM_RIGHT, ImgTextAreaBottomRight, 4, 2);
+		skin.setNinePatch(FlxNinePatch.TOP_LEFT, ImgTextAreaTopLeft, 4, 2);
+		skin.setNinePatch(FlxNinePatch.TOP_CENTER, ImgTextAreaTopCenter, 1, 2);
+		skin.setNinePatch(FlxNinePatch.TOP_RIGHT, ImgTextAreaTopRight, 4, 2);
+		skin.setNinePatch(FlxNinePatch.MIDDLE_LEFT, ImgTextAreaMiddleLeft, 4, 1);
+		skin.setNinePatch(FlxNinePatch.MIDDLE_RIGHT, ImgTextAreaMiddleRight, 4, 1);
+		skin.setNinePatch(FlxNinePatch.BOTTOM_LEFT, ImgTextAreaBottomLeft, 4, 2);
+		skin.setNinePatch(FlxNinePatch.BOTTOM_CENTER, ImgTextAreaBottomCenter, 1, 2);
+		skin.setNinePatch(FlxNinePatch.BOTTOM_RIGHT, ImgTextAreaBottomRight, 4, 2);
 	}
 
 	@Override
