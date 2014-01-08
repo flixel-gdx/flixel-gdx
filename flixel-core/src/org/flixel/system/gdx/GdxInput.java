@@ -6,6 +6,7 @@ import org.flixel.system.gdx.utils.TouchEventPool;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntIntMap;
 
@@ -20,7 +21,7 @@ import flash.ui.Keyboard;
  * 
  * @author Thomas Weston
  */
-public class GdxInput implements InputProcessor
+public class GdxInput extends InputMultiplexer implements InputProcessor
 {
 	/**
 	 * Maps libgdx key codes to their Flash equivalents.
@@ -166,6 +167,7 @@ public class GdxInput implements InputProcessor
 	//TODO: convert to pointer position to stage coordinates here
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{		
+		super.touchDown(screenX, screenY, pointer, button);
 		boolean touchProcessed = _eventDispatcher.dispatchEvent(_touchEvents.obtain(TouchEvent.TOUCH_BEGIN, screenX, screenY, pointer));
 		boolean mouseProcessed = _eventDispatcher.dispatchEvent(_mouseEvents.obtain(MouseEvent.MOUSE_DOWN, screenX, screenY, 0));
 		return touchProcessed || mouseProcessed;
@@ -174,6 +176,7 @@ public class GdxInput implements InputProcessor
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{		
+		super.touchUp(screenX, screenY, pointer, button);
 		boolean touchProcessed = _eventDispatcher.dispatchEvent(_touchEvents.obtain(TouchEvent.TOUCH_END, screenX, screenY, pointer));
 		boolean mouseProcessed = _eventDispatcher.dispatchEvent(_mouseEvents.obtain(MouseEvent.MOUSE_UP, screenX, screenY, 0));
 		return touchProcessed || mouseProcessed;
@@ -182,13 +185,13 @@ public class GdxInput implements InputProcessor
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
-		return false;
+		return super.touchDragged(screenX, screenY, pointer);
 	}
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
-		return false;
+		return super.mouseMoved(screenX, screenY);
 	}
 
 	@Override

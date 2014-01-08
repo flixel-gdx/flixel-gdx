@@ -6,11 +6,10 @@ import org.flixel.event.IFlxCamera;
 import org.flixel.event.IFlxCollision;
 import org.flixel.event.IFlxObject;
 import org.flixel.event.IFlxReplay;
-import org.flixel.event.IFlxVolume;
 import org.flixel.event.IFlxShaderProgram;
+import org.flixel.event.IFlxVolume;
 import org.flixel.gles20.FlxShaderProgram;
 import org.flixel.plugin.DebugPathDisplay;
-import org.flixel.plugin.GestureManager;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
@@ -19,7 +18,6 @@ import org.flixel.system.gdx.ManagedTextureData;
 import org.flixel.system.gdx.loaders.ShaderLoader.ShaderProgramParameter;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
-import org.flixel.system.input.Sensor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
@@ -209,10 +207,6 @@ public class FlxG
 	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
 	 */
 	static public Keyboard keys;
-	/**
-	 * A reference to a <code>FlxSensor</code> object.	Important for input!
-	 */
-	static public Sensor sensor;
 	
 	/**
 	 * A handy container for a background music object.
@@ -2111,7 +2105,6 @@ public class FlxG
 		
 		FlxG.mouse = new Mouse(FlxG._game._mouse);
 		FlxG.keys = new Keyboard();
-		FlxG.sensor = new Sensor();
 		
 		FlxG.levels = new Array<Object>();
 		FlxG.scores = new IntArray();
@@ -2119,9 +2112,6 @@ public class FlxG
 
 		if(_gl == Gdx.gl20)
 			FlxG.shaders = new ObjectMap<String, FlxShaderProgram>();
-		
-		GestureManager manager = new GestureManager();
-		addPlugin(manager);
 	}
 	
 	/**
@@ -2153,9 +2143,6 @@ public class FlxG
 		FlxG.globalSeed = (float) Math.random();
 		FlxG.worldBounds = new FlxRect(-10,-10,FlxG.width+20,FlxG.height+20);
 		FlxG.worldDivisions = 6;
-		DebugPathDisplay debugPathDisplay = (DebugPathDisplay) FlxG.getPlugin(DebugPathDisplay.class);
-		if(debugPathDisplay != null)
-			debugPathDisplay.clear();
 	}
 	
 	/**
@@ -2166,7 +2153,6 @@ public class FlxG
 		FlxG.keys.update();
 		if(!_game._debuggerUp || !_game._debugger.hasMouse)
 			FlxG.mouse.update();
-		FlxG.sensor.update();
 	}
 	
 	/**

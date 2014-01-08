@@ -34,6 +34,17 @@ public interface Graphics
 	public void lineTo(float x, float y);
 	
 	/**
+	 * Draws a circle. Set the line style, fill, or both before you cal the drawCircle() method,
+	 * by calling the linestyle(), lineGradientStyle(), beginFill(), beginGradientFill(), or
+	 * beginBitmapFill() method.
+	 * 
+	 * @param x			The x location of the center of the circle relative to the registration point of the parent display object (in pixels).
+	 * @param y			The y location of the center of the circle relative to the registration point of the parent display object (in pixels).
+	 * @param radius	The radius of the circle (in pixels). 
+	 */
+	public void drawCircle(float x, float y, float radius);
+	
+	/**
 	 * Draws a rectangle. Set the line style, fill, or both before you call the drawRect() method,
 	 * by calling the linestyle(), lineGradientStyle(), beginFill(), beginGradientFill(), or
 	 * beginBitmapFill() method.

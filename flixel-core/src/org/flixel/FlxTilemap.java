@@ -81,7 +81,7 @@ public class FlxTilemap extends FlxObject
 	/**
 	 * The actual Flash <code>BitmapData</code> object representing the current display state of the sprite.
 	 */
-	public Sprite framePixels;
+	protected Sprite _framePixels;
 	/**
 	 * Internal list of buffers, one for each camera, used for drawing the tilemaps.
 	 */
@@ -155,6 +155,7 @@ public class FlxTilemap extends FlxObject
 		_tiles = null;	
 		_data = null;
 		_regions = null;
+		_framePixels = null;
 		super.destroy();
 	}
 
@@ -250,8 +251,8 @@ public class FlxTilemap extends FlxObject
 		
 		//Figure out the size of the tiles
 		_tiles = FlxG.addBitmap(TileGraphic);
-		framePixels = new Sprite(_tiles);
-		framePixels.setSize(TileWidth, TileHeight);		
+		_framePixels = new Sprite(_tiles);
+		_framePixels.setSize(TileWidth, TileHeight);		
 		_tileWidth = TileWidth;
 		if(_tileWidth == 0)
 			_tileWidth = (int) _tiles.getRegionHeight();
@@ -451,11 +452,11 @@ public class FlxTilemap extends FlxObject
 				{					
 					if(_tiles.rotate)
 					{
-						framePixels.setRegion(_textureRegion);
-						framePixels.rotate90(false);
-						framePixels.setPosition(_flashPoint.x + _point.x, _flashPoint.y + _point.y);
-						framePixels.draw(FlxG.batch);
-						framePixels.rotate90(true);						
+						_framePixels.setRegion(_textureRegion);
+						_framePixels.rotate90(false);
+						_framePixels.setPosition(_flashPoint.x + _point.x, _flashPoint.y + _point.y);
+						_framePixels.draw(FlxG.batch);
+						_framePixels.rotate90(true);						
 					}
 					else
 						FlxG.batch.draw(_textureRegion, _flashPoint.x + _point.x, _flashPoint.y + _point.y);

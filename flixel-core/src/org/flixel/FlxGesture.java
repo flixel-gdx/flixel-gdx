@@ -79,6 +79,11 @@ public class FlxGesture
 		GestureManager manager = getManager();
 		if(manager != null)
 			manager.add(this);
+		else
+		{
+			FlxG.log("WARNING: Did you forgot to plug-in GestureManager?");
+			return null;
+		}
 
 		_callback = Callback;
 		return this;

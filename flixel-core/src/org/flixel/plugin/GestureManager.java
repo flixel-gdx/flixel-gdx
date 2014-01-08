@@ -1,8 +1,11 @@
 package org.flixel.plugin;
 
 import org.flixel.FlxBasic;
+import org.flixel.FlxG;
 import org.flixel.FlxGesture;
+import org.flixel.system.gdx.GdxStage;
 
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -33,6 +36,7 @@ public class GestureManager extends FlxBasic implements GestureListener
 		_gestures = new Array<FlxGesture>();
 		visible = false;
 		data = new GestureData();
+		((GdxStage)FlxG.getStage()).getInput().addProcessor(new GestureDetector(this));
 	}
 
 	@Override
@@ -80,7 +84,7 @@ public class GestureManager extends FlxBasic implements GestureListener
 		}
 		_gestures.clear();
 	}
-
+	
 	/**
 	 * Update gestures by gesture type, e.g. <code>FlxGesture.PAN, FlxGesture.DIRECTION_DOWN, etc.</code>.
 	 * @param Gesture	The gesture type that needs to be updated.
@@ -111,7 +115,7 @@ public class GestureManager extends FlxBasic implements GestureListener
 
 	@Override
 	public boolean tap(float x, float y, int count, int button)
-	{		
+	{
 		if(afterLongPress)
 			afterLongPress = false;
 		else
