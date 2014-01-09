@@ -276,9 +276,9 @@ version ${spec.version}
 		<mkdir dir="${licences}" />
 		<mkdir dir="${compress}" />
 		
-		<copy file="CC-LICENSE" todir="${licences}"/>
-		<copy file="LICENSE" 	todir="${licences}"/>
-		<copy file="README.md" 	todir="${licences}"/>
+		<copy file="CC-LICENSE.md" todir="${licences}"/>
+		<copy file="LICENSE.md" todir="${licences}"/>
+		<copy file="README.md" todir="${licences}"/>
 		
 		<!-- Compress javadoc in a zip file -->		
 		<!-- <zip destfile="${dist.dir}/flixel-gdx-javadoc.zip" >
