@@ -4,378 +4,385 @@ filter: Nearest,Nearest
 repeat: none
 button_x
   rotate: false
-  xy: 129, 167
+  xy: 134, 175
   size: 111, 37
   orig: 111, 37
   offset: 0, 0
   index: -1
 label_topleft
   rotate: false
-  xy: 250, 154
+  xy: 171, 165
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
   index: -1
 radiobutton
   rotate: false
-  xy: 2, 2
+  xy: 3, 3
   size: 160, 64
   orig: 160, 64
   offset: 0, 0
   index: -1
 default
   rotate: false
-  xy: 224, 279
+  xy: 112, 286
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 button_a
   rotate: false
-  xy: 2, 232
+  xy: 3, 245
   size: 111, 37
   orig: 111, 37
   offset: 0, 0
   index: -1
 ninepatch_textfield_middleleft
   rotate: false
-  xy: 115, 188
+  xy: 118, 199
   size: 12, 32
   orig: 12, 32
   offset: 0, 0
   index: -1
 label_middleright
   rotate: false
-  xy: 242, 200
+  xy: 221, 170
   size: 4, 1
   orig: 4, 1
   offset: 0, 0
   index: -1
 ninepatch_button_topright
   rotate: false
-  xy: 191, 369
+  xy: 203, 329
   size: 40, 8
   orig: 40, 8
   offset: 0, 0
   index: -1
 ninepatch_textfield_middlecenter
   rotate: false
-  xy: 242, 203
+  xy: 249, 239
   size: 3, 32
   orig: 3, 32
   offset: 0, 0
   index: -1
 autotiles
   rotate: false
-  xy: 2, 144
+  xy: 3, 151
   size: 128, 8
   orig: 128, 8
   offset: 0, 0
   index: -1
 ninepatch_textfield_middleright
   rotate: false
-  xy: 115, 154
+  xy: 118, 163
   size: 12, 32
   orig: 12, 32
   offset: 0, 0
   index: -1
 button_down
   rotate: false
-  xy: 164, 2
+  xy: 112, 329
   size: 87, 39
   orig: 87, 39
   offset: 0, 0
   index: -1
 ninepatch_button_middleleft
   rotate: false
-  xy: 44, 349
+  xy: 205, 165
   size: 40, 1
   orig: 40, 1
   offset: 0, 0
   index: -1
 ninepatch_textarea_topleft
   rotate: false
-  xy: 242, 172
+  xy: 118, 247
   size: 12, 2
   orig: 12, 2
   offset: 0, 0
   index: -1
 tab_divider
   rotate: false
-  xy: 250, 81
+  xy: 252, 299
   size: 1, 48
   orig: 1, 48
   offset: 0, 0
   index: -1
 switch
   rotate: false
-  xy: 115, 245
+  xy: 134, 257
   size: 107, 68
   orig: 107, 68
   offset: 0, 0
   index: -1
 ninepatch_textarea_middleright
   rotate: false
-  xy: 242, 184
+  xy: 207, 160
   size: 12, 1
   orig: 12, 1
   offset: 0, 0
   index: -1
 button
   rotate: false
-  xy: 109, 315
+  xy: 167, 91
   size: 80, 60
   orig: 80, 60
   offset: 0, 0
   index: -1
 base
   rotate: false
-  xy: 164, 81
+  xy: 167, 3
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 label_topcenter
   rotate: false
-  xy: 250, 131
+  xy: 195, 165
   size: 1, 4
   orig: 1, 4
   offset: 0, 0
   index: -1
 label_middlecenter
   rotate: false
-  xy: 129, 154
+  xy: 237, 170
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 button_c
   rotate: false
-  xy: 2, 193
+  xy: 3, 204
   size: 111, 37
   orig: 111, 37
   offset: 0, 0
   index: -1
 ninepatch_button_bottomleft
   rotate: false
-  xy: 2, 346
+  xy: 203, 365
   size: 40, 8
   orig: 40, 8
   offset: 0, 0
   index: -1
 ninepatch_button_topleft
   rotate: false
-  xy: 2, 336
+  xy: 203, 341
   size: 40, 8
   orig: 40, 8
   offset: 0, 0
   index: -1
 ninepatch_textarea_bottomright
   rotate: false
-  xy: 242, 176
+  xy: 118, 253
   size: 12, 2
   orig: 12, 2
   offset: 0, 0
   index: -1
+logo
+  rotate: false
+  xy: 237, 155
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
 label_middleleft
   rotate: false
-  xy: 248, 200
+  xy: 229, 170
   size: 4, 1
   orig: 4, 1
   offset: 0, 0
   index: -1
 tab
   rotate: false
-  xy: 253, 2
+  xy: 251, 91
   size: 1, 144
   orig: 1, 144
   offset: 0, 0
   index: -1
 button_y
   rotate: false
-  xy: 2, 154
+  xy: 3, 163
   size: 111, 37
   orig: 111, 37
   offset: 0, 0
   index: -1
 label_topright
   rotate: false
-  xy: 250, 148
+  xy: 163, 165
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
   index: -1
 ninepatch_textarea_middleleft
   rotate: false
-  xy: 242, 187
+  xy: 205, 170
   size: 12, 1
   orig: 12, 1
   offset: 0, 0
   index: -1
 ninepatch_textfield_topright
   rotate: false
-  xy: 129, 163
+  xy: 118, 235
   size: 12, 2
   orig: 12, 2
   offset: 0, 0
   index: -1
 ninepatch_button_middleright
   rotate: false
-  xy: 44, 346
+  xy: 163, 160
   size: 40, 1
   orig: 40, 1
   offset: 0, 0
   index: -1
 cursor
   rotate: false
-  xy: 224, 245
+  xy: 135, 139
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 ninepatch_textarea_topcenter
   rotate: false
-  xy: 242, 167
+  xy: 245, 299
   size: 3, 2
   orig: 3, 2
   offset: 0, 0
   index: -1
 label_bottomcenter
   rotate: false
-  xy: 250, 137
+  xy: 200, 165
   size: 1, 4
   orig: 1, 4
   offset: 0, 0
   index: -1
 tab_divider_vertical
   rotate: false
-  xy: 2, 333
+  xy: 163, 155
   size: 70, 1
   orig: 70, 1
   offset: 0, 0
   index: -1
 ninepatch_button_topcenter
   rotate: false
-  xy: 242, 190
+  xy: 245, 275
   size: 5, 8
   orig: 5, 8
   offset: 0, 0
   index: -1
 ninepatch_textarea_topright
   rotate: false
-  xy: 143, 163
+  xy: 118, 241
   size: 12, 2
   orig: 12, 2
   offset: 0, 0
   index: -1
 dpad_center
   rotate: false
-  xy: 132, 134
+  xy: 150, 372
   size: 29, 27
   orig: 29, 27
   offset: 0, 0
   index: -1
 ninepatch_button_bottomcenter
   rotate: false
-  xy: 249, 190
+  xy: 245, 287
   size: 5, 8
   orig: 5, 8
   offset: 0, 0
   index: -1
 button_left
   rotate: false
-  xy: 2, 302
+  xy: 3, 319
   size: 105, 29
   orig: 105, 29
   offset: 0, 0
   index: -1
 button_right
   rotate: false
-  xy: 2, 271
+  xy: 3, 286
   size: 105, 29
   orig: 105, 29
   offset: 0, 0
   index: -1
 ninepatch_button_bottomright
   rotate: false
-  xy: 44, 336
+  xy: 203, 353
   size: 40, 8
   orig: 40, 8
   offset: 0, 0
   index: -1
 ninepatch_textarea_middlecenter
   rotate: false
-  xy: 250, 143
+  xy: 232, 160
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 stick
   rotate: false
-  xy: 191, 315
+  xy: 94, 372
   size: 52, 52
   orig: 52, 52
   offset: 0, 0
   index: -1
 label_bottomleft
   rotate: false
-  xy: 250, 166
+  xy: 187, 165
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
   index: -1
 label_bottomright
   rotate: false
-  xy: 250, 160
+  xy: 179, 165
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
   index: -1
 button_b
   rotate: false
-  xy: 129, 206
+  xy: 134, 216
   size: 111, 37
   orig: 111, 37
   offset: 0, 0
   index: -1
 button_up
   rotate: false
-  xy: 164, 43
+  xy: 3, 352
   size: 87, 36
   orig: 87, 36
   offset: 0, 0
   index: -1
 ninepatch_button_middlecenter
   rotate: false
-  xy: 157, 163
+  xy: 223, 160
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 checkbox
   rotate: false
-  xy: 2, 68
+  xy: 3, 71
   size: 160, 64
   orig: 160, 64
   offset: 0, 0
   index: -1
 ninepatch_textarea_bottomleft
   rotate: false
-  xy: 242, 180
+  xy: 118, 259
   size: 12, 2
   orig: 12, 2
   offset: 0, 0
   index: -1
 ninepatch_textarea_bottomcenter
   rotate: false
-  xy: 247, 203
+  xy: 245, 305
   size: 3, 2
   orig: 3, 2
   offset: 0, 0
   index: -1
 autotiles_alt
   rotate: false
-  xy: 2, 134
+  xy: 3, 139
   size: 128, 8
   orig: 128, 8
   offset: 0, 0

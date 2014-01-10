@@ -223,8 +223,14 @@ public abstract class FlxUIComponent extends FlxSprite
 		this(X, Y, Skin, null, 0, 0);
 	}
 	
+	/**
+	 * Cache the width and height of a single patch. Just for performance sake.
+	 * @param patch		A single nine patch.
+	 */
 	private void setPatchDimension(FlxNinePatch patch)
 	{
+		if(patch == null)
+			return;
 		if(_patchWidth == 0) _patchWidth = patch.width;
 		if(_patchHeight == 0) _patchHeight = patch.height;
 	}

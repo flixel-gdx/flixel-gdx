@@ -175,8 +175,9 @@ public class FlxUISkin
 	 * @param Img			The image of the ninepatch.
 	 * @param Width			The width of the image.
 	 * @param Height		The height of the image.
+	 * @param Repeat		Repeats the pattern of a ninepatch. Default is false.
 	 */
-	public void setNinePatch(int Position, String Img, int Width, int Height)
+	public void setNinePatch(int Position, String Img, int Width, int Height, boolean Repeat)
 	{
 		if(patches == null)
 		{
@@ -184,9 +185,19 @@ public class FlxUISkin
 			for(int i = 0; i < 9; i++)
 				patches.add(null);
 		}
-		patches.set(Position, new FlxNinePatch(Position, Img, Width, Height));
-		if(Position == FlxNinePatch.MIDDLE_CENTER)
-			setImage(Img, Width, Height);
+		patches.set(Position, new FlxNinePatch(Position, Img, Width, Height, Repeat));
+	}
+	
+	/**
+	 * Set a ninepatch.
+	 * @param Position		The position of the ninepatch (e.g. NinePatch.TOP_LEFT).
+	 * @param Img			The image of the ninepatch.
+	 * @param Width			The width of the image.
+	 * @param Height		The height of the image.
+	 */
+	public void setNinePatch(int Position, String Img, int Width, int Height)
+	{
+		setNinePatch(Position, Img, Width, Height, false);
 	}
 	
 	/**

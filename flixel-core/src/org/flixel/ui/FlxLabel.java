@@ -14,9 +14,7 @@ public class FlxLabel extends FlxUIComponent
 	private final String ImgLabelTopCenter = "org/flixel/data/pack:label_topcenter";
 	private final String ImgLabelTopRight = "org/flixel/data/pack:label_topright";
 	private final String ImgLabelMiddleLeft = "org/flixel/data/pack:label_middleleft";
-//	private final String ImgLabelMiddleCenter = "org/flixel/data/pack:label_middlecenter";
-	// TODO: use this until there is fix for 1 x 1 px for texture region.
-	private final String ImgLabelMiddleCenter = "org/flixel/data/holo_dark/label_middlecenter.png";
+	private final String ImgLabelMiddleCenter = "org/flixel/data/pack:label_middlecenter";
 	private final String ImgLabelMiddleRight = "org/flixel/data/pack:label_middleright";
 	private final String ImgLabelBottomLeft = "org/flixel/data/pack:label_bottomleft";
 	private final String ImgLabelBottomCenter = "org/flixel/data/pack:label_bottomcenter";
