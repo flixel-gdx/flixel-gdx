@@ -185,7 +185,8 @@ public class Mouse extends FlxPoint
 		_cursor.scale.x = Scale;
 		_cursor.scale.y = Scale;
 		_cursor.ignoreDrawDebug = true;
-		_cursor.cameras = new Array<FlxCamera>(new FlxCamera[]{new FlxCamera(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight())});
+		_cursor.cameras = new Array<FlxCamera>();
+		_cursor.cameras.addAll(new FlxCamera[]{new FlxCamera(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight())});
 		
 		_cursorContainer.add(_cursor);
 	}
