@@ -5,4 +5,14 @@
 	<inherits name="com.badlogic.gdx.backends.gdx_backends_gwt"/>
 	<super-source path="emu"/>
 	<source path="client"/>
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxState" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxBasic" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxGroup" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxObject" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxParticle" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxPoint" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxSound" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxSprite" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxText" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxCamera" />
 </module>

@@ -131,6 +131,14 @@ public class FlxSound extends FlxBasic
 	 * Internal helper for fading in sounds.
 	 */
 	protected float _fadeInTotal;
+	/**
+	 * Internal, calculates the distance-based volume control for this first point.
+	 */
+	private FlxPoint _distance1;
+	/**
+	 * Internal, calculates the distance-based volume control for the second point.
+	 */
+	private FlxPoint _distance2;
 	
 	/**
 	 * Internal event listener.
@@ -180,6 +188,8 @@ public class FlxSound extends FlxBasic
 		amplitudeRight = 0;
 		autoDestroy = false;
 		survive = false;
+		_distance1 = new FlxPoint();
+		_distance2 = new FlxPoint();
 	}
 		
 	/**
@@ -195,7 +205,8 @@ public class FlxSound extends FlxBasic
 		_target = null;
 		name = null;
 		artist = null;
-		
+		_distance1 = null;
+		_distance2 = null;
 		super.destroy();
 	}
 		
@@ -211,7 +222,7 @@ public class FlxSound extends FlxBasic
 		//Distance-based volume control
 		if(_target != null)
 		{
-			radial = 1 - FlxU.getDistance(new FlxPoint(_target.x,_target.y),new FlxPoint(x,y))/_radius;
+			radial = 1 - FlxU.getDistance(_distance1.make(_target.x,_target.y),_distance2.make(x,y))/_radius;
 			if(radial < 0) radial = 0;
 			if(radial > 1) radial = 1;
 			
@@ -441,7 +452,7 @@ public class FlxSound extends FlxBasic
 	 * Call this function to play the sound - also works on paused sounds.
 	 * 
 	 * @param	ForceRestart	Whether to start the sound over or not.  Default value is false, meaning if the sound is already playing or was paused when you call <code>play()</code>, it will continue playing from its current position, NOT start again from the beginning.
-	 */
+	 *///TODO: re-check whether sound can be played again using FlxSound object and play(false);
 	public void play(boolean ForceRestart)
 	{	
 		if(_position < 0)
