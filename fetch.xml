@@ -89,6 +89,8 @@
 			<patternset>
 				<include name="gdx-backend-gwt.jar"/>
 				<include name="sources/gdx-backend-gwt-sources.jar"/>
+				<include name="extensions/gdx-controllers/gdx-controllers-gwt.jar"/>
+				<include name="extensions/gdx-controllers/sources/gdx-controllers-gwt-sources.jar"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>

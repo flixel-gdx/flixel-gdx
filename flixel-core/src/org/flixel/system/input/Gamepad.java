@@ -5,6 +5,7 @@ import org.flixel.FlxPoint;
 
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.ObjectIntMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 /**
@@ -90,12 +91,16 @@ public class Gamepad extends Input
 	 * The ID of the gamepad which is equal to the ID of the <code>Controller</code>.
 	 */
 	public String ID;
+	
+	final int _total = 34;
 		
 	/**
 	 * Creates a new <code>Gamepad</code> object.
 	 */
 	public Gamepad()
 	{		
+		_lookup = new ObjectIntMap<String>(_total);
+		_map = new IntMap<Input.KeyState>(_total);
 		_point = new FlxPoint();
 		axisData = new IntMap<Float>(4);
 	}
@@ -109,7 +114,7 @@ public class Gamepad extends Input
 		axisData.clear();
 		axisData = null;
 	}
-
+	
 	/**
 	 * Event handler so GamepadManager can toggle keys.
 	 * @param buttonCode	The button code of the pressed key.

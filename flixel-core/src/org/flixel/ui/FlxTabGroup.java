@@ -292,15 +292,23 @@ public class FlxTabGroup extends FlxUIGroup
 		}
 		
 		FlxTab object;
+		FlxGroup group;
 		for(int i = 0; i < _tabs.members.size; i++)
 		{
 			object = (FlxTab) _tabs.members.get(i);
 			object.setActive(false);
-			((FlxGroup)_content.members.get(i)).setAll("visible", false);
+			
+			group = (FlxGroup) _content.members.get(i);
+			for(int ii = 0; ii < group.length; ii++)
+				group.members.get(ii).visible = false;
 		}
 		tab.setActive(true);
 		_current = _tabs.members.indexOf(tab, true);
-		((FlxGroup)_content.members.get(_current)).setAll("visible", true);
+		
+		group = (FlxGroup) _content.members.get(_current);		
+		for(int i = 0; i < group.length; i++)
+			group.members.get(i).visible = true;
+		
 		if(onChange != null)
 			onChange.callback();
 	}

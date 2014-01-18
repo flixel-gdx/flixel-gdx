@@ -5,6 +5,8 @@ import org.flixel.FlxG;
 import org.flixel.system.input.Gamepad;
 import org.flixel.system.input.GamepadMapping;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -48,12 +50,15 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 		SharedLibraryLoader loader = new SharedLibraryLoader();
 		if(FlxG.mobile)
 		{	/*loader.load("gdx-controllers-android");*/}
+		else if(Gdx.app.getType() == ApplicationType.WebGL)
+		{	/*loader.load("gdx-controllers-gwt");*/}
 		else
 			loader.load("gdx-controllers-desktop");
 	
 		listener = this;
 		controllers = new ObjectMap<Controller, Gamepad>();
 		mappings = new Array<GamepadMapping>();
+		addMapping(new GamepadMapping("generic"));
 		pads = new Array<Gamepad>();
 	}
 	
@@ -118,7 +123,10 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 		
 		// Check if there is enough controllers available to hook a gamepad to it.
 		if(pads.size > Controllers.getControllers().size)
+		{
 			FlxG.log("Gamepad > Available controllers: " + Controllers.getControllers().size);
+			gamepad.setMapping(mappings.get(0));
+		}
 		else
 		{
 			Controller c = Controllers.getControllers().get(pads.size-1);
@@ -156,7 +164,11 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 				}
 			}
 			if(!mappingFound)
-				FlxG.log("No mapping found for controller: " + c.getName());
+			{
+				FlxG.log("No mapping found for controller: " + c.getName() +
+						 "\nUse default mapping.");
+				gamepad.setMapping(mappings.get(0));
+			}
 		}
 	}
 	

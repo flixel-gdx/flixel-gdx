@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
 <module>
-	<inherits name="org.flixel.flixel_core"/>
-	<inherits name="com.badlogic.gdx.backends.gdx_backends_gwt"/>	
-	<super-source path="emu"/>
-	<source path="client"/>
+	<inherits name="org.flixel.flixel_core" />
+	<inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
+	<inherits name="com.badlogic.gdx.controllers.controllers-gwt" />
+	<inherits name="aurelienribon.tweenengine" />
+	<super-source path="emu" />
+	<source path="client" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/client/logo.png" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxBasic" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxCamera" />
@@ -20,5 +22,6 @@
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxState" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxText" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxU" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.system.input.Gamepad" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.system.input.Keyboard" />
 </module>
