@@ -4,10 +4,54 @@
 <module>
 	<source path="" />
 	<inherits name="com.badlogic.gdx" />
+	<inherits name="com.badlogic.gdx.controllers" />
 	<inherits name="flash.flash" />
-	<inherits name="aurelienribon.tweenengine" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/font/nokiafc22.fnt" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/font/nokiafc22.png" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/pack" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/pack.png" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/splashscreen" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/splashscreen.png" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/vertex.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/add.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/average.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/behind.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/clear.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/cmy_c.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/cmy_m.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/cmy_y.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/color_burn.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/color_dodge.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/color.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/darken.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/difference.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/dissolve.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/exclusion.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/glow.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/hard_light.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/hard_mix.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/hue.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/inverse_color_burn.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/inverse_color_dodge.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/inverse_difference.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/lighten.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/linear_burn.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/linear_light.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/luminosity.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/multiply.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/negation.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/normal.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/opacity.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/overlay.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/phoenix.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/pin_light.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/reflect.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/rgb_b.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/rgb_g.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/rgb_r.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/saturation.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/screen.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/soft_light.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/substract.glsl" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/vivid_light.glsl" />
 </module>

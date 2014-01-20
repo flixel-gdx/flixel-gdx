@@ -5,8 +5,6 @@ import org.flixel.FlxG;
 import org.flixel.system.input.Gamepad;
 import org.flixel.system.input.GamepadMapping;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -14,7 +12,6 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 /**
  * Manages the controllers and listen to input events.
@@ -47,13 +44,13 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	public GamepadManager()
 	{
 		// TODO: error gdx-controllers-android can't be found.
-		SharedLibraryLoader loader = new SharedLibraryLoader();
-		if(FlxG.mobile)
-		{	/*loader.load("gdx-controllers-android");*/}
-		else if(Gdx.app.getType() == ApplicationType.WebGL)
-		{	/*loader.load("gdx-controllers-gwt");*/}
-		else
-			loader.load("gdx-controllers-desktop");
+		//SharedLibraryLoader loader = new SharedLibraryLoader();
+		//if(FlxG.mobile)
+		//{	/*loader.load("gdx-controllers-android");*/}
+		//else if(Gdx.app.getType() == ApplicationType.WebGL)
+		//{	/*loader.load("gdx-controllers-gwt");*/}
+		//else
+		//	loader.load("gdx-controllers-desktop");
 	
 		listener = this;
 		controllers = new ObjectMap<Controller, Gamepad>();
