@@ -22,6 +22,8 @@
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxState" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxText" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxU" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.plugin.TimerManager" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.plugin.DebugPathDisplay" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.system.input.Gamepad" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.system.input.Keyboard" />
 </module>
