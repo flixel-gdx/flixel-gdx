@@ -171,7 +171,7 @@ public class FlxGame
 	/**
 	 * Temporary text buffer for the fps.
 	 */
-	private StringBuffer _stringBuffer;
+	private StringBuilder _stringBuffer;
 	/**
 	 * Temporary camera to display the fps.
 	 */
@@ -874,7 +874,7 @@ public class FlxGame
 		_font.setScale(2);
 		_fontCamera = new OrthographicCamera();
 		_fontCamera.setToOrtho(true);
-		_stringBuffer = new StringBuffer();
+		_stringBuffer = new StringBuilder();
 	}
 	
 	/**

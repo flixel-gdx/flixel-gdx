@@ -1246,7 +1246,7 @@ public class FlxSprite extends FlxObject
 	{
 		if(Frame >= getNumFrames())
 		{
-			FlxG.log("WARNING: The frame number of a FlxSprite must be less than its `numFrames` value.");
+			FlxG.log("WARNING: The frame number of a " + this + " be less than its `numFrames` value.");
 			Frame = getNumFrames() - 1;
 		}
 		_curAnim = null;
@@ -1268,7 +1268,7 @@ public class FlxSprite extends FlxObject
 		if(_curIndex >= getNumFrames())
 		{
 			_curIndex = getNumFrames();
-			FlxG.log("WARNING: A FlxSprite animation is trying to set the frame number of its FlxSprite out of bounds.");
+			FlxG.log("WARNING: A " + this + " animation is trying to set the frame number of its FlxSprite out of bounds.");
 			return false;
 		}
 		return true;
@@ -1303,14 +1303,14 @@ public class FlxSprite extends FlxObject
 	{
 		if(NumFrames < 1)
 		{
-			FlxG.log("ERROR: Cannot set the number of frames on a FlxSprite to less than 1.");
+			FlxG.log("ERROR: Cannot set the number of frames on a " + this + " to less than 1.");
 			_numFrames = 1;
 			return;
 		}
 
 		if(NumFrames > _maxFrames)
 		{
-			FlxG.log("ERROR: Cannot set the number of frames on a FlxSprite to higher than its `maxFrames` value (" + _maxFrames + ").");
+			FlxG.log("ERROR: Cannot set the number of frames on a " + this + " higher than its `maxFrames` value (" + _maxFrames + ").");
 			_numFrames = _maxFrames;
 			return;
 		}
