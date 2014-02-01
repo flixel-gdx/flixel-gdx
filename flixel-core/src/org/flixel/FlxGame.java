@@ -7,6 +7,7 @@ import org.flixel.system.FlxReplay;
 import org.flixel.system.FlxSplashScreen;
 import org.flixel.system.gdx.GdxStage;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -822,6 +823,9 @@ public class FlxGame
 			return;
 		stage.removeEventListener(Event.ADDED_TO_STAGE, addedToStageListener);		
 		_total = System.currentTimeMillis();
+		
+		// Enable logging
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		
 		//TODO: Move this back up to constructor
 		if(!useSystemCursor)
