@@ -9,21 +9,12 @@
 	<source path="client" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/client/logo.png" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxBasic" />
-	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxCamera" />
-	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxEmitter" />
-	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxG" />
-	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxGame" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxGroup" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxObject" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxParticle" />
-	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxPoint" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxSound" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxSprite" />
-	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxState" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxText" />
-	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxU" />
-	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.plugin.TimerManager" />
-	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.plugin.DebugPathDisplay" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.system.input.Gamepad" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.system.input.Keyboard" />
 </module>

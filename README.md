@@ -35,7 +35,6 @@ flixel-gdx is an open source 2D game engine written in Java. Flixel-gdx is a por
         <td></td>
     </tr>
 </table>
-_Note: HTML5 is experimental_
 
 ###Forums
 flixel-gdx doesn't have its own message board, but you can use the forums of flixel and libgdx. Both have an active community. If you have any questions or feedback that are related to flixel please put it in the flixel community. They are more likely to help you out more quickly than at the libgdx. Questions about Android, OpenGL ES, rendering, etc. goes to libgdx.
