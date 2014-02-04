@@ -12,6 +12,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxGroup" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxObject" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxParticle" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxPoint" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxSound" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxSprite" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxText" />

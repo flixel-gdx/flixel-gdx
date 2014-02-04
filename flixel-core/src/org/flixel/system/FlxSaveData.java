@@ -29,7 +29,7 @@ public class FlxSaveData
 	public FlxSaveData(Preferences SharedObject)
 	{
 		_sharedObject = SharedObject;
-		_json = new Json(JsonWriter.OutputType.minimal);
+		_json = new Json(JsonWriter.OutputType.json);
 	}
 	
 	/**
