@@ -7,6 +7,7 @@ classes/
 war/
 .gwt/
 
+*.a
 *.jar
 *.so
 *.zip

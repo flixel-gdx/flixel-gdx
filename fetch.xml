@@ -94,6 +94,23 @@
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
+		
+		<!-- robovm project -->
+		<mkdir dir="flixel-robovm/libs"/>
+		<delete>
+			<fileset dir="flixel-robovm/libs"/>
+		</delete>
+		<unzip src="libgdx-nightly.zip" dest="flixel-robovm/libs">
+			<patternset>
+				<include name="gdx-backend-robovm.jar"/>
+				<include name="sources/gdx-backend-robovm-sources.jar"/>				
+				<include name="ios/libgdx.a"/>
+				<include name="ios/libObjectAL.a"/>
+				<include name="extensions/gdx-freetype/ios/libgdx-freetype.a"/>
+			</patternset>
+			<mapper type="flatten"/>
+		</unzip>
+		
 	</target>
 	
 	<target name="all" depends="fetch,extract"/>
