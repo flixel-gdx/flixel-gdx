@@ -601,8 +601,7 @@ public class FlxGame
 			_state = null;			
 		}
 		if(showSplashScreen && !FlxSplashScreen.splashScreenShown)
-		{
-			FlxSplashScreen.splashScreenShown = true;
+		{			
 			_state = new FlxSplashScreen(_requestedState);
 			_requestedState = _state;
 			_state.create();

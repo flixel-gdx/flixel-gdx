@@ -45,6 +45,7 @@ public class FlxSplashScreen extends FlxState
 	@Override
 	public void create()
 	{
+		splashScreenShown = true;
 		tempZoom = FlxG.camera.getZoom();
 		
 		FlxG.camera.setZoom(1f);		

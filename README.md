@@ -25,7 +25,7 @@ flixel-gdx is an open source 2D game engine written in Java. Flixel-gdx is a por
     <tr>
     	<th>Mobile</th>
         <td>Android</td>
-        <td></td>
+        <td>iOS (beta)</td>
         <td></td>
     </tr>
     <tr>
@@ -44,4 +44,4 @@ flixel-gdx doesn't have its own message board, but you can use the forums of fli
 ###License
 flixel-gdx is distributed under the New BSD License, meaning you can use it free of charge, without strings attached in commercial and non-commercial projects. We love to get (non-mandatory) credit in case you release a game or app using flixel-gdx!
 
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/1dce88fef0d15f6880dafe10239c704a "githalytics.com")](http://githalytics.com/flixel-gdx/flixel-gdx)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/flixel-gdx/flixel-gdx/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
