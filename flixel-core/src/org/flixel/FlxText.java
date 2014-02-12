@@ -228,7 +228,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat(String Font, float Size, int Color)
 	{
-		return setFormat(Font, Size, Color, "left", 0, 1f, 1f);
+		return setFormat(Font, Size, Color, getAlignment(), 0, 1f, 1f);
 	}
 	
 	/**
@@ -242,7 +242,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat(String Font, float Size)
 	{
-		return setFormat(Font, Size, 0xFFFFFFFF, "left", 0, 1f, 1f);
+		return setFormat(Font, Size, 0xFFFFFFFF, getAlignment(), 0, 1f, 1f);
 	}
 	
 	/**
@@ -255,7 +255,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat(String Font)
 	{
-		return setFormat(Font, 8, 0xFFFFFFFF, "left", 0, 1f, 1f);
+		return setFormat(Font, 8, 0xFFFFFFFF, getAlignment(), 0, 1f, 1f);
 	}
 	
 	/**
@@ -266,7 +266,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat()
 	{
-		return setFormat(null, 8, 0xFFFFFFFF, "left", 0, 1f, 1f);
+		return setFormat(null, 8, 0xFFFFFFFF, getAlignment(), 0, 1f, 1f);
 	}
 	
 	/**
@@ -464,7 +464,7 @@ public class FlxText extends FlxSprite
 		{
 			//tinting
 			int tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
-			_textField.setColors(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, ((_shadow >> 24) & 0xFF) * _alpha * 0.00392f);
+			_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, ((_shadow >> 24) & 0xFF) * _alpha * 0.00392f);
 			_textField.translate(_shadowX, _shadowY);
 			_textField.draw(FlxG.batch);
 			_textField.translate(-_shadowX, -_shadowY);
@@ -472,7 +472,7 @@ public class FlxText extends FlxSprite
 		
 		//tinting
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
-		_textField.setColors(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
+		_textField.setColor(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 		
 		_textField.draw(FlxG.batch);
 						
