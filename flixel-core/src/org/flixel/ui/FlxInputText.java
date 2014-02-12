@@ -113,11 +113,11 @@ public class FlxInputText extends FlxUITouchable
 	/**
 	 * Buffer text.
 	 */
-	protected StringBuffer textBuffer;
+	protected StringBuilder textBuffer;
 	/**
 	 * Buffer password.
 	 */
-	private StringBuffer _passwordBuffer;
+	private StringBuilder _passwordBuffer;
 	/**
 	 * Tracks whether the text got changed or not.
 	 */
@@ -138,9 +138,9 @@ public class FlxInputText extends FlxUITouchable
 		textfield = new FlxTextExt(X, Y-6, Width, Height, null, true);		
 		textfield.offset.y = (skin == null) ? -12 : 0;
 		textfield.setFormat(null, 16);
-		textBuffer = new StringBuffer();
-		_passwordBuffer = new StringBuffer();
-		//FlxG.getStage().addEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
+		textBuffer = new StringBuilder();
+		_passwordBuffer = new StringBuilder();
+		FlxG.getStage().addEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
 	}
 	
 	/**
@@ -206,7 +206,6 @@ public class FlxInputText extends FlxUITouchable
 		this(0, 0, null, null, 0, 0);
 	}
 	
-
 	@Override
 	public void setDefaultSkin()
 	{
@@ -297,7 +296,7 @@ public class FlxInputText extends FlxUITouchable
 				{
 					if(textBuffer.length() > 0)
 					{
-						textBuffer.delete(textBuffer.length()-1, textBuffer.length());
+						textBuffer.delete(textBuffer.length()-1, textBuffer.length());						
 						if(_passwordMode)
 							_passwordBuffer.delete(_passwordBuffer.length()-1, _passwordBuffer.length());
 						_isChanged = true;
@@ -343,7 +342,8 @@ public class FlxInputText extends FlxUITouchable
 	public void destroy()
 	{
 		super.destroy();
-		//FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
+		FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
+		handleKeyDown = null;
 		textfield.destroy();
 		textfield = null;
 		callback = null;

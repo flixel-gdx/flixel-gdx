@@ -4,8 +4,8 @@ import org.flixel.system.gdx.utils.KeyboardEventPool;
 import org.flixel.system.gdx.utils.MouseEventPool;
 import org.flixel.system.gdx.utils.TouchEventPool;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntIntMap;
@@ -33,6 +33,10 @@ public class GdxInput extends InputMultiplexer implements InputProcessor
 	private KeyboardEventPool _keyboardEvents;
 	private MouseEventPool _mouseEvents;
 	private TouchEventPool _touchEvents;
+	/**
+	 * Cache the keycode and pass this in the <code>KEY_TYPED</code> event.
+	 */
+	private int _keyCode;
 	
 	public GdxInput(IEventDispatcher eventDispatcher)
 	{
@@ -147,20 +151,20 @@ public class GdxInput extends InputMultiplexer implements InputProcessor
 	@Override
 	public boolean keyDown(int keycode)
 	{
-		return _eventDispatcher.dispatchEvent(_keyboardEvents.obtain(KeyboardEvent.KEY_DOWN, _map.get(keycode, -1), 0));
+		_keyCode = keycode;
+		return _eventDispatcher.dispatchEvent(_keyboardEvents.obtain(KeyboardEvent.KEY_DOWN, _map.get(keycode, -1)));
 	}
 
 	@Override
 	public boolean keyUp(int keycode)
 	{
-		return _eventDispatcher.dispatchEvent(_keyboardEvents.obtain(KeyboardEvent.KEY_UP, _map.get(keycode, -1), 0));
+		return _eventDispatcher.dispatchEvent(_keyboardEvents.obtain(KeyboardEvent.KEY_UP, _map.get(keycode, -1)));
 	}
 
 	@Override
-	//TODO: Set charCodes in key up and key down events
 	public boolean keyTyped(char character)
 	{
-		return false;
+		return _eventDispatcher.dispatchEvent(_keyboardEvents.obtain(KeyboardEvent.KEY_TYPED, _keyCode, character));
 	}
 
 	@Override
