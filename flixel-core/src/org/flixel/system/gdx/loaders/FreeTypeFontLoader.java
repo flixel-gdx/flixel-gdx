@@ -9,6 +9,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -30,7 +31,11 @@ public class FreeTypeFontLoader extends AsynchronousAssetLoader<BitmapFont, Bitm
 	{
 		String[] split = fileName.split(":");
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(resolve(split[1]));
-		FreeTypeBitmapFontData data = generator.generateData(Integer.parseInt(split[0]), FreeTypeFontGenerator.DEFAULT_CHARS, parameter != null ? parameter.flip : true);
+		FreeTypeFontParameter param = new FreeTypeFontParameter();
+		param.size = Integer.parseInt(split[0]);
+		param.flip = (parameter != null) ? parameter.flip : true;
+		param.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+		FreeTypeBitmapFontData data = generator.generateData(param);
 		generator.dispose();
 		return new BitmapFont(data, data.getTextureRegions(), true);
 	}
