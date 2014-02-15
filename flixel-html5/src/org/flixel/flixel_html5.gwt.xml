@@ -16,6 +16,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxSound" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxSprite" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.FlxText" />
+	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.system.input.Input" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.system.input.Gamepad" />
 	<extend-configuration-property name="gdx.reflect.include" value="org.flixel.system.input.Keyboard" />
 </module>
