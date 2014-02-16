@@ -509,7 +509,7 @@ public class FlxGame
 		FlxG.resetInput();
 		_lostFocus /*= _focus.visible*/ = false;
 		//stage.frameRate = _flashFramerate;
-		FlxG.resumeSounds();
+		FlxG.resumeSounds(true);
 		FlxG.restoreShaders();
 	}
 	
@@ -523,7 +523,7 @@ public class FlxGame
 		flash.ui.Mouse.show();
 		_lostFocus = /*_focus.visible =*/ true;
 		//stage.frameRate = 10;
-		FlxG.pauseSounds();
+		FlxG.pauseSounds(true);
 	}
 	
 	/**

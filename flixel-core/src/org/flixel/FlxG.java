@@ -1048,12 +1048,17 @@ public class FlxG
 	}
 	
 	/**
-	 * Pause all sounds currently playing.
+	 * Internal, pause all sounds currently playing.
 	 */
-	public static void pauseSounds()
+	static void pauseSounds(boolean isFocusLost)
 	{
 		if((music != null) && music.exists && music.active)
+		{
+			if(isFocusLost)
+				music._isPausedOnFocusLost = true;
 			music.pause();
+		}
+		
 		int i = 0;
 		FlxSound sound;
 		int l = sounds.length;
@@ -1061,7 +1066,60 @@ public class FlxG
 		{			
 			sound = (FlxSound) sounds.members.get(i++);
 			if((sound != null) && sound.exists && sound.active)
+			{
+				if(isFocusLost)
+					sound._isPausedOnFocusLost = true;
 				sound.pause();
+			}
+		}
+	}
+	
+	/**
+	 * Pause all sounds currently playing.
+	 */
+	public static void pauseSounds()
+	{
+		pauseSounds(false);
+	}
+	
+	/**
+	 * Internal, resume playing existing sounds.
+	 */
+	static void resumeSounds(boolean isFocusLost)
+	{		
+		if((music != null) && music.exists && music._position == 1)
+		{
+			if(isFocusLost)
+			{
+				if(music._isPausedOnFocusLost)
+				{
+					music._isPausedOnFocusLost = false;
+					music.play();
+				}
+			}
+			else
+				music.play();
+		}
+		
+		int i = 0;
+		FlxSound sound;
+		int l = sounds.length;
+		while(i < l)
+		{
+			sound = (FlxSound) sounds.members.get(i++);
+			if((sound != null) && sound.exists && sound._position == 1)
+			{
+				if(isFocusLost)
+				{
+					if(sound._isPausedOnFocusLost)
+					{
+						sound._isPausedOnFocusLost = false;
+						sound.resume();
+					}
+				}
+				else
+					sound.resume();
+			}
 		}
 	}
 
@@ -1070,17 +1128,7 @@ public class FlxG
 	 */
 	public static void resumeSounds()
 	{
-		if((music != null) && music.exists)
-			music.play();
-		int i = 0;
-		FlxSound sound;
-		int l = sounds.length;
-		while(i < l)
-		{
-			sound = (FlxSound) sounds.members.get(i++);
-			if((sound != null) && sound.exists)
-				sound.resume();
-		}
+		resumeSounds(false);
 	}
 	
 	/**
