@@ -14,4 +14,9 @@ public class FlxDesktopApplication extends LwjglApplication
 	{
 		this(Game, Width, Height, false);
 	}
+	
+	public FlxDesktopApplicationC(FlxGame Game, String title, int Width, int Height, boolean UseGL2)
+	{
+	    	super((ApplicationListener)Game.stage, title, Width, Height, UseGL2);
+	}
 }
