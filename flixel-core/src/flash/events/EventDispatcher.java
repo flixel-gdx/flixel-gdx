@@ -1,5 +1,7 @@
 package flash.events;
 
+import com.badlogic.gdx.utils.Pool;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,12 +16,17 @@ public class EventDispatcher implements IEventDispatcher
 {
 	protected Map<String, List<IEventListener>> _listeners;
 	
-	private List<IEventListener> _listenersForTypeCopy;
+	private Pool<List<IEventListener>> _listenersForTypeCopyPool;
 	
 	public EventDispatcher()
 	{
 		_listeners = new HashMap<String, List<IEventListener>>();
-		_listenersForTypeCopy = new LinkedList<IEventListener>();
+		_listenersForTypeCopyPool = new Pool<List<IEventListener>>() {
+			@Override
+			protected List<IEventListener> newObject() {
+				return new LinkedList<IEventListener>();
+			}
+		};
 	}
 	
 	@Override
@@ -60,13 +67,17 @@ public class EventDispatcher implements IEventDispatcher
 		
 		if(listenersForType == null || listenersForType.size() <= 0)
 			return false;
-		
-		_listenersForTypeCopy.addAll(listenersForType);
-		
-		for(IEventListener listener : _listenersForTypeCopy)
+
+		final List<IEventListener> listenersForTypeCopy = _listenersForTypeCopyPool.obtain();
+
+		listenersForTypeCopy.addAll(listenersForType);
+
+		for(IEventListener listener: listenersForTypeCopy)
 			listener.onEvent(event);
-		
-		_listenersForTypeCopy.clear();
+
+
+		listenersForTypeCopy.clear();
+		_listenersForTypeCopyPool.free(listenersForTypeCopy);
 		
 		return true;
 	}
