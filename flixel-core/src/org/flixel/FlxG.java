@@ -1447,22 +1447,34 @@ public class FlxG
 	 * 
 	 * @param Path		The path to the font file.
 	 * @param Size		The size of the font.
+	 * @param Parameter The parameter that will be used for the <code>BitmapFont</code>
+	 * @return	The font.
+	 */
+	static public BitmapFont loadFont(String Path, int Size, BitmapFontParameter Parameter)
+	{		
+		String bitmapFontExtension = ".fnt";
+		
+		if(Path.endsWith(bitmapFontExtension))
+		{
+			Path = Path.substring(0, Path.length() - bitmapFontExtension.length()) + Size + bitmapFontExtension;
+			return _cache.load(Path, BitmapFont.class, Parameter);
+		}
+		else
+			return _cache.load(Size + ":" + Path, BitmapFont.class, Parameter);
+	}
+	
+	/**
+	 * Loads a font from a file and caches it.
+	 * 
+	 * @param Path		The path to the font file.
+	 * @param Size		The size of the font.
 	 * @return	The font.
 	 */
 	static public BitmapFont loadFont(String Path, int Size)
 	{
 		BitmapFontParameter parameter = new BitmapFontParameter();
 		parameter.flip = true;
-		
-		String bitmapFontExtension = ".fnt";
-		
-		if(Path.endsWith(bitmapFontExtension))
-		{
-			Path = Path.substring(0, Path.length() - bitmapFontExtension.length()) + Size + bitmapFontExtension;
-			return _cache.load(Path, BitmapFont.class, parameter);
-		}
-		else
-			return _cache.load(Size + ":" + Path, BitmapFont.class, parameter);
+		return loadFont(Path, Size, parameter);
 	}
 	
 	/**

@@ -1,10 +1,14 @@
 package org.flixel;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 
 import flash.display.BlendMode;
@@ -20,7 +24,15 @@ import flash.display.BlendMode;
  * @author	Thomas Weston
  */
 public class FlxText extends FlxSprite
-{	
+{		
+	/**
+	 * The default vertex shader that will be used.
+	 */
+	private final String VERTEX = "org/flixel/data/shaders/vertex.glsl";
+	/**
+	 * The default fragment shader that will be used for distance field.
+	 */
+	public final String DISTANCE_FIELD_FRAGMENT = "org/flixel/data/shaders/distance_field.glsl";
 	/**
 	 * Internal reference to a libgdx <code>BitmapFontCache</code> object.
 	 */
@@ -60,6 +72,27 @@ public class FlxText extends FlxSprite
 	protected float _shadowY;
 	
 	/**
+	 * Parameters that is used for generating the <code>BitmapFont</code>.
+	 */
+	private BitmapFontParameter _bitmapFontParameter;
+	/**
+	 * The shader program that is used for distance field.
+	 */
+	private ShaderProgram _distanceFieldShader;
+	/**
+	 * Internal tracker whether the distance field is enabled.
+	 */
+	private boolean _distanceFieldEnabled;
+	/**
+	 * The padding that is set for generating the bitmap font.
+	 */
+	private int _padding;
+	/**
+	 * The smoothness of the font.
+	 */
+	private float _smoothness;
+	
+	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
 	 * 
 	 * @param	X				The X position of the text.
@@ -78,6 +111,8 @@ public class FlxText extends FlxSprite
 		width = frameWidth = Width;
 		_text = Text;
 		allowCollisions = NONE;
+		_bitmapFontParameter = new BitmapFontParameter();
+		_bitmapFontParameter.flip = true;
 		setFormat("org/flixel/data/font/nokiafc22.ttf", 8, 0xFFFFFF, "left", 0, 1f, 1f);
 	}
 	
@@ -115,6 +150,8 @@ public class FlxText extends FlxSprite
 		_textField.clear();
 		_textField = null;
 		_text = null;
+		_bitmapFontParameter = null;
+		_distanceFieldShader = null;
 		super.destroy();
 	}
 	
@@ -141,12 +178,12 @@ public class FlxText extends FlxSprite
 		{			
 			try
 			{
-				_textField = new BitmapFontCache(FlxG.loadFont(Font, FlxU.round(Size)));
+				_textField = new BitmapFontCache(FlxG.loadFont(Font, FlxU.round(Size), _bitmapFontParameter));
 			}
 			catch(Exception e)
 			{
 				FlxG.log(e.getMessage());
-				_textField = new BitmapFontCache(FlxG.loadFont("org/flixel/data/font/nokiafc.fnt", 22));
+				_textField = new BitmapFontCache(FlxG.loadFont("org/flixel/data/font/nokiafc.fnt", 22, _bitmapFontParameter));
 			}
 			
 			_font = Font;
@@ -386,6 +423,72 @@ public class FlxText extends FlxSprite
 		_shadowY = ShadowY;
 	}
 	
+	/**
+	 * Sets whether the font should render as distance field.
+	 * @param Enabled		Whether the font should render as distance field or not.
+	 * @param Padding		The padding that is set to generate the bitmap font.
+	 * @param Smoothness	The smoothness between 0 and 1.
+	 * @param Name			The name of the shader.
+	 * @param Fragment		A custom fragment that will be used for creating the shader.
+	 * @return The shader program that will be used 
+	 */
+	public ShaderProgram setDistanceField(boolean Enabled, int Padding, float Smoothness, String Name, String Fragment)
+	{
+		_distanceFieldEnabled = Enabled;
+		if(!Enabled)
+			return null;
+		
+		_padding = -Padding;
+		_smoothness = Smoothness;
+
+		_bitmapFontParameter.genMipMaps = true;
+		_bitmapFontParameter.minFilter = TextureFilter.MipMapLinearNearest;
+		_bitmapFontParameter.magFilter = TextureFilter.Linear;
+		
+		return _distanceFieldShader = FlxG.loadShader(Name, VERTEX, Fragment);
+	}
+	
+	/**
+	 * Sets whether the font should render as distance field.
+	 * @param Enabled		Whether the font should render as distance field or not.
+	 * @param Padding		The padding that is set to generate the bitmap font.
+	 * @param Smoothness	The smoothness between 0 and 1.
+	 * @param Name			The name of the shader.
+	 * @return The shader program that will be used 
+	 */
+	public ShaderProgram setDistanceField(boolean Enabled, int Padding, float Smoothness, String Name)
+	{
+		return setDistanceField(Enabled, Padding, Smoothness, Name, DISTANCE_FIELD_FRAGMENT);
+	}
+	
+	/**
+	 * Sets whether the font should render as distance field.
+	 * @param Enabled		Whether the font should render as distance field or not.
+	 * @param Padding		The padding that is set to generate the bitmap font.
+	 * @param Smoothness	The smoothness between 0 and 1.
+	 * @return The shader program that will be used 
+	 */
+	public ShaderProgram setDistanceField(boolean Enabled, int Padding, int Smoothness)
+	{
+		return setDistanceField(Enabled, Padding, Smoothness, _font, DISTANCE_FIELD_FRAGMENT);
+	}
+	
+	/**
+	 * Sets the distance field shader in the batch.
+	 */
+	private void drawDistanceField()
+	{
+		_distanceFieldShader.begin();			
+		float delta = 0.5f * MathUtils.clamp(_smoothness / scale.x, 0, 1);
+		_distanceFieldShader.setUniformf("u_lower", 0.5f - delta);
+		_distanceFieldShader.setUniformf("u_upper", 0.5f + delta);
+		_distanceFieldShader.end();
+		FlxG.batch.setShader(_distanceFieldShader);
+		
+		_point.y += scale.x * _padding;
+		_textField.setPosition(_point.x, _point.y);		
+	}
+	
 	@Override
 	protected void calcFrame()
 	{
@@ -459,6 +562,10 @@ public class FlxText extends FlxSprite
 			renderBlend();
 		}
 		
+		//distance field
+		if(_distanceFieldEnabled)
+			drawDistanceField();
+		
 		//Render shadow behind the text
 		if (_shadow != 0)
 		{
@@ -474,8 +581,12 @@ public class FlxText extends FlxSprite
 		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
 		_textField.setColors(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
 		
-		_textField.draw(FlxG.batch);
-						
+		_textField.draw(FlxG.batch);		
+		
+		//turn off distance field
+		if(_distanceFieldEnabled)
+			FlxG.batch.setShader(null);
+		
 		//rotation
 		if (angle != 0)
 			FlxG.batch.setTransformMatrix(_matrix);

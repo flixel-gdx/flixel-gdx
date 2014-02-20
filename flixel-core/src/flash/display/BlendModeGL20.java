@@ -29,7 +29,7 @@ public class BlendModeGL20
 	/**
 	 * The default vertex shader that will be used.
 	 */
-	public static final String VERTEX = PATH + "vertex.glsl";
+	public static final String VERTEX = "org/flixel/data/shaders/vertex.glsl";
 	
 	/**
 	 * Adds the values of the constituent colors of the display object to the colors of its background, applying a ceiling of 0xFF.
