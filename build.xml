@@ -57,9 +57,6 @@ version ${spec.version}
         
         <!-- Save all in the single zip file -->
 		<antcall target="compress-dist" />
-		
-		<!-- Create a config file for the setup-ui -->
-		<antcall target="create-config" />
 
 	</target>
 
@@ -265,10 +262,6 @@ version ${spec.version}
 		<echo message="---------------------------------------------"/>
 		<echo message="Start Compress"/>
 		<echo message="---------------------------------------------"/>
-        
-		<tstamp>
-			<format property="buildDate" pattern="yyyyMMdd" />
-		</tstamp>
 		
 		<property name="licences"       value="${dist.dir}/licences" />
 		<property name="compress"       value="${dist.dir}/compress" />
@@ -286,7 +279,7 @@ version ${spec.version}
 		</zip>-->
 		
 		<!-- Generate the final zip with the library, javadoc and licences -->
-    	<zip destfile="${compress}/flixel-gdx-nigthly-latest.zip" >
+    	<zip destfile="${compress}/flixel-gdx-nigthly.zip" >
     	    <fileset dir="${dist.dir}">
 				<include name="**/*.jar" />
 			</fileset>
@@ -298,7 +291,6 @@ version ${spec.version}
     	    <fileset dir="${licences}" />
 		</zip>
 		
-    	<copy file="${compress}/flixel-gdx-nigthly-latest.zip" tofile="${compress}/flixel-gdx-nightly-${buildDate}.zip"/>
     	<delete dir="${licences}" />
     	
 		<echo message="---------------------------------------------"/>
@@ -306,55 +298,6 @@ version ${spec.version}
 		<echo message="---------------------------------------------"/>
     	
     	
-    </target>
-    
-    <target name="create-config">
-        
-        <echo message="---------------------------------------------"/>
-		<echo message="Create setup-ui config"/>
-		<echo message="---------------------------------------------"/>
-        
-        <property name="compress"       value="${dist.dir}compress/" />
-        <property name="url"			value="http://www.sylvain-grialou.name:8180/job/flixel-gdx/ws/${compress}" />
-        
-        <tstamp>
-			<format property="buildDate" pattern="yyyyMMdd" />
-		</tstamp>
-        
-        <delete file="flixel-gdx.txt"/>
-        <echo file="flixel-gdx.txt">[name]
-flixel-gdx
-
-[homepage]
-http://github.com/flixel-gdx/flixel-gdx
-
-[gwt]
-org.flixel
-
-[stable-version]
-0.5
-
-[stable-url]
-${url}flixel-gdx-nightly-${buildDate}.zip
-
-[libs-common]
-flixel-core.jar
-flixel-core-sources.jar
-
-[libs-desktop]
-flixel-desktop.jar
-flixel-desktop-sources.jar
-
-[libs-android]
-flixel-android.jar
-flixel-android-sources.jar
-flixel-android.jar.properties
-
-[libs-html]
-flixel-gwt.jar
-flixel-gwt-sources.jar
-            
-        </echo>
     </target>
 
 </project>
