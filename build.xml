@@ -34,7 +34,6 @@
 		                                                                                  		    
 		<echo message="version ${spec.version}" />	
 
-		<echo message="Delete the old Build from ${dist.dir}" />
 		<antcall target="clean" />
 
 		<!-- Compile the core -->		    	
@@ -46,14 +45,14 @@
 		</antcall>
 		
 		<!-- Compile the android version -->
-        <antcall target="compile-other">
-            <param name="project" value="android"/>
-        </antcall>
+		<antcall target="compile-other">
+		<param name="project" value="android"/>
+		</antcall>
         
 		<!-- Generate javadoc -->
 		<antcall target="generate-doc" />
         
-        <!-- Save all in the single zip file -->
+		<!-- Save all in the single zip file -->
 		<antcall target="compress-dist" />
 
 	</target>
@@ -148,9 +147,6 @@
 		</antcall>
 
 	</target>
-
-
-
 
 	<target name="packaging">
 
@@ -255,7 +251,7 @@
           Create zip file with the library
                         
          ================================= -->
-    <target name="compress-dist">
+	<target name="compress-dist">
     	
 		<echo message="---------------------------------------------"/>
 		<echo message="Start Compress"/>
@@ -273,29 +269,28 @@
 		
 		<!-- Compress javadoc in a zip file -->		
 		<!-- <zip destfile="${dist.dir}/flixel-gdx-javadoc.zip" >
-    	    <fileset dir="${dist.dir}/docs" />
+		<fileset dir="${dist.dir}/docs" />
 		</zip>-->
 		
 		<!-- Generate the final zip with the library, javadoc and licences -->
-    	<zip destfile="${compress}/flixel-gdx-nigthly.zip" >
-    	    <fileset dir="${dist.dir}">
+		<zip destfile="${compress}/flixel-gdx-nightly.zip" >
+			<fileset dir="${dist.dir}">
 				<include name="**/*.jar" />
 			</fileset>
 			
-    	    <!--  <fileset dir="${dist.dir}">
+			<!--  <fileset dir="${dist.dir}">
 				<include name="docs/**/**.*" />
 			</fileset>-->
 			
-    	    <fileset dir="${licences}" />
+			<fileset dir="${licences}" />
 		</zip>
 		
-    	<delete dir="${licences}" />
+		<delete dir="${licences}" />
     	
 		<echo message="---------------------------------------------"/>
 		<echo message="End Compress"/>
 		<echo message="---------------------------------------------"/>
     	
-    	
-    </target>
+	</target>
 
 </project>
