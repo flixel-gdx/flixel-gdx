@@ -32,7 +32,7 @@ public class TouchEvent extends Event
 	/**
 	 * Creates an <code>Event</code> object that contains information about touch events.
 	 * 
-	 * @param	type				The type of event.
+	 * @param	type			The type of event.
 	 * @param	bubbles			Determines whether the <code>Event</code> object participates in the bubbling stage of the event flow. The default value is <code>true</code>.
 	 * @param	cancelable		Determines whether the <code>Event</code> object can be cancelled. The default values is <code>false</code>.
 	 * @param	touchPointID	A unique identification number (as an int) assigned to the touch point.
@@ -50,7 +50,7 @@ public class TouchEvent extends Event
 	/**
 	 * Creates an <code>Event</code> object that contains information about touch events.
 	 * 
-	 * @param	type				The type of event.
+	 * @param	type			The type of event.
 	 * @param	bubbles			Determines whether the <code>Event</code> object participates in the bubbling stage of the event flow. The default value is <code>true</code>.
 	 * @param	cancelable		Determines whether the <code>Event</code> object can be cancelled. The default values is <code>false</code>.
  	 * @param	touchPointID	A unique identification number (as an int) assigned to the touch point.
@@ -64,7 +64,7 @@ public class TouchEvent extends Event
 	/**
 	 * Creates an <code>Event</code> object that contains information about touch events.
 	 * 
-	 * @param	type				The type of event.
+	 * @param	type			The type of event.
 	 * @param	bubbles			Determines whether the <code>Event</code> object participates in the bubbling stage of the event flow. The default value is <code>true</code>.
 	 * @param	cancelable		Determines whether the <code>Event</code> object can be cancelled. The default values is <code>false</code>.
 	 * @param	touchPointID	A unique identification number (as an int) assigned to the touch point.
@@ -77,7 +77,7 @@ public class TouchEvent extends Event
 	/**
 	 * Creates an <code>Event</code> object that contains information about touch events.
 	 * 
-	 * @param	type				The type of event.
+	 * @param	type			The type of event.
 	 * @param	bubbles			Determines whether the <code>Event</code> object participates in the bubbling stage of the event flow. The default value is <code>true</code>.
 	 * @param	cancelable		Determines whether the <code>Event</code> object can be cancelled. The default values is <code>false</code>.
 	 */
@@ -89,7 +89,7 @@ public class TouchEvent extends Event
 	/**
 	 * Creates an <code>Event</code> object that contains information about touch events.
 	 * 
-	 * @param	type				The type of event.
+	 * @param	type			The type of event.
 	 * @param	bubbles			Determines whether the <code>Event</code> object participates in the bubbling stage of the event flow. The default value is <code>true</code>.
 	 */
 	public TouchEvent(String type, boolean bubbles)
@@ -100,8 +100,7 @@ public class TouchEvent extends Event
 	/**
 	 * Creates an <code>Event</code> object that contains information about touch events.
 	 * 
-	 * @param	type				The type of event.
-	 * @param	bubbles			Determines whether the <code>Event</code> object participates in the bubbling stage of the event flow. The default value is <code>true</code>.
+	 * @param	type			The type of event.
 	 */
 	public TouchEvent(String type)
 	{
