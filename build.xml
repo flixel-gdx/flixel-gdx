@@ -60,7 +60,7 @@
 		
 		<!-- Compile the gwt version -->
 		<antcall target="compile-other">
-			<param name="project" value="html-5"/>
+			<param name="project" value="html5"/>
 		</antcall>
         
 		<!-- Generate javadoc -->
