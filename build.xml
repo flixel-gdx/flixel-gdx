@@ -34,16 +34,6 @@
 		<echo message="version ${spec.version}" />	
 
 		<antcall target="clean" />
-
-		<get src="https://google-web-toolkit.googlecode.com/files/gwt-2.6.0.zip" dest="gwt-2.6.0.zip"/>
- 		<unzip src="gwt-2.6.0.zip" dest=".">
- 			<patternset>
- 				<include name="gwt-user.jar"/>
-				<include name="gwt-dev.jar"/>
- 			</patternset>
- 		</unzip>
- 		
- 		<delete file="gwt-2.6.0.zip"/>
 		
 		<!-- Compile the core -->		    	
 		<antcall target="compile-core" />
@@ -59,9 +49,9 @@
 		</antcall>
 		
 		<!-- Compile the gwt version -->
-		<antcall target="compile-other">
+		<!--<antcall target="compile-other">
 			<param name="project" value="html5"/>
-		</antcall>
+		</antcall>-->
         
 		<!-- Generate javadoc -->
 		<antcall target="generate-doc" />
