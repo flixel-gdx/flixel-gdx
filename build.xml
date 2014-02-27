@@ -36,14 +36,14 @@
 		<antcall target="clean" />
 
 		<get src="https://google-web-toolkit.googlecode.com/files/gwt-2.6.0.zip" dest="gwt-2.6.0.zip"/>
- +		<unzip src="gwt-2.6.0.zip" dest=".">
- +			<patternset>
- +				<include name="gwt-user.jar"/>
+ 		<unzip src="gwt-2.6.0.zip" dest=".">
+ 			<patternset>
+ 				<include name="gwt-user.jar"/>
 				<include name="gwt-dev.jar"/>
- +			</patternset>
- +		</unzip>
- +		
- +		<delete file="gwt-2.6.0.zip"/>
+ 			</patternset>
+ 		</unzip>
+ 		
+ 		<delete file="gwt-2.6.0.zip"/>
 		
 		<!-- Compile the core -->		    	
 		<antcall target="compile-core" />
