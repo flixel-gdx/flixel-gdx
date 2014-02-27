@@ -2,11 +2,10 @@
 <project name="flixel" default="build" basedir=".">
 
 	<!--
-	
 		Author: Emanuel Herrera
-        Base on:
-            https://github.com/jruby/joni/blob/master/build.xml
-    -->
+		Base on:
+		https://github.com/jruby/joni/blob/master/build.xml
+	-->
 
 	<!-- Global variables -->
 	<property name="dist.dir"       value="dist/" />
@@ -38,7 +37,16 @@
 
 		<!-- Compile the core -->		    	
 		<antcall target="compile-core" />
-
+		
+		<get src="https://google-web-toolkit.googlecode.com/files/gwt-2.6.0.zip" dest="gwt-2.6.0.zip"/>
+		<unzip src="gwt-2.6.0.zip" dest=".">
+			<patternset>
+				<include name="gwt-*.jar"/>
+			</patternset>
+		</unzip>
+		
+		<delete file="gwt-2.6.0.zip"/>
+		
 		<!-- Compile the desktop -->
 		<antcall target="compile-other">
 			<param name="project" value="desktop"/>
@@ -46,7 +54,12 @@
 		
 		<!-- Compile the android version -->
 		<antcall target="compile-other">
-		<param name="project" value="android"/>
+			<param name="project" value="android"/>
+		</antcall>
+		
+		<!-- Compile the gwt version -->
+		<antcall target="compile-other">
+			<param name="project" value="html-5"/>
 		</antcall>
         
 		<!-- Generate javadoc -->
@@ -56,7 +69,6 @@
 		<antcall target="compress-dist" />
 
 	</target>
-
 
 	<target name="compile-core">
 
@@ -76,7 +88,6 @@
 			<fileset dir="${bin.lib}">
 				<include name="**/*.jar" />
 			</fileset>
-
 		</path>
 
 		<!-- Create the directory for the .class files -->
@@ -101,7 +112,6 @@
 
 	</target>
 
-
 	<target name="compile-other">
 
 		<echo message="---------------------------------------------"/>
@@ -124,16 +134,15 @@
 			<fileset dir="${ant.project.name}-core/libs">
 				<include name="**/*.jar" />
 			</fileset>
-			<pathelement path="android.jar" />
+			<!--<pathelement path="android.jar" />-->
+			<fileset dir=".">
+				<include name="/*.jar"/>
+			</fileset>
 			<pathelement path="${dist.dir}/${ant.project.name}-core.jar" />
-
-
-
 		</path>
 
 		<!-- Crate the directory for the .class files -->
 		<mkdir dir="${bin.dir}" />
-
 
 		<!-- COMPILE!!!!!! -->
 		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" />
@@ -204,8 +213,7 @@
 	<!--  -->
 	<target name="generate-doc">
 	    
-		
-		<javadoc 	destdir="${dist.dir}/docs" 
+		<javadoc	destdir="${dist.dir}/docs" 
 					sourcepath="${ant.project.name}-core/src/"
 					author="true" 
 					version="true" 
@@ -238,11 +246,8 @@
 
 			<classpath>
 				<fileset dir="${ant.project.name}-core/libs" />
-    		</classpath>
+			</classpath>
 		</javadoc>	    
-	    
-
-	    
 	</target>
 	
 	<!-- ================================= 
