@@ -49,9 +49,9 @@
 		</antcall>
 		
 		<!-- Compile the gwt version -->
-		<antcall target="compile-other">
+		<!--<antcall target="compile-other">
 			<param name="project" value="html5"/>
-		</antcall>
+		</antcall>-->
         
 		<!-- Generate javadoc -->
 		<antcall target="generate-doc" />
@@ -112,8 +112,8 @@
 		<property name="src.dir"          value="${ant.project.name}-${project}/src/" />
 		<property name="bin.dir"          value="${ant.project.name}-${project}/bin/" />
 		<property name="bin.lib"          value="${ant.project.name}-${project}/libs" />
+		
 		<!-- Clean old build -->
-
 		<delete dir="${bin.dir}" />
 
 		<!-- Get dependency from the libs directory -->
