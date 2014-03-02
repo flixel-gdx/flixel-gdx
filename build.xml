@@ -49,9 +49,9 @@
 		</antcall>
 		
 		<!-- Compile the gwt version -->
-		<!--<antcall target="compile-other">
+		<antcall target="compile-other">
 			<param name="project" value="html5"/>
-		</antcall>-->
+		</antcall>
         
 		<!-- Generate javadoc -->
 		<antcall target="generate-doc" />
@@ -89,7 +89,10 @@
 		
 		<!-- Copy resources -->
 		<copy toDir="${bin.dir}">
-		    <fileset dir="${src.dir}" excludes="**/*.java"/>
+		    <fileset dir="${src.dir}">
+				<exclude name="**/*.java" />
+				<include name="**/*.gwt.xml" />
+			</fileset>
 		</copy>
 
 		<echo message="---------------------------------------------"/>
@@ -128,13 +131,21 @@
 			<!--<pathelement path="android.jar" />-->
 			<fileset dir=".">
 				<include name="*.jar"/>
-			</fileset>
+			</fileset>			
 			<pathelement path="${dist.dir}/${ant.project.name}-core.jar" />
 		</path>
-
+		
 		<!-- Crate the directory for the .class files -->
 		<mkdir dir="${bin.dir}" />
-
+		
+		<!-- Copy resources -->
+		<copy toDir="${bin.dir}">
+		    <fileset dir="${src.dir}">
+				<exclude name="**/*.java" />
+				<include name="**/*.gwt.xml" />
+			</fileset>
+		</copy>
+		
 		<!-- COMPILE!!!!!! -->
 		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" />
 
