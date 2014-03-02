@@ -115,8 +115,8 @@
 		<property name="src.dir"          value="${ant.project.name}-${project}/src/" />
 		<property name="bin.dir"          value="${ant.project.name}-${project}/bin/" />
 		<property name="bin.lib"          value="${ant.project.name}-${project}/libs" />
+		
 		<!-- Clean old build -->
-
 		<delete dir="${bin.dir}" />
 
 		<!-- Get dependency from the libs directory -->
