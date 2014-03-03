@@ -353,12 +353,20 @@ public class FlxText extends FlxSprite
 	/**
 	 * The font used for this text.
 	 */
-	public void setFont(String Font)
+	public void setFont(String Font, float Size)
 	{
 		if (Font == _font)
 			return;
 		
-		setFormat(Font, _size, _color, getAlignment(), _shadow, _shadowX, _shadowY);
+		setFormat(Font, Size, _color, getAlignment(), _shadow, _shadowX, _shadowY);
+	}
+	
+	/**
+	 * The font used for this text.
+	 */
+	public void setFont(String Font)
+	{
+		setFont(Font, _size);
 	}
 	
 	/**
@@ -468,7 +476,7 @@ public class FlxText extends FlxSprite
 	 * @param Smoothness	The smoothness between 0 and 1.
 	 * @return The shader program that will be used 
 	 */
-	public ShaderProgram setDistanceField(boolean Enabled, int Padding, int Smoothness)
+	public ShaderProgram setDistanceField(boolean Enabled, int Padding, float Smoothness)
 	{
 		return setDistanceField(Enabled, Padding, Smoothness, _font, DISTANCE_FIELD_FRAGMENT);
 	}
@@ -478,6 +486,8 @@ public class FlxText extends FlxSprite
 	 */
 	private void drawDistanceField()
 	{
+		FlxG.batch.flush();
+		
 		_distanceFieldShader.begin();			
 		float delta = 0.5f * MathUtils.clamp(_smoothness / scale.x, 0, 1);
 		_distanceFieldShader.setUniformf("u_lower", 0.5f - delta);

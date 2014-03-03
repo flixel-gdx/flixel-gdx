@@ -95,6 +95,16 @@
 			<mapper type="flatten"/>
 		</unzip>
 		
+		<delete file="flixel-html5/libs/gdx-backend-gwt.jar"/>
+		<delete file="flixel-html5/libs/gdx-backend-gwt-sources.jar"/>		
+		<unzip src="libgdx-nightly.zip" dest="flixel-html5/libs">
+			<patternset>
+				<include name="gdx-backend-gwt.jar"/>
+				<include name="sources/gdx-backend-gwt-sources.jar"/>				
+			</patternset>
+			<mapper type="flatten"/>
+		</unzip>
+		
 		<!-- robovm project -->
 		<mkdir dir="flixel-robovm/libs"/>
 		<delete>
