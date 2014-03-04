@@ -16,5 +16,5 @@ void main()
 {
   	float distance = texture2D(u_texture, v_texCoord).a;
 	float alpha = smoothstep(u_lower, u_upper, distance);
-	gl_FragColor = vec4(v_color.rgb, alpha);
+	gl_FragColor = vec4(v_color.rgb, v_color.a * alpha);
 }
