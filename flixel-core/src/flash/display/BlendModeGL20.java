@@ -272,7 +272,7 @@ public class BlendModeGL20
 						shader.setUniformi("u_texture", 1);
 					if(shader.hasUniform("u_texture1"))
 						shader.setUniformi("u_texture1", 2);
-					shader.end();
+					shader.end(); // TODO: set texture coordinates
 				}
 			};
 			callback.loadShaderSettings(shader);

@@ -3,7 +3,6 @@ package org.flixel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
@@ -355,7 +354,7 @@ public class FlxText extends FlxSprite
 	 */
 	public void setFont(String Font, float Size)
 	{
-		if (Font == _font)
+		if (Font.equals(_font) || Font == null)
 			return;
 		
 		setFormat(Font, Size, _color, getAlignment(), _shadow, _shadowX, _shadowY);
@@ -496,7 +495,7 @@ public class FlxText extends FlxSprite
 		FlxG.batch.setShader(_distanceFieldShader);
 		
 		_point.y += scale.x * _padding;
-		_textField.setPosition(_point.x, _point.y);		
+		_textField.setPosition(_point.x, _point.y);
 	}
 	
 	@Override
@@ -534,9 +533,8 @@ public class FlxText extends FlxSprite
 		_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
 		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
 		
-		//scaling
-		BitmapFont font = _textField.getFont();
-		if(scale.x != font.getScaleX() || scale.y != font.getScaleY())
+		//scaling				
+		if(scale.x != 1f || scale.y != 1f)
 		{
 			_textField.getFont().setScale(scale.x, scale.y);
 			calcFrame();
