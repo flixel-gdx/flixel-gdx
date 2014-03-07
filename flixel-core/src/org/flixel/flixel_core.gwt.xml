@@ -12,6 +12,7 @@
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/pack.png" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/splashscreen" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/splashscreen.png" />
+	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/logo_corners.png" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/vertex.glsl" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/add.glsl" />
 	<extend-configuration-property name="gdx.files.classpath" value="org/flixel/data/shaders/blend/average.glsl" />

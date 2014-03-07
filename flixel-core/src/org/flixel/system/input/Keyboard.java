@@ -116,7 +116,7 @@ public class Keyboard extends Input
 	public Keyboard()
 	{
 		int i;
-		
+
 		// LETTERS (A-Z)
 		i = 65;
 		addKey("A", i++);
@@ -145,7 +145,7 @@ public class Keyboard extends Input
 		addKey("X", i++);
 		addKey("Y", i++);
 		addKey("Z", i++);
-		
+
 		// NUMBERS (0-9)
 		i = 48;
 		addKey("ZERO", i++);
@@ -178,55 +178,55 @@ public class Keyboard extends Input
 		// FUNCTION KEYS (F1-F12)
 		i = 1;
 		while(i <= 12)
-			addKey("F"+i,111+(i++));
+			addKey("F" + i, 111 + (i++));
 
 		// SPECIAL KEYS + PUNCTUATION
-		addKey("ESCAPE",27);
-		addKey("MINUS",189);
-		addKey("NUMPADMINUS",109);
-		addKey("PLUS",187);
-		addKey("NUMPADPLUS",107);
-		addKey("DELETE",46);
-		addKey("BACKSPACE",8);
-		addKey("LBRACKET",219);
-		addKey("RBRACKET",221);
-		addKey("BACKSLASH",220);
-		addKey("CAPSLOCK",20);
-		addKey("SEMICOLON",186);
-		addKey("QUOTE",222);
-		addKey("ENTER",13);
-		addKey("SHIFT",16);
-		addKey("COMMA",188);
-		addKey("PERIOD",190);
-		addKey("NUMPADPERIOD",110);
-		addKey("SLASH",191);
-		addKey("NUMPADSLASH",191);
-		addKey("CONTROL",17);
-		addKey("ALT",18);
-		addKey("SPACE",32);
-		addKey("UP",38);
-		addKey("DOWN",40);
-		addKey("LEFT",37);
-		addKey("RIGHT",39);
-		addKey("TAB",9);
+		addKey("ESCAPE", 27);
+		addKey("MINUS", 189);
+		addKey("NUMPADMINUS", 109);
+		addKey("PLUS", 187);
+		addKey("NUMPADPLUS", 107);
+		addKey("DELETE", 46);
+		addKey("BACKSPACE", 8);
+		addKey("LBRACKET", 219);
+		addKey("RBRACKET", 221);
+		addKey("BACKSLASH", 220);
+		addKey("CAPSLOCK", 20);
+		addKey("SEMICOLON", 186);
+		addKey("QUOTE", 222);
+		addKey("ENTER", 13);
+		addKey("SHIFT", 16);
+		addKey("COMMA", 188);
+		addKey("PERIOD", 190);
+		addKey("NUMPADPERIOD", 110);
+		addKey("SLASH", 191);
+		addKey("NUMPADSLASH", 191);
+		addKey("CONTROL", 17);
+		addKey("ALT", 18);
+		addKey("SPACE", 32);
+		addKey("UP", 38);
+		addKey("DOWN", 40);
+		addKey("LEFT", 37);
+		addKey("RIGHT", 39);
+		addKey("TAB", 9);
 
 		// MOBILE KEYS
 		addKey("BACK", flash.ui.Keyboard.BACK);
 		addKey("MENU", flash.ui.Keyboard.MENU);
 		addKey("SEARCH", flash.ui.Keyboard.SEARCH);
-		//addKey("VOLUME_DOWN", flash.ui.Keyboard.VOLUME_DOWN);
-		//addKey("VOLUME_UP", flash.ui.Keyboard.VOLUME_UP);
+		// addKey("VOLUME_DOWN", flash.ui.Keyboard.VOLUME_DOWN);
+		// addKey("VOLUME_UP", flash.ui.Keyboard.VOLUME_UP);
 	}
 
 	/**
 	 * Event handler so FlxGame can toggle keys.
 	 * 
-	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
+	 * @param Event A <code>KeyboardEvent</code> object.
 	 */
-	public void handleKeyDown(KeyboardEvent FlashEvent)
+	public void handleKeyDown(KeyboardEvent Event)
 	{
-		KeyState object = _map.get(FlashEvent.keyCode);
-		
+		KeyState object = _map.get(Event.keyCode);
+
 		if(object == null)
 			return;
 		if(object.current > 0)
@@ -235,7 +235,7 @@ public class Keyboard extends Input
 			object.current = 2;
 
 		try
-		{	//TODO: Reflection is fairly slow, could we use a BooleanMap instead?
+		{ // TODO: Reflection is fairly slow, could we use a BooleanMap instead?
 			ClassReflection.getField(Keyboard.class, object.name).set(this, true);
 		}
 		catch(Exception e)
@@ -247,19 +247,19 @@ public class Keyboard extends Input
 	/**
 	 * Event handler so FlxGame can toggle keys.
 	 * 
-	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
+	 * @param Event A <code>KeyboardEvent</code> object.
 	 */
-	public void handleKeyUp(KeyboardEvent FlashEvent)
+	public void handleKeyUp(KeyboardEvent Event)
 	{
-		KeyState object = _map.get(FlashEvent.keyCode);
-		
+		KeyState object = _map.get(Event.keyCode);
+
 		if(object == null)
 			return;
 		if(object.current > 0)
 			object.current = -1;
 		else
 			object.current = 0;
-		
+
 		try
 		{
 			ClassReflection.getField(Keyboard.class, object.name).set(this, false);

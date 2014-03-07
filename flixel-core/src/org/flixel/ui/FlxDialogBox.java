@@ -7,9 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 
 /**
- * Skinnable DialogBox. When clicked a dialog will be opened.
- * For desktop it will be Swing dialog.
- * For Android it will be standard Android dialog.
+ * Skinnable DialogBox. When clicked a dialog will be opened. For desktop it
+ * will be Swing dialog. For Android it will be standard Android dialog.
  * 
  * @author Ka Wing Chin
  */
@@ -26,29 +25,32 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 
 	/**
 	 * Creates new <code>FlxDialogBox</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component.
-	 * @param Width		The width of the component. Default 0, unlimited width.
-	 * @param Height 	The height of the component. Default 0, unlimited height.
-	 * @param Title		The title of the dialog box.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component.
+	 * @param Width The width of the component. Default 0, unlimited width.
+	 * @param Height The height of the component. Default 0, unlimited height.
+	 * @param Title The title of the dialog box.
 	 */
 	public FlxDialogBox(float X, float Y, FlxUISkin skin, String Label, int Width, int Height, String Title)
 	{
 		super(X, Y, skin, Label, Width, Height);
 		_title = Title;
-		//FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
+		// FlxG.getStage().removeEventListener(KeyboardEvent.KEY_TYPED,
+		// handleKeyDown);
 	}
 
 	/**
 	 * Creates new <code>FlxDialogBox</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component.
-	 * @param Width		The width of the component. Default 0, unlimited width.
-	 * @param Height 	The height of the component. Default 0, unlimited height.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component.
+	 * @param Width The width of the component. Default 0, unlimited width.
+	 * @param Height The height of the component. Default 0, unlimited height.
 	 */
 	public FlxDialogBox(float X, float Y, FlxUISkin skin, String Label, int Width, int Height)
 	{
@@ -57,11 +59,12 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 
 	/**
 	 * Creates new <code>FlxDialogBox</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component.
-	 * @param Width		The width of the component. Default 0, unlimited width.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component.
+	 * @param Width The width of the component. Default 0, unlimited width.
 	 */
 	public FlxDialogBox(float X, float Y, FlxUISkin skin, String Label, int Width)
 	{
@@ -70,10 +73,11 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 
 	/**
 	 * Creates new <code>FlxDialogBox</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component.
 	 */
 	public FlxDialogBox(float X, float Y, FlxUISkin skin, String Label)
 	{
@@ -82,19 +86,21 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 
 	/**
 	 * Creates new <code>FlxDialogBox</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
 	 */
 	public FlxDialogBox(float X, float Y, FlxUISkin skin)
 	{
 		this(X, Y, skin, null, 0, 0, null);
 	}
-	
+
 	/**
 	 * Creates new <code>FlxDialogBox</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
 	 */
 	public FlxDialogBox(float X, float Y)
 	{
@@ -109,7 +115,8 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 	}
 
 	/**
-	 * Will be called when text got applied from the dialog box into the textfield.
+	 * Will be called when text got applied from the dialog box into the
+	 * textfield.
 	 */
 	@Override
 	public void input(String text)
@@ -141,7 +148,7 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 			setActive(true);
 			Gdx.input.getTextInput(this, _title, textfield.getText());
 		}
-	}	
+	}
 
 	@Override
 	protected void checkFocus()

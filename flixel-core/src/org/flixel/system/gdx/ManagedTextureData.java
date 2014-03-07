@@ -8,14 +8,14 @@ import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
  * 
  * @author Thomas Weston
  */
-public class ManagedTextureData extends PixmapTextureData 
+public class ManagedTextureData extends PixmapTextureData
 {
-	public ManagedTextureData(Pixmap pixmap) 
+	public ManagedTextureData(Pixmap pixmap)
 	{
 		super(pixmap, null, false, false);
 	}
 
-	@Override 
+	@Override
 	public boolean isManaged()
 	{
 		return true;

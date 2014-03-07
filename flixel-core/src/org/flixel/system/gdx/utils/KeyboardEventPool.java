@@ -8,7 +8,7 @@ public class KeyboardEventPool extends RotationPool<KeyboardEvent>
 	{
 		super(size);
 	}
-			
+
 	public KeyboardEvent obtain(String type, int keycode, char charcode)
 	{
 		KeyboardEvent event = obtain();
@@ -17,7 +17,7 @@ public class KeyboardEventPool extends RotationPool<KeyboardEvent>
 		event.charCode = charcode;
 		return event;
 	}
-	
+
 	public KeyboardEvent obtain(String type, int keycode)
 	{
 		KeyboardEvent event = obtain();

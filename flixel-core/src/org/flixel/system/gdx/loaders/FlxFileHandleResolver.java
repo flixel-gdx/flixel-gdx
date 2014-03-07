@@ -9,7 +9,7 @@ public class FlxFileHandleResolver implements FileHandleResolver
 	@Override
 	public FileHandle resolve(String fileName)
 	{
-		if (fileName.startsWith("org/flixel"))
+		if(fileName.startsWith("org/flixel"))
 			return Gdx.files.classpath(fileName);
 		else
 			return Gdx.files.internal(fileName);

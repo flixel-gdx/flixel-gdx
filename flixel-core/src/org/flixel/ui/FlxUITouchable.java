@@ -15,23 +15,26 @@ import flash.events.MouseEvent;
  * @author Ka Wing Chin
  */
 public class FlxUITouchable extends FlxUIComponent
-{		
+{
 	/**
-	 * Used with public variable <code>status</code>, means not highlighted or pressed.
+	 * Used with public variable <code>status</code>, means not highlighted or
+	 * pressed.
 	 */
 	static public final int NORMAL = 0;
 	/**
-	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	 * Used with public variable <code>status</code>, means highlighted (usually
+	 * from mouse over).
 	 */
 	static public final int HIGHLIGHT = 1;
 	/**
-	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	 * Used with public variable <code>status</code>, means pressed (usually
+	 * from mouse click).
 	 */
 	static public final int PRESSED = 2;
 	/**
-	 * This function is called when the component is released.
-	 * We recommend assigning your main component behavior to this function
-	 * via the <code>FlxUITouchable</code> constructor.
+	 * This function is called when the component is released. We recommend
+	 * assigning your main component behavior to this function via the
+	 * <code>FlxUITouchable</code> constructor.
 	 */
 	public IFlxUIListener onUp;
 	/**
@@ -47,33 +50,33 @@ public class FlxUITouchable extends FlxUIComponent
 	 */
 	public IFlxUIListener onOut;
 	/**
-	 * Set this to play a sound when the mouse goes over the component.
-	 * We recommend using the helper function setSounds()!
+	 * Set this to play a sound when the mouse goes over the component. We
+	 * recommend using the helper function setSounds()!
 	 */
 	public FlxSound soundOver;
 	/**
-	 * Set this to play a sound when the mouse leaves the component.
-	 * We recommend using the helper function setSounds()!
+	 * Set this to play a sound when the mouse leaves the component. We
+	 * recommend using the helper function setSounds()!
 	 */
 	public FlxSound soundOut;
 	/**
-	 * Set this to play a sound when the component is pressed down.
-	 * We recommend using the helper function setSounds()!
+	 * Set this to play a sound when the component is pressed down. We recommend
+	 * using the helper function setSounds()!
 	 */
 	public FlxSound soundDown;
 	/**
-	 * Set this to play a sound when the component is released.
-	 * We recommend using the helper function setSounds()!
+	 * Set this to play a sound when the component is released. We recommend
+	 * using the helper function setSounds()!
 	 */
-	public FlxSound soundUp;	
+	public FlxSound soundUp;
 	/**
 	 * Used for checkbox-style behavior.
 	 */
-	protected boolean _onToggle;	
+	protected boolean _onToggle;
 	/**
 	 * Tracks whether or not the component is currently pressed.
 	 */
-	protected boolean _pressed;	
+	protected boolean _pressed;
 	/**
 	 * Whether or not the component has initialized itself yet.
 	 */
@@ -81,12 +84,13 @@ public class FlxUITouchable extends FlxUIComponent
 
 	/**
 	 * Creates a new <code>FlxUITouchable</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component.
-	 * @param Width		The width of the component. Default auto.
-	 * @param Height	The height of the component. Default auto.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component.
+	 * @param Width The width of the component. Default auto.
+	 * @param Height The height of the component. Default auto.
 	 */
 	public FlxUITouchable(float X, float Y, FlxUISkin Skin, String Label, int Width, int Height)
 	{
@@ -95,7 +99,7 @@ public class FlxUITouchable extends FlxUIComponent
 		onDown = null;
 		onOut = null;
 		onOver = null;
-		
+
 		soundOver = null;
 		soundOut = null;
 		soundDown = null;
@@ -106,46 +110,49 @@ public class FlxUITouchable extends FlxUIComponent
 		_pressed = false;
 		_initialized = false;
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxUITouchable</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component.
-	 * @param Width		The width of the component. Default auto.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component.
+	 * @param Width The width of the component. Default auto.
 	 */
 	public FlxUITouchable(float X, float Y, FlxUISkin Skin, String Label, int Width)
 	{
 		this(X, Y, Skin, Label, Width, 0);
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxUITouchable</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component.
 	 */
 	public FlxUITouchable(float X, float Y, FlxUISkin Skin, String Label)
 	{
 		this(X, Y, Skin, Label, 0, 0);
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxUITouchable</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
 	 */
 	public FlxUITouchable(float X, float Y, FlxUISkin Skin)
 	{
 		this(X, Y, Skin, null, 0, 0);
 	}
-	
+
 	@Override
 	public void destroy()
-	{		
+	{
 		if(FlxG.getStage() != null)
 			FlxG.getStage().removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		onMouseUp = null;
@@ -163,7 +170,7 @@ public class FlxUITouchable extends FlxUIComponent
 			soundUp.destroy();
 		super.destroy();
 	}
-	
+
 	@Override
 	public void setDefaultSkin()
 	{
@@ -178,18 +185,18 @@ public class FlxUITouchable extends FlxUIComponent
 		FlxG.getStage().addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		_initialized = true;
 	}
-	
+
 	@Override
 	public void preUpdate()
-	{		
-		super.preUpdate();		
+	{
+		super.preUpdate();
 		if(!_initialized)
 		{
 			if(FlxG.getStage() != null)
 				init();
 		}
 	}
-		
+
 	@Override
 	public void update()
 	{
@@ -197,7 +204,7 @@ public class FlxUITouchable extends FlxUIComponent
 		if(enabled)
 			updateComponent();
 	}
-	
+
 	/**
 	 * Basic component update logic
 	 */
@@ -205,7 +212,7 @@ public class FlxUITouchable extends FlxUIComponent
 	{
 		if(status == PRESSED)
 			status = NORMAL;
-				
+
 		if(FlxG.mouse.getVisible())
 		{
 			if(cameras == null)
@@ -213,8 +220,8 @@ public class FlxUITouchable extends FlxUIComponent
 			FlxCamera camera;
 			int i = 0;
 			int l = cameras.size;
-			int pointerId = 0;		
-			int	totalPointers = FlxG.mouse.activePointers + 1;
+			int pointerId = 0;
+			int totalPointers = FlxG.mouse.activePointers + 1;
 			boolean offAll = true;
 			while(i < l)
 			{
@@ -237,7 +244,7 @@ public class FlxUITouchable extends FlxUIComponent
 									soundDown.play(true);
 							}
 						}
-					
+
 						if(status == NORMAL || (activated && skinStatus == skin.ACTIVE_NORMAL))
 						{
 							status = HIGHLIGHT;
@@ -249,7 +256,7 @@ public class FlxUITouchable extends FlxUIComponent
 						}
 					}
 					++pointerId;
-				}			
+				}
 			}
 			if(offAll)
 			{
@@ -264,7 +271,7 @@ public class FlxUITouchable extends FlxUIComponent
 				skinStatus = activated ? skin.ACTIVE_NORMAL : skin.NORMAL;
 			}
 		}
-		
+
 		if((status == HIGHLIGHT) && FlxG.mobile)
 		{
 			if(activated)
@@ -272,45 +279,51 @@ public class FlxUITouchable extends FlxUIComponent
 			else
 				skinStatus = enabled ? skin.NORMAL : skin.DISABLED;
 			setFrame(skinStatus);
-		}	
+		}
 		else
 			setFrame(skinStatus);
 	}
-		
+
 	/**
 	 * Use this to toggle checkbox-style behavior.
-	 * @param	boolean
+	 * 
+	 * @param boolean
 	 */
 	public void setOn(boolean On)
 	{
 		_onToggle = On;
 	}
-	
+
 	/**
 	 * Whether the component has a checkbox-style behavior.
+	 * 
 	 * @return
 	 */
 	public boolean getOn()
 	{
 		return _onToggle;
 	}
-	
+
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
+	 * Set sounds to play during mouse-button interactions. These operations can
+	 * be done manually as well, and the public sound variables can be used
+	 * after this for more fine-tuning, such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.
-	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
-	 * @param SoundDownVolume	How load the that sound should be.
-	 * @param SoundUp			What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.
-	 * @param SoundUpVolume		How load the that sound should be.
+	 * @param SoundOver What embedded sound effect to play when the mouse goes
+	 *        over the button. Default is null, or no sound.
+	 * @param SoundOverVolume How load the that sound should be.
+	 * @param SoundOut What embedded sound effect to play when the mouse leaves
+	 *        the button area. Default is null, or no sound.
+	 * @param SoundOutVolume How load the that sound should be.
+	 * @param SoundDown What embedded sound effect to play when the mouse
+	 *        presses the button down. Default is null, or no sound.
+	 * @param SoundDownVolume How load the that sound should be.
+	 * @param SoundUp What embedded sound effect to play when the mouse releases
+	 *        the button. Default is null, or no sound.
+	 * @param SoundUpVolume How load the that sound should be.
 	 */
-	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume, String SoundDown, float SoundDownVolume, String SoundUp, float SoundUpVolume)
+	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume, String SoundDown, float SoundDownVolume, String SoundUp,
+			float SoundUpVolume)
 	{
 		if(SoundOver != null)
 			soundOver = FlxG.loadSound(SoundOver, SoundOverVolume);
@@ -321,55 +334,62 @@ public class FlxUITouchable extends FlxUIComponent
 		if(SoundUp != null)
 			soundUp = FlxG.loadSound(SoundUp, SoundUpVolume);
 	}
-	
+
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
+	 * Set sounds to play during mouse-button interactions. These operations can
+	 * be done manually as well, and the public sound variables can be used
+	 * after this for more fine-tuning, such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.
-	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
-	 * @param SoundDownVolume	How load the that sound should be.
-	 * @param SoundUp			What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.	 
+	 * @param SoundOver What embedded sound effect to play when the mouse goes
+	 *        over the button. Default is null, or no sound.
+	 * @param SoundOverVolume How load the that sound should be.
+	 * @param SoundOut What embedded sound effect to play when the mouse leaves
+	 *        the button area. Default is null, or no sound.
+	 * @param SoundOutVolume How load the that sound should be.
+	 * @param SoundDown What embedded sound effect to play when the mouse
+	 *        presses the button down. Default is null, or no sound.
+	 * @param SoundDownVolume How load the that sound should be.
+	 * @param SoundUp What embedded sound effect to play when the mouse releases
+	 *        the button. Default is null, or no sound.
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume, String SoundDown, float SoundDownVolume, String SoundUp)
 	{
 		setSounds(SoundOver, SoundOverVolume, SoundOut, SoundOutVolume, SoundDown, SoundDownVolume, SoundUp, 1.0f);
 	}
-	
+
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
+	 * Set sounds to play during mouse-button interactions. These operations can
+	 * be done manually as well, and the public sound variables can be used
+	 * after this for more fine-tuning, such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.
-	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
-	 * @param SoundDownVolume	How load the that sound should be.	 
+	 * @param SoundOver What embedded sound effect to play when the mouse goes
+	 *        over the button. Default is null, or no sound.
+	 * @param SoundOverVolume How load the that sound should be.
+	 * @param SoundOut What embedded sound effect to play when the mouse leaves
+	 *        the button area. Default is null, or no sound.
+	 * @param SoundOutVolume How load the that sound should be.
+	 * @param SoundDown What embedded sound effect to play when the mouse
+	 *        presses the button down. Default is null, or no sound.
+	 * @param SoundDownVolume How load the that sound should be.
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume, String SoundDown, float SoundDownVolume)
 	{
 		setSounds(SoundOver, SoundOverVolume, SoundOut, SoundOutVolume, SoundDown, SoundDownVolume, null, 1.0f);
 	}
-	
+
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
+	 * Set sounds to play during mouse-button interactions. These operations can
+	 * be done manually as well, and the public sound variables can be used
+	 * after this for more fine-tuning, such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.
-	 * @param SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.	 
+	 * @param SoundOver What embedded sound effect to play when the mouse goes
+	 *        over the button. Default is null, or no sound.
+	 * @param SoundOverVolume How load the that sound should be.
+	 * @param SoundOut What embedded sound effect to play when the mouse leaves
+	 *        the button area. Default is null, or no sound.
+	 * @param SoundOutVolume How load the that sound should be.
+	 * @param SoundDown What embedded sound effect to play when the mouse
+	 *        presses the button down. Default is null, or no sound.
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume, String SoundDown)
 	{
@@ -377,76 +397,78 @@ public class FlxUITouchable extends FlxUIComponent
 	}
 
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
+	 * Set sounds to play during mouse-button interactions. These operations can
+	 * be done manually as well, and the public sound variables can be used
+	 * after this for more fine-tuning, such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param SoundOutVolume	How load the that sound should be.	 
+	 * @param SoundOver What embedded sound effect to play when the mouse goes
+	 *        over the button. Default is null, or no sound.
+	 * @param SoundOverVolume How load the that sound should be.
+	 * @param SoundOut What embedded sound effect to play when the mouse leaves
+	 *        the button area. Default is null, or no sound.
+	 * @param SoundOutVolume How load the that sound should be.
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut, float SoundOutVolume)
 	{
 		setSounds(SoundOver, SoundOverVolume, SoundOut, SoundOutVolume, null, 1.0f, null, 1.0f);
 	}
-		
+
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
+	 * Set sounds to play during mouse-button interactions. These operations can
+	 * be done manually as well, and the public sound variables can be used
+	 * after this for more fine-tuning, such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
-	 * @param SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
+	 * @param SoundOver What embedded sound effect to play when the mouse goes
+	 *        over the button. Default is null, or no sound.
+	 * @param SoundOverVolume How load the that sound should be.
+	 * @param SoundOut What embedded sound effect to play when the mouse leaves
+	 *        the button area. Default is null, or no sound.
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume, String SoundOut)
 	{
 		setSounds(SoundOver, SoundOverVolume, SoundOut, 1.0f, null, 1.0f, null, 1.0f);
 	}
-	
+
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
+	 * Set sounds to play during mouse-button interactions. These operations can
+	 * be done manually as well, and the public sound variables can be used
+	 * after this for more fine-tuning, such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param SoundOverVolume	How load the that sound should be.
+	 * @param SoundOver What embedded sound effect to play when the mouse goes
+	 *        over the button. Default is null, or no sound.
+	 * @param SoundOverVolume How load the that sound should be.
 	 */
 	public void setSounds(String SoundOver, float SoundOverVolume)
 	{
 		setSounds(SoundOver, SoundOverVolume, null, 1.0f, null, 1.0f, null, 1.0f);
 	}
-	
+
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
+	 * Set sounds to play during mouse-button interactions. These operations can
+	 * be done manually as well, and the public sound variables can be used
+	 * after this for more fine-tuning, such as positional audio, etc.
 	 * 
-	 * @param SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.	 
+	 * @param SoundOver What embedded sound effect to play when the mouse goes
+	 *        over the button. Default is null, or no sound.
 	 */
 	public void setSounds(String SoundOver)
 	{
 		setSounds(SoundOver, 1.0f, null, 1.0f, null, 1.0f, null, 1.0f);
 	}
-	
+
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
+	 * Set sounds to play during mouse-button interactions. These operations can
+	 * be done manually as well, and the public sound variables can be used
+	 * after this for more fine-tuning, such as positional audio, etc.
 	 */
 	public void setSounds()
 	{
 		setSounds(null, 1.0f, null, 1.0f, null, 1.0f, null, 1.0f);
 	}
-	
+
 	/**
-	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxU.openURL()</code>).
+	 * Internal function for handling the actual callback call (for UI thread
+	 * dependent calls like <code>FlxU.openURL()</code>).
 	 */
 	IEventListener onMouseUp = new IEventListener()
 	{
@@ -460,7 +482,7 @@ public class FlxUITouchable extends FlxUIComponent
 				activated = !activated;
 				skinStatus = activated ? skin.ACTIVE_NORMAL : skin.NORMAL;
 				setFrame(skinStatus);
-			}			
+			}
 			onChange();
 			if(onUp != null)
 				onUp.callback();
@@ -475,7 +497,6 @@ public class FlxUITouchable extends FlxUIComponent
 	 */
 	protected void onChange()
 	{
-		// Override this in subclass.		
+		// Override this in subclass.
 	}
 }
-

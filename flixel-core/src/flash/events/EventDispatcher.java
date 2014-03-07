@@ -11,29 +11,32 @@ import java.util.Map;
  * This class replicates some of the EventDispatcher functionality from Flash.
  * 
  * @author Ka Wing Chin
+ * @author Thomas Weston
  */
 public class EventDispatcher implements IEventDispatcher
 {
 	protected Map<String, List<IEventListener>> _listeners;
-	
+
 	private Pool<List<IEventListener>> _listenersForTypeCopyPool;
-	
+
 	public EventDispatcher()
 	{
 		_listeners = new HashMap<String, List<IEventListener>>();
-		_listenersForTypeCopyPool = new Pool<List<IEventListener>>() {
+		_listenersForTypeCopyPool = new Pool<List<IEventListener>>()
+		{
 			@Override
-			protected List<IEventListener> newObject() {
+			protected List<IEventListener> newObject()
+			{
 				return new LinkedList<IEventListener>();
 			}
 		};
 	}
-	
+
 	@Override
 	public void addEventListener(String type, IEventListener listener, boolean useCapture, int priority, boolean useWeakReference)
 	{
 		List<IEventListener> listenersForType = _listeners.get(type);
-		
+
 		if(listenersForType == null)
 		{
 			listenersForType = new LinkedList<IEventListener>();
@@ -64,7 +67,7 @@ public class EventDispatcher implements IEventDispatcher
 	public boolean dispatchEvent(Event event)
 	{
 		List<IEventListener> listenersForType = _listeners.get(event.type);
-		
+
 		if(listenersForType == null || listenersForType.size() <= 0)
 			return false;
 
@@ -72,16 +75,15 @@ public class EventDispatcher implements IEventDispatcher
 
 		listenersForTypeCopy.addAll(listenersForType);
 
-		for(IEventListener listener: listenersForTypeCopy)
+		for(IEventListener listener : listenersForTypeCopy)
 			listener.onEvent(event);
-
 
 		listenersForTypeCopy.clear();
 		_listenersForTypeCopyPool.free(listenersForTypeCopy);
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean hasEventListener(String type)
 	{
@@ -93,10 +95,10 @@ public class EventDispatcher implements IEventDispatcher
 	public void removeEventListener(String type, IEventListener listener, boolean useCapture)
 	{
 		List<IEventListener> listenersForType = _listeners.get(type);
-		
+
 		if(listenersForType == null)
 			return;
-		
+
 		while(listenersForType.remove(listener));
 	}
 

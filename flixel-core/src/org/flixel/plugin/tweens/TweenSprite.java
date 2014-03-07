@@ -5,21 +5,21 @@ import org.flixel.FlxSprite;
 import aurelienribon.tweenengine.TweenAccessor;
 
 /**
- * The tween accessor for FlxSprite. Don't call any methods from this class.
- * If you got other variables that needs to be tweened, you can override this class.
- * You'll need to register your TweenAccessor with the your own sprite class 
- * and tween accessor.
+ * The tween accessor for FlxSprite. Don't call any methods from this class. If
+ * you got other variables that needs to be tweened, you can override this
+ * class. You'll need to register your TweenAccessor with the your own sprite
+ * class and tween accessor.
  * 
  * @author Ka Wing Chin
  */
 public class TweenSprite implements TweenAccessor<FlxSprite>
 {
 	/**
-	 *  The x-position from FlxObject.
+	 * The x-position from FlxObject.
 	 */
 	public static final int X = 1;
 	/**
-	 *  The y-position from FlxObject.
+	 * The y-position from FlxObject.
 	 */
 	public static final int Y = 2;
 	/**
@@ -31,7 +31,7 @@ public class TweenSprite implements TweenAccessor<FlxSprite>
 	 */
 	public static final int ANGLE = 4;
 	/**
-	 *  The alpha from FlxSprite.
+	 * The alpha from FlxSprite.
 	 */
 	public static final int ALPHA = 5;
 	/**
@@ -50,8 +50,7 @@ public class TweenSprite implements TweenAccessor<FlxSprite>
 	 * The x- and y-scale from FlxSprite.
 	 */
 	public static final int SCALE_XY = 9;
-	
-	
+
 	@Override
 	public int getValues(FlxSprite target, int tweenType, float[] returnValues)
 	{
@@ -91,7 +90,7 @@ public class TweenSprite implements TweenAccessor<FlxSprite>
 				return -1;
 		}
 	}
-	
+
 	@Override
 	public void setValues(FlxSprite target, int tweenType, float[] newValues)
 	{
@@ -114,7 +113,7 @@ public class TweenSprite implements TweenAccessor<FlxSprite>
 				target.setAlpha(newValues[0]);
 				break;
 			case COLOR:
-				target.setColor((int)newValues[0]);
+				target.setColor((int) newValues[0]);
 				break;
 			case SCALE_X:
 				target.scale.x = newValues[0];
@@ -132,4 +131,3 @@ public class TweenSprite implements TweenAccessor<FlxSprite>
 		}
 	}
 }
-

@@ -5,6 +5,7 @@ flixel-gdx is an open source 2D game engine written in Java. Flixel-gdx is a por
 
 ###Build status
 ![Build Status](http://www.sylvain-grialou.name:8180/job/flixel-gdx/badge/icon)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/flixel-gdx/flixel-gdx/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 ###Links
 -	[flixel-gdx.com](http://flixel-gdx.com 'flixel-gdx homepage')
@@ -18,19 +19,21 @@ flixel-gdx is an open source 2D game engine written in Java. Flixel-gdx is a por
 <table>
     <tr>
     	<th>Desktop</th>
-    	<td>Linux</td>
-        <td>Mac</td>
-        <td>Windows</td>
+    	<th>Mobile</th>
+        <th>Web</th>
     </tr>
     <tr>
-    	<th>Mobile</th>
+    	<td>Linux</td>
         <td>Android</td>
+        <td>WebGL browsers</td>
+    </tr>
+    <tr>
+    	<td>Mac</td>
         <td>iOS (beta)</td>
         <td></td>
     </tr>
     <tr>
-    	<th>HTML5</th>
-        <td>WebGL browsers</td>
+    	<td>Windows</td>
         <td></td>
         <td></td>
     </tr>
@@ -43,5 +46,3 @@ flixel-gdx doesn't have its own message board, but you can use the forums of fli
 
 ###License
 flixel-gdx is distributed under the New BSD License, meaning you can use it free of charge, without strings attached in commercial and non-commercial projects. We love to get (non-mandatory) credit in case you release a game or app using flixel-gdx!
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/flixel-gdx/flixel-gdx/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

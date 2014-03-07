@@ -1,15 +1,14 @@
 package org.flixel.ui;
 
-
 /**
  * Skinnable Radiobutton.
  * 
  * @author Ka Wing Chin
  */
 public class FlxRadioButton extends FlxUITouchable
-{	
+{
 	private final String ImgRadioButton = "org/flixel/data/pack:radiobutton";
-	
+
 	/**
 	 * The group where this radio button belongs to.
 	 */
@@ -17,12 +16,13 @@ public class FlxRadioButton extends FlxUITouchable
 
 	/**
 	 * Creates a new <code>FlxRadioButton</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param ID		The unique ID of the component.
-	 * @param Group		The group where the component belongs to.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param ID The unique ID of the component.
+	 * @param Group The group where the component belongs to.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component.
 	 */
 	public FlxRadioButton(float X, float Y, String ID, FlxRadioButtonGroup Group, FlxUISkin UISkin, String Label)
 	{
@@ -32,14 +32,15 @@ public class FlxRadioButton extends FlxUITouchable
 		setOn(true);
 		group.add(this);
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxRadioButton</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param ID		The unique ID of the component.
-	 * @param Group		The group where the component belongs to.
-	 * @param UISkin	The skin that needs to be applied.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param ID The unique ID of the component.
+	 * @param Group The group where the component belongs to.
+	 * @param UISkin The skin that needs to be applied.
 	 */
 	public FlxRadioButton(float X, float Y, String ID, FlxRadioButtonGroup Group, FlxUISkin UISkin)
 	{
@@ -49,13 +50,14 @@ public class FlxRadioButton extends FlxUITouchable
 		setOn(true);
 		group.add(this);
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxRadioButton</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param ID		The unique ID of the component.
-	 * @param Group		The group where the component belongs to.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param ID The unique ID of the component.
+	 * @param Group The group where the component belongs to.
 	 */
 	public FlxRadioButton(float X, float Y, String ID, FlxRadioButtonGroup Group)
 	{
@@ -65,7 +67,7 @@ public class FlxRadioButton extends FlxUITouchable
 		setOn(true);
 		group.add(this);
 	}
-	
+
 	@Override
 	public void setDefaultSkin()
 	{
@@ -81,14 +83,14 @@ public class FlxRadioButton extends FlxUITouchable
 		skin.labelPosition = FlxUISkin.LABEL_RIGHT;
 		skin.setFormat(null, 16);
 	}
-	
+
 	@Override
 	public void destroy()
 	{
 		super.destroy();
 		group = null;
 	}
-		
+
 	/**
 	 * Let the group knows to change the behavior of the radio buttons.
 	 */
@@ -96,7 +98,7 @@ public class FlxRadioButton extends FlxUITouchable
 	{
 		group.onChange(this);
 	}
-	
+
 	/**
 	 * Set the radio button active.
 	 */
@@ -106,4 +108,3 @@ public class FlxRadioButton extends FlxUITouchable
 		toggleOn();
 	}
 }
-

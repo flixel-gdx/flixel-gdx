@@ -10,12 +10,12 @@ import flash.media.SoundTransform;
 public class GdxSound implements flash.media.Sound
 {
 	private Sound _sound;
-	
+
 	public GdxSound(String path)
 	{
 		_sound = FlxG._cache.load(path, Sound.class);
 	}
-	
+
 	@Override
 	public SoundChannel play(float startTime, int loops, SoundTransform sndTransform)
 	{

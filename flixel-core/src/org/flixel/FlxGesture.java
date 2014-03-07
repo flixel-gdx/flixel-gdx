@@ -5,9 +5,13 @@ import org.flixel.plugin.GestureManager;
 import org.flixel.plugin.GestureManager.GestureData;
 
 /**
- * A gesture class. By performing a gesture a callback will be fired.
- * Not intended to be added to a game state or group; the <code>GestureManager</code>
- * is responsible for actually calling update(), not the user.
+ * A gesture class. By performing a gesture a callback will be fired. Not
+ * intended to be added to a game state or group; the
+ * <code>GestureManager</code> is responsible for actually calling update(), not
+ * the user.
+ * 
+ * @author cyphertext
+ * @author Ka Wing Chin
  */
 public class FlxGesture
 {
@@ -32,11 +36,12 @@ public class FlxGesture
 	 */
 	public static final int DIRECTION_RIGHT = 4;
 	/**
-	 *  Tap on the screen and lift it without moving outside of the tap square.
+	 * Tap on the screen and lift it without moving outside of the tap square.
 	 */
 	public static final int TAP = 5;
 	/**
-	 *  Tap twice on the screen and lift it without moving outside of the tap square.
+	 * Tap twice on the screen and lift it without moving outside of the tap
+	 * square.
 	 */
 	public static final int DOUBLE_TAP = 6;
 	/**
@@ -52,27 +57,29 @@ public class FlxGesture
 	 */
 	public static final int PINCH = 9;
 	/**
-	 * Finger went down on the screen or a mouse button was pressed. 
+	 * Finger went down on the screen or a mouse button was pressed.
 	 */
 	public static final int TOUCH_DOWN = 10;
 	/**
-	 * The callback will be called when a gesture is performed. 
+	 * The callback will be called when a gesture is performed.
 	 */
 	protected IFlxGesture _callback;
-	
+
 	/**
 	 * Instantiate the <code>FlxGesture</code>. Does not activate the gesture.
 	 * To activate, call FlxGesture::start().
 	 */
 	public FlxGesture()
 	{
-		
+
 	}
-	
+
 	/**
 	 * Make this <code>FlxGesture</code> object active in the manager.
-	 * @param Callback	The callback that will be fired when a gesture is performed.
-	 * @return	The <code>FlxGesture</code> object that got activated.
+	 * 
+	 * @param Callback The callback that will be fired when a gesture is
+	 *        performed.
+	 * @return The <code>FlxGesture</code> object that got activated.
 	 */
 	public FlxGesture start(IFlxGesture Callback)
 	{
@@ -91,7 +98,8 @@ public class FlxGesture
 
 	/**
 	 * Make this <code>FlxGesture</code> object active in the manager.
-	 * @return	The <code>FlxGesture</code> object that got activated.
+	 * 
+	 * @return The <code>FlxGesture</code> object that got activated.
 	 */
 	public FlxGesture start()
 	{
@@ -109,8 +117,10 @@ public class FlxGesture
 	}
 
 	/**
-	 * Fires callback by gesture type, e.g. <code>FlxGesture.PAN, FlxGesture.DIRECTION_DOWN, etc.</code>. 
-	 * @param Gesture	The gesture type that needs to be updated.
+	 * Fires callback by gesture type, e.g.
+	 * <code>FlxGesture.PAN, FlxGesture.DIRECTION_DOWN, etc.</code>.
+	 * 
+	 * @param Gesture The gesture type that needs to be updated.
 	 */
 	public void callback(int Gesture, GestureData data)
 	{
@@ -127,8 +137,10 @@ public class FlxGesture
 	}
 
 	/**
-	 * Get the <code>GestureManager</code> object that is used by <code>FlxGesture</code>.
-	 * @return	The <code>GestureManager</code> object.
+	 * Get the <code>GestureManager</code> object that is used by
+	 * <code>FlxGesture</code>.
+	 * 
+	 * @return The <code>GestureManager</code> object.
 	 */
 	static public GestureManager getManager()
 	{

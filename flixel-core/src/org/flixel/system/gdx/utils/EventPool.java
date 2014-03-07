@@ -8,7 +8,7 @@ public class EventPool extends RotationPool<Event>
 	{
 		super(size);
 	}
-	
+
 	public Event obtain(String type)
 	{
 		Event event = obtain();

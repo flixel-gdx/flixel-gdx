@@ -8,17 +8,17 @@ import flash.media.Sound;
 import flash.media.SoundChannel;
 import flash.media.SoundTransform;
 
-public class GdxMusic implements Sound 
+public class GdxMusic implements Sound
 {
 	private Music _music;
-	
+
 	public GdxMusic(String path)
 	{
 		_music = FlxG._cache.load(path, Music.class);
 	}
-	
+
 	@Override
-	public SoundChannel play(float startTime, int loops, SoundTransform sndTransform) 
+	public SoundChannel play(float startTime, int loops, SoundTransform sndTransform)
 	{
 		if(_music.isPlaying())
 			return null;

@@ -8,7 +8,7 @@ public class TouchEventPool extends RotationPool<TouchEvent>
 	{
 		super(size);
 	}
-	
+
 	public TouchEvent obtain(String type, int stageX, int stageY, int pointer)
 	{
 		TouchEvent event = obtain();

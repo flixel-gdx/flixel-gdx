@@ -12,6 +12,9 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * A simple manager for tracking and updating gesture objects.
+ * 
+ * @author Ka Wing Chin
+ * @author cyphertext
  */
 public class GestureManager extends FlxBasic implements GestureListener
 {

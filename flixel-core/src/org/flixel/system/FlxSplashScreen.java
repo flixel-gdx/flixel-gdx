@@ -7,7 +7,8 @@ import org.flixel.FlxU;
 import org.flixel.event.IFlxCamera;
 
 /**
- * A flixel-gdx splashscreen. Will be shown if the FlxGame.showSplashScreen is set to true.
+ * A flixel-gdx splashscreen. Will be shown if the FlxGame.showSplashScreen is
+ * set to true.
  * 
  * @author Ka Wing Chin
  */
@@ -19,42 +20,44 @@ public class FlxSplashScreen extends FlxState
 	private final static String ImgGearGreen = "org/flixel/data/splashscreen:gear_green";
 	private final static String ImgPoweredBy = "org/flixel/data/splashscreen:powered_by";
 	private final static String ImgFlixelGDX = "org/flixel/data/splashscreen:flixel-gdx";
-	
+
 	private final static String ImgHeart = "org/flixel/data/splashscreen:heart";
 	private final static String ImgLightBulb = "org/flixel/data/splashscreen:lightbulb";
 	private final static String ImgCode = "org/flixel/data/splashscreen:code";
 	private final static String ImgDPAD = "org/flixel/data/splashscreen:dpad";
-	
+
 	public static boolean splashScreenShown = false;
-	
+
 	private FlxState _state;
 	private static int CENTER_X;
 	private static int CENTER_Y;
 	private float _counter = 2.25f;
 	private float tempZoom;
-	
+
 	/**
 	 * Creates a new <code>FlxSpashScreen</code> object.
-	 * @param _requestedState	The <code>FlxState</code> that needs to be switch to.
+	 * 
+	 * @param _requestedState The <code>FlxState</code> that needs to be switch
+	 *        to.
 	 */
 	public FlxSplashScreen(FlxState _requestedState)
 	{
 		_state = _requestedState;
 	}
-	
+
 	@Override
 	public void create()
 	{
 		splashScreenShown = true;
 		tempZoom = FlxG.camera.getZoom();
-		
-		FlxG.camera.setZoom(1f);		
+
+		FlxG.camera.setZoom(1f);
 		CENTER_X = FlxG.width / 2;
 		CENTER_Y = FlxG.height / 2;
 		FlxG.resetCameras();
-		
+
 		FlxG.setBgColor(0xFFFFFFFF);
-		
+
 		add(new Gear(ImgGearBlue, CENTER_X - 160, CENTER_Y - 198, 1.822f));
 		add(new Gear(ImgGearPurple, CENTER_X + 18, CENTER_Y - 193, 2.55f));
 		add(new Gear(ImgGearGrey, CENTER_X - 3, CENTER_Y - 114, -1.5f));
@@ -70,7 +73,7 @@ public class FlxSplashScreen extends FlxState
 
 		FlxG.camera.flash(0x00000000, .25f);
 	}
-	
+
 	@Override
 	public void update()
 	{
@@ -79,7 +82,7 @@ public class FlxSplashScreen extends FlxState
 		{
 			FlxU.openURL("http://www.flixel-gdx.com");
 		}
-		
+
 		if(_counter > 0)
 		{
 			_counter -= FlxG.elapsed;
@@ -97,7 +100,7 @@ public class FlxSplashScreen extends FlxState
 			}
 		}
 	}
-	
+
 	@Override
 	public void destroy()
 	{
@@ -105,17 +108,17 @@ public class FlxSplashScreen extends FlxState
 		super.destroy();
 		_state = null;
 	}
-	
+
 	private class Gear extends FlxSprite
 	{
 		private float rotationSpeed;
-		
+
 		public Gear(String img, float x, float y, float rotationSpeed)
 		{
 			super(x, y, img);
 			this.rotationSpeed = rotationSpeed;
 		}
-		
+
 		@Override
 		public void update()
 		{
@@ -123,23 +126,23 @@ public class FlxSplashScreen extends FlxState
 			super.update();
 		}
 	}
-	
+
 	private class Lightbulb extends FlxSprite
-	{		
+	{
 		private float _offCounter;
 		private float _blinkCounter;
-		
+
 		public Lightbulb(float x, float y)
 		{
 			super(x, y);
 			loadGraphic(ImgLightBulb, true, false, 48, 71);
 			addAnimation("off", new int[]{0}, 0, false);
 			addAnimation("on", new int[]{1}, 0, false);
-			addAnimation("blink", new int[]{0,1}, 20);
+			addAnimation("blink", new int[]{0, 1}, 20);
 			play("off");
 			_offCounter = 1f;
 		}
-		
+
 		@Override
 		public void update()
 		{
@@ -152,61 +155,54 @@ public class FlxSplashScreen extends FlxState
 					play("blink");
 				}
 			}
-			
+
 			if(_blinkCounter > 0)
 			{
 				_blinkCounter -= FlxG.elapsed;
 				if(_blinkCounter <= 0)
 					play("on");
-			}		
+			}
 			super.update();
 		}
 	}
-	
+
 	private class Heart extends FlxSprite
-	{		
+	{
 		public Heart(float x, float y)
 		{
 			super(x, y);
 			loadGraphic(ImgHeart, true, false, 42, 38);
-			addAnimation("bounce", new int[]{0,0,0,1,1,2,2,1,1}, 12);
+			addAnimation("bounce", new int[]{0, 0, 0, 1, 1, 2, 2, 1, 1}, 12);
 			play("bounce");
 		}
 	}
-	
+
 	private class DPad extends FlxSprite
-	{	
+	{
 		public DPad(float x, float y)
 		{
 			super(x, y);
-			loadGraphic(ImgDPAD, true, false, 67, 67);			
+			loadGraphic(ImgDPAD, true, false, 67, 67);
 			int[] array = new int[20];
 			for(int i = 0; i < 20; i++)
 			{
 				array[i] = (int) ((FlxG.random() * 4) + 1);
 				i++;
 				array[i] = 0;
-			}			
+			}
 			addAnimation("gameOn", array, 4, true);
 			play("gameOn");
 		}
 	}
-	
+
 	private class Code extends FlxSprite
-	{		
+	{
 		public Code(float x, float y)
 		{
 			super(x, y);
 			loadGraphic(ImgCode, true, false, 37, 24);
-			addAnimation("coding", new int[]{
-					0,8,0,8,0,8,
-					1,2,1,2,1,2,
-					3,4,3,4,3,4,
-					5,6,5,6,5,6,
-					7
-				}, 12, false);
+			addAnimation("coding", new int[]{0, 8, 0, 8, 0, 8, 1, 2, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6, 5, 6, 5, 6, 7}, 12, false);
 			play("coding");
 		}
 	}
 }
-

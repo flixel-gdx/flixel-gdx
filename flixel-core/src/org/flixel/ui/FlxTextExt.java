@@ -31,11 +31,12 @@ public class FlxTextExt extends FlxText
 	/**
 	 * Creates a new <code>FlxTextExt</code> object.
 	 * 
-	 * @param X				The X position of the text.
-	 * @param Y				The Y position of the text.
-	 * @param Width			The width of the text object (height is determined automatically).
-	 * @param Text			The actual text you would like to display initially.
-	 * @param EmbeddedFont	Whether this text field uses embedded fonts or not.
+	 * @param X The X position of the text.
+	 * @param Y The Y position of the text.
+	 * @param Width The width of the text object (height is determined
+	 *        automatically).
+	 * @param Text The actual text you would like to display initially.
+	 * @param EmbeddedFont Whether this text field uses embedded fonts or not.
 	 */
 	public FlxTextExt(float X, float Y, int Width, int Height, String Text, boolean EmbeddedFont)
 	{
@@ -44,49 +45,52 @@ public class FlxTextExt extends FlxText
 		_height = Height;
 		calcFrame();
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxTextExt</code> object.
 	 * 
-	 * @param X				The X position of the text.
-	 * @param Y				The Y position of the text.
-	 * @param Width			The width of the text object (height is determined automatically).
-	 * @param Text			The actual text you would like to display initially.
+	 * @param X The X position of the text.
+	 * @param Y The Y position of the text.
+	 * @param Width The width of the text object (height is determined
+	 *        automatically).
+	 * @param Text The actual text you would like to display initially.
 	 */
 	public FlxTextExt(float X, float Y, int Width, int Height, String Text)
 	{
 		this(X, Y, Width, Height, Text, true);
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxTextExt</code> object.
 	 * 
-	 * @param X				The X position of the text.
-	 * @param Y				The Y position of the text.
-	 * @param Width			The width of the text object (height is determined automatically).
+	 * @param X The X position of the text.
+	 * @param Y The Y position of the text.
+	 * @param Width The width of the text object (height is determined
+	 *        automatically).
 	 */
 	public FlxTextExt(float X, float Y, int Width, int Height)
 	{
 		this(X, Y, Width, Height, null, true);
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxTextExt</code> object.
 	 * 
-	 * @param X				The X position of the text.
-	 * @param Y				The Y position of the text.
-	 * @param Width			The width of the text object (height is determined automatically).
+	 * @param X The X position of the text.
+	 * @param Y The Y position of the text.
+	 * @param Width The width of the text object (height is determined
+	 *        automatically).
 	 */
 	public FlxTextExt(float X, float Y, int Width)
 	{
 		this(X, Y, Width, 0, null, true);
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxTextExt</code> object.
 	 * 
-	 * @param X				The X position of the text.
-	 * @param Y				The Y position of the text.
+	 * @param X The X position of the text.
+	 * @param Y The Y position of the text.
 	 */
 	public FlxTextExt(float X, float Y)
 	{
@@ -106,17 +110,17 @@ public class FlxTextExt extends FlxText
 		_textField.setWrappedText("ABC\nABC", 2, 3, FlxG.width, _alignment);
 		float doubleLine = _textField.getBounds().height;
 		_lineHeight = doubleLine - _firstLineHeight;
-		
+
 		if(_width == 0)
 			width = frameWidth = (int) _textField.getFont().getBounds(_text).width;
 		else
 			width = _width;
-		
+
 		if(_height == 0)
 			height = frameHeight = (int) _textField.getBounds().height;
 		else
 			height = _height;
-		
+
 		// Set text back.
 		_text = text;
 		calcFrame();
@@ -125,6 +129,7 @@ public class FlxTextExt extends FlxText
 
 	/**
 	 * Get the current bounding height of the textfield.
+	 * 
 	 * @return
 	 */
 	public float getHeight()
@@ -134,16 +139,17 @@ public class FlxTextExt extends FlxText
 
 	/**
 	 * Get the total lines of the textfield.
+	 * 
 	 * @return
 	 */
 	public int getTotalLines()
 	{
 		return (int) ((getHeight() - _firstLineHeight) / _lineHeight) + 1;
 	}
-	
+
 	/**
-	 * Internal function to update the current animation frame.
-	 * Gives access to calcFrame which is normally protected.
+	 * Internal function to update the current animation frame. Gives access to
+	 * calcFrame which is normally protected.
 	 */
 	public void calcFrame()
 	{

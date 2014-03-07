@@ -16,7 +16,7 @@ public class SensorManager extends FlxBasic
 	 * The value of the accelerometer on its x-axis. ranges between [-10,10].
 	 */
 	public static float x;
-	/** 
+	/**
 	 * The value of the accelerometer on its x-axis. ranges between [-10,10].
 	 */
 	public static float y;
@@ -25,15 +25,19 @@ public class SensorManager extends FlxBasic
 	 */
 	public static float z;
 	/**
-	 * The azimuth is the angle of the device's orientation around the z-axis. The positive z-axis points towards the earths center.
+	 * The azimuth is the angle of the device's orientation around the z-axis.
+	 * The positive z-axis points towards the earths center.
 	 */
 	public static float azimuth;
 	/**
-	 * The pitch is the angle of the device's orientation around the x-axis. The positive x-axis roughly points to the west and is orthogonal to the z- and y-axis.
+	 * The pitch is the angle of the device's orientation around the x-axis. The
+	 * positive x-axis roughly points to the west and is orthogonal to the z-
+	 * and y-axis.
 	 */
 	public static float pitch;
 	/**
-	 * The roll is the angle of the device's orientation around the y-axis. The positive y-axis points to the magnetic north pole of the earth.
+	 * The roll is the angle of the device's orientation around the y-axis. The
+	 * positive y-axis points to the magnetic north pole of the earth.
 	 */
 	public static float roll;
 	/**
@@ -44,7 +48,7 @@ public class SensorManager extends FlxBasic
 	 * The native orientation of the device.
 	 */
 	public static Orientation orientation;
-		
+
 	/**
 	 * Updates the values of the accelerometer and orientation of the device.
 	 */

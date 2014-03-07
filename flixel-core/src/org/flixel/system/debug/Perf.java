@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.IntArray;
 
-
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
  * 
@@ -33,26 +32,31 @@ public class Perf extends FlxWindow
 	protected int _visibleObjectMarker;
 
 	/**
-	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object. This Flash-based class is
+	 * mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title			The name of the window, displayed in the header bar.
-	 * @param Width			The initial width of the window.
-	 * @param Height		The initial height of the window.
-	 * @param Resizable		Whether you can change the size of the window with flashPlayerFramerate drag handle.
-	 * @param Bounds		A rectangle indicating the valid screen area for the window.
-	 * @param BGColor		What color the window background should be, default is gray and transparent.
-	 * @param TopColor		What color the window header bar should be, default is black and transparent.
+	 * @param Title The name of the window, displayed in the header bar.
+	 * @param Width The initial width of the window.
+	 * @param Height The initial height of the window.
+	 * @param Resizable Whether you can change the size of the window with
+	 *        flashPlayerFramerate drag handle.
+	 * @param Bounds A rectangle indicating the valid screen area for the
+	 *        window.
+	 * @param BGColor What color the window background should be, default is
+	 *        gray and transparent.
+	 * @param TopColor What color the window header bar should be, default is
+	 *        black and transparent.
 	 */
 	public Perf(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds, int BGColor, int TopColor)
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
-		resize(90,66);
-		
+		resize(90, 66);
+
 		_lastTime = 0;
 		_updateTimer = 0;
-		
+
 		_text = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
-		
+
 		_flixelUpdate = new IntArray(32);
 		_flixelUpdate.size = 32;
 		_flixelUpdateMarker = 0;
@@ -69,61 +73,71 @@ public class Perf extends FlxWindow
 		_visibleObject.size = 32;
 		_visibleObjectMarker = 0;
 	}
-	
+
 	/**
-	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object. This Flash-based class is
+	 * mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title			The name of the window, displayed in the header bar.
-	 * @param Width			The initial width of the window.
-	 * @param Height		The initial height of the window.
-	 * @param Resizable		Whether you can change the size of the window with flashPlayerFramerate drag handle.
-	 * @param Bounds		A rectangle indicating the valid screen area for the window.
-	 * @param BGColor		What color the window background should be, default is gray and transparent.
+	 * @param Title The name of the window, displayed in the header bar.
+	 * @param Width The initial width of the window.
+	 * @param Height The initial height of the window.
+	 * @param Resizable Whether you can change the size of the window with
+	 *        flashPlayerFramerate drag handle.
+	 * @param Bounds A rectangle indicating the valid screen area for the
+	 *        window.
+	 * @param BGColor What color the window background should be, default is
+	 *        gray and transparent.
 	 */
 	public Perf(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds, int BGColor)
 	{
 		this(Title, Width, Height, Resizable, Bounds, BGColor, 0x7f000000);
 	}
-	
+
 	/**
-	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object. This Flash-based class is
+	 * mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title			The name of the window, displayed in the header bar.
-	 * @param Width			The initial width of the window.
-	 * @param Height		The initial height of the window.
-	 * @param Resizable		Whether you can change the size of the window with flashPlayerFramerate drag handle.
-	 * @param Bounds		A rectangle indicating the valid screen area for the window.
+	 * @param Title The name of the window, displayed in the header bar.
+	 * @param Width The initial width of the window.
+	 * @param Height The initial height of the window.
+	 * @param Resizable Whether you can change the size of the window with
+	 *        flashPlayerFramerate drag handle.
+	 * @param Bounds A rectangle indicating the valid screen area for the
+	 *        window.
 	 */
 	public Perf(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds)
 	{
 		this(Title, Width, Height, Resizable, Bounds, 0x7f7f7f7f, 0x7f000000);
 	}
-	
+
 	/**
-	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object. This Flash-based class is
+	 * mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title			The name of the window, displayed in the header bar.
-	 * @param Width			The initial width of the window.
-	 * @param Height		The initial height of the window.
-	 * @param Resizable		Whether you can change the size of the window with flashPlayerFramerate drag handle.
+	 * @param Title The name of the window, displayed in the header bar.
+	 * @param Width The initial width of the window.
+	 * @param Height The initial height of the window.
+	 * @param Resizable Whether you can change the size of the window with
+	 *        flashPlayerFramerate drag handle.
 	 */
 	public Perf(String Title, float Width, float Height, boolean Resizable)
 	{
 		this(Title, Width, Height, Resizable, null, 0x7f7f7f7f, 0x7f000000);
 	}
-	
+
 	/**
-	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object. This Flash-based class is
+	 * mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title			The name of the window, displayed in the header bar.
-	 * @param Width			The initial width of the window.
-	 * @param Height		The initial height of the window.
+	 * @param Title The name of the window, displayed in the header bar.
+	 * @param Width The initial width of the window.
+	 * @param Height The initial height of the window.
 	 */
 	public Perf(String Title, float Width, float Height)
 	{
 		this(Title, Width, Height, true, null, 0x7f7f7f7f, 0x7f000000);
 	}
-	
+
 	/**
 	 * Clean up memory.
 	 */
@@ -137,41 +151,48 @@ public class Perf extends FlxWindow
 		_visibleObject = null;
 		super.destroy();
 	}
-	
+
 	/**
-	 * Called each frame, but really only updates once every second or so, to save on performance.
-	 * Takes all the data in the accumulators and parses it into useful performance data.
+	 * Called each frame, but really only updates once every second or so, to
+	 * save on performance. Takes all the data in the accumulators and parses it
+	 * into useful performance data.
 	 */
 	public void update()
-	{	
+	{
 		long time = System.currentTimeMillis();
 		long elapsed = time - _lastTime;
 		int updateEvery = 500;
 		if(elapsed > updateEvery)
 			elapsed = updateEvery;
 		_lastTime = time;
-		
+
 		_updateTimer += elapsed;
 		if(_updateTimer > updateEvery)
 		{
 			int i;
 			StringBuilder output = new StringBuilder();
-	
+
 			float flashPlayerFramerate = 0;
-			
+
 			i = 0;
-			while (i < _flashMarker)
+			while(i < _flashMarker)
 				flashPlayerFramerate += _flash.get(i++);
 			flashPlayerFramerate /= _flashMarker;
-			output.append((int)(1/(flashPlayerFramerate/1000)) + "/" + FlxG.getFlashFramerate() + "fps\n");
-		
-			output.append((float)( ( (Gdx.app.getJavaHeap() + Gdx.app.getNativeHeap()) * 0.000000954f )/*.toFixed(2)*/ ) + "MB\n"); 
-			
+			output.append((int) (1 / (flashPlayerFramerate / 1000)) + "/" + FlxG.getFlashFramerate() + "fps\n");
+
+			output.append((float) (((Gdx.app.getJavaHeap() + Gdx.app.getNativeHeap()) * 0.000000954f)/*
+																									 * .
+																									 * toFixed
+																									 * (
+																									 * 2
+																									 * )
+																									 */) + "MB\n");
+
 			int updateTime = 0;
 			i = 0;
 			while(i < _flixelUpdateMarker)
 				updateTime += _flixelUpdate.get(i++);
-			
+
 			int activeCount = 0;
 			int visibleCount = 0;
 			i = 0;
@@ -182,24 +203,24 @@ public class Perf extends FlxWindow
 			}
 			if(_objectMarker != 0)
 				activeCount /= _objectMarker;
-			
-			output.append("U:" + activeCount + " " + (int)((float)updateTime/_flixelDrawMarker) + "ms\n");
-			
+
+			output.append("U:" + activeCount + " " + (int) ((float) updateTime / _flixelDrawMarker) + "ms\n");
+
 			int drawTime = 0;
 			i = 0;
 			while(i < _flixelDrawMarker)
 				drawTime += _flixelDraw.get(i++);
-			
+
 			visibleCount = 0;
 			i = 0;
 			while(i < _visibleObjectMarker)
 				visibleCount += _visibleObject.get(i++);
 			visibleCount /= _visibleObjectMarker;
-	
-			output.append("D:" + visibleCount + " " + (int)((float)drawTime/_flixelDrawMarker) + "ms");
-			
-			//_text.text = output; can't draw here now.
-			//this.output = output.toString();
+
+			output.append("D:" + visibleCount + " " + (int) ((float) drawTime / _flixelDrawMarker) + "ms");
+
+			// _text.text = output; can't draw here now.
+			// this.output = output.toString();
 			_flixelUpdateMarker = 0;
 			_flixelDrawMarker = 0;
 			_flashMarker = 0;
@@ -208,86 +229,79 @@ public class Perf extends FlxWindow
 			_updateTimer -= updateEvery;
 		}
 	}
-	
-	
+
 	/**
 	 * Keep track of how long updates take.
 	 * 
-	 * @param Time	How long this update took.
+	 * @param Time How long this update took.
 	 */
 	public void flixelUpdate(int Time)
 	{
-		//if(_flixelUpdate.size <= _flixelUpdateMarker)
-			//return;
+		// if(_flixelUpdate.size <= _flixelUpdateMarker)
+		// return;
 		_flixelUpdate.set(_flixelUpdateMarker++, Time);
 	}
-	
-	
+
 	/**
 	 * Keep track of how long renders take.
 	 * 
-	 * @param	Time	How long this render took.
+	 * @param Time How long this render took.
 	 */
 	public void flixelDraw(int Time)
 	{
-		//if(_flixelDraw.size <= _flixelDrawMarker)
-			//return;
+		// if(_flixelDraw.size <= _flixelDrawMarker)
+		// return;
 		_flixelDraw.set(_flixelDrawMarker++, Time);
 	}
-	
-	
+
 	/**
 	 * Keep track of how long the Flash player and browser take.
 	 * 
-	 * @param Time	How long Flash/browser took.
+	 * @param Time How long Flash/browser took.
 	 */
 	public void flash(int Time)
 	{
-		//if(_flash.size <= _flashMarker)
-			//return;
+		// if(_flash.size <= _flashMarker)
+		// return;
 		_flash.set(_flashMarker++, Time);
 	}
-	
-	
+
 	/**
 	 * Keep track of how many objects were updated.
 	 * 
-	 * @param Count	How many objects were updated.
+	 * @param Count How many objects were updated.
 	 */
 	public void activeObjects(int Count)
 	{
-		//if(_activeObject.size <= _objectMarker)
-			//return;
+		// if(_activeObject.size <= _objectMarker)
+		// return;
 		_activeObject.set(_objectMarker++, Count);
 	}
-	
-	
+
 	/**
 	 * Keep track of how many objects were updated.
-	 *  
-	 * @param Count	How many objects were updated.
+	 * 
+	 * @param Count How many objects were updated.
 	 */
 	public void visibleObjects(int Count)
 	{
-		//if(_visibleObject.size <= _visibleObjectMarker)
-			//return;
+		// if(_visibleObject.size <= _visibleObjectMarker)
+		// return;
 		_visibleObject.set(_visibleObjectMarker++, Count);
 	}
 
-
 	public void draw()
 	{
-		//if(output != null)
+		// if(output != null)
 		{/*
-			ShapeRenderer flashGfx = FlxG.flashGfx;
-			flashGfx.setProjectionMatrix(FlxG.camera.glCamera.combined);
-			flashGfx.begin(ShapeType.FilledRectangle);
-			flashGfx.setColor(FlxU.colorFromHex(0x22222222));
-			flashGfx.filledRect(FlxG.width-60, 0, 60, 50);
-			flashGfx.end();
-			FlxG.batch.begin();
-			_text.drawMultiLine(FlxG.batch, output, FlxG.width-55, 5);
-			FlxG.batch.end();*/
+		 * ShapeRenderer flashGfx = FlxG.flashGfx;
+		 * flashGfx.setProjectionMatrix(FlxG.camera.glCamera.combined);
+		 * flashGfx.begin(ShapeType.FilledRectangle);
+		 * flashGfx.setColor(FlxU.colorFromHex(0x22222222));
+		 * flashGfx.filledRect(FlxG.width-60, 0, 60, 50); flashGfx.end();
+		 * FlxG.batch.begin(); _text.drawMultiLine(FlxG.batch, output,
+		 * FlxG.width-55, 5); FlxG.batch.end();
+		 */
 		}
 	}
 }

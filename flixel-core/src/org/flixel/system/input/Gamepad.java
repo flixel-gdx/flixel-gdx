@@ -9,8 +9,8 @@ import com.badlogic.gdx.utils.ObjectIntMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 /**
- * A gamepad with common buttons. Keeps track of what keys are pressed and how with 
- * handy booleans or strings.
+ * A gamepad with common buttons. Keeps track of what keys are pressed and how
+ * with handy booleans or strings.
  * 
  * @author Ka Wing Chin
  */
@@ -18,7 +18,7 @@ public class Gamepad extends Input
 {
 	public boolean UP;
 	public boolean UP_RIGHT;
-	public boolean UP_LEFT;	
+	public boolean UP_LEFT;
 	public boolean RIGHT;
 	public boolean DOWN;
 	public boolean DOWN_RIGHT;
@@ -50,13 +50,14 @@ public class Gamepad extends Input
 	private int AXIS_LEFT_Y;
 	private int AXIS_RIGHT_X;
 	private int AXIS_RIGHT_Y;
-		
+
 	/**
-	 * Internal, tracks the current POV. 
+	 * Internal, tracks the current POV.
 	 */
 	public PovDirection povDirection;
 	/**
-	 * This is just a pre-allocated x-y point container to be used however you like.
+	 * This is just a pre-allocated x-y point container to be used however you
+	 * like.
 	 */
 	private FlxPoint _point;
 	/**
@@ -88,23 +89,24 @@ public class Gamepad extends Input
 	 */
 	public boolean connected;
 	/**
-	 * The ID of the gamepad which is equal to the ID of the <code>Controller</code>.
+	 * The ID of the gamepad which is equal to the ID of the
+	 * <code>Controller</code>.
 	 */
 	public String ID;
-	
+
 	final int _total = 34;
-		
+
 	/**
 	 * Creates a new <code>Gamepad</code> object.
 	 */
 	public Gamepad()
-	{		
+	{
 		_lookup = new ObjectIntMap<String>(_total);
 		_map = new IntMap<Input.KeyState>(_total);
 		_point = new FlxPoint();
 		axisData = new IntMap<Float>(4);
 	}
-	
+
 	@Override
 	public void destroy()
 	{
@@ -114,15 +116,16 @@ public class Gamepad extends Input
 		axisData.clear();
 		axisData = null;
 	}
-	
+
 	/**
 	 * Event handler so GamepadManager can toggle keys.
-	 * @param buttonCode	The button code of the pressed key.
+	 * 
+	 * @param buttonCode The button code of the pressed key.
 	 */
 	public void handleKeyDown(int buttonCode)
 	{
 		KeyState object = _map.get(buttonCode);
-		
+
 		if(object == null)
 			return;
 
@@ -130,7 +133,7 @@ public class Gamepad extends Input
 			object.current = 1;
 		else
 			object.current = 2;
-		
+
 		try
 		{
 			ClassReflection.getField(Gamepad.class, object.name).set(this, true);
@@ -140,15 +143,16 @@ public class Gamepad extends Input
 			FlxG.log("Gamepad", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Event handler so GamepadManager can toggle keys.
-	 * @param buttonCode	The button code of the pressed key.
+	 * 
+	 * @param buttonCode The button code of the pressed key.
 	 */
 	public void handleKeyUp(int buttonCode)
 	{
 		KeyState object = _map.get(buttonCode);
-		
+
 		if(object == null)
 			return;
 
@@ -166,10 +170,11 @@ public class Gamepad extends Input
 			FlxG.log("Gamepad", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Set the button mapping provided by <code>GamepadMapping</code>.
-	 * @param mapping	The mapping that will be set to this gamepad.
+	 * 
+	 * @param mapping The mapping that will be set to this gamepad.
 	 */
 	public void setMapping(GamepadMapping mapping)
 	{
@@ -181,7 +186,7 @@ public class Gamepad extends Input
 		addKey("DOWN", GamepadMapping.DOWN);
 		addKey("DOWN_RIGHT", GamepadMapping.DOWN_RIGHT);
 		addKey("DOWN_LEFT", GamepadMapping.DOWN_LEFT);
-		addKey("LEFT", GamepadMapping.LEFT);		
+		addKey("LEFT", GamepadMapping.LEFT);
 		addKey("CENTER", GamepadMapping.CENTER);
 		addKey("BUTTON_DPAD_UP", mapping.BUTTON_DPAD_UP);
 		addKey("BUTTON_DPAD_RIGHT", mapping.BUTTON_DPAD_RIGHT);
@@ -206,16 +211,17 @@ public class Gamepad extends Input
 		AXIS_LEFT_Y = mapping.AXIS_LEFT_Y;
 		AXIS_RIGHT_X = mapping.AXIS_RIGHT_X;
 		AXIS_RIGHT_Y = mapping.AXIS_RIGHT_Y;
-		
+
 		axisData.put(mapping.AXIS_LEFT_X, 0f);
 		axisData.put(mapping.AXIS_LEFT_Y, 0f);
 		axisData.put(mapping.AXIS_RIGHT_X, 0f);
 		axisData.put(mapping.AXIS_RIGHT_Y, 0f);
 	}
-	
+
 	/**
 	 * Get the data from L-axis.
-	 * @return	A point which contains the x and y value.
+	 * 
+	 * @return A point which contains the x and y value.
 	 */
 	public FlxPoint getAxisL()
 	{
@@ -225,10 +231,11 @@ public class Gamepad extends Input
 		_point.y = axisData.get(AXIS_LEFT_Y) * sensitivityL;
 		return _point;
 	}
-	
+
 	/**
 	 * Get the data from R-axis.
-	 * @return	A point which contains the x and y value.
+	 * 
+	 * @return A point which contains the x and y value.
 	 */
 	public FlxPoint getAxisR()
 	{

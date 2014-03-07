@@ -10,6 +10,7 @@ import flash.events.Event;
 import flash.events.IEventListener;
 import flash.events.KeyboardEvent;
 
+/*@formatter:off*/
 /**
  * Copyright (c) 2009 Martín Sebastián Wain
  * License: Creative Commons Attribution 3.0 United States
@@ -24,7 +25,7 @@ import flash.events.KeyboardEvent;
  * @author Gama11
  * @author Mr_Walrus
  * @author nitram_cero (Martin Sebastián Wain)
- */
+ *//*@formatter:on*/
 public class FlxInputText extends FlxUITouchable
 {
 	private final String ImgTextAreaTopLeft = "org/flixel/data/pack:ninepatch_textarea_topleft";
@@ -35,7 +36,7 @@ public class FlxInputText extends FlxUITouchable
 	private final String ImgTextAreaBottomLeft = "org/flixel/data/pack:ninepatch_textarea_bottomleft";
 	private final String ImgTextAreaBottomCenter = "org/flixel/data/pack:ninepatch_textarea_bottomcenter";
 	private final String ImgTextAreaBottomRight = "org/flixel/data/pack:ninepatch_textarea_bottomright";
-		
+
 	/**
 	 * No filter
 	 */
@@ -76,11 +77,11 @@ public class FlxInputText extends FlxUITouchable
 	 * Defines what text to filter. It can be NO_FILTER, ONLY_ALPHA,
 	 * ONLY_NUMERIC, ONLY_ALPHA_NUMERIC or CUSTOM_FILTER.
 	 */
-	private String _filterMode = NO_FILTER;	
+	private String _filterMode = NO_FILTER;
 	/**
 	 * This regular expression will filter out (remove) everything that matches.
 	 * This is activated by setting filterMode = FlxInputText.CUSTOM_FILTER.
-	 */	
+	 */
 	public String customFilterPattern;
 	/**
 	 * Text transform, ALL_CASES, LOWER_CASE and UPPER_CASE.
@@ -93,7 +94,7 @@ public class FlxInputText extends FlxUITouchable
 	/**
 	 * A function called when the enter key is pressed on this text box.
 	 */
-	public IFlxInputText callback;	
+	public IFlxInputText callback;
 	/**
 	 * The max amount of characters the textfield can contain.
 	 */
@@ -122,46 +123,49 @@ public class FlxInputText extends FlxUITouchable
 	 * Tracks whether the text got changed or not.
 	 */
 	private boolean _isChanged;
-	
+
 	/**
 	 * Create a new <code>FlxInputText</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component.
-	 * @param Width		The width of the component. Default 0, unlimited width.
-	 * @param Height	The height of the component. Default 0, unlimited height.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component.
+	 * @param Width The width of the component. Default 0, unlimited width.
+	 * @param Height The height of the component. Default 0, unlimited height.
 	 */
 	public FlxInputText(float X, float Y, FlxUISkin skin, String Label, int Width, int Height)
 	{
 		super(X, Y, skin, Label, Width, Height);
-		textfield = new FlxTextExt(X, Y-6, Width, Height, null, true);		
+		textfield = new FlxTextExt(X, Y - 6, Width, Height, null, true);
 		textfield.offset.y = (skin == null) ? -12 : 0;
 		textfield.setFormat(null, 16);
 		textBuffer = new StringBuilder();
 		_passwordBuffer = new StringBuilder();
 		FlxG.getStage().addEventListener(KeyboardEvent.KEY_TYPED, handleKeyDown);
 	}
-	
+
 	/**
 	 * Create a new <code>FlxInputText</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component
-	 * @param Width		The width of the component. Default 0, unlimited width.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component
+	 * @param Width The width of the component. Default 0, unlimited width.
 	 */
 	public FlxInputText(float X, float Y, FlxUISkin skin, String Label, int Width)
 	{
 		this(X, Y, skin, Label, Width, 0);
 	}
-	
+
 	/**
 	 * Create a new <code>FlxInputText</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
-	 * @param Label		The label along side the component
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
+	 * @param Label The label along side the component
 	 */
 	public FlxInputText(float X, float Y, FlxUISkin skin, String Label)
 	{
@@ -170,34 +174,37 @@ public class FlxInputText extends FlxUITouchable
 
 	/**
 	 * Create a new <code>FlxInputText</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
-	 * @param UISkin	The skin that needs to be applied.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
+	 * @param UISkin The skin that needs to be applied.
 	 */
 	public FlxInputText(float X, float Y, FlxUISkin skin)
 	{
 		this(X, Y, skin, null, 0, 0);
 	}
-	
+
 	/**
 	 * Create a new <code>FlxInputText</code> object.
-	 * @param X			The x-position of the component.
-	 * @param Y			The y-position of the component.
+	 * 
+	 * @param X The x-position of the component.
+	 * @param Y The y-position of the component.
 	 */
 	public FlxInputText(float X, float Y)
 	{
 		this(X, Y, null, null, 0, 0);
 	}
-	
+
 	/**
 	 * Create a new <code>FlxInputText</code> object.
-	 * @param X			The x-position of the component.
+	 * 
+	 * @param X The x-position of the component.
 	 */
 	public FlxInputText(float X)
 	{
 		this(X, 0, null, null, 0, 0);
 	}
-	
+
 	/**
 	 * Create a new <code>FlxInputText</code> object.
 	 */
@@ -205,7 +212,7 @@ public class FlxInputText extends FlxUITouchable
 	{
 		this(0, 0, null, null, 0, 0);
 	}
-	
+
 	@Override
 	public void setDefaultSkin()
 	{
@@ -220,7 +227,7 @@ public class FlxInputText extends FlxUITouchable
 		skin.labelOffset.y = -3;
 		skin.labelWidth = 200;
 		skin.setFormat(null, 8, 0x0099CC);
-		
+
 		skin.setNinePatch(FlxNinePatch.TOP_LEFT, ImgTextAreaTopLeft, 4, 2);
 		skin.setNinePatch(FlxNinePatch.TOP_CENTER, ImgTextAreaTopCenter, 1, 2);
 		skin.setNinePatch(FlxNinePatch.TOP_RIGHT, ImgTextAreaTopRight, 4, 2);
@@ -244,9 +251,10 @@ public class FlxInputText extends FlxUITouchable
 		checkFocus();
 		super.update();
 	}
-		
+
 	/**
-	 * Check whether a click has been occurred outside the textfield. Hides the keyboard on mobile.
+	 * Check whether a click has been occurred outside the textfield. Hides the
+	 * keyboard on mobile.
 	 */
 	protected void checkFocus()
 	{
@@ -259,10 +267,10 @@ public class FlxInputText extends FlxUITouchable
 				Gdx.input.setOnscreenKeyboardVisible(false);
 		}
 	}
-	
+
 	/**
-	 * This will automatically called when textfield got clicked. Allows to type in the textfield.
-	 * Shows the keyboard on mobile.
+	 * This will automatically called when textfield got clicked. Allows to type
+	 * in the textfield. Shows the keyboard on mobile.
 	 */
 	@Override
 	public void onChange()
@@ -275,19 +283,17 @@ public class FlxInputText extends FlxUITouchable
 	/**
 	 * Handles key presses generated on the stage.
 	 * 
-	 * @param e		The triggering keyboard event.
+	 * @param e The triggering keyboard event.
 	 */
 	IEventListener handleKeyDown = new IEventListener()
 	{
 		@Override
-		public void onEvent(Event e) 
-		{			
+		public void onEvent(Event e)
+		{
 			if(activated)
 			{
-				int key = ((KeyboardEvent)e).keyCode;
-				if(key == Keys.SHIFT_LEFT || key == Keys.SHIFT_RIGHT
-				|| key == Keys.CONTROL_LEFT || key == Keys.CONTROL_RIGHT
-				|| key == Keys.ALT_LEFT || key == Keys.ALT_RIGHT)
+				int key = ((KeyboardEvent) e).keyCode;
+				if(key == Keys.SHIFT_LEFT || key == Keys.SHIFT_RIGHT || key == Keys.CONTROL_LEFT || key == Keys.CONTROL_RIGHT || key == Keys.ALT_LEFT || key == Keys.ALT_RIGHT)
 				{
 					return;
 				}
@@ -296,12 +302,12 @@ public class FlxInputText extends FlxUITouchable
 				{
 					if(textBuffer.length() > 0)
 					{
-						textBuffer.delete(textBuffer.length()-1, textBuffer.length());						
+						textBuffer.delete(textBuffer.length() - 1, textBuffer.length());
 						if(_passwordMode)
-							_passwordBuffer.delete(_passwordBuffer.length()-1, _passwordBuffer.length());
+							_passwordBuffer.delete(_passwordBuffer.length() - 1, _passwordBuffer.length());
 						_isChanged = true;
 					}
-				}				
+				}
 				// Enter
 				else if(key == Keys.ENTER)
 				{
@@ -318,7 +324,7 @@ public class FlxInputText extends FlxUITouchable
 				{
 					if(textBuffer.length() < _maxLength || _maxLength == 0)
 					{
-						textBuffer.append(filter(String.valueOf(((KeyboardEvent)e).charCode)));
+						textBuffer.append(filter(String.valueOf(((KeyboardEvent) e).charCode)));
 						if(_passwordMode)
 							_passwordBuffer.append("*");
 						_isChanged = true;
@@ -329,7 +335,7 @@ public class FlxInputText extends FlxUITouchable
 					// Calculate whether it fits the bounding or not.
 					textfield.setText(textBuffer);
 					if(_maxLines < textfield.getTotalLines())
-						textBuffer.deleteCharAt(textBuffer.length()-1);
+						textBuffer.deleteCharAt(textBuffer.length() - 1);
 					textfield.setText(_passwordMode ? _passwordBuffer : textBuffer);
 					_currentLineCounter = textfield.getTotalLines() == -1 ? 1 : textfield.getTotalLines();
 				}
@@ -352,9 +358,10 @@ public class FlxInputText extends FlxUITouchable
 	}
 
 	/**
-	 * Checks an input string against the current filter and returns a filtered string.
+	 * Checks an input string against the current filter and returns a filtered
+	 * string.
 	 * 
-	 * @param text	Unfiltered text
+	 * @param text Unfiltered text
 	 * @return Text filtered by the the filter mode of the box
 	 */
 	protected String filter(String text)
@@ -363,93 +370,105 @@ public class FlxInputText extends FlxUITouchable
 			text = text.toUpperCase();
 		else if(_forceCase == LOWER_CASE)
 			text = text.toLowerCase();
-			
+
 		if(_filterMode != NO_FILTER)
 		{
 			if(!text.matches(_filterMode))
 				text = "";
-		}	
+		}
 		return text;
 	}
-	
+
 	/**
 	 * Set the maximum lines the textfield is allowed.
+	 * 
 	 * @param Lines
 	 */
 	public void setMaxLines(int Lines)
 	{
 		_maxLines = Lines;
 	}
-	
+
 	/**
 	 * Get the current case that got forced.
+	 * 
 	 * @return
 	 */
 	public int getForceCase()
-	{ 
+	{
 		return _forceCase;
 	}
-	
+
 	/**
 	 * Enforce upper-case or lower-case
-	 * @param	Case		The Case that's being enforced. Either ALL_CASES, UPPER_CASE or LOWER_CASE.
+	 * 
+	 * @param Case The Case that's being enforced. Either ALL_CASES, UPPER_CASE
+	 *        or LOWER_CASE.
 	 */
 	public void setForceCase(int Case)
-	{ 
+	{
 		_forceCase = Case;
 		textfield.setText(filter(textfield.getText()));
 	}
-	
+
 	/**
 	 * Set the font size.
+	 * 
 	 * @param Size
 	 */
 	public void setSize(float Size)
 	{
 		textfield.setSize(Size);
 	}
-	
+
 	/**
 	 * The maximum chars the textfield is allowed.
+	 * 
 	 * @param Length
 	 */
 	public void setMaxLength(int Length)
 	{
 		_maxLength = Length;
-		if (textfield.getText().length() > _maxLength) 
+		if(textfield.getText().length() > _maxLength)
 			textfield.setText(textfield.getText().substring(0, _maxLength));
 	}
-	
+
 	/**
-	 * Set the maximum length for the field (e.g. "3" for Arcade type hi-score initials)
-	 * @param	Length		The maximum length. 0 means unlimited.
+	 * Set the maximum length for the field (e.g. "3" for Arcade type hi-score
+	 * initials)
+	 * 
+	 * @param Length The maximum length. 0 means unlimited.
 	 */
 	public int getMaxLength()
 	{
 		return _maxLength;
 	}
-	
+
 	/**
 	 * Make the textfield go in to password mode and show * for every char.
+	 * 
 	 * @param enable
 	 */
 	public void setPasswordMode(boolean enable)
 	{
 		_passwordMode = enable;
 	}
-	
+
 	/**
 	 * Whether or not the textfield is a password textfield
-	 * @param	enable		Whether to en- or disable password mode
+	 * 
+	 * @param enable Whether to en- or disable password mode
 	 */
 	public boolean getPasswordMode()
 	{
 		return _passwordMode;
 	}
-	
+
 	/**
-	 * Set the filter mode that the text needs to be filtered.
-	 * NO_FILTER, ONLY_ALPHA, ONLY_NUMERIC, ONLY_ALPHA_NUMERIC, ONLY_ALPHA_NUMERIC_SPACE or CUSTOM_FILTER
+	 * Set the filter mode that the text needs to be filtered. NO_FILTER,
+	 * ONLY_ALPHA, ONLY_NUMERIC, ONLY_ALPHA_NUMERIC, ONLY_ALPHA_NUMERIC_SPACE or
+	 * CUSTOM_FILTER
+	 * 
 	 * @param filterMode
 	 */
 	public void setFilterMode(String filterMode)
@@ -457,25 +476,28 @@ public class FlxInputText extends FlxUITouchable
 		_filterMode = filterMode;
 		textfield.setText(filter(textfield.getText()));
 	}
-	
+
 	/**
-	 * Defines what text to filter. It can be NO_FILTER, ONLY_ALPHA, ONLY_NUMERIC, ONLY_ALPHA_NUMERIC, ONLY_ALPHA_NUMERIC_SPACE or CUSTOM_FILTER
-	 * (Remember to append "FlxInputText." as a prefix to those constants)
+	 * Defines what text to filter. It can be NO_FILTER, ONLY_ALPHA,
+	 * ONLY_NUMERIC, ONLY_ALPHA_NUMERIC, ONLY_ALPHA_NUMERIC_SPACE or
+	 * CUSTOM_FILTER (Remember to append "FlxInputText." as a prefix to those
+	 * constants)
 	 */
 	public String getFilterMode()
 	{
 		return _filterMode;
 	}
-	
+
 	/**
 	 * Set text in the textfield.
+	 * 
 	 * @param Text
 	 */
 	public void setText(CharSequence Text)
 	{
 		textfield.setText(Text);
 	}
-	
+
 	/**
 	 * Get the text from the textfield.
 	 */

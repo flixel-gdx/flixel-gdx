@@ -14,16 +14,17 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * <code>AssetLoader</code> to create a <code>BitmapFont</code> from a ttf file. Passing a <code>BitmapFontParameter</code> to
- * <code>AssetManager::load(String, Class, AssetLoaderParameters)</code> allows to specify whether the font
- * should be flipped on the y-axis or not.
+ * <code>AssetLoader</code> to create a <code>BitmapFont</code> from a ttf file.
+ * Passing a <code>BitmapFontParameter</code> to
+ * <code>AssetManager::load(String, Class, AssetLoaderParameters)</code> allows
+ * to specify whether the font should be flipped on the y-axis or not.
  * 
  * @author Thomas Weston
  */
-public class FontLoader extends AsynchronousAssetLoader<BitmapFont, BitmapFontParameter> 
-{	
+public class FontLoader extends AsynchronousAssetLoader<BitmapFont, BitmapFontParameter>
+{
 	private Map<String, AsynchronousAssetLoader<BitmapFont, BitmapFontParameter>> _loaders;
-	
+
 	public FontLoader(FileHandleResolver resolver)
 	{
 		super(resolver);
@@ -37,7 +38,7 @@ public class FontLoader extends AsynchronousAssetLoader<BitmapFont, BitmapFontPa
 	{
 		return getLoader(file).loadSync(manager, fileName, file, parameter);
 	}
-	
+
 	@Override
 	public void loadAsync(AssetManager manager, String fileName, FileHandle file, BitmapFontParameter parameter)
 	{
@@ -50,7 +51,7 @@ public class FontLoader extends AsynchronousAssetLoader<BitmapFont, BitmapFontPa
 	{
 		return getLoader(file).getDependencies(fileName, file, parameter);
 	}
-	
+
 	private AsynchronousAssetLoader<BitmapFont, BitmapFontParameter> getLoader(FileHandle file)
 	{
 		AsynchronousAssetLoader<BitmapFont, BitmapFontParameter> loader = _loaders.get(file.extension().toLowerCase());

@@ -1,17 +1,17 @@
 package org.flixel.ui;
 
-
 /**
  * A checkbox style button with only ON and OFF labeled.
  * 
  * @author Ka Wing Chin
  */
 public class FlxSwitch extends FlxUITouchable
-{	
+{
 	private final String ImgSwitch = "org/flixel/data/pack:switch";
-	
+
 	/**
 	 * Creates a new <code>FlxSwitch</code> object.
+	 * 
 	 * @param X
 	 * @param Y
 	 * @param ID
@@ -25,9 +25,10 @@ public class FlxSwitch extends FlxUITouchable
 		this.ID = ID;
 		setOn(true);
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxSwitch</code> object.
+	 * 
 	 * @param X
 	 * @param Y
 	 * @param ID
@@ -39,9 +40,10 @@ public class FlxSwitch extends FlxUITouchable
 	{
 		this(X, Y, ID, skin, null);
 	}
-	
+
 	/**
 	 * Creates a new <code>FlxSwitch</code> object.
+	 * 
 	 * @param X
 	 * @param Y
 	 * @param ID
@@ -50,7 +52,7 @@ public class FlxSwitch extends FlxUITouchable
 	{
 		this(X, Y, ID, null, null);
 	}
-	
+
 	@Override
 	public void setDefaultSkin()
 	{

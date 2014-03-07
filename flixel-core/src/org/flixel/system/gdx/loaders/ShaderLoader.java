@@ -14,7 +14,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * <code>AssetLoader</code> to create a <ProgramShader> from vertex and fragment file.
+ * <code>AssetLoader</code> to create a <ProgramShader> from vertex and fragment
+ * file.
  * 
  * @author Ka Wing Chin
  */
@@ -27,7 +28,7 @@ public class ShaderLoader extends AsynchronousAssetLoader<FlxShaderProgram, Shad
 
 	@Override
 	public void loadAsync(AssetManager manager, String fileName, FileHandle file, ShaderProgramParameter parameter)
-	{		
+	{
 	}
 
 	@Override
@@ -39,12 +40,12 @@ public class ShaderLoader extends AsynchronousAssetLoader<FlxShaderProgram, Shad
 			vertex = Gdx.files.classpath(parameter.vertex).readString();
 		else
 			vertex = Gdx.files.internal(parameter.vertex).readString();
-			
+
 		if(parameter.fragment.startsWith("org/flixel"))
 			fragment = Gdx.files.classpath(parameter.fragment).readString();
 		else
 			fragment = Gdx.files.internal(parameter.fragment).readString();
-		
+
 		FlxShaderProgram shader = new FlxShaderProgram(vertex, fragment, parameter.callback);
 		FlxG.isShaderCompiled(shader);
 		shader.loadShaderSettings();
@@ -54,12 +55,13 @@ public class ShaderLoader extends AsynchronousAssetLoader<FlxShaderProgram, Shad
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, ShaderProgramParameter parameter)
-	{		
+	{
 		return null;
 	}
-	
+
 	/**
-	 * Parameter to be passed, in this case the path to the vertex and fragment files.
+	 * Parameter to be passed, in this case the path to the vertex and fragment
+	 * files.
 	 * 
 	 * @author Ka Wing Chin
 	 */
@@ -79,4 +81,3 @@ public class ShaderLoader extends AsynchronousAssetLoader<FlxShaderProgram, Shad
 		public IFlxShaderProgram callback;
 	}
 }
-

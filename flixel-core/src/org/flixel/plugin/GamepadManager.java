@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.ObjectMap;
  * @author Ka Wing Chin
  */
 public class GamepadManager extends FlxBasic implements ControllerListener
-{	
+{
 	/**
 	 * A self reference of the listener.
 	 */
@@ -36,32 +36,32 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	 * An array that contains <code>Gamepad</code>s for quick access.
 	 */
 	private static Array<Gamepad> pads;
-	
+
 	/**
-	 * Creates a new <code>GamepadManager</code> object.
-	 * Needs to added to the plugin, <code>FlxG.addPlugin()</code>.
+	 * Creates a new <code>GamepadManager</code> object. Needs to be added to the
+	 * plugin, <code>FlxG.addPlugin()</code>.
 	 */
 	public GamepadManager()
 	{
 		// TODO: error gdx-controllers-android can't be found.
-		//SharedLibraryLoader loader = new SharedLibraryLoader();
-		//if(FlxG.mobile)
-		//{	/*loader.load("gdx-controllers-android");*/}
-		//else if(Gdx.app.getType() == ApplicationType.WebGL)
-		//{	/*loader.load("gdx-controllers-gwt");*/}
-		//else
-		//	loader.load("gdx-controllers-desktop");
-	
+		// SharedLibraryLoader loader = new SharedLibraryLoader();
+		// if(FlxG.mobile)
+		// { /*loader.load("gdx-controllers-android");*/}
+		// else if(Gdx.app.getType() == ApplicationType.WebGL)
+		// { /*loader.load("gdx-controllers-gwt");*/}
+		// else
+		// loader.load("gdx-controllers-desktop");
+
 		listener = this;
 		controllers = new ObjectMap<Controller, Gamepad>();
 		mappings = new Array<GamepadMapping>();
 		addMapping(new GamepadMapping("generic"));
 		pads = new Array<Gamepad>();
 	}
-	
+
 	@Override
 	public void destroy()
-	{			
+	{
 		for(Controller c : Controllers.getControllers())
 		{
 			c.removeListener(listener);
@@ -78,7 +78,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 		pads.clear();
 		pads = null;
 	}
-		
+
 	@Override
 	public void update()
 	{
@@ -88,10 +88,11 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 				pad.update();
 		}
 	}
-	
+
 	/**
 	 * Add new mapping.
-	 * @param mapping	The mapping that will be added.
+	 * 
+	 * @param mapping The mapping that will be added.
 	 */
 	public static void addMapping(GamepadMapping mapping)
 	{
@@ -100,13 +101,14 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 		{
 			if(mapping == mappings.get(i))
 				return;
-		}		
-		mappings.add(mapping);		
+		}
+		mappings.add(mapping);
 	}
-	
+
 	/**
 	 * Add a new gamepad.
-	 * @param gamepad	The gamepad that will be added.
+	 * 
+	 * @param gamepad The gamepad that will be added.
 	 */
 	public static void addGamepad(Gamepad gamepad)
 	{
@@ -117,8 +119,9 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 				return;
 		}
 		pads.add(gamepad);
-		
-		// Check if there is enough controllers available to hook a gamepad to it.
+
+		// Check if there is enough controllers available to hook a gamepad to
+		// it.
 		if(pads.size > Controllers.getControllers().size)
 		{
 			FlxG.log("Gamepad > Available controllers: " + Controllers.getControllers().size);
@@ -126,7 +129,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 		}
 		else
 		{
-			Controller c = Controllers.getControllers().get(pads.size-1);
+			Controller c = Controllers.getControllers().get(pads.size - 1);
 			c.addListener(listener);
 			controllers.put(c, gamepad);
 			String controllerName = c.getName().toLowerCase();
@@ -142,7 +145,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 						gamepad.connected = true;
 						mappingFound = true;
 						break;
-					}					
+					}
 				}
 				if(mappings.get(i).IDs != null)
 				{
@@ -162,19 +165,19 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 			}
 			if(!mappingFound)
 			{
-				FlxG.log("No mapping found for controller: " + c.getName() +
-						 "\nUse default mapping.");
+				FlxG.log("No mapping found for controller: " + c.getName() + "\nUse default mapping.");
 				gamepad.setMapping(mappings.get(0));
 			}
 		}
 	}
-	
+
 	/**
 	 * Remove a gamepad.
-	 * @param gamepad	The gamepad that will be moved.
+	 * 
+	 * @param gamepad The gamepad that will be moved.
 	 */
 	public static void removeGamepad(Gamepad gamepad)
-	{		
+	{
 		if(pads.removeValue(gamepad, true))
 		{
 			gamepad.connected = false;
@@ -185,12 +188,13 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 				c.removeListener(listener);
 			}
 		}
-	}	
-	
+	}
+
 	/**
 	 * Get a gamepad by index.
-	 * @param index		The index.
-	 * @return			The gamepad.
+	 * 
+	 * @param index The index.
+	 * @return The gamepad.
 	 */
 	public static Gamepad get(int index)
 	{
@@ -254,7 +258,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 
 	@Override
 	public boolean povMoved(Controller controller, int povCode, PovDirection value)
-	{		
+	{
 		Gamepad pad = controllers.get(controller);
 		if(value == PovDirection.center || pad.povDirection != value)
 		{
@@ -269,15 +273,32 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 		}
 		switch(value)
 		{
-			case north:pad.handleKeyDown(GamepadMapping.UP);break;
-			case northEast:pad.handleKeyDown(GamepadMapping.UP_RIGHT);break;
-			case northWest:pad.handleKeyDown(GamepadMapping.UP_LEFT);break;
-			case east:pad.handleKeyDown(GamepadMapping.RIGHT);break;
-			case south:pad.handleKeyDown(GamepadMapping.DOWN);break;
-			case southEast:pad.handleKeyDown(GamepadMapping.DOWN_RIGHT);break;
-			case southWest:pad.handleKeyDown(GamepadMapping.DOWN_LEFT);break;
-			case west:pad.handleKeyDown(GamepadMapping.LEFT);break;				
-			default:break;
+			case north:
+				pad.handleKeyDown(GamepadMapping.UP);
+				break;
+			case northEast:
+				pad.handleKeyDown(GamepadMapping.UP_RIGHT);
+				break;
+			case northWest:
+				pad.handleKeyDown(GamepadMapping.UP_LEFT);
+				break;
+			case east:
+				pad.handleKeyDown(GamepadMapping.RIGHT);
+				break;
+			case south:
+				pad.handleKeyDown(GamepadMapping.DOWN);
+				break;
+			case southEast:
+				pad.handleKeyDown(GamepadMapping.DOWN_RIGHT);
+				break;
+			case southWest:
+				pad.handleKeyDown(GamepadMapping.DOWN_LEFT);
+				break;
+			case west:
+				pad.handleKeyDown(GamepadMapping.LEFT);
+				break;
+			default:
+				break;
 		}
 		pad.povDirection = value;
 		return false;
@@ -286,14 +307,14 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	@Override
 	public boolean xSliderMoved(Controller controller, int sliderCode, boolean value)
 	{
-//		FlxG.log(sliderCode + " " + value);
+		// FlxG.log(sliderCode + " " + value);
 		return false;
 	}
 
 	@Override
 	public boolean ySliderMoved(Controller controller, int sliderCode, boolean value)
 	{
-//		FlxG.log(sliderCode + " " + value);
+		// FlxG.log(sliderCode + " " + value);
 		return false;
 	}
 
@@ -302,8 +323,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	{
 		controllers.get(controller).x = value.x;
 		controllers.get(controller).y = value.y;
-		controllers.get(controller).z = value.z;		
+		controllers.get(controller).z = value.z;
 		return false;
 	}
 }
-

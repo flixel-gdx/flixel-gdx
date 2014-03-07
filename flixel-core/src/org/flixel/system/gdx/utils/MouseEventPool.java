@@ -8,7 +8,7 @@ public class MouseEventPool extends RotationPool<MouseEvent>
 	{
 		super(size);
 	}
-	
+
 	public MouseEvent obtain(String type, int stageX, int stageY, int delta)
 	{
 		MouseEvent event = obtain();

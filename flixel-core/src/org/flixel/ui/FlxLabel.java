@@ -1,10 +1,8 @@
 package org.flixel.ui;
 
-
-
 /**
- * <code>FlxLabel</code> differs from <code>FlxText</code> with the bounding.
- * It automatically adjust the dimensions to the bounding of the text.
+ * <code>FlxLabel</code> differs from <code>FlxText</code> with the bounding. It
+ * automatically adjust the dimensions to the bounding of the text.
  * 
  * @author Ka Wing Chin
  */
@@ -19,14 +17,15 @@ public class FlxLabel extends FlxUIComponent
 	private final String ImgLabelBottomLeft = "org/flixel/data/pack:label_bottomleft";
 	private final String ImgLabelBottomCenter = "org/flixel/data/pack:label_bottomcenter";
 	private final String ImgLabelBottomRight = "org/flixel/data/pack:label_bottomright";
-		
+
 	/**
 	 * Create a new <code>FlxLabel</code> object.
-	 * @param X			The x-position.
-	 * @param Y			The y-position.
-	 * @param Text		The text of the label.
-	 * @param Width		The width of the label. Default 0 is auto.
-	 * @param Height	The height of the label. Default 0 is auto.
+	 * 
+	 * @param X The x-position.
+	 * @param Y The y-position.
+	 * @param Text The text of the label.
+	 * @param Width The width of the label. Default 0 is auto.
+	 * @param Height The height of the label. Default 0 is auto.
 	 */
 	public FlxLabel(float X, float Y, FlxUISkin Skin, String Text, int Width, int Height)
 	{
@@ -58,4 +57,3 @@ public class FlxLabel extends FlxUIComponent
 		skin.labelOffset.x = -2;
 	}
 }
-

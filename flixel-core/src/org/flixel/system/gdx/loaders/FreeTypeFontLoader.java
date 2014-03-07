@@ -13,14 +13,15 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.utils.Array;
 
 /**
- * <code>AssetLoader</code> to create a <code>BitmapFont</code> from a ttf file. Passing a <code>BitmapFontParameter</code> to
- * <code>AssetManager::load(String, Class, AssetLoaderParameters)</code> allows to specify whether the font
- * should be flipped on the y-axis or not.
+ * <code>AssetLoader</code> to create a <code>BitmapFont</code> from a ttf file.
+ * Passing a <code>BitmapFontParameter</code> to
+ * <code>AssetManager::load(String, Class, AssetLoaderParameters)</code> allows
+ * to specify whether the font should be flipped on the y-axis or not.
  * 
  * @author Thomas Weston
  */
-public class FreeTypeFontLoader extends AsynchronousAssetLoader<BitmapFont, BitmapFontParameter> 
-{	
+public class FreeTypeFontLoader extends AsynchronousAssetLoader<BitmapFont, BitmapFontParameter>
+{
 	public FreeTypeFontLoader(FileHandleResolver resolver)
 	{
 		super(resolver);
@@ -39,11 +40,11 @@ public class FreeTypeFontLoader extends AsynchronousAssetLoader<BitmapFont, Bitm
 		generator.dispose();
 		return new BitmapFont(data, data.getTextureRegions(), true);
 	}
-	
+
 	@Override
 	public void loadAsync(AssetManager manager, String fileName, FileHandle file, BitmapFontParameter parameter)
 	{
-		
+
 	}
 
 	@SuppressWarnings("rawtypes")
