@@ -62,6 +62,7 @@ public class GdxSoundChannel extends EventDispatcher implements SoundChannel
 	{
 		_soundTransform = soundTransform;
 		_sound.setPan(_soundId, _soundTransform.pan, _soundTransform.volume);
+		_sound.setPitch(_soundId, _soundTransform.pitch);
 	}
 
 	@Override

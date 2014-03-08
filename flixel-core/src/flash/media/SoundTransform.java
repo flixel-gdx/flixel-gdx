@@ -18,6 +18,28 @@ public class SoundTransform
 	 * The volume, ranging from 0 (silent) to 1 (full volume).
 	 */
 	public float volume;
+	/**
+	 * The pitch multiplier, 1 == default, >1 == faster, <1 == slower, the value
+	 * has to be between 0.5 and 2.0.
+	 */
+	public float pitch;
+
+	/**
+	 * Creates a <code>SoundTransform</code> object.
+	 * 
+	 * @param vol The volume, ranging from 0 (silent) to 1 (full volume)
+	 * @param panning The left-to-right panning of the sound, ranging from -1
+	 *        (full pan left) to 1 (full pan right). A value of 0 represents no
+	 *        panning (balanced center between right and left)
+	 * @param pitching The pitch multiplier, 1 == default, >1 == faster, <1 ==
+	 *        slower, the value has to be between 0.5 and 2.0.
+	 */
+	public SoundTransform(float vol, float panning, float pitching)
+	{
+		volume = vol;
+		pan = panning;
+		pitch = pitching;
+	}
 
 	/**
 	 * Creates a <code>SoundTransform</code> object.
@@ -29,8 +51,7 @@ public class SoundTransform
 	 */
 	public SoundTransform(float vol, float panning)
 	{
-		volume = vol;
-		pan = panning;
+		this(vol, panning, 1f);
 	}
 
 	/**

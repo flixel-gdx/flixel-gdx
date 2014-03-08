@@ -101,6 +101,10 @@ public class FlxSound extends FlxBasic
 	 */
 	protected float _volumeAdjust;
 	/**
+	 * Internal tracker for how fast or how slow the sound is.
+	 */
+	private float _pitch;
+	/**
 	 * Internal tracker for whether the sound is looping or not.
 	 */
 	protected boolean _looped;
@@ -672,6 +676,8 @@ public class FlxSound extends FlxBasic
 	/**
 	 * Set <code>volume</code> to a value between 0 and 1 to change how this
 	 * sound is.
+	 * 
+	 * @param Volume The volume of the sound.
 	 */
 	public void setVolume(float Volume)
 	{
@@ -695,11 +701,38 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
+	 * Set the pitch multiplier, 1 == default, >1 == faster, <1 == slower, the
+	 * value has to be between 0.5 and 2.0.
+	 * 
+	 * @param Pitch
+	 */
+	public void setPitch(float Pitch)
+	{
+		_pitch = Pitch;
+		if(_pitch < 0)
+			_pitch = 0;
+		else if(_pitch > 2)
+			_pitch = 2;
+		updateTransform();
+	}
+
+	/**
+	 * Returns the current ptich of the sound.
+	 * 
+	 * @return The ptich of the sound.
+	 */
+	public float getPitch()
+	{
+		return _pitch;
+	}
+
+	/**
 	 * Call after adjusting the volume to update the sound channel's settings.
 	 */
 	protected void updateTransform()
 	{
 		_transform.volume = (FlxG.mute ? 0 : 1) * FlxG.getVolume() * _volume * _volumeAdjust;
+		_transform.pitch = _pitch;
 		if(_channel != null)
 			_channel.setSoundTransform(_transform);
 	}
