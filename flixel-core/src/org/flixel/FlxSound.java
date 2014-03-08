@@ -204,6 +204,7 @@ public class FlxSound extends FlxBasic
 		_position = 0;
 		_volume = 1.0f;
 		_volumeAdjust = 1.0f;
+		_pitch = 1.0f;
 		_looped = false;
 		_target = null;
 		_radius = 0;
