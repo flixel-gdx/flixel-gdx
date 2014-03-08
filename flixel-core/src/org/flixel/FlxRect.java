@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 /**
  * Stores a rectangle.
  * 
- * @author	Ka Wing Chin
+ * @author Ka Wing Chin
  */
 public class FlxRect
 {
@@ -25,14 +25,14 @@ public class FlxRect
 	 * @default 0
 	 */
 	public float height;
-	
+
 	/**
 	 * Instantiate a new rectangle.
 	 * 
-	 * @param X			The X-coordinate of the point in space.
-	 * @param Y			The Y-coordinate of the point in space.
-	 * @param Width		Desired width of the rectangle.
-	 * @param Height	Desired height of the rectangle.
+	 * @param X The X-coordinate of the point in space.
+	 * @param Y The Y-coordinate of the point in space.
+	 * @param Width Desired width of the rectangle.
+	 * @param Height Desired height of the rectangle.
 	 */
 	public FlxRect(float X, float Y, float Width, float Height)
 	{
@@ -41,34 +41,34 @@ public class FlxRect
 		width = Width;
 		height = Height;
 	}
-	
+
 	/**
 	 * Instantiate a new rectangle.
 	 * 
-	 * @param X			The X-coordinate of the point in space.
-	 * @param Y			The Y-coordinate of the point in space.
-	 * @param Width		Desired width of the rectangle.
+	 * @param X The X-coordinate of the point in space.
+	 * @param Y The Y-coordinate of the point in space.
+	 * @param Width Desired width of the rectangle.
 	 */
 	public FlxRect(float X, float Y, float Width)
 	{
 		this(X, Y, Width, 0);
 	}
-	
+
 	/**
 	 * Instantiate a new rectangle.
 	 * 
-	 * @param X			The X-coordinate of the point in space.
-	 * @param Y			The Y-coordinate of the point in space.
+	 * @param X The X-coordinate of the point in space.
+	 * @param Y The Y-coordinate of the point in space.
 	 */
 	public FlxRect(float X, float Y)
 	{
-		this(X, Y, 0 ,0);
+		this(X, Y, 0, 0);
 	}
-	
+
 	/**
 	 * Instantiate a new rectangle.
 	 * 
-	 * @param X			The X-coordinate of the point in space.
+	 * @param X The X-coordinate of the point in space.
 	 */
 	public FlxRect(float X)
 	{
@@ -76,7 +76,7 @@ public class FlxRect
 	}
 
 	/**
-	 * Instantiate a new rectangle. 
+	 * Instantiate a new rectangle.
 	 */
 	public FlxRect()
 	{
@@ -90,7 +90,7 @@ public class FlxRect
 	{
 		return x;
 	}
-	
+
 	/**
 	 * The X coordinate of the right side of the rectangle. Read-only.
 	 */
@@ -98,7 +98,7 @@ public class FlxRect
 	{
 		return x + width;
 	}
-	
+
 	/**
 	 * The Y coordinate of the top of the rectangle. Read-only.
 	 */
@@ -106,7 +106,7 @@ public class FlxRect
 	{
 		return y;
 	}
-	
+
 	/**
 	 * The Y coordinate of the bottom of the rectangle. Read-only.
 	 */
@@ -114,16 +114,16 @@ public class FlxRect
 	{
 		return y + height;
 	}
-	
+
 	/**
 	 * Instantiate a new rectangle.
 	 * 
-	 * @param X			The X-coordinate of the point in space.
-	 * @param Y			The Y-coordinate of the point in space.
-	 * @param Width		Desired width of the rectangle.
-	 * @param Height	Desired height of the rectangle.
+	 * @param X The X-coordinate of the point in space.
+	 * @param Y The Y-coordinate of the point in space.
+	 * @param Width Desired width of the rectangle.
+	 * @param Height Desired height of the rectangle.
 	 * 
-	 * @return	A reference to itself.
+	 * @return A reference to itself.
 	 */
 	public FlxRect make(float X, float Y, float Width, float Height)
 	{
@@ -133,26 +133,26 @@ public class FlxRect
 		height = Height;
 		return this;
 	}
-	
+
 	/**
 	 * Instantiate a new rectangle.
 	 * 
-	 * @param X			The X-coordinate of the point in space.
-	 * @param Y			The Y-coordinate of the point in space.
-	 * @param Width		Desired width of the rectangle.
+	 * @param X The X-coordinate of the point in space.
+	 * @param Y The Y-coordinate of the point in space.
+	 * @param Width Desired width of the rectangle.
 	 * 
-	 * @return	A reference to itself.
+	 * @return A reference to itself.
 	 */
 	public FlxRect make(float X, float Y, float Width)
 	{
 		return make(X, Y, Width, 0);
 	}
-	
+
 	/**
 	 * Instantiate a new rectangle.
 	 * 
-	 * @param X		The X-coordinate of the point in space.
-	 * @param Y		The Y-coordinate of the point in space.
+	 * @param X The X-coordinate of the point in space.
+	 * @param Y The Y-coordinate of the point in space.
 	 * 
 	 * @return A reference to itself.
 	 */
@@ -160,11 +160,11 @@ public class FlxRect
 	{
 		return make(X, Y, 0, 0);
 	}
-		
+
 	/**
 	 * Instantiate a new rectangle.
 	 * 
-	 * @param X		The X-coordinate of the point in space.
+	 * @param X The X-coordinate of the point in space.
 	 * 
 	 * @return A reference to itself.
 	 */
@@ -172,7 +172,7 @@ public class FlxRect
 	{
 		return make(X, 0, 0, 0);
 	}
-		
+
 	/**
 	 * Instantiate a new rectangle.
 	 * 
@@ -182,11 +182,11 @@ public class FlxRect
 	{
 		return make(0, 0, 0, 0);
 	}
-	
+
 	/**
 	 * Helper function, just copies the values from the specified rectangle.
 	 * 
-	 * @param Rect	Any <code>FlxRect</code>.
+	 * @param Rect Any <code>FlxRect</code>.
 	 * 
 	 * @return A reference to itself.
 	 */
@@ -198,11 +198,12 @@ public class FlxRect
 		height = Rect.height;
 		return this;
 	}
-	
+
 	/**
-	 * Helper function, just copies the values from this rectangle to the specified rectangle.
+	 * Helper function, just copies the values from this rectangle to the
+	 * specified rectangle.
 	 * 
-	 * @param Rect	Any <code>FlxRect</code>.
+	 * @param Rect Any <code>FlxRect</code>.
 	 * 
 	 * @return A reference to the altered rectangle parameter.
 	 */
@@ -214,11 +215,12 @@ public class FlxRect
 		Rect.height = height;
 		return Rect;
 	}
-	
+
 	/**
-	 * Helper function, just copies the values from the specified libgdx rectangle.
+	 * Helper function, just copies the values from the specified libgdx
+	 * rectangle.
 	 * 
-	 * @param Rect	Any <code>Rectangle</code>.
+	 * @param Rect Any <code>Rectangle</code>.
 	 * 
 	 * @return A reference to itself.
 	 */
@@ -230,11 +232,12 @@ public class FlxRect
 		height = Rect.height;
 		return this;
 	}
-	
+
 	/**
-	 * Helper function, just copies the values from this rectangle to the specified libgdx rectangle.
+	 * Helper function, just copies the values from this rectangle to the
+	 * specified libgdx rectangle.
 	 * 
-	 * @param Rect	Any <code>Rectangle</code>.
+	 * @param Rect Any <code>Rectangle</code>.
 	 * 
 	 * @return A reference to the altered rectangle parameter.
 	 */
@@ -246,16 +249,17 @@ public class FlxRect
 		Rect.height = height;
 		return Rect;
 	}
-	
+
 	/**
-	 * Checks to see if some <code>FlxRect</code> object overlaps this <code>FlxRect</code> object.
+	 * Checks to see if some <code>FlxRect</code> object overlaps this
+	 * <code>FlxRect</code> object.
 	 * 
-	 * @param Rect	The rectangle being tested.
+	 * @param Rect The rectangle being tested.
 	 * 
 	 * @return Whether or not the two rectangles overlap.
 	 */
 	public boolean overlaps(FlxRect Rect)
 	{
-		return (Rect.x + Rect.width > x) && (Rect.x < x+width) && (Rect.y + Rect.height > y) && (Rect.y < y+height);
+		return (Rect.x + Rect.width > x) && (Rect.x < x + width) && (Rect.y + Rect.height > y) && (Rect.y < y + height);
 	}
 }

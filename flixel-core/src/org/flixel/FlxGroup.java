@@ -264,7 +264,7 @@ public class FlxGroup extends FlxBasic
 	 * 
 	 * @return A reference to the object that was created. Don't forget to cast
 	 *         it back to the Class you want (e.g. myObject =
-	 *         myGroup.recycle(myObjectClass) as myObjectClass;).
+	 *         (myObjectClass) myGroup.recycle(myObjectClass);).
 	 */
 	public FlxBasic recycle(Class<? extends FlxBasic> ObjectClass)
 	{
@@ -336,7 +336,7 @@ public class FlxGroup extends FlxBasic
 	 * 
 	 * @return A reference to the object that was created. Don't forget to cast
 	 *         it back to the Class you want (e.g. myObject =
-	 *         myGroup.recycle(myObjectClass) as myObjectClass;).
+	 *         (myObjectClass) myGroup.recycle(myObjectClass);).
 	 */
 	public FlxBasic recycle()
 	{
