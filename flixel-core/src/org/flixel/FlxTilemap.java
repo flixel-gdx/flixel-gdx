@@ -839,13 +839,19 @@ public class FlxTilemap extends FlxObject
 		// All walls are flagged as -2, all open areas as -1.
 		int mapSize = widthInTiles * heightInTiles;
 		IntArray distances = new IntArray(mapSize);
+		int data;
 		int i = 0;
+		FlxTile tile = null;
 		while(i < mapSize)
 		{
-			if((_tileObjects.get(_data.get(i))).allowCollisions != NONE)
+			data = _data.get(i);
+			if(data < _tileObjects.size)
+				tile = _tileObjects.get(data);
+			if(tile != null && tile.allowCollisions != NONE)
 				distances.add(-2);
 			else
 				distances.add(-1);
+			tile = null;
 			i++;
 		}
 		distances.set(StartIndex, 0);
@@ -2225,8 +2231,8 @@ public class FlxTilemap extends FlxObject
 	 * Black pixels are flagged as 'solid' by default, non-black pixels are set
 	 * as non-colliding. Black pixels must be PURE BLACK.
 	 * 
-	 * @param Bitmap A <code>TextureRegion</code> object, preferably black
-	 *        and white.
+	 * @param Bitmap A <code>TextureRegion</code> object, preferably black and
+	 *        white.
 	 * @param Invert Load white pixels as solid instead.
 	 * @param Scale Default is 1. Scale of 2 means each pixel forms a 2x2 block
 	 *        of tiles, and so on.
@@ -2244,8 +2250,8 @@ public class FlxTilemap extends FlxObject
 	 * Black pixels are flagged as 'solid' by default, non-black pixels are set
 	 * as non-colliding. Black pixels must be PURE BLACK.
 	 * 
-	 * @param Bitmap A <code>TextureRegion</code> object, preferably black
-	 *        and white.
+	 * @param Bitmap A <code>TextureRegion</code> object, preferably black and
+	 *        white.
 	 * @param Invert Load white pixels as solid instead.
 	 * 
 	 * @return A comma-separated string containing the level data in a
@@ -2261,8 +2267,8 @@ public class FlxTilemap extends FlxObject
 	 * Black pixels are flagged as 'solid' by default, non-black pixels are set
 	 * as non-colliding. Black pixels must be PURE BLACK.
 	 * 
-	 * @param Bitmap A <code>TextureRegion</code> object, preferably black
-	 *        and white.
+	 * @param Bitmap A <code>TextureRegion</code> object, preferably black and
+	 *        white.
 	 * 
 	 * @return A comma-separated string containing the level data in a
 	 *         <code>FlxTilemap</code>-friendly format.
