@@ -1246,7 +1246,7 @@ public class FlxSprite extends FlxObject
 	{
 		if(Frame >= getNumFrames())
 		{
-			FlxG.log("WARNING: The frame number of a " + this + " be less than its `numFrames` value.");
+			FlxG.log("WARNING: The frame number of a " + this + " is less than its `numFrames` value.");
 			Frame = getNumFrames() - 1;
 		}
 		_curAnim = null;
