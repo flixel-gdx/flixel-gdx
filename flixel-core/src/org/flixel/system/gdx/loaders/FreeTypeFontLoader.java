@@ -1,5 +1,7 @@
 package org.flixel.system.gdx.loaders;
 
+import org.flixel.FlxG;
+
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
@@ -35,7 +37,7 @@ public class FreeTypeFontLoader extends AsynchronousAssetLoader<BitmapFont, Bitm
 		FreeTypeFontParameter param = new FreeTypeFontParameter();
 		param.size = Integer.parseInt(split[0]);
 		param.flip = (parameter != null) ? parameter.flip : true;
-		param.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+		param.characters = FlxG.freeTypeFontChars;
 		FreeTypeBitmapFontData data = generator.generateData(param);
 		generator.dispose();
 		return new BitmapFont(data, data.getTextureRegions(), true);

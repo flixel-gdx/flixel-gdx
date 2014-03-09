@@ -32,6 +32,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -231,7 +232,10 @@ public class FlxG
 	 * Internal volume level, used for global sound control.
 	 */
 	static protected float _volume;
-
+	/**
+	 * The default characters for FreeType Font generator.
+	 */
+	static public String freeTypeFontChars = FreeTypeFontGenerator.DEFAULT_CHARS;
 	/**
 	 * An array of <code>FlxCamera</code> objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
