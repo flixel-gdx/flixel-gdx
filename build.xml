@@ -91,7 +91,6 @@
 		<copy toDir="${bin.dir}">
 		    <fileset dir="${src.dir}">
 				<exclude name="**/*.java" />
-				<include name="**/*.gwt.xml" />
 			</fileset>
 		</copy>
 
@@ -142,7 +141,6 @@
 		<copy toDir="${bin.dir}">
 		    <fileset dir="${src.dir}">
 				<exclude name="**/*.java" />
-				<include name="**/*.gwt.xml" />
 			</fileset>
 		</copy>
 		
