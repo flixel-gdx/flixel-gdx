@@ -856,7 +856,7 @@ public class FlxGame
 			_stringBuffer.delete(0, _stringBuffer.length());
 			_stringBuffer.append("fps:");
 			_stringBuffer.append(Gdx.graphics.getFramesPerSecond());
-			_font.draw(FlxG.batch, _stringBuffer.toString(), Gdx.graphics.getWidth() - 80, 0);
+			_font.draw(FlxG.batch, _stringBuffer, Gdx.graphics.getWidth() - 80, 0);
 		}
 		FlxG.batch.end();
 		if(_debuggerUp)
