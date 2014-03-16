@@ -1031,26 +1031,15 @@ public class FlxCamera extends FlxBasic
 	public void fill(int Color, boolean BlendAlpha)
 	{
 		int color = FlxU.multiplyColors(Color, _color);
-
-		if(((Color >> 24) & 0xff) == 0xFF || !BlendAlpha)
-		{
-			FlxG._gl.glDisable(GL10.GL_BLEND);
-			FlxG._gl.glClearColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((Color >> 24) & 0xFF) * 0.00392f);
-			FlxG._gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		}
-		else
-		{
-			FlxG._gl.glEnable(GL10.GL_BLEND);
-			FlxG._gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
-			ShapeRenderer flashGfx = ((GdxGraphics) FlxG.flashGfx).getShapeRenderer();
-			flashGfx.setProjectionMatrix(_glCamera.combined);
-			flashGfx.begin(ShapeType.Filled);
-
-			flashGfx.setColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((Color >> 24) & 0xFF) * 0.00392f);
-			flashGfx.rect(0, 0, width, height);
-			flashGfx.end();
-		}
+		FlxG._gl.glEnable(GL10.GL_BLEND);
+		FlxG._gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		ShapeRenderer flashGfx = ((GdxGraphics) FlxG.flashGfx).getShapeRenderer();
+		flashGfx.setProjectionMatrix(_glCamera.combined);
+		flashGfx.begin(ShapeType.Filled);
+		
+		flashGfx.setColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((Color >> 24) & 0xFF) * 0.00392f);
+		flashGfx.rect(0, 0, width, height);
+		flashGfx.end();
 	}
 
 	/**
