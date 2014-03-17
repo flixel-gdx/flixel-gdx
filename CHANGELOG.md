@@ -1,0 +1,141 @@
+0.6.0
+-----
+- based on Flixel Community v2.56.
+- applied fixes from Flixel Community v2.56: https://github.com/FlixelCommunity/flixel/blob/master/CHANGELOG.md
+- added iOS support via RoboVM.
+- added HTML5 support via GWT.
+- added build.xml, automatically build jars.
+- added fetch.xml, pulls 3rd party libraries.
+- added custom chars support for FreeType font generator.
+- added pitch in FlxSound.
+- fixed FlxTilemap.findPath() array size error.
+- added Distance Field Font support.
+- fixed EventDispatcher can now handle firings of an event inside other firings correctly.
+- fixed music and sound restarts after losing focus and refocusing.
+- fixed FlxText.getAlignment().
+- added custom mouse cursor.
+- added replica of Flash classes.
+- added GdxStage, moved libgdx specific things out of FlxGame.
+- added ShaderLoader that managed the context when it is lost.
+- added BlendModeGL20, blends that can only be done in GLES20.
+- added shader support.
+- fixed jittery camera movement on tilemaps.
+- added justPressedAny() and justReleasedAny().
+- added support for bitmap fonts (.fnt) in FlxText.
+- added rotated texture region support.
+- added Controller plugin.
+- fixed camera shake being applied at the wrong time
+- fixed cameras not repositioning correctly after scaling.
+- removed FlxObjectPool in favour of libgdx Pool.
+- added gesture support.
+- added FlxUI components: checkbox, dialogbox, input textfield, textarea, ninepatch, radiobutton, switch, and tab.
+- fixed prevent crash when showing soundtray.
+- replaced reflection by Reflection API of libgdx.
+- added resolution filre resolver in FlxAssetManager.
+- updated FlxTilemap, now uses the new API of libgdx.
+- updated FlxG.playMusic with optional arguments. You can now set repeat.
+- fixed prevent crash when FlxText is given a null alignment.
+- updated textures now automatically converted to power of two.
+- uses libgdx AssetManager.
+- updated scale support in FlxText.
+- updated alpha support for shadow in FlxText.
+- fixed FlxText not being drawn when using alignment.
+- updated FlxText for custom shadow position.
+- added dragzone in FlxAnalog.
+- added support for loading single images for quick testing.
+- added tween plugin.
+- added option for GLES20 support.
+- removed FlxBox2D from core.
+
+0.5.0
+------
+- updated loading assets has to be done by a String: url + pack name.
+- added FlxAssetCache, manages textures, fonts, sounds and music.
+- added Stage, replica from Flash. Currently used for mouse events.
+- added FlxAnalog, circle drag and multi. of particle.
+- added B2FlxBox2D, shapes, joints and debug implemented. Works with FlxCamera.
+- added pooling for FlxQuadTree, increase performance.
+- updated FlxTileblock, optimize creation by only loading pixmap once.
+- added BlendMode, only 5 blend modes works.
+- added drawLine() and replaceColor() in FlxSprite.
+- added sort() in FlxGroup, only works for float.
+- moved MouseObserver to Stage.
+- changed visual debugging uses ShapeRenderer for better performance.
+- added Scaling options, your game won’t be stretched anymore at fullscreen.
+- changed dynamic textures are managed by the assetmanager.
+- fixed incorrect cast of FlxU.round().
+- fixed onOver being called every frame in FlxButton.
+- changed fonts are managed by an assetmanager.
+- changed textures are managed by an assetmanager.
+- fixed incorrect display of debug tiles on tilemap.
+- fixed FlxEmitter only emitting one type of particle.
+
+0.4.0
+------
+- added FlxTimer, evertyhing is implemented.
+- added AFlxTimer, a callback for FlxTimer
+- added TimerManager, evertyhing is implemented.
+- added unfinished FlxAnalog.
+- added DebugPathDisplay.
+- added Perf for FlxDebugger.
+- added FlxGamePad: 4 direction buttons and 4 action buttons. With layout options.
+- added IMouseSubject and IMouseObserver: general event listener for mouse inputs.
+- updated FlxPath, evertyhing is implemented.
+- updated FlxTilemap, evertyhing is implemented.
+- updated FlxText, evertyhing is implemented.
+- added support of truetype font in FlxText.
+- updated FlxButton, evertyhing is implemented.
+- added vibration and sensor support in FlxG.
+- added support for multiple cameras.
+
+0.3.0
+------
+- added resWidth, resHeight, the width and height in pixels of the display surface.
+- added difWidh, difHeight, the differents between the ingame and display surface.
+- fixed the touch on different resolution.
+- changed The new variables of FlxG will initialized at create().
+- changed OVERLAP_BIAS from int to float.
+- fixed the callback in seperateX and seperateY. It called onSeparateX/Y, it should be overlapsWithCallback.
+- updated FlxTileblock, evertyhing is implemented.
+- added FlxTilemap, rendering works, auto rendering works, not all functions are implemented, a part of the functions are not tested.
+- changed class name to FlxArray.
+- added AFlxTile, used for callback
+- added FlxTile, evertyhing is implemented.
+- added FlxTilemapBuffer, evertyhing is implemented.
+
+0.2.0
+------
+- based on flixel v2.55.
+- uses libgdx as backend.
+- added desktop support.
+- added OpenGL ES 1.0 support.
+- added FlxBasic, evertyhing is implemented.
+- added FlxButton, sound missing
+- added FlxCamera, splitscreen does not work.
+- added FlxEmitter, custom particle missing.
+- added FlxG, the most important thing are there.
+- added FlxGame, well, the rendering stuff, etc.
+- added FlxGroup, no sorting.
+- addedFlxSound and FlxMusic. The differents, FlxSound is loaded to the RAM and FlxMusic streams from the (internal or external) storage. A lot of features are missing, due the lack of features of Android API itself. FlxMusic can do fadeIn and fadeout.
+- added FlxObject, no followpath.
+- added FlxParticle, evertyhing is implemented.
+- added FlxPath, no implemented.
+- added FlxPoint, evertyhing is implemented.
+- added FlxRect, evertyhing is implemented.
+- added FlxSprite, no brush.
+- added FlxState, it’s an abstract class now. People always forget to put the code in the create(). Now you’ll be forced heaving a create() method inside every FlxState.
+- added FlxText, doesn't rotate and uses bitmapfont.
+- added FlxTileBlock…it doesn’t create random blocks, because I can’t do copypixels. So it’s not working.
+- added FlxTilemap, not implemented.
+- added FlxU, evertyhing is implemented.
+- added FlxAnim, evertyhing is implemented.
+- added FlxList, evertyhing is implemented.
+- added FlxQuadTree, evertyhing is implemented.
+- added Input, evertyhing is implemented.
+- added Keyboard, evertyhing is implemented.
+- added Touch (Mouse), evertyhing is implemented.
+
+0.1.0
+------
+- runs on Androids Canvas API.
+- based on flixel v2.43.
