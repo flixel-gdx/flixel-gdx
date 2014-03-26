@@ -1265,7 +1265,8 @@ public class FlxTilemap extends FlxObject
 						tile.mapIndex = rowStart + column;
 						tile.callback.callback(tile, TargetObject);
 					}
-					results = true;
+					if(tile.allowCollisions != NONE)
+						results = true;
 				}
 				column++;
 			}
