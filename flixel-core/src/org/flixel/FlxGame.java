@@ -884,7 +884,7 @@ public class FlxGame
 			flash.ui.Mouse.hide();
 
 		// Set up OpenGL
-		FlxG._gl = Gdx.graphics.isGL20Available() ? Gdx.gl20 : Gdx.gl10;
+		FlxG._gl = Gdx.gl20;
 
 		FlxG.batch = new SpriteBatch();
 
