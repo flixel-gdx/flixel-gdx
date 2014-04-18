@@ -73,14 +73,12 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 		FileTextureData.copyToPOT = true;
 
 		// Set OpenGL features
-		if(!Gdx.graphics.isGL20Available())
-			((GL20) Gdx.gl).glShadeModel(GL20.GL_FLAT);
-		Gdx.gl.glHint(GL20.GL_PERSPECTIVE_CORRECTION_HINT, GL20.GL_FASTEST);
+		//Gdx.gl.glHint(GL10.PER GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DITHER);
-		Gdx.gl.glDisable(GL20.GL_LIGHTING);
+		//Gdx.gl.glDisable(GL10.GL_LIGHTING);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-		Gdx.gl.glDisable(GL20.GL_FOG);
+		//Gdx.gl.glDisable(GL10.GL_FOG);
 		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 
 		_graphics.init();

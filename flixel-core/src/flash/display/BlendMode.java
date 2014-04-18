@@ -3,7 +3,7 @@ package flash.display;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 
 /**
  * A class that provides constant values for visual blend mode effects.
@@ -117,25 +117,25 @@ public class BlendMode
 	{
 		_blendMap = new HashMap<String, int[]>(15);
 
-		addBlendMode(ADD, GL10.GL_ONE, GL10.GL_ONE);
-		addBlendMode(ALPHA, GL10.GL_SRC_ALPHA, GL10.GL_ONE);
-		// _blendMap.put(DARKEN, new int[]{GL10.GL_DST_COLOR, GL10.GL_ZERO});
-		// _blendMap.put(DIFFERENCE, new int[]{GL10.GL_SRC_ALPHA,
-		// GL10.GL_ONE_MINUS_SRC_ALPHA});
-		addBlendMode(ERASE, GL10.GL_ZERO, GL10.GL_SRC_ALPHA);
-		// _blendMap.put(HARDLIGHT, new int[]{GL10.GL_SRC_ALPHA,
-		// GL10.GL_ONE_MINUS_SRC_ALPHA});
-		// _blendMap.put(INVERT, new int[]{GL10.GL_SRC_ALPHA,
-		// GL10.GL_ONE_MINUS_SRC_ALPHA});
-		// _blendMap.put(LAYER, new int[]{GL10.GL_SRC_ALPHA,
-		// GL10.GL_ONE_MINUS_SRC_ALPHA});
-		// _blendMap.put(LIGHTEN, new int[]{GL10.GL_SRC_ALPHA,
-		// GL10.GL_ONE_MINUS_SRC_ALPHA});
-		addBlendMode(MULTIPLY, GL10.GL_DST_COLOR, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		addBlendMode(NORMAL, GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		// _blendMap.put(OVERLAY, new int[]{GL10.GL_SRC_ALPHA,
-		// GL10.GL_ONE_MINUS_SRC_ALPHA});
-		addBlendMode(SCREEN, GL10.GL_SRC_ALPHA, GL10.GL_ONE);
+		addBlendMode(ADD, GL20.GL_ONE, GL20.GL_ONE);
+		addBlendMode(ALPHA, GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+		// _blendMap.put(DARKEN, new int[]{GL20.GL_DST_COLOR, GL20.GL_ZERO});
+		// _blendMap.put(DIFFERENCE, new int[]{GL20.GL_SRC_ALPHA,
+		// GL20.GL_ONE_MINUS_SRC_ALPHA});
+		addBlendMode(ERASE, GL20.GL_ZERO, GL20.GL_SRC_ALPHA);
+		// _blendMap.put(HARDLIGHT, new int[]{GL20.GL_SRC_ALPHA,
+		// GL20.GL_ONE_MINUS_SRC_ALPHA});
+		// _blendMap.put(INVERT, new int[]{GL20.GL_SRC_ALPHA,
+		// GL20.GL_ONE_MINUS_SRC_ALPHA});
+		// _blendMap.put(LAYER, new int[]{GL20.GL_SRC_ALPHA,
+		// GL20.GL_ONE_MINUS_SRC_ALPHA});
+		// _blendMap.put(LIGHTEN, new int[]{GL20.GL_SRC_ALPHA,
+		// GL20.GL_ONE_MINUS_SRC_ALPHA});
+		addBlendMode(MULTIPLY, GL20.GL_DST_COLOR, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		addBlendMode(NORMAL, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		// _blendMap.put(OVERLAY, new int[]{GL20.GL_SRC_ALPHA,
+		// GL20.GL_ONE_MINUS_SRC_ALPHA});
+		addBlendMode(SCREEN, GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 		// _blendMap.put(SHADER, );
 		// _blendMap.put(SUBTRACT, );
 	}

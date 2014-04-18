@@ -585,7 +585,7 @@ public class FlxText extends FlxSprite
 			int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 			FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 		}
-		else if(Gdx.graphics.isGL20Available() && (FlxG.batchShader == null || ignoreBatchShader))
+		else if(FlxG.batchShader == null || ignoreBatchShader)
 		{
 			// OpenGL ES 2.0 shader render
 			renderShader();
