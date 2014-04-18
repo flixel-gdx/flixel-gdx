@@ -4,7 +4,7 @@ import org.flixel.system.gdx.utils.EventPool;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 
@@ -74,14 +74,14 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 
 		// Set OpenGL features
 		if(!Gdx.graphics.isGL20Available())
-			((GL10) Gdx.gl).glShadeModel(GL10.GL_FLAT);
-		Gdx.gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
-		Gdx.gl.glDisable(GL10.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL10.GL_DITHER);
-		Gdx.gl.glDisable(GL10.GL_LIGHTING);
-		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
-		Gdx.gl.glDisable(GL10.GL_FOG);
-		Gdx.gl.glEnable(GL10.GL_SCISSOR_TEST);
+			((GL20) Gdx.gl).glShadeModel(GL20.GL_FLAT);
+		Gdx.gl.glHint(GL20.GL_PERSPECTIVE_CORRECTION_HINT, GL20.GL_FASTEST);
+		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+		Gdx.gl.glDisable(GL20.GL_DITHER);
+		Gdx.gl.glDisable(GL20.GL_LIGHTING);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glDisable(GL20.GL_FOG);
+		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 
 		_graphics.init();
 
@@ -101,7 +101,7 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	{
 		Gdx.gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClearColor(0, 0, 0, 1.0f);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		dispatchEvent(_applicationEvents.obtain(Event.ENTER_FRAME));
 	}

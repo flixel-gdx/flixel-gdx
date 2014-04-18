@@ -5,7 +5,7 @@ import org.flixel.system.FlxAnim;
 import org.flixel.system.gdx.ManagedTextureData;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
@@ -782,7 +782,7 @@ public class FlxSprite extends FlxObject
 			FlxG.batch.setShader(blendGL20);
 			getTexture().bind(1);
 			blendTexture.bind(2);
-			Gdx.gl.glActiveTexture(GL10.GL_TEXTURE0);
+			Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
 		}
 	}
 
@@ -1553,7 +1553,7 @@ public class FlxSprite extends FlxObject
 			if(currentBlend != null)
 			{
 				currentBlend = null;
-				FlxG.batch.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+				FlxG.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 			}
 			if(FlxG._gl == Gdx.gl20)
 			{
