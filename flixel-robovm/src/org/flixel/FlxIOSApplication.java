@@ -1,30 +1,58 @@
 package org.flixel;
 
-import org.robovm.cocoatouch.foundation.NSAutoreleasePool;
-import org.robovm.cocoatouch.uikit.UIApplication;
-
+import org.robovm.apple.foundation.NSAutoreleasePool;
+import org.robovm.apple.uikit.UIApplication;
+ 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 
-public class FlxIOSApplication extends IOSApplication.Delegate
+/**
+ * Implement this abstract class and instantiate it in your main()
+ * to run on iOS.
+ * <p/>
+ * Example:
+ * <pre>
+ * public class MyIOSGame extends FlxIOSApplication {
+ *     @Override public FlxGame createGame() { return new MyGame(); }
+ * 
+ *     public static void main (String[] args) {
+ *         new MyIOSGame();
+ *     } 
+ *
+ * }
+ * </pre>
+ */
+public abstract class FlxIOSApplication extends IOSApplication.Delegate
 {
-	private FlxGame _game;
-	private IOSApplicationConfiguration _config;
-	
-	public FlxIOSApplication(String[] args, FlxGame game, IOSApplicationConfiguration config)
+	public FlxIOSApplication(String[] args)
 	{
-		_game = game;
-		_config = config;
-		
 		NSAutoreleasePool pool = new NSAutoreleasePool();
-		UIApplication.main(args, null, FlxIOSApplication.class);
-		pool.drain();
+		UIApplication.main(args, null, getClass());
+		pool.close();
 	}
 
 	@Override
 	protected IOSApplication createApplication()
 	{		
-		return new IOSApplication((ApplicationListener) _game.stage, _config);
+		return new IOSApplication((ApplicationListener) createGame().stage, createConfig());
+	}
+	
+	/**
+	 * Override this method and create your FlxGame instance here.
+	 * @return a new FlxGame instance
+	 */
+	protected abstract FlxGame createGame();
+	
+	/**
+	 * Configuration factory for the app. Override if you need anything else
+	 * than the default landscape-only mode.
+	 * @return a new configuration for the iOS app.
+	 */
+	protected IOSApplicationConfiguration createConfig() {
+		IOSApplicationConfiguration cfg = new IOSApplicationConfiguration();
+		cfg.orientationLandscape = true;
+		cfg.orientationPortrait = false;
+		return cfg;
 	}
 }
