@@ -8,48 +8,54 @@ import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 
 /**
- * Implement this abstract class and instantiate it in your main()
- * to run on iOS.
+ * Launch your iOS app by calling {@link #main(String[], FlxGame)}.
+ * If you need to set other config options than the default
+ * landscape-only mode, with accelerometer and compas disabled,
+ * you shoud tweak the static {@link #config} member before calling
+ * {@link #main(String[], FlxGame)}.
+ * <p/>
+ * This class is instantiated through the RoboVM runtime; you should never
+ * do it yourself.
  * <p/>
  * Example:
  * <pre>
- * public class MyIOSGame extends FlxIOSApplication {
- *     @Override public FlxGame createGame() { return new MyGame(); }
- * 
- *     public static void main (String[] args) {
- *         new MyIOSGame();
- *     } 
- *
+ * public class MyIOSGame {
+ *     public static void main(String[] args) {
+ *         FlxIOSApplication.config.orientationPortrait = true;
+ *         FlxIOSApplication.main(args, new MyFlixelGame());
+ *     }
  * }
  * </pre>
+ * @author kamstrup
+ *
  */
-public abstract class FlxIOSApplication extends IOSApplication.Delegate
+public class FlxIOSApplication extends IOSApplication.Delegate
 {
-	public FlxIOSApplication(String[] args)
+	private static FlxGame _game;
+	
+	public static final IOSApplicationConfiguration config = createConfig();
+	
+	/**
+	 * Run a given {@link FlxGame} instance as an iOS app with a given set
+	 * of command line arguments (normally passed directly from outer main()). 
+	 * @param args Command line args.
+	 * @param game The game instance to run.
+	 */
+	public static void main(String[] args, FlxGame game)
 	{
+		_game = game;
 		NSAutoreleasePool pool = new NSAutoreleasePool();
-		UIApplication.main(args, null, getClass());
+		UIApplication.main(args, null, FlxIOSApplication.class);
 		pool.close();
 	}
 
 	@Override
 	protected IOSApplication createApplication()
 	{		
-		return new IOSApplication((ApplicationListener) createGame().stage, createConfig());
+		return new IOSApplication((ApplicationListener) _game.stage, config);
 	}
 	
-	/**
-	 * Override this method and create your FlxGame instance here.
-	 * @return a new FlxGame instance
-	 */
-	protected abstract FlxGame createGame();
-	
-	/**
-	 * Configuration factory for the app. Override if you need anything else
-	 * than the default landscape-only mode.
-	 * @return a new configuration for the iOS app.
-	 */
-	protected IOSApplicationConfiguration createConfig() {
+	private static IOSApplicationConfiguration createConfig() {
 		IOSApplicationConfiguration cfg = new IOSApplicationConfiguration();
 		cfg.orientationLandscape = true;
 		cfg.orientationPortrait = false;
