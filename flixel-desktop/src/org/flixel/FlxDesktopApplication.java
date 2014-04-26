@@ -7,11 +7,11 @@ public class FlxDesktopApplication extends LwjglApplication
 {
    	public FlxDesktopApplication(FlxGame Game, int Width, int Height)
 	{
-        super((ApplicationListener)Game.stage, FlxG.getLibraryName(), Width, Height, true);
+        super((ApplicationListener)Game.stage, FlxG.getLibraryName(), Width, Height);
 	}
 
     public FlxDesktopApplication(FlxGame Game, String title, int Width, int Height)
     {
-        super((ApplicationListener)Game.stage, title, Width, Height, true);
+        super((ApplicationListener)Game.stage, title, Width, Height);
     }
 }
