@@ -1,30 +1,64 @@
 package org.flixel;
 
-import org.robovm.cocoatouch.foundation.NSAutoreleasePool;
-import org.robovm.cocoatouch.uikit.UIApplication;
-
+import org.robovm.apple.foundation.NSAutoreleasePool;
+import org.robovm.apple.uikit.UIApplication;
+ 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 
+/**
+ * Launch your iOS app by calling {@link #main(String[], FlxGame)}.
+ * If you need to set other config options than the default
+ * landscape-only mode, with accelerometer and compas disabled,
+ * you shoud tweak the static {@link #config} member before calling
+ * {@link #main(String[], FlxGame)}.
+ * <p/>
+ * This class is instantiated through the RoboVM runtime; you should never
+ * do it yourself.
+ * <p/>
+ * Example:
+ * <pre>
+ * public class MyIOSGame {
+ *     public static void main(String[] args) {
+ *         FlxIOSApplication.config.orientationPortrait = true;
+ *         FlxIOSApplication.main(args, new MyFlixelGame());
+ *     }
+ * }
+ * </pre>
+ * @author kamstrup
+ *
+ */
 public class FlxIOSApplication extends IOSApplication.Delegate
 {
-	private FlxGame _game;
-	private IOSApplicationConfiguration _config;
+	private static FlxGame _game;
 	
-	public FlxIOSApplication(String[] args, FlxGame game, IOSApplicationConfiguration config)
+	public static final IOSApplicationConfiguration config = createConfig();
+	
+	/**
+	 * Run a given {@link FlxGame} instance as an iOS app with a given set
+	 * of command line arguments (normally passed directly from outer main()). 
+	 * @param args Command line args.
+	 * @param game The game instance to run.
+	 */
+	public static void main(String[] args, FlxGame game)
 	{
 		_game = game;
-		_config = config;
-		
 		NSAutoreleasePool pool = new NSAutoreleasePool();
 		UIApplication.main(args, null, FlxIOSApplication.class);
-		pool.drain();
+		pool.close();
 	}
 
 	@Override
 	protected IOSApplication createApplication()
 	{		
-		return new IOSApplication((ApplicationListener) _game.stage, _config);
+		return new IOSApplication((ApplicationListener) _game.stage, config);
+	}
+	
+	private static IOSApplicationConfiguration createConfig() {
+		IOSApplicationConfiguration cfg = new IOSApplicationConfiguration();
+		cfg.orientationLandscape = true;
+		cfg.orientationPortrait = false;
+		return cfg;
 	}
 }

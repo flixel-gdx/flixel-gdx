@@ -3,7 +3,7 @@ package org.flixel;
 import org.flixel.event.IFlxCamera;
 import org.flixel.system.gdx.GdxGraphics;
 
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -1034,14 +1034,14 @@ public class FlxCamera extends FlxBasic
 
 		if(((Color >> 24) & 0xff) == 0xFF || !BlendAlpha)
 		{
-			FlxG._gl.glDisable(GL10.GL_BLEND);
+			FlxG._gl.glDisable(GL20.GL_BLEND);
 			FlxG._gl.glClearColor(((color >> 16) & 0xFF) * 0.00392f, ((color >> 8) & 0xFF) * 0.00392f, (color & 0xFF) * 0.00392f, ((Color >> 24) & 0xFF) * 0.00392f);
-			FlxG._gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			FlxG._gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		}
 		else
 		{
-			FlxG._gl.glEnable(GL10.GL_BLEND);
-			FlxG._gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+			FlxG._gl.glEnable(GL20.GL_BLEND);
+			FlxG._gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 			ShapeRenderer flashGfx = ((GdxGraphics) FlxG.flashGfx).getShapeRenderer();
 			flashGfx.setProjectionMatrix(_glCamera.combined);

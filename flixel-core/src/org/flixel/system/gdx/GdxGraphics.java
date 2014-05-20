@@ -1,7 +1,7 @@
 package org.flixel.system.gdx;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
@@ -114,7 +114,7 @@ public class GdxGraphics implements Graphics
 	 */
 	public void end()
 	{
-		Gdx.gl.glEnable(GL10.GL_BLEND);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
 		_shapeRenderer.end();
 	}
 

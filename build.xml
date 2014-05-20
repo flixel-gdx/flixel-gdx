@@ -85,7 +85,7 @@
 		<mkdir dir="${bin.dir}" />
 
 		<!-- COMPILE!!!!!! -->
-		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" />
+		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" target="1.6" source="1.6"/>
 		
 		<!-- Copy resources -->
 		<copy toDir="${bin.dir}">
@@ -145,7 +145,7 @@
 		</copy>
 		
 		<!-- COMPILE!!!!!! -->
-		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" />
+		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" target="1.6" source="1.6"/>
 
 		<echo message="---------------------------------------------"/>
 		<echo message="End Compile: ${project}"/>

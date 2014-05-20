@@ -23,7 +23,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver.Resolution;
-import com.badlogic.gdx.graphics.GLCommon;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
@@ -302,7 +302,7 @@ public class FlxG
 	/**
 	 * Internal reference to OpenGL.
 	 */
-	static GLCommon _gl;
+	static GL20 _gl;
 	/**
 	 * The camera currently being drawn.
 	 */
@@ -2369,8 +2369,7 @@ public class FlxG
 		FlxG.scores = new IntArray();
 		FlxG.visualDebug = false;
 
-		if(_gl == Gdx.gl20)
-			FlxG.shaders = new ObjectMap<String, FlxShaderProgram>();
+		FlxG.shaders = new ObjectMap<String, FlxShaderProgram>();
 	}
 
 	/**
@@ -2578,8 +2577,6 @@ public class FlxG
 	 */
 	public static FlxShaderProgram loadShader(String Name, String Vertex, String Fragment, IFlxShaderProgram callback)
 	{
-		if(!Gdx.graphics.isGL20Available())
-			throw new RuntimeException("OpenGL ES 2.0 is not available, forgot to turn it on?");
 		ShaderProgramParameter parameter = new ShaderProgramParameter();
 		parameter.vertex = Vertex;
 		parameter.fragment = Fragment;
@@ -2612,8 +2609,6 @@ public class FlxG
 	 */
 	public static void disposeShader(String Name)
 	{
-		if(_gl != Gdx.gl20)
-			return;
 		FlxG._cache.unload(Name);
 		shaders.remove(Name);
 	}
@@ -2647,7 +2642,7 @@ public class FlxG
 	 */
 	public static void restoreShaders()
 	{
-		if(_gl != Gdx.gl20 || !FlxG.mobile)
+		if(!FlxG.mobile)
 			return;
 
 		Iterator<FlxShaderProgram> entries = shaders.values().iterator();
@@ -2662,8 +2657,6 @@ public class FlxG
 	 */
 	public static void destroyShaders()
 	{
-		if(_gl != Gdx.gl20)
-			return;
 		FlxG._cache.disposeAssets(FlxShaderProgram.class);
 		shaders.clear();
 		batchShader = null;
