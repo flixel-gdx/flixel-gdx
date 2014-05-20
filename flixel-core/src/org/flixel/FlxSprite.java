@@ -733,7 +733,7 @@ public class FlxSprite extends FlxObject
 				int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
 				FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
 			}
-			else if(FlxG._gl == Gdx.gl20 && (FlxG.batchShader == null || ignoreBatchShader))
+			else if(FlxG.batchShader == null || ignoreBatchShader)
 			{
 				// OpenGL ES 2.0 shader render
 				renderShader();
@@ -1555,18 +1555,15 @@ public class FlxSprite extends FlxObject
 				currentBlend = null;
 				FlxG.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 			}
-			if(FlxG._gl == Gdx.gl20)
-			{
-				if(FlxG.batchShader != null && !ignoreBatchShader)
+			if(FlxG.batchShader != null && !ignoreBatchShader)
 					FlxG.batch.setShader(FlxG.batchShader);
-				else
-				{
-					if(currentShader != null)
-						FlxG.batch.setShader(currentShader = null);
-					if(blendGL20 == null)
-						FlxG.batch.setShader(null);
-				}
-			}
+			else
+			{
+				if(currentShader != null)
+					FlxG.batch.setShader(currentShader = null);
+				if(blendGL20 == null)
+					FlxG.batch.setShader(null);
+			}			
 			return true;
 		}
 		return false;
