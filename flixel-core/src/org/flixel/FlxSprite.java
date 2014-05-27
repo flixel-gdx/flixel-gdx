@@ -882,7 +882,7 @@ public class FlxSprite extends FlxObject
 	 * @param EndX X coordinate of the line's end point.
 	 * @param EndY Y coordinate of the line's end point.
 	 * @param Color The line's color, format 0xAARRGGBB.
-	 * @param Thickness How thick the line is in pixels (default value is 1).
+	 * @param Thickness How thick the line is in pixels (default value is 1). Note - unimplemented.
 	 */
 	public void drawLine(float StartX, float StartY, float EndX, float EndY, int Color, int Thickness)
 	{
