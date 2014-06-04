@@ -246,7 +246,7 @@ public class FlxTilemap extends FlxObject
 		while(row < heightInTiles)
 		{
 			columns = rows[row++].split(",");
-			if(columns.length <= 1)
+			if(columns.length < 1)
 			{
 				heightInTiles = heightInTiles - 1;
 				continue;
