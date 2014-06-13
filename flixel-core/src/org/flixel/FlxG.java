@@ -10,6 +10,7 @@ import org.flixel.event.IFlxShaderProgram;
 import org.flixel.event.IFlxVolume;
 import org.flixel.gles20.FlxShaderProgram;
 import org.flixel.plugin.DebugPathDisplay;
+import org.flixel.plugin.FullscreenManager;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxAssetManager;
 import org.flixel.system.FlxQuadTree;
@@ -307,6 +308,10 @@ public class FlxG
 	 * The camera currently being drawn.
 	 */
 	static FlxCamera _activeCamera;
+	/**
+	 * Plugin for switching between fullscreen and windowed mode
+	 */
+	static FullscreenManager fullscreenManager;
 
 	static public String getLibraryName()
 	{
@@ -433,20 +438,43 @@ public class FlxG
 		if(_game._maxAccumulation < _game._step)
 			_game._maxAccumulation = (int) _game._step;
 	}
+	
+	/**
+	 * Create the fullscreen manager
+	 * @param fullscreenWidth Width of the fullscreen display mode
+	 * @param fullscreenHeight Height of the fullscreen display mode
+	 * @param windowedWidth Width of the windowed display mode
+	 * @param windowedHeight Height of the windowed display mode
+	 */
+	static public void createFullscreenManager(int fullscreenWidth, int fullscreenHeight, int windowedWidth, int windowedHeight)
+	{
+		fullscreenManager = new FullscreenManager(fullscreenWidth, fullscreenHeight, windowedWidth, windowedHeight);
+		addPlugin(fullscreenManager);
+	}
+	
+	/**
+	 * Create the fullscreen manager
+	 * @param fullscreenWidth Width of the fullscreen display mode
+	 * @param fullscreenHeight Height of the fullscreen display mode
+	 * @param windowedWidth Width of the windowed display mode
+	 * @param windowedHeight Height of the windowed display mode
+	 * @param hotkey The name of the key that can be pressed to toggle fullscreen
+	 */
+	static public void createFullscreenManager(int fullscreenWidth, int fullscreenHeight, int windowedWidth, int windowedHeight, String hotkey)
+	{
+		fullscreenManager = new FullscreenManager(fullscreenWidth, fullscreenHeight, windowedWidth, windowedHeight, hotkey);
+		addPlugin(fullscreenManager);
+	}
 
 	/**
-	 * Switch to full-screen display. TODO: Add function to trigger full-screen
-	 * support
+	 * Toggle fullscreen
 	 */
 	static public void fullscreen()
 	{
-		/*
-		 * FlxG.stage.displayState = "fullScreen"; var fsw:uint =
-		 * FlxG.width*FlxG.camera.zoom; var fsh:uint =
-		 * FlxG.height*FlxG.camera.zoom; FlxG.camera.x =
-		 * (FlxG.stage.fullScreenWidth - fsw)/2; FlxG.camera.y =
-		 * (FlxG.stage.fullScreenHeight - fsh)/2;
-		 */
+		if(fullscreenManager == null)
+			FlxG.log("Cannot toggle fullscreen!  You must create the fullscreen manager first!");
+		else
+			fullscreenManager.toggle();
 	}
 
 	/**
