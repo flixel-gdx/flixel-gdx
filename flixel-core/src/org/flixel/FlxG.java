@@ -440,39 +440,24 @@ public class FlxG
 	}
 	
 	/**
-	 * Create the fullscreen manager
-	 * @param fullscreenWidth Width of the fullscreen display mode
-	 * @param fullscreenHeight Height of the fullscreen display mode
-	 * @param windowedWidth Width of the windowed display mode
-	 * @param windowedHeight Height of the windowed display mode
+	 * Set the fullscreen manager
+	 * @param newFullscreenManager The <code>FullscreenManager</code> object
 	 */
-	static public void createFullscreenManager(int fullscreenWidth, int fullscreenHeight, int windowedWidth, int windowedHeight)
+	static public void setFullscreenManager(FullscreenManager newFullscreenManager)
 	{
-		fullscreenManager = new FullscreenManager(fullscreenWidth, fullscreenHeight, windowedWidth, windowedHeight);
+		if(FlxG.getPlugin(FullscreenManager.class) != null)
+			removePlugin(fullscreenManager);
+		fullscreenManager = newFullscreenManager;
 		addPlugin(fullscreenManager);
 	}
 	
-	/**
-	 * Create the fullscreen manager
-	 * @param fullscreenWidth Width of the fullscreen display mode
-	 * @param fullscreenHeight Height of the fullscreen display mode
-	 * @param windowedWidth Width of the windowed display mode
-	 * @param windowedHeight Height of the windowed display mode
-	 * @param hotkey The name of the key that can be pressed to toggle fullscreen
-	 */
-	static public void createFullscreenManager(int fullscreenWidth, int fullscreenHeight, int windowedWidth, int windowedHeight, String hotkey)
-	{
-		fullscreenManager = new FullscreenManager(fullscreenWidth, fullscreenHeight, windowedWidth, windowedHeight, hotkey);
-		addPlugin(fullscreenManager);
-	}
-
 	/**
 	 * Toggle fullscreen
 	 */
 	static public void fullscreen()
 	{
 		if(fullscreenManager == null)
-			FlxG.log("Cannot toggle fullscreen!  You must create the fullscreen manager first!");
+			log("Cannot toggle fullscreen!  You must create the fullscreen manager first!");
 		else
 			fullscreenManager.toggle();
 	}
