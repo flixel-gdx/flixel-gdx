@@ -445,7 +445,7 @@ public class FlxG
 	 */
 	static public void setFullscreenManager(FullscreenManager newFullscreenManager)
 	{
-		if(FlxG.getPlugin(FullscreenManager.class) != null)
+		if(fullscreenManager != null)
 			removePlugin(fullscreenManager);
 		fullscreenManager = newFullscreenManager;
 		addPlugin(fullscreenManager);
