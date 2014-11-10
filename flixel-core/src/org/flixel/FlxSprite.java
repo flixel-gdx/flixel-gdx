@@ -718,6 +718,8 @@ public class FlxSprite extends FlxObject
 		if(isSimpleRender())
 		{ // Simple render
 			framePixels.setPosition(_point.x, _point.y);
+            if((angle != 0) && (_bakedRotation <= 0))
+                framePixels.setRotation(angle);
 			renderSprite();
 		}
 		else
@@ -1547,26 +1549,15 @@ public class FlxSprite extends FlxObject
 	@Override
 	public boolean isSimpleRender()
 	{
-		if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null)
-				&& ((shader == null) && (blendGL20 == null) || (FlxG.batchShader != null && !ignoreBatchShader)))
-		{
-			if(currentBlend != null)
-			{
-				currentBlend = null;
-				FlxG.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-			}
-			if(FlxG.batchShader != null && !ignoreBatchShader)
-					FlxG.batch.setShader(FlxG.batchShader);
-			else
-			{
-				if(currentShader != null)
-					FlxG.batch.setShader(currentShader = null);
-				if(blendGL20 == null)
-					FlxG.batch.setShader(null);
-			}			
-			return true;
-		}
-		return false;
+        boolean simpleGeometry = ((angle == 0) || (_bakedRotation > 0)) &&
+                                 (scale.x == 1) && (scale.y == 1);
+        boolean noBlend = (blend == null);
+        boolean noShading = ((shader == null) && (blendGL20 == null) ||
+                             (FlxG.batchShader != null && !ignoreBatchShader));
+
+		return simpleGeometry &&
+               noBlend &&
+               noShading;
 	}
 
 	public Texture getTexture()
