@@ -146,7 +146,7 @@ public class FlxDialogBox extends FlxInputText implements TextInputListener
 		if(overlapsPoint(_point.make(FlxG.mouse.x, FlxG.mouse.y)))
 		{
 			setActive(true);
-			Gdx.input.getTextInput(this, _title, textfield.getText());
+			Gdx.input.getTextInput(this, _title, textfield.getText(), "Place holder");
 		}
 	}
 
