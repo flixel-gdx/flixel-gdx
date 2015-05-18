@@ -39,8 +39,9 @@ public class FreeTypeFontLoader extends AsynchronousAssetLoader<BitmapFont, Bitm
 		param.flip = (parameter != null) ? parameter.flip : true;
 		param.characters = FlxG.freeTypeFontChars;
 		FreeTypeBitmapFontData data = generator.generateData(param);
+		BitmapFont font = generator.generateFont(param);
 		generator.dispose();
-		return new BitmapFont(data, data.getTextureRegions(), true);
+		return font;
 	}
 
 	@Override

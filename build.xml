@@ -10,7 +10,7 @@
 	<!-- Global variables -->
 	<property name="dist.dir"       value="dist/" />
 	<property name="spec.title"     value="flixel-gdx" />
-	<property name="spec.version"   value="0.6-SNAPSHOT" />
+	<property name="spec.version"   value="0.7.1-SNAPSHOT" />
 	<property name="spec.vendor"    value="flixel-gdx team (https://github.com/flixel-gdx)" />
 	<property name="impl.title"     value="org.flixel" />
 	<property environment="env"/>

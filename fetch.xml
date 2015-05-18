@@ -3,18 +3,19 @@
 	<property name="domain" value="http://flixel-gdx.com/dist"/>
 	<target name="fetch">
 		<!-- download archives -->
-		<get src="${domain}/libgdx-nightly.zip" dest="libgdx-nightly.zip" usetimestamp="true"/>
+		<!-- <get src="${domain}/libgdx-1.6.0.zip" dest="libgdx-1.6.0.zip" usetimestamp="true"/> -->
+		<get src="http://libgdx.badlogicgames.com/releases/libgdx-1.6.0.zip" dest="libgdx-1.6.0.zip" usetimestamp="true"/>
 		<get src="${domain}/tween-engine.zip" dest="tween-engine.zip" usetimestamp="true"/>
 
 	</target>
-	
+
 	<target name="extract">
 		<!-- core project -->
 		<mkdir dir="flixel-core/libs"/>
 		<delete>
 			<fileset dir="flixel-core/libs"/>
 		</delete>
-		<unzip src="libgdx-nightly.zip" dest="flixel-core/libs">
+		<unzip src="libgdx-1.6.0.zip" dest="flixel-core/libs">
 			<patternset>
 				<include name="gdx.jar"/>
 				<include name="sources/gdx-sources.jar"/>
@@ -25,15 +26,15 @@
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
-		
+
 		<unzip src="tween-engine.zip" dest="flixel-core/libs"/>
-		
+
 		<!-- android project -->
 		<mkdir dir="flixel-android/libs"/>
 		<delete>
 			<fileset dir="flixel-android/libs" excludes="**/*.properties"/>
 		</delete>
-		<unzip src="libgdx-nightly.zip" dest="flixel-android/libs">
+		<unzip src="libgdx-1.6.0.zip" dest="flixel-android/libs">
 			<patternset>
 				<include name="gdx-backend-android.jar"/>
 				<include name="sources/gdx-backend-android-sources.jar"/>
@@ -42,31 +43,31 @@
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
-		
+
 		<mkdir dir="flixel-android/libs/armeabi"/>
-		<unzip src="libgdx-nightly.zip" dest="flixel-android/libs/armeabi">
+		<unzip src="libgdx-1.6.0.zip" dest="flixel-android/libs/armeabi">
 			<patternset>
 				<include name="armeabi/libgdx.so"/>
 				<include name="extensions/gdx-freetype/armeabi/libgdx-freetype.so"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
-		
+
 		<mkdir dir="flixel-android/libs/armeabi-v7a"/>
-		<unzip src="libgdx-nightly.zip" dest="flixel-android/libs/armeabi-v7a">
+		<unzip src="libgdx-1.6.0.zip" dest="flixel-android/libs/armeabi-v7a">
 			<patternset>
 				<include name="armeabi-v7a/libgdx.so"/>
 				<include name="extensions/gdx-freetype/armeabi-v7a/libgdx-freetype.so"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
-		
+
 		<!-- desktop project -->
 		<mkdir dir="flixel-desktop/libs"/>
 		<delete>
 			<fileset dir="flixel-desktop/libs"/>
 		</delete>
-		<unzip src="libgdx-nightly.zip" dest="flixel-desktop/libs">
+		<unzip src="libgdx-1.6.0.zip" dest="flixel-desktop/libs">
 			<patternset>
 				<include name="gdx-backend-lwjgl.jar"/>
 				<include name="gdx-backend-lwjgl-natives.jar"/>
@@ -79,13 +80,13 @@
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
-		
+
 		<!-- gwt project -->
 		<mkdir dir="flixel-html5/war/WEB-INF/lib"/>
 		<delete>
 			<fileset dir="flixel-html5/war/WEB-INF/lib"/>
 		</delete>
-		<unzip src="libgdx-nightly.zip" dest="flixel-html5/war/WEB-INF/lib">
+		<unzip src="libgdx-1.6.0.zip" dest="flixel-html5/war/WEB-INF/lib">
 			<patternset>
 				<include name="gdx-backend-gwt.jar"/>
 				<include name="sources/gdx-backend-gwt-sources.jar"/>
@@ -94,34 +95,34 @@
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
-		
+
 		<delete file="flixel-html5/libs/gdx-backend-gwt.jar"/>
-		<delete file="flixel-html5/libs/gdx-backend-gwt-sources.jar"/>		
-		<unzip src="libgdx-nightly.zip" dest="flixel-html5/libs">
+		<delete file="flixel-html5/libs/gdx-backend-gwt-sources.jar"/>
+		<unzip src="libgdx-1.6.0.zip" dest="flixel-html5/libs">
 			<patternset>
 				<include name="gdx-backend-gwt.jar"/>
-				<include name="sources/gdx-backend-gwt-sources.jar"/>				
+				<include name="sources/gdx-backend-gwt-sources.jar"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
-		
+
 		<!-- robovm project -->
 		<mkdir dir="flixel-robovm/libs"/>
 		<delete>
 			<fileset dir="flixel-robovm/libs"/>
 		</delete>
-		<unzip src="libgdx-nightly.zip" dest="flixel-robovm/libs">
+		<unzip src="libgdx-1.6.0.zip" dest="flixel-robovm/libs">
 			<patternset>
 				<include name="gdx-backend-robovm.jar"/>
-				<include name="sources/gdx-backend-robovm-sources.jar"/>				
+				<include name="sources/gdx-backend-robovm-sources.jar"/>
 				<include name="ios/libgdx.a"/>
 				<include name="ios/libObjectAL.a"/>
 				<include name="extensions/gdx-freetype/ios/libgdx-freetype.a"/>
 			</patternset>
 			<mapper type="flatten"/>
 		</unzip>
-		
+
 	</target>
-	
+
 	<target name="all" depends="fetch,extract"/>
 </project>
