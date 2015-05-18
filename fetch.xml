@@ -3,7 +3,6 @@
 	<property name="domain" value="http://flixel-gdx.com/dist"/>
 	<target name="fetch">
 		<!-- download archives -->
-		<!-- <get src="${domain}/libgdx-1.6.0.zip" dest="libgdx-1.6.0.zip" usetimestamp="true"/> -->
 		<get src="http://libgdx.badlogicgames.com/releases/libgdx-1.6.0.zip" dest="libgdx-1.6.0.zip" usetimestamp="true"/>
 		<get src="${domain}/tween-engine.zip" dest="tween-engine.zip" usetimestamp="true"/>
 
