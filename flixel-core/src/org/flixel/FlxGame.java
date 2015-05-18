@@ -998,7 +998,7 @@ public class FlxGame
 
 		// TODO: Move to FlxDebugger
 		_font = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
-		_font.setScale(2);
+		_font.getData().setScale(2);
 		_fontCamera = new OrthographicCamera();
 		_fontCamera.setToOrtho(true);
 		_stringBuffer = new StringBuilder();
