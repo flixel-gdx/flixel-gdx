@@ -101,7 +101,7 @@ public class GdxSoundChannel extends EventDispatcher implements SoundChannel
 		int i = 0;
 		long soundId = -1;
 		while(soundId == -1 && i++ < PLAY_TRY_LIMIT)
-			soundId = loops > 0 ? sound.loop() : sound.play();
+			soundId = loops > 0 ? sound.loop(sndTransform.volume) : sound.play(sndTransform.volume);
 		setSoundTransform(sndTransform);
 		return soundId;
 	}
