@@ -131,7 +131,7 @@ public abstract class FlxUIComponent extends FlxSprite
 		if(Label != null)
 		{
 			label = new FlxTextExt(0, 0, skin.labelWidth, skin.labelHeight, Label, true);
-			label.setFormat(skin.labelFont, skin.labelSize, skin.labelColor, skin.labelAlign, skin.labelShadowColor, skin.labelShadowPosition.x, skin.labelShadowPosition.y);
+			label.setFormat(skin.labelFont, skin.labelSize, skin.labelColor, skin.labelAlign, skin.labelShadowColor);
 			label.calcFrame();
 		}
 		// Single image

@@ -1,6 +1,5 @@
 package org.flixel.ui;
 
-import org.flixel.FlxG;
 import org.flixel.FlxText;
 
 /**
@@ -98,31 +97,31 @@ public class FlxTextExt extends FlxText
 	}
 
 	@Override
-	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor, float ShadowX, float ShadowY)
+	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor)
 	{
-		super.setFormat(Font, Size, Color, Alignment, ShadowColor, ShadowX, ShadowY);
+		super.setFormat(Font, Size, Color, Alignment, ShadowColor);
 		// Save text.
-		CharSequence text = getText();
+		String text = getText();
 
 		// Calculate lineheight.
-		_textField.setWrappedText("ABC", 2, 3, FlxG.width, _alignment);
-		_firstLineHeight = _textField.getBounds().height;
-		_textField.setWrappedText("ABC\nABC", 2, 3, FlxG.width, _alignment);
-		float doubleLine = _textField.getBounds().height;
+		_textField.setText("ABC");
+		_firstLineHeight = _textField.height;
+		_textField.setText("ABC\nABC");
+		float doubleLine = _textField.height;
 		_lineHeight = doubleLine - _firstLineHeight;
 
 		if(_width == 0)
-			width = frameWidth = (int) _textField.getFont().getBounds(_text).width;
+			width = frameWidth = (int) _textField.width;
 		else
 			width = _width;
 
 		if(_height == 0)
-			height = frameHeight = (int) _textField.getBounds().height;
+			height = frameHeight = (int) _textField.height;
 		else
 			height = _height;
 
 		// Set text back.
-		_text = text;
+		setText(text);
 		calcFrame();
 		return this;
 	}
@@ -134,7 +133,7 @@ public class FlxTextExt extends FlxText
 	 */
 	public float getHeight()
 	{
-		return _textField.getBounds().height;
+		return _textField.height;
 	}
 
 	/**

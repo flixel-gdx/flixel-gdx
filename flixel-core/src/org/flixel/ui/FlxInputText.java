@@ -333,10 +333,10 @@ public class FlxInputText extends FlxUITouchable
 				if(_isChanged)
 				{
 					// Calculate whether it fits the bounding or not.
-					textfield.setText(textBuffer);
+					textfield.setText(textBuffer.toString());
 					if(_maxLines < textfield.getTotalLines())
 						textBuffer.deleteCharAt(textBuffer.length() - 1);
-					textfield.setText(_passwordMode ? _passwordBuffer : textBuffer);
+					textfield.setText(_passwordMode ? _passwordBuffer.toString() : textBuffer.toString());
 					_currentLineCounter = textfield.getTotalLines() == -1 ? 1 : textfield.getTotalLines();
 				}
 				_isChanged = false;
@@ -495,7 +495,7 @@ public class FlxInputText extends FlxUITouchable
 	 */
 	public void setText(CharSequence Text)
 	{
-		textfield.setText(Text);
+		textfield.setText(Text.toString());
 	}
 
 	/**

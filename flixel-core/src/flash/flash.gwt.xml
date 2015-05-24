@@ -6,4 +6,5 @@
 	<source path="events" />
 	<source path="media" />
 	<source path="ui" />
+	<source path="text" />
 </module>

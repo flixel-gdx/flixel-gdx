@@ -1,21 +1,16 @@
 package org.flixel;
 
-import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
-import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
+import org.flixel.system.gdx.text.GdxTextField;
 
-import flash.display.BlendMode;
+import flash.text.TextField;
+import flash.text.TextFormat;
 
 /**
- * Extends <code>FlxSprite</code> to support rendering text. Can tint, fade,
- * rotate and scale just like a sprite. Doesn't really animate though, as far as
- * I know. Also does nice pixel-perfect centering on pixel fonts as long as they
- * are only one liners.
+ * Extends <code>FlxSprite</code> to support rendering text.
+ * Can tint, fade, rotate and scale just like a sprite.
+ * Doesn't really animate though, as far as I know.
+ * Also does nice pixel-perfect centering on pixel fonts
+ * as long as they are only one liners.
  * 
  * @author Ka Wing Chin
  * @author Thomas Weston
@@ -23,105 +18,49 @@ import flash.display.BlendMode;
 public class FlxText extends FlxSprite
 {
 	/**
-	 * The default vertex shader that will be used.
+	 * Internal reference to a Flash <code>TextField</code> object.
 	 */
-	private final String VERTEX = "org/flixel/data/shaders/vertex.glsl";
-	/**
-	 * The default fragment shader that will be used for distance field.
-	 */
-	public final String DISTANCE_FIELD_FRAGMENT = "org/flixel/data/shaders/distance_field.glsl";
-	/**
-	 * Internal reference to a libgdx <code>BitmapFontCache</code> object.
-	 */
-	protected BitmapFontCache _textField;
+	protected TextField _textField;
 	/**
 	 * Internal tracker for the text shadow color, default is clear/transparent.
 	 */
 	protected int _shadow;
-	/**
-	 * Internal tracker for the alignment of the text.
-	 */
-	protected HAlignment _alignment;
-	/**
-	 * Internal reference to the text to be drawn.
-	 */
-	protected CharSequence _text;
-	/**
-	 * Internal helper for rotation.
-	 */
-	protected Matrix4 _matrix;
-	/**
-	 * Internal reference to the font.
-	 */
-	protected String _font;
-	/**
-	 * Internal tracker for the size of the text.
-	 */
-	protected int _size;
-
-	/**
-	 * Internal tracker for the x-position of the shadow, default is 1.
-	 */
-	protected float _shadowX;
-	/**
-	 * Internal tracker for the y-position of the shadow, default is 1.
-	 */
-	protected float _shadowY;
-
-	/**
-	 * Parameters that is used for generating the <code>BitmapFont</code>.
-	 */
-	private BitmapFontParameter _bitmapFontParameter;
-	/**
-	 * The shader program that is used for distance field.
-	 */
-	private ShaderProgram _distanceFieldShader;
-	/**
-	 * Internal tracker whether the distance field is enabled.
-	 */
-	private boolean _distanceFieldEnabled;
-	/**
-	 * The padding that is set for generating the bitmap font.
-	 */
-	private int _padding;
-	/**
-	 * The smoothness of the font.
-	 */
-	private float _smoothness;
 
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
 	 * 
-	 * @param X The X position of the text.
-	 * @param Y The Y position of the text.
-	 * @param Width The width of the text object (height is determined
-	 *        automatically).
-	 * @param Text The actual text you would like to display initially.
-	 * @param EmbeddedFont Whether this text field uses embedded fonts or not.
+	 * @param	X				The X position of the text.
+	 * @param	Y				The Y position of the text.
+	 * @param	Width			The width of the text object (height is determined automatically).
+	 * @param	Text			The actual text you would like to display initially.
+	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not.
 	 */
 	public FlxText(float X, float Y, int Width, String Text, boolean EmbeddedFont)
 	{
 		super(X, Y);
+		width = frameWidth = Width;
 
 		if(Text == null)
 			Text = "";
-
-		width = frameWidth = Width;
-		_text = Text;
+		_textField = new GdxTextField();
+		_textField.width = Width;
+		_textField.setText(Text);
+		TextFormat format = new TextFormat("org/flixel/data/font/nokiafc22.ttf",8,0xffffff);
+		_textField.defaultTextFormat = format;
+		_textField.setTextFormat(format);
+		
+		_shadow = 0;
 		allowCollisions = NONE;
-		_bitmapFontParameter = new BitmapFontParameter();
-		_bitmapFontParameter.flip = true;
-		setFormat("org/flixel/data/font/nokiafc22.ttf", 8, 0xFFFFFF, "left", 0, 1f, 1f);
+		calcFrame();
 	}
 
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
 	 * 
-	 * @param X The X position of the text.
-	 * @param Y The Y position of the text.
-	 * @param Width The width of the text object (height is determined
-	 *        automatically).
-	 * @param Text The actual text you would like to display initially.
+	 * @param	X		The X position of the text.
+	 * @param	Y		The Y position of the text.
+	 * @param	Width	The width of the text object (height is determined automatically).
+	 * @param	Text	The actual text you would like to display initially.
 	 */
 	public FlxText(float X, float Y, int Width, String Text)
 	{
@@ -131,10 +70,9 @@ public class FlxText extends FlxSprite
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
 	 * 
-	 * @param X The X position of the text.
-	 * @param Y The Y position of the text.
-	 * @param Width The width of the text object (height is determined
-	 *        automatically).
+	 * @param	X		The X position of the text.
+	 * @param	Y		The Y position of the text.
+	 * @param	Width	The width of the text object (height is determined automatically).
 	 */
 	public FlxText(float X, float Y, int Width)
 	{
@@ -147,58 +85,35 @@ public class FlxText extends FlxSprite
 	@Override
 	public void destroy()
 	{
-		_textField.clear();
 		_textField = null;
-		_text = null;
-		_bitmapFontParameter = null;
-		_distanceFieldShader = null;
 		super.destroy();
 	}
 
 	/**
-	 * You can use this if you have a lot of text parameters to set instead of
-	 * the individual properties.
+	 * You can use this if you have a lot of text parameters 
+	 * to set instead of the individual properties.
 	 * 
-	 * @param Font The name of the font face for the text display.
-	 * @param Size The size of the font (in pixels essentially).
-	 * @param Color The color of the text in 0xRRGGBB format.
-	 * @param Alignment A string representing the desired alignment
-	 *        ("left,"right" or "center").
-	 * @param ShadowColor An int representing the desired text shadow color
-	 *        0xAARRGGBB format.
-	 * @param ShadowX The x-position of the shadow, default is 1.
-	 * @param ShadowY The y-position of the shadow, default is 1.
+	 * @param	Font		The name of the font face for the text display.
+	 * @param	Size		The size of the font (in pixels essentially).
+	 * @param	Color		The color of the text in 0xRRGGBB format.
+	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
+	 * @param	ShadowColor	An int representing the desired text shadow color 0xAARRGGBB format.
 	 * 
-	 * @return This FlxText instance (nice for chaining stuff together, if
-	 *         you're into that).
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor, float ShadowX, float ShadowY)
+	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor)
 	{
 		if(Font == null)
-			Font = _font;
+			Font = "";
+		TextFormat format = _textField.defaultTextFormat;
+		format.font = Font;
+		format.size = Size;
+		format.color = Color;
+		format.align = Alignment;
+		_textField.defaultTextFormat = format;
+		_textField.setTextFormat(format);
 
-		if(!Font.equals(_font) || Size != _size)
-		{
-			try
-			{
-				_textField = new BitmapFontCache(FlxG.loadFont(Font, FlxU.round(Size), _bitmapFontParameter));
-			}
-			catch(Exception e)
-			{
-				FlxG.log(e.getMessage());
-				_textField = new BitmapFontCache(FlxG.loadFont("org/flixel/data/font/nokiafc.fnt", 22, _bitmapFontParameter));
-			}
-
-			_font = Font;
-			_size = FlxU.round(Size);
-		}
-
-		setColor(Color);
-		if(Alignment != null) // GWT doesn't support Locale. May cause problems?
-			_alignment = HAlignment.valueOf(Alignment.toUpperCase());// Locale.ENGLISH));
 		_shadow = ShadowColor;
-		_shadowX = ShadowX;
-		_shadowY = ShadowY;
 
 		calcFrame();
 
@@ -206,119 +121,72 @@ public class FlxText extends FlxSprite
 	}
 
 	/**
-	 * You can use this if you have a lot of text parameters to set instead of
-	 * the individual properties.
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
 	 * 
-	 * @param Font The name of the font face for the text display.
-	 * @param Size The size of the font (in pixels essentially).
-	 * @param Color The color of the text in 0xRRGGBB format.
-	 * @param Alignment A string representing the desired alignment
-	 *        ("left,"right" or "center").
-	 * @param ShadowColor An int representing the desired text shadow color in
-	 *        0xAARRGGBB format.
-	 * @param ShadowX The x-position of the shadow, default is 1.
+	 * @param	Font		The name of the font face for the text display.
+	 * @param	Size		The size of the font (in pixels essentially).
+	 * @param	Color		The color of the text in 0xRRGGBB format.
+	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
 	 * 
-	 * @return This FlxText instance (nice for chaining stuff together, if
-	 *         you're into that).
-	 */
-	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor, float ShadowX)
-	{
-		return setFormat(Font, Size, Color, Alignment, ShadowColor, ShadowX, 1f);
-	}
-
-	/**
-	 * You can use this if you have a lot of text parameters to set instead of
-	 * the individual properties.
-	 * 
-	 * @param Font The name of the font face for the text display.
-	 * @param Size The size of the font (in pixels essentially).
-	 * @param Color The color of the text in 0xRRGGBB format.
-	 * @param Alignment A string representing the desired alignment
-	 *        ("left,"right" or "center").
-	 * @param ShadowColor An int representing the desired text shadow color in
-	 *        0xAARRGGBB format.
-	 * 
-	 * @return This FlxText instance (nice for chaining stuff together, if
-	 *         you're into that).
-	 */
-	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor)
-	{
-		return setFormat(Font, Size, Color, Alignment, ShadowColor, 1f, 1f);
-	}
-
-	/**
-	 * You can use this if you have a lot of text parameters to set instead of
-	 * the individual properties.
-	 * 
-	 * @param Font The name of the font face for the text display.
-	 * @param Size The size of the font (in pixels essentially).
-	 * @param Color The color of the text in 0xRRGGBB format.
-	 * @param Alignment A string representing the desired alignment
-	 *        ("left,"right" or "center").
-	 * 
-	 * @return This FlxText instance (nice for chaining stuff together, if
-	 *         you're into that).
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxText setFormat(String Font, float Size, int Color, String Alignment)
 	{
-		return setFormat(Font, Size, Color, Alignment, 0, 1f, 1f);
+		return setFormat(Font, Size, Color, Alignment, 0);
 	}
 
 	/**
-	 * You can use this if you have a lot of text parameters to set instead of
-	 * the individual properties.
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
 	 * 
-	 * @param Font The name of the font face for the text display.
-	 * @param Size The size of the font (in pixels essentially).
-	 * @param Color The color of the text in 0xRRGGBB format.
+	 * @param	Font		The name of the font face for the text display.
+	 * @param	Size		The size of the font (in pixels essentially).
+	 * @param	Color		The color of the text in 0xRRGGBB format.
 	 * 
-	 * @return This FlxText instance (nice for chaining stuff together, if
-	 *         you're into that).
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxText setFormat(String Font, float Size, int Color)
 	{
-		return setFormat(Font, Size, Color, null, 0, 1f, 1f);
+		return setFormat(Font, Size, Color, null, 0);
 	}
 
 	/**
-	 * You can use this if you have a lot of text parameters to set instead of
-	 * the individual properties.
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
 	 * 
-	 * @param Font The name of the font face for the text display.
-	 * @param Size The size of the font (in pixels essentially).
+	 * @param	Font	The name of the font face for the text display.
+	 * @param	Size	The size of the font (in pixels essentially).
 	 * 
-	 * @return This FlxText instance (nice for chaining stuff together, if
-	 *         you're into that).
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxText setFormat(String Font, float Size)
 	{
-		return setFormat(Font, Size, 0xFFFFFFFF, null, 0, 1f, 1f);
+		return setFormat(Font, Size, 0xFFFFFFFF, null, 0);
 	}
 
 	/**
-	 * You can use this if you have a lot of text parameters to set instead of
-	 * the individual properties.
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
 	 * 
-	 * @param Font The name of the font face for the text display.
+	 * @param	Font	The name of the font face for the text display.
 	 * 
-	 * @return This FlxText instance (nice for chaining stuff together, if
-	 *         you're into that).
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxText setFormat(String Font)
 	{
-		return setFormat(Font, 8, 0xFFFFFFFF, null, 0, 1f, 1f);
+		return setFormat(Font, 8, 0xFFFFFFFF, null, 0);
 	}
 
 	/**
-	 * You can use this if you have a lot of text parameters to set instead of
-	 * the individual properties.
+	 * You can use this if you have a lot of text parameters
+	 * to set instead of the individual properties.
 	 * 
-	 * @return This FlxText instance (nice for chaining stuff together, if
-	 *         you're into that).
+	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxText setFormat()
 	{
-		return setFormat(null, 8, 0xFFFFFFFF, null, 0, 1f, 1f);
+		return setFormat(null, 8, 0xFFFFFFFF, null, 0);
 	}
 
 	/**
@@ -326,16 +194,20 @@ public class FlxText extends FlxSprite
 	 */
 	public String getText()
 	{
-		return _text.toString();
+		return _textField.getText();
 	}
 
 	/**
 	 * The text being displayed.
 	 */
-	public void setText(CharSequence Text)
+	public void setText(String Text)
 	{
-		_text = Text;
-		calcFrame();
+		String ot = _textField.getText();
+		_textField.setText(Text);
+		if(!_textField.getText().equals(ot))
+		{
+			calcFrame();
+		}
 	}
 
 	/**
@@ -343,7 +215,7 @@ public class FlxText extends FlxSprite
 	 */
 	public float getSize()
 	{
-		return _size;
+		return _textField.defaultTextFormat.size;
 	}
 
 	/**
@@ -351,29 +223,41 @@ public class FlxText extends FlxSprite
 	 */
 	public void setSize(float Size)
 	{
-		if(Size == _size)
-			return;
-
-		setFormat(_font, Size, _color, getAlignment(), _shadow, _shadowX, _shadowY);
+		TextFormat format = _textField.defaultTextFormat;
+		format.size = Size;
+		_textField.defaultTextFormat = format;
+		_textField.setTextFormat(format);
+		calcFrame();
 	}
 
+	/**
+	 * The color of the text being displayed.
+	 */
+	@Override
+	public int getColor() 
+	{
+		return _textField.defaultTextFormat.color;
+	}
+	
+	/**
+	 * The color of the text being displayed.
+	 */
+	@Override
+	public void setColor(int Color)
+	{
+		TextFormat format = _textField.defaultTextFormat;
+		format.color = Color;
+		_textField.defaultTextFormat = format;
+		_textField.setTextFormat(format);
+		calcFrame();
+	}
+	
 	/**
 	 * The font used for this text.
 	 */
 	public String getFont()
 	{
-		return _font;
-	}
-
-	/**
-	 * The font used for this text.
-	 */
-	public void setFont(String Font, float Size)
-	{
-		if(Font == null || Font.equals(_font))
-			return;
-
-		setFormat(Font, Size, _color, getAlignment(), _shadow, _shadowX, _shadowY);
+		return _textField.defaultTextFormat.font;
 	}
 
 	/**
@@ -381,7 +265,11 @@ public class FlxText extends FlxSprite
 	 */
 	public void setFont(String Font)
 	{
-		setFont(Font, _size);
+		TextFormat format = _textField.defaultTextFormat;
+		format.font = Font;
+		_textField.defaultTextFormat = format;
+		_textField.setTextFormat(format);
+		calcFrame();
 	}
 
 	/**
@@ -389,7 +277,7 @@ public class FlxText extends FlxSprite
 	 */
 	public String getAlignment()
 	{
-		return _alignment.toString().toLowerCase();// Locale.ENGLISH);
+		return _textField.defaultTextFormat.align;
 	}
 
 	/**
@@ -397,9 +285,10 @@ public class FlxText extends FlxSprite
 	 */
 	public void setAlignment(String Alignment)
 	{
-		if(Alignment == null)
-			return;
-		_alignment = HAlignment.valueOf(Alignment.toUpperCase());// Locale.ENGLISH));
+		TextFormat format = _textField.defaultTextFormat;
+		format.align = Alignment;
+		_textField.defaultTextFormat = format;
+		_textField.setTextFormat(format);
 		calcFrame();
 	}
 
@@ -419,114 +308,10 @@ public class FlxText extends FlxSprite
 		_shadow = Color;
 	}
 
-	/**
-	 * The position of the text shadow.
-	 * 
-	 * @param ShadowX The x-position
-	 * @param ShadowY The y-position
-	 */
-	public void setShadow(float ShadowX, float ShadowY)
-	{
-		_shadowX = ShadowX;
-		_shadowY = ShadowY;
-	}
-
-	/**
-	 * The x-position of the text shadow.
-	 */
-	public void setShadowX(float ShadowX)
-	{
-		_shadowX = ShadowX;
-	}
-
-	/**
-	 * The y-position of the text shadow.
-	 */
-	public void setShadowY(float ShadowY)
-	{
-		_shadowY = ShadowY;
-	}
-
-	/**
-	 * Sets whether the font should render as distance field.
-	 * 
-	 * @param Enabled Whether the font should render as distance field or not.
-	 * @param Padding The padding that is set to generate the bitmap font.
-	 * @param Smoothness The smoothness between 0 and 1.
-	 * @param Name The name of the shader.
-	 * @param Fragment A custom fragment that will be used for creating the
-	 *        shader.
-	 * @return The shader program that will be used
-	 */
-	public ShaderProgram setDistanceField(boolean Enabled, int Padding, float Smoothness, String Name, String Fragment)
-	{
-		_distanceFieldEnabled = Enabled;
-		if(!Enabled)
-			return null;
-
-		_padding = -Padding;
-		_smoothness = Smoothness;
-
-		_bitmapFontParameter.genMipMaps = true;
-		_bitmapFontParameter.minFilter = TextureFilter.MipMapLinearNearest;
-		_bitmapFontParameter.magFilter = TextureFilter.Linear;
-
-		return _distanceFieldShader = FlxG.loadShader(Name, VERTEX, Fragment);
-	}
-
-	/**
-	 * Sets whether the font should render as distance field.
-	 * 
-	 * @param Enabled Whether the font should render as distance field or not.
-	 * @param Padding The padding that is set to generate the bitmap font.
-	 * @param Smoothness The smoothness between 0 and 1.
-	 * @param Name The name of the shader.
-	 * @return The shader program that will be used
-	 */
-	public ShaderProgram setDistanceField(boolean Enabled, int Padding, float Smoothness, String Name)
-	{
-		return setDistanceField(Enabled, Padding, Smoothness, Name, DISTANCE_FIELD_FRAGMENT);
-	}
-
-	/**
-	 * Sets whether the font should render as distance field.
-	 * 
-	 * @param Enabled Whether the font should render as distance field or not.
-	 * @param Padding The padding that is set to generate the bitmap font.
-	 * @param Smoothness The smoothness between 0 and 1.
-	 * @return The shader program that will be used
-	 */
-	public ShaderProgram setDistanceField(boolean Enabled, int Padding, float Smoothness)
-	{
-		return setDistanceField(Enabled, Padding, Smoothness, _font, DISTANCE_FIELD_FRAGMENT);
-	}
-
-	/**
-	 * Sets the distance field shader in the batch.
-	 */
-	private void drawDistanceField()
-	{
-		FlxG.batch.flush();
-
-		_distanceFieldShader.begin();
-		float delta = 0.5f * MathUtils.clamp(_smoothness / scale.x, 0, 1);
-		_distanceFieldShader.setUniformf("u_lower", 0.5f - delta);
-		_distanceFieldShader.setUniformf("u_upper", 0.5f + delta);
-		_distanceFieldShader.end();
-		FlxG.batch.setShader(_distanceFieldShader);
-
-		_point.y += scale.x * _padding;
-		_textField.setPosition(_point.x, _point.y);
-	}
-
 	@Override
 	protected void calcFrame()
 	{
-		TextBounds bounds = _textField.setWrappedText(_text, 2, 3, width, _alignment);
-		// bounds.height is shorter than it should be.
-		// After some trial and error, adding seven seems to make it about right
-		// in most cases.
-		height = frameHeight = (int) FlxU.ceil(bounds.height + 7);
+		height = frameHeight = FlxU.ceil(_textField.height * 1.2f);
 	}
 
 	@Override
@@ -554,77 +339,51 @@ public class FlxText extends FlxSprite
 		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
 		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
-
-		// scaling
-		if(scale.x != 1f || scale.y != 1f)
-		{
-			_textField.getFont().setScale(scale.x, scale.y);
-			calcFrame();
-		}
-
-		// position
-		_textField.setPosition(_point.x, _point.y);
-
-		// rotation
-		if(angle != 0)
-		{
-			_matrix = FlxG.batch.getTransformMatrix().cpy();
-
-			Matrix4 rotationMatrix = FlxG.batch.getTransformMatrix();
-			rotationMatrix.translate(_textField.getX() + (width / 2), _textField.getY() + (height / 2), 0);
-			rotationMatrix.rotate(0, 0, 1, angle);
-			rotationMatrix.translate(-(_textField.getX() + (width / 2)), -(_textField.getY() + (height / 2)), 0);
-
-			FlxG.batch.setTransformMatrix(rotationMatrix);
-		}
-
-		// blending
-		if(blend != null && currentBlend != blend)
-		{
-			int[] blendFunc = BlendMode.getOpenGLBlendMode(blend);
-			FlxG.batch.setBlendFunction(blendFunc[0], blendFunc[1]);
-		}
-		else if(FlxG.batchShader == null || ignoreBatchShader)
-		{
-			// OpenGL ES 2.0 shader render
-			renderShader();
-			// OpenGL ES 2.0 blend mode render
-			renderBlend();
-		}
-
-		// distance field
-		if(_distanceFieldEnabled)
-			drawDistanceField();
-
-		// Render shadow behind the text
+		
+		_textField.x = _point.x;
+		_textField.y = _point.y;
+		
+		_textField.rotation = angle;
+		
+		_textField.scaleX = scale.x;
+		_textField.scaleY = scale.y;
+		
+		_textField.alpha = getAlpha();
+		
+		//Render a single pixel shadow beneath the text
 		if(_shadow != 0)
 		{
-			// tinting
-			int tintColor = FlxU.multiplyColors(_shadow, camera.getColor());
-			_textField.setColors(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, ((_shadow >> 24) & 0xFF) * _alpha
-					* 0.00392f);
-			_textField.translate(_shadowX, _shadowY);
-			_textField.draw(FlxG.batch);
-			_textField.translate(-_shadowX, -_shadowY);
+			_textField.x += 1;
+			_textField.y += 1;
+			
+			TextFormat format = _textField.defaultTextFormat;
+			int color = format.color;
+			format.color = FlxU.multiplyColors(_shadow, camera.getColor());
+			_textField.setTextFormat(format);
+			
+			((GdxTextField) _textField).render();
+			
+			format.color = color;
+			_textField.setTextFormat(format);
+			
+			_textField.x -= 1;
+			_textField.y -= 1;
 		}
+		
+		TextFormat format = _textField.defaultTextFormat;
+		int color = format.color;
+		format.color = FlxU.multiplyColors(color, camera.getColor());
+		_textField.setTextFormat(format);
+		
+		((GdxTextField) _textField).render();
 
-		// tinting
-		int tintColor = FlxU.multiplyColors(_color, camera.getColor());
-		_textField.setColors(((tintColor >> 16) & 0xFF) * 0.00392f, ((tintColor >> 8) & 0xFF) * 0.00392f, (tintColor & 0xFF) * 0.00392f, _alpha);
-
-		_textField.draw(FlxG.batch);
-
-		// turn off distance field
-		if(_distanceFieldEnabled)
-			FlxG.batch.setShader(null);
-
-		// rotation
-		if(angle != 0)
-			FlxG.batch.setTransformMatrix(_matrix);
-
+		format.color = color;
+		_textField.setTextFormat(format);
+		
 		_VISIBLECOUNT++;
 
 		if(FlxG.visualDebug && !ignoreDrawDebug)
 			drawDebug(camera);
 	}
 }
+														

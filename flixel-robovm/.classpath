@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="org.robovm.eclipse.ROBOVM_CONTAINER"/>
 	<classpathentry kind="con" path="org.robovm.eclipse.ROBOVM_COCOA_TOUCH_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/flixel-core"/>
-	<classpathentry kind="lib" path="libs/gdx-backend-robovm.jar" sourcepath="libs/gdx-backend-robovm-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-robovm.jar" sourcepath="libs/gdx-backend-robovm-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

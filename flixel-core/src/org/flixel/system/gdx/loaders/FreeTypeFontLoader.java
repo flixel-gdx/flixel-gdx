@@ -10,7 +10,6 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.Array;
 
@@ -38,9 +37,9 @@ public class FreeTypeFontLoader extends AsynchronousAssetLoader<BitmapFont, Bitm
 		param.size = Integer.parseInt(split[0]);
 		param.flip = (parameter != null) ? parameter.flip : true;
 		param.characters = FlxG.freeTypeFontChars;
-		FreeTypeBitmapFontData data = generator.generateData(param);
+		BitmapFont font = generator.generateFont(param);
 		generator.dispose();
-		return new BitmapFont(data, data.getTextureRegions(), true);
+		return font;
 	}
 
 	@Override
