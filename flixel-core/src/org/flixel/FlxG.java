@@ -170,14 +170,6 @@ public class FlxG
 	 * collision activity usually profits from more. Default value is 6.
 	 */
 	static public int worldDivisions;
-	/**
-	 * The width in pixels of the display surface.
-	 */
-	static public int screenWidth;
-	/**
-	 * The height in pixels of the display surface.
-	 */
-	static public int screenHeight;
 
 	/**
 	 * Whether to show visual debug displays or not. Default = false.
@@ -1732,7 +1724,7 @@ public class FlxG
 	 * Dumps all the current cameras and resets to just one camera. Handy for
 	 * doing split-screen especially.
 	 */
-	public static void resetCameras()
+	static public void resetCameras()
 	{
 		resetCameras(null);
 	}
@@ -2415,6 +2407,9 @@ public class FlxG
 		FlxG.globalSeed = (float) Math.random();
 		FlxG.worldBounds = new FlxRect(-10, -10, FlxG.width + 20, FlxG.height + 20);
 		FlxG.worldDivisions = 6;
+		DebugPathDisplay debugPathDisplay = (DebugPathDisplay) FlxG.getPlugin(DebugPathDisplay.class);
+		if(debugPathDisplay != null)
+			debugPathDisplay.clear();
 	}
 
 	/**
@@ -2442,8 +2437,8 @@ public class FlxG
 		// Set the drawing area
 		int scissorWidth = FlxU.ceil(cam.width * cam._screenScaleFactorX * cam.getZoom());
 		int scissorHeight = FlxU.ceil(cam.height * cam._screenScaleFactorY * cam.getZoom());
-		int scissorX = (int) ((FlxG.screenWidth / 2f) - (cam._glCamera.position.x * cam._screenScaleFactorX) * cam.getZoom());
-		int scissorY = (int) (FlxG.screenHeight - (((FlxG.screenHeight / 2f) - (cam._glCamera.position.y * cam._screenScaleFactorY) * cam.getZoom()) + scissorHeight));
+		int scissorX = (int) ((FlxG.getStage().getStageWidth() / 2f) - (cam._glCamera.position.x * cam._screenScaleFactorX * cam.getZoom()));
+		int scissorY = (int) (FlxG.getStage().getStageHeight() - (((FlxG.getStage().getStageHeight() / 2f) - (cam._glCamera.position.y * cam._screenScaleFactorY) * cam.getZoom()) + scissorHeight));
 		_gl.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
 
 		// Clear the camera
@@ -2492,8 +2487,8 @@ public class FlxG
 			{
 				if(cam.active)
 					cam.update();
-				cam._glCamera.position.x = cam._flashOffsetX - ((cam.x - cam._fxShakeOffset.x) / cam.getZoom());
-				cam._glCamera.position.y = cam._flashOffsetY - ((cam.y - cam._fxShakeOffset.y) / cam.getZoom());
+				cam._glCamera.position.x = cam._flashOffsetX - cam.x + cam._fxShakeOffset.x;
+				cam._glCamera.position.y = cam._flashOffsetY - cam.y + cam._fxShakeOffset.y;
 			}
 		}
 	}

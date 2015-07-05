@@ -21,9 +21,6 @@ import flash.events.EventDispatcher;
  */
 public class GdxStage extends EventDispatcher implements Stage, ApplicationListener
 {
-	private int _stageWidth;
-	private int _stageHeight;
-
 	private EventPool _applicationEvents;
 
 	private GdxInput _input;
@@ -32,16 +29,10 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	private static Pixmap _blankCursor;
 
 	/**
-	 * Creates a new <code>Stage</code> with the specified width and height.
-	 * 
-	 * @param width The width of the <code>Stage</code> in pixels.
-	 * @param height The height of the <code>Stage</code> in pixels.
+	 * Creates a new <code>Stage</code> with the specified width and height. 
 	 */
-	public GdxStage(int width, int height)
+	public GdxStage()
 	{
-		_stageWidth = width;
-		_stageHeight = height;
-
 		_input = new GdxInput(this);
 		_graphics = new GdxGraphics();
 
@@ -51,13 +42,13 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	@Override
 	public int getStageWidth()
 	{
-		return _stageWidth;
+		return Gdx.graphics.getWidth();
 	}
 
 	@Override
 	public int getStageHeight()
 	{
-		return _stageHeight;
+		return Gdx.graphics.getHeight();
 	}
 
 	@Override

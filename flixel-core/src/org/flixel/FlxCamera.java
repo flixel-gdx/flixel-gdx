@@ -52,6 +52,7 @@ public class FlxCamera extends FlxBasic
 	 * Camera "shake" effect preset: shake camera on the Y axis only.
 	 */
 	static public final int SHAKE_VERTICAL_ONLY = 2;
+
 	/**
 	 * Camera "scale" mode preset: The game is not scaled.
 	 */
@@ -70,7 +71,12 @@ public class FlxCamera extends FlxBasic
 	 * Camera "scale" mode preset: Stretches the game to fill the entire screen.
 	 */
 	public static final int STRETCH = 3;
-
+	/**
+	 * Camera "scale" mode preset: Resizes the width of game to match the aspect ratio of the display,
+	 * then scales the game to fill the entire screen.
+	 */
+	static public final int RESIZE_WIDTH = 4;
+	
 	/**
 	 * While you can alter the zoom of each camera after the fact, this variable
 	 * determines what value the camera will start at when created.
@@ -133,32 +139,11 @@ public class FlxCamera extends FlxBasic
 	 * <code>FlxG.bgColor</code>. NOTE: can be transparent for crazy FX!
 	 */
 	public int bgColor;
+	
 	/**
 	 * Indicates how far the camera is zoomed in.
 	 */
 	protected float _zoom;
-	/**
-	 * Decides how flixel handles different screen sizes.
-	 */
-	protected int _scaleMode;
-
-	/**
-	 * Internal, the factor of the screen width divided by the stage width.
-	 */
-	public float _screenScaleFactorX;
-	/**
-	 * Internal, the factor of the screen height divided by the stage height.
-	 */
-	public float _screenScaleFactorY;
-	/**
-	 * The width of the viewport in pixels.
-	 */
-	public int viewportWidth;
-	/**
-	 * The height of the viewport n pixels.
-	 */
-	public int viewportHeight;
-
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */
@@ -167,6 +152,19 @@ public class FlxCamera extends FlxBasic
 	 * Internal, help with color transforming the bitmap.
 	 */
 	protected int _color;
+	
+	/**
+	 * Decides how flixel handles different screen sizes.
+	 */
+	protected int _scaleMode;
+	/**
+	 * Internal, the factor of the screen width divided by the stage width.
+	 */
+	public float _screenScaleFactorX;
+	/**
+	 * Internal, the factor of the screen height divided by the stage height.
+	 */
+	public float _screenScaleFactorY;
 
 	/**
 	 * Internal, used to render buffer to screen space.
@@ -269,12 +267,12 @@ public class FlxCamera extends FlxBasic
 
 		setScaleMode(ScaleMode);
 		setZoom(Zoom); // sets the scale of sprite, which in turn loads
-						// flashOffset values
-		_flashOffsetX = viewportWidth * 0.5f;
-		_flashOffsetY = viewportHeight * 0.5f;
+		                                // flashOffset values
+		_flashOffsetX = FlxG.width*defaultZoom*0.5f/getZoom();
+		_flashOffsetY = FlxG.height*defaultZoom*0.5f/getZoom();
 
-		_glCamera.position.x = _flashOffsetX - (x / getZoom());
-		_glCamera.position.y = _flashOffsetY - (y / getZoom());
+		_glCamera.position.x = _flashOffsetX - x;
+		_glCamera.position.y = _flashOffsetY - y;
 
 		_fxFlashColor = 0;
 		_fxFlashDuration = 0.0f;
@@ -342,7 +340,6 @@ public class FlxCamera extends FlxBasic
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
 		_fxShakeOffset = null;
-		super.destroy();
 	}
 
 	/**
@@ -432,9 +429,9 @@ public class FlxCamera extends FlxBasic
 			else
 			{
 				if((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_HORIZONTAL_ONLY))
-					_fxShakeOffset.x = (float) ((FlxG.random() * (_fxShakeIntensity * width) * 2 - (_fxShakeIntensity * width)) * _zoom);
+					_fxShakeOffset.x = (FlxG.random()*_fxShakeIntensity*width*2-_fxShakeIntensity*width)*_zoom;
 				if((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_VERTICAL_ONLY))
-					_fxShakeOffset.y = (float) ((FlxG.random() * _fxShakeIntensity * height * 2 - _fxShakeIntensity * height) * _zoom);
+					_fxShakeOffset.y = (FlxG.random()*_fxShakeIntensity*height*2-_fxShakeIntensity*height)*_zoom;
 			}
 		}
 	}
@@ -451,33 +448,24 @@ public class FlxCamera extends FlxBasic
 	public void follow(FlxObject Target, int Style)
 	{
 		target = Target;
-		if(target == null)
-		{
-			deadzone = null;
-			return;
-		}
-
+		float helper;
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
-				float cameraPaddingX = width / 8f;
-				float cameraPaddingY = height / 3f;
-				deadzone = new FlxRect((width - cameraPaddingX) / 2, (height - cameraPaddingY) / 2 - cameraPaddingY * 0.25f, cameraPaddingX, cameraPaddingY);
+				float w = width/8f;
+				float h = height/3f;
+				deadzone = new FlxRect((width-w)/2f,(height-h)/2f - h*0.25f,w,h);
 				break;
 			case STYLE_TOPDOWN:
+				helper = FlxU.max(width,height)/4f;
+				deadzone = new FlxRect((width-helper)/2f,(height-helper)/2f,helper,helper);
+				break;
 			case STYLE_TOPDOWN_TIGHT:
-				float tdTightness = (Style == STYLE_TOPDOWN_TIGHT) ? 8 : 4;
-				float tdHelper = FlxU.max(width, height) / tdTightness;
-				deadzone = new FlxRect((width - tdHelper) / 2, (height - tdHelper) / 2, tdHelper, tdHelper);
+				helper = FlxU.max(width, height)/8f;
+				deadzone = new FlxRect((width-helper)/2f,(height-helper)/2f,helper,helper);
 				break;
 			case STYLE_LOCKON:
-				float targetWidth = target.width;
-				float targetHeight = target.height;
-				deadzone = new FlxRect((width - targetWidth) / 2, (height - targetHeight) / 2, targetWidth, targetHeight);
-				break;
 			default:
-				FlxG.log("[FlxCamera#follow()] WARNING: Invalid follow style of value: " + Style + "'. Defaulting to centering on the target.");
-				target = null;
 				deadzone = null;
 				break;
 		}
@@ -809,8 +797,8 @@ public class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0f;
 		_fxFadeAlpha = 0.0f;
 		_fxShakeDuration = 0;
-		_glCamera.position.x = _flashOffsetX - (x / getZoom());
-		_glCamera.position.y = _flashOffsetY - (y / getZoom());
+		_glCamera.position.x = _flashOffsetX - x;
+		_glCamera.position.y = _flashOffsetY - y;
 	}
 
 	/**
@@ -948,7 +936,7 @@ public class FlxCamera extends FlxBasic
 	}
 
 	/**
-	 * Whether the camera display is smooth and filtered, or chunky and
+	 * Whether the camera display is smooth and filtered, or chunky and 
 	 * pixelated. Default behavior is chunky-style.
 	 */
 	public void setAntialiasing(boolean Antialiasing)
@@ -964,7 +952,10 @@ public class FlxCamera extends FlxBasic
 	public FlxPoint getScale()
 	{
 		Stage stage = FlxG.getStage();
-		return _point.make(stage.getStageWidth() / _glCamera.viewportWidth, stage.getStageHeight() / _glCamera.viewportHeight);
+		
+		float X = _screenScaleFactorX / stage.getStageWidth() / _glCamera.viewportWidth;
+		float Y = _screenScaleFactorY / stage.getStageHeight() / _glCamera.viewportHeight;
+		return _point.make(X, Y);
 	}
 
 	/**
@@ -974,43 +965,34 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void setScale(float X, float Y)
 	{
-		int stageWidth = FlxG.getStage().getStageWidth();
-		int stageHeight = FlxG.getStage().getStageHeight();
-		float screenAspectRatio = FlxG.screenWidth / (float) FlxG.screenHeight;
-
+		Stage stage = FlxG.getStage();
+				
+		int initialStageWidth = (int) (FlxG.width * FlxCamera.defaultZoom);
+		int initialStageHeight = (int) (FlxG.height * FlxCamera.defaultZoom);
+		float screenAspectRatio = stage.getStageWidth() / (float) stage.getStageHeight();
+		
 		switch(_scaleMode)
 		{
 			case NO_SCALE:
-				_screenScaleFactorY = 1;
-				_screenScaleFactorX = 1;
-				viewportWidth = (int) (FlxG.screenWidth / X);
-				viewportHeight = (int) (FlxG.screenHeight / Y);
+				_glCamera.setToOrtho(true, stage.getStageWidth() / X, stage.getStageHeight() / Y);
 				break;
 
 			default:
 			case STRETCH:
-				_screenScaleFactorY = (float) FlxG.screenHeight / stageHeight;
-				_screenScaleFactorX = (float) FlxG.screenWidth / stageWidth;
-				viewportWidth = (int) (stageWidth / X);
-				viewportHeight = (int) (stageHeight / Y);
+				_glCamera.setToOrtho(true, initialStageWidth / X, initialStageHeight / Y);
 				break;
 
 			case FILL_X:
-				_screenScaleFactorX = (float) FlxG.screenWidth / (stageHeight * screenAspectRatio);
-				_screenScaleFactorY = (float) FlxG.screenHeight / stageHeight;
-				viewportWidth = (int) ((stageHeight * screenAspectRatio) / X);
-				viewportHeight = (int) (stageHeight / Y);
+				_glCamera.setToOrtho(true, (initialStageHeight * screenAspectRatio) / X, initialStageHeight / Y);
 				break;
 
 			case FILL_Y:
-				_screenScaleFactorX = (float) FlxG.screenWidth / stageWidth;
-				_screenScaleFactorY = (float) FlxG.screenHeight / (stageWidth / screenAspectRatio);
-				viewportWidth = (int) (stageWidth / X);
-				viewportHeight = (int) ((stageWidth / screenAspectRatio) / Y);
+				_glCamera.setToOrtho(true, initialStageWidth / X, initialStageWidth / screenAspectRatio / Y);
 				break;
 		}
-
-		_glCamera.setToOrtho(true, viewportWidth, viewportHeight);
+		
+		_screenScaleFactorX = stage.getStageWidth() / (_glCamera.viewportWidth * X);
+		_screenScaleFactorY = stage.getStageHeight() / (_glCamera.viewportHeight * Y);
 	}
 
 	/**
@@ -1089,10 +1071,8 @@ public class FlxCamera extends FlxBasic
 		// Shake offset is now applied in FlxG.lockCameras instead.
 		// if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		// {
-		// _glCamera.position.x = _flashOffsetX - (x / getZoom()) +
-		// _fxShakeOffset.x;
-		// _glCamera.position.y = _flashOffsetY - (y / getZoom()) +
-		// _fxShakeOffset.y;
+		// _glCamera.position.x = _flashOffsetX - x + _fxShakeOffset.x;
+		// _glCamera.position.y = _flashOffsetY - y + _fxShakeOffset.y;
 		// }
 	}
 }

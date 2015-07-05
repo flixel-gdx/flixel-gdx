@@ -230,7 +230,7 @@ public class FlxGame
 		// super high priority init stuff (focus, mouse, etc)
 		_lostFocus = false;
 		_mouse = new FlxGroup();
-		stage = new GdxStage((int) (GameSizeX * Zoom), (int) (GameSizeY * Zoom));
+		stage = new GdxStage();
 
 		// basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom, ScaleMode);
@@ -994,6 +994,7 @@ public class FlxGame
 				onEnterFrame(e);
 			}
 		});
+		
 		_created = true;
 
 		// TODO: Move to FlxDebugger
@@ -1109,11 +1110,10 @@ public class FlxGame
 	}
 
 	protected void onResize()
-	{
-		// TODO: get width and height without referencing libgdx?
-		FlxG.screenWidth = Gdx.graphics.getWidth();
-		FlxG.screenHeight = Gdx.graphics.getHeight();
-
+	{		
+		if(FlxCamera.defaultScaleMode == FlxCamera.RESIZE_WIDTH)
+			FlxG.width = (int) ((stage.getStageWidth() / (float)stage.getStageHeight()) * FlxG.height);
+		
 		// reset all the cameras
 		for(FlxCamera camera : FlxG.cameras)
 			camera.setScaleMode(camera.getScaleMode());
