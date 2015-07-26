@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * A shader program encapsulates a vertex and fragment shader pair linked to
- * form a shader program usable with OpenGL ES 2.0. It restores the shader
- * settings when the context is lost.
+ * form a shader program usable with OpenGL ES 2.0.
+ * It restores the shader settings when the context is lost.
  * 
  * @author Ka Wing Chin
  */
@@ -22,26 +22,26 @@ public class FlxShaderProgram extends ShaderProgram
 	/**
 	 * Creates a <code>ManagedShaderData</code> object.
 	 * 
-	 * @param vertexShader The path to the vertexShader.
-	 * @param fragmentShader The path to the fragmentShader.
-	 * @param callback The callback that will be used on resume.
+	 * @param	VertexShader	The path to the vertexShader.
+	 * @param	FragmentShader	The path to the fragmentShader.
+	 * @param	Callback		The callback that will be used on resume.
 	 */
-	public FlxShaderProgram(String vertexShader, String fragmentShader, IFlxShaderProgram callback)
+	public FlxShaderProgram(String VertexShader, String FragmentShader, IFlxShaderProgram Callback)
 	{
-		super(vertexShader, fragmentShader);
-		this.callback = callback;
+		super(VertexShader, FragmentShader);
+		callback = Callback;
 	}
 
 	/**
 	 * Creates a <code>ManagedShaderData</code> object.
 	 * 
-	 * @param vertexShader The path to the vertexShader.
-	 * @param fragmentShader The path to the fragmentShader.
-	 * @param callback The callback that will be used on resume.
+	 * @param	VertexShader	The path to the vertexShader.
+	 * @param	FragmentShader	The path to the fragmentShader.
+	 * @param	Callback		The callback that will be used on resume.
 	 */
-	public FlxShaderProgram(FileHandle vertexShader, FileHandle fragmentShader, IFlxShaderProgram callback)
+	public FlxShaderProgram(FileHandle VertexShader, FileHandle FragmentShader, IFlxShaderProgram Callback)
 	{
-		this(vertexShader.readString(), fragmentShader.readString(), callback);
+		this(VertexShader.readString(), FragmentShader.readString(), Callback);
 	}
 
 	/**

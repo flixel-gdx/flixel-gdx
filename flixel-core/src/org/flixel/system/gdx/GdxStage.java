@@ -14,8 +14,7 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 
 /**
- * This class replicates some of the <code>Stage</code> functionality from Flash
- * using libgdx.
+ * This class replicates some of the <code>Stage</code> functionality from Flash using libgdx.
  * 
  * @author Thomas Weston
  */

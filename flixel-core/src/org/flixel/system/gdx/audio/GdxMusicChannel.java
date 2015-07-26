@@ -58,6 +58,18 @@ public class GdxMusicChannel extends EventDispatcher implements SoundChannel, On
 	}
 
 	@Override
+	public float getLeftPeak()
+	{
+		return 0;
+	}
+	
+	@Override
+	public float getRightPeak()
+	{
+		return 0;
+	}
+	
+	@Override
 	public void setSoundTransform(SoundTransform soundTransform)
 	{
 		_soundTransform = soundTransform;

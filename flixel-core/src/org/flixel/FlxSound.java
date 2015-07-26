@@ -13,8 +13,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 /**
- * This is the universal flixel sound object, used for streaming, music, and
- * sound effects.
+ * This is the universal flixel sound object, used for streaming, music, and sound effects.
  * 
  * @author Ka Wing Chin
  * @author Thomas Weston
@@ -35,28 +34,25 @@ public class FlxSound extends FlxBasic
 	static public final int MUSIC = 2;
 
 	/**
-	 * The X position of this sound in world coordinates. Only really matters if
-	 * you are doing proximity/panning stuff.
+	 * The X position of this sound in world coordinates.
+	 * Only really matters if you are doing proximity/panning stuff.
 	 */
 	public float x;
 	/**
-	 * The Y position of this sound in world coordinates. Only really matters if
-	 * you are doing proximity/panning stuff.
+	 * The Y position of this sound in world coordinates.
+	 * Only really matters if you are doing proximity/panning stuff.
 	 */
 	public float y;
 	/**
-	 * Whether or not this sound should be automatically destroyed when you
-	 * switch states.
+	 * Whether or not this sound should be automatically destroyed when you switch states.
 	 */
 	public boolean survive;
 	/**
-	 * The ID3 song name. Defaults to null. Currently only works for streamed
-	 * sounds.
+	 * The ID3 song name.  Defaults to null.  Currently only works for streamed sounds.
 	 */
 	public String name;
 	/**
-	 * The ID3 artist name. Defaults to null. Currently only works for streamed
-	 * sounds.
+	 * The ID3 artist name.  Defaults to null.  Currently only works for streamed sounds.
 	 */
 	public String artist;
 	/**
@@ -91,7 +87,7 @@ public class FlxSound extends FlxBasic
 	/**
 	 * Internal tracker for the position in runtime of the music playback.
 	 */
-	protected int _position;
+	protected float _position;
 	/**
 	 * Internal tracker for how loud the sound is.
 	 */
@@ -117,18 +113,15 @@ public class FlxSound extends FlxBasic
 	 */
 	protected FlxObject _target;
 	/**
-	 * Internal tracker for the maximum effective radius of this sound (for
-	 * proximity and panning).
+	 * Internal tracker for the maximum effective radius of this sound (for proximity and panning).
 	 */
 	protected float _radius;
 	/**
-	 * Internal tracker for whether to pan the sound left and right. Default is
-	 * false.
+	 * Internal tracker for whether to pan the sound left and right.  Default is false.
 	 */
 	protected boolean _pan;
 	/**
-	 * Internal timer used to keep track of requests to fade out the sound
-	 * playback.
+	 * Internal timer used to keep track of requests to fade out the sound playback.
 	 */
 	protected float _fadeOutTimer;
 	/**
@@ -136,8 +129,7 @@ public class FlxSound extends FlxBasic
 	 */
 	protected float _fadeOutTotal;
 	/**
-	 * Internal flag for whether to pause or stop the sound when it's done
-	 * fading out.
+	 * Internal flag for whether to pause or stop the sound when it's done fading out.
 	 */
 	protected boolean _pauseOnFadeOut;
 	/**
@@ -148,40 +140,9 @@ public class FlxSound extends FlxBasic
 	 * Internal helper for fading in sounds.
 	 */
 	protected float _fadeInTotal;
-	/**
-	 * Internal, cache for distance based volume.
-	 */
-	private float _radial;
-	/**
-	 * Internal, cache for fade out the sound.
-	 */
-	private float _fade;
-	/**
-	 * Internal, calculates the distance-based volume control for this first
-	 * point.
-	 */
-	private FlxPoint _distance1;
-	/**
-	 * Internal, calculates the distance-based volume control for the second
-	 * point.
-	 */
-	private FlxPoint _distance2;
 
 	/**
-	 * Internal event listener.
-	 */
-	protected final IEventListener stoppedListener = new IEventListener()
-	{
-		@Override
-		public void onEvent(Event e)
-		{
-			stopped();
-		}
-	};
-
-	/**
-	 * The FlxSound constructor gets all the variables initialized, but NOT
-	 * ready to play a sound yet.
+	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
 	 */
 	public FlxSound()
 	{
@@ -224,8 +185,6 @@ public class FlxSound extends FlxBasic
 		amplitudeRight = 0;
 		autoDestroy = false;
 		survive = false;
-		_distance1 = new FlxPoint();
-		_distance2 = new FlxPoint();
 	}
 
 	/**
@@ -241,42 +200,36 @@ public class FlxSound extends FlxBasic
 		_target = null;
 		name = null;
 		artist = null;
-		_distance1 = null;
-		_distance2 = null;
+		
 		super.destroy();
 	}
 
 	/**
-	 * Handles fade out, fade in, panning, proximity, and amplitude operations
-	 * each frame.
+	 * Handles fade out, fade in, panning, proximity, and amplitude operations each frame.
 	 */
 	@Override
 	public void update()
 	{
-		_radial = 1.0f;
-		_fade = 1.0f;
-
-		// Distance-based volume control
+		float radial = 1.0f;
+		float fade = 1.0f;
+		
+		//Distance-based volume control
 		if(_target != null)
 		{
-			_radial = 1 - FlxU.getDistance(_distance1.make(_target.x, _target.y), _distance2.make(x, y)) / _radius;
-			if(_radial < 0)
-				_radial = 0;
-			if(_radial > 1)
-				_radial = 1;
+			radial = 1 - FlxU.getDistance(new FlxPoint(_target.x,_target.y),new FlxPoint(x,y))/_radius;
+			if(radial < 0) radial = 0;
+			if(radial > 1) radial = 1;
 
 			if(_pan)
 			{
-				float d = (x - _target.x) / _radius;
-				if(d < -1)
-					d = -1;
-				else if(d > 1)
-					d = 1;
+				float d = (x-_target.x)/_radius;
+				if(d < -1) d = -1;
+				else if(d > 1) d = 1;
 				_transform.pan = d;
 			}
 		}
 
-		// Cross-fading volume control
+		//Cross-fading volume control
 		if(_fadeOutTimer > 0)
 		{
 			_fadeOutTimer -= FlxG.elapsed;
@@ -287,29 +240,26 @@ public class FlxSound extends FlxBasic
 				else
 					stop();
 			}
-			_fade = _fadeOutTimer / _fadeOutTotal;
-			if(_fade < 0)
-				_fade = 0;
+			fade = _fadeOutTimer/_fadeOutTotal;
+			if(fade < 0) fade = 0;
 		}
 		else if(_fadeInTimer > 0)
 		{
 			_fadeInTimer -= FlxG.elapsed;
-			_fade = _fadeInTimer / _fadeInTotal;
-			if(_fade < 0)
-				_fade = 0;
-			_fade = 1 - _fade;
+			fade = _fadeInTimer/_fadeInTotal;
+			if(fade < 0) fade = 0;
+			fade = 1 - fade;
 		}
 
-		_volumeAdjust = _radial * _fade;
+		_volumeAdjust = radial*fade;
 		updateTransform();
 
-		// TODO: Amplitude data
-		// if(_transform.volume > 0)
-		// {
-		// amplitudeLeft = _channel.leftPeak/_transform.volume;
-		// amplitudeRight = _channel.rightPeak/_transform.volume;
-		// amplitude = (amplitudeLeft+amplitudeRight)*0.5;
-		// }
+		if((_transform.volume > 0) && (_channel != null))
+		{
+			amplitudeLeft = _channel.getLeftPeak()/_transform.volume;
+			amplitudeRight = _channel.getRightPeak()/_transform.volume;
+			amplitude = (amplitudeLeft+amplitudeRight)*0.5f;
+		}
 	}
 
 	@Override
@@ -321,19 +271,14 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * One of two main setup functions for sounds, this function loads a sound
-	 * from an embedded MP3.
+	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 * 
-	 * @param EmbeddedSound An embedded Class object representing an MP3 file.
-	 * @param Looped Whether or not this sound should loop endlessly.
-	 * @param AutoDestroy Whether or not this <code>FlxSound</code> instance
-	 *        should be destroyed when the sound finishes playing. Default value
-	 *        is false, but FlxG.play() and FlxG.stream() will set it to true by
-	 *        default.
-	 * @param Type Whether this sound is a sound effect or a music track.
+	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
+	 * @param	Looped			Whether or not this sound should loop endlessly.
+	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
+	 * @param	Type			Whether this sound is a sound effect or a music track.
 	 * 
-	 * @return This <code>FlxSound</code> instance (nice for chaining stuff
-	 *         together, if you're into that).
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxSound loadEmbedded(String EmbeddedSound, boolean Looped, boolean AutoDestroy, int Type)
 	{
@@ -352,14 +297,13 @@ public class FlxSound extends FlxBasic
 
 			case AUTO:
 			default:
-				// If the type is not specified, make a guess based on the file
-				// size.
+				//If the type is not specified, make a guess based on the file size.
 				FileHandle file = Gdx.files.internal(EmbeddedSound);
 				Type = file.length() < 24576 ? SFX : MUSIC;
 				return loadEmbedded(EmbeddedSound, Looped, AutoDestroy, Type);
 		}
 
-		// NOTE: can't pull ID3 info from embedded sound currently
+		//NOTE: can't pull ID3 info from embedded sound currently
 		_looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
@@ -368,19 +312,13 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * One of two main setup functions for sounds, this function loads a sound
-	 * from an embedded MP3. If the file is larger than 24 KB, the type will be
-	 * MUSIC.
+	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 * 
-	 * @param EmbeddedSound An embedded Class object representing an MP3 file.
-	 * @param Looped Whether or not this sound should loop endlessly.
-	 * @param AutoDestroy Whether or not this <code>FlxSound</code> instance
-	 *        should be destroyed when the sound finishes playing. Default value
-	 *        is false, but FlxG.play() and FlxG.stream() will set it to true by
-	 *        default.
+	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
+	 * @param	Looped			Whether or not this sound should loop endlessly.
+	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
 	 * 
-	 * @return This <code>FlxSound</code> instance (nice for chaining stuff
-	 *         together, if you're into that).
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxSound loadEmbedded(String EmbeddedSound, boolean Looped, boolean AutoDestroy)
 	{
@@ -388,15 +326,12 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * One of two main setup functions for sounds, this function loads a sound
-	 * from an embedded MP3. If the file is larger than 24 KB, the type will be
-	 * MUSIC.
+	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 * 
-	 * @param EmbeddedSound An embedded Class object representing an MP3 file.
-	 * @param Looped Whether or not this sound should loop endlessly.
+	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
+	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * 
-	 * @return This <code>FlxSound</code> instance (nice for chaining stuff
-	 *         together, if you're into that).
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxSound loadEmbedded(String EmbeddedSound, boolean Looped)
 	{
@@ -404,14 +339,11 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * One of two main setup functions for sounds, this function loads a sound
-	 * from an embedded MP3. If the file is larger than 24 KB, the type will be
-	 * MUSIC.
+	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 * 
-	 * @param EmbeddedSound An embedded Class object representing an MP3 file.
+	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * 
-	 * @return This <code>FlxSound</code> instance (nice for chaining stuff
-	 *         together, if you're into that).
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxSound loadEmbedded(String EmbeddedSound)
 	{
@@ -419,19 +351,13 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * One of two main setup functions for sounds, this function loads a sound
-	 * from a URL.
+	 * One of two main setup functions for sounds, this function loads a sound from a URL.
 	 * 
-	 * @param SoundURL A string representing the URL of the MP3 file you want to
-	 *        play.
-	 * @param Looped Whether or not this sound should loop endlessly.
-	 * @param AutoDestroy Whether or not this <code>FlxSound</code> instance
-	 *        should be destroyed when the sound finishes playing. Default value
-	 *        is false, but FlxG.play() and FlxG.stream() will set it to true by
-	 *        default.
+	 * @param	SoundURL	A string representing the URL of the MP3 file you want to play.
+	 * @param	Looped		Whether or not this sound should loop endlessly.
+	 * @param	AutoDestroy	Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
 	 * 
-	 * @return This <code>FlxSound</code> instance (nice for chaining stuff
-	 *         together, if you're into that).
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
 	// TODO: Load a sound from an URL
 	public FlxSound loadStream(String SoundURL, boolean Looped, boolean AutoDestroy)
@@ -441,24 +367,20 @@ public class FlxSound extends FlxBasic
 		// _sound = new Sound();
 		// _sound.addEventListener(Event.ID3, gotID3);
 		// _sound.load(new URLRequest(SoundURL));
-		// _looped = Looped;
-		// autoDestroy = AutoDestroy;
-		// updateTransform();
-
+		_looped = Looped;
+		autoDestroy = AutoDestroy;
+		updateTransform();
 		exists = true;
 		return this;
 	}
 
 	/**
-	 * One of two main setup functions for sounds, this function loads a sound
-	 * from a URL.
+	 * One of two main setup functions for sounds, this function loads a sound from a URL.
 	 * 
-	 * @param SoundURL A string representing the URL of the MP3 file you want to
-	 *        play.
-	 * @param Looped Whether or not this sound should loop endlessly.
+	 * @param	SoundURL	A string representing the URL of the MP3 file you want to play.
+	 * @param	Looped		Whether or not this sound should loop endlessly.
 	 * 
-	 * @return This <code>FlxSound</code> instance (nice for chaining stuff
-	 *         together, if you're into that).
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxSound loadStream(String SoundURL, boolean Looped)
 	{
@@ -466,14 +388,11 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * One of two main setup functions for sounds, this function loads a sound
-	 * from a URL.
+	 * One of two main setup functions for sounds, this function loads a sound from a URL.
 	 * 
-	 * @param SoundURL A string representing the URL of the MP3 file you want to
-	 *        play.
+	 * @param	SoundURL	A string representing the URL of the MP3 file you want to play.
 	 * 
-	 * @return This <code>FlxSound</code> instance (nice for chaining stuff
-	 *         together, if you're into that).
+	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
 	public FlxSound loadStream(String SoundURL)
 	{
@@ -481,20 +400,18 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * Call this function if you want this sound's volume to change based on
-	 * distance from a particular FlxCore object.
+	 * Call this function if you want this sound's volume to change
+	 * based on distance from a particular FlxCore object.
 	 * 
-	 * @param X The X position of the sound.
-	 * @param Y The Y position of the sound.
-	 * @param Object The object you want to track.
-	 * @param Radius The maximum distance this sound can travel.
-	 * @param Pan Whether the sound should pan in addition to the volume changes
-	 *        (default: true).
+	 * @param	X		The X position of the sound.
+	 * @param	Y		The Y position of the sound.
+	 * @param	Object	The object you want to track.
+	 * @param	Radius	The maximum distance this sound can travel.
+	 * @param	Pan		Whether the sound should pan in addition to the volume changes (default: true).
 	 * 
-	 * @return This FlxSound instance (nice for chaining stuff together, if
-	 *         you're into that).
+	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSound proximity(float X, float Y, FlxObject Object, float Radius, boolean Pan)
+	public FlxSound proximity(float X,float Y,FlxObject Object,float Radius,boolean Pan)
 	{
 		x = X;
 		y = Y;
@@ -505,29 +422,26 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * Call this function if you want this sound's volume to change based on
-	 * distance from a particular FlxCore object.
+	 * Call this function if you want this sound's volume to change
+	 * based on distance from a particular FlxCore object.
 	 * 
-	 * @param X The X position of the sound.
-	 * @param Y The Y position of the sound.
-	 * @param Object The object you want to track.
-	 * @param Radius The maximum distance this sound can travel.
+	 * @param	X		The X position of the sound.
+	 * @param	Y		The Y position of the sound.
+	 * @param	Object	The object you want to track.
+	 * @param	Radius	The maximum distance this sound can travel.
+	 * @param	Pan		Whether the sound should pan in addition to the volume changes (default: true).
 	 * 
-	 * @return This FlxSound instance (nice for chaining stuff together, if
-	 *         you're into that).
+	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxSound proximity(float X, float Y, FlxObject Object, float Radius)
+	public FlxSound proximity(float X,float Y,FlxObject Object,float Radius)
 	{
-		return proximity(X, Y, Object, Radius, true);
+		return proximity(X,Y,Object,Radius,true);
 	}
 
 	/**
 	 * Call this function to play the sound - also works on paused sounds.
 	 * 
-	 * @param ForceRestart Whether to start the sound over or not. Default value
-	 *        is false, meaning if the sound is already playing or was paused
-	 *        when you call <code>play()</code>, it will continue playing from
-	 *        its current position, NOT start again from the beginning.
+	 * @param	ForceRestart	Whether to start the sound over or not.  Default value is false, meaning if the sound is already playing or was paused when you call <code>play()</code>, it will continue playing from its current position, NOT start again from the beginning.
 	 */
 	public void play(boolean ForceRestart)
 	{
@@ -545,7 +459,7 @@ public class FlxSound extends FlxBasic
 			if(_position == 0)
 			{
 				if(_channel == null)
-					_channel = _sound.play(0f, 9999, _transform);
+					_channel = _sound.play(0f,9999,_transform);
 				if(_channel == null)
 					exists = false;
 				else
@@ -560,7 +474,7 @@ public class FlxSound extends FlxBasic
 			{
 				if(_channel == null)
 				{
-					_channel = _sound.play(0f, 0, _transform);
+					_channel = _sound.play(0f,0,_transform);
 					if(_channel == null)
 						exists = false;
 					else
@@ -590,9 +504,7 @@ public class FlxSound extends FlxBasic
 	{
 		if(_position <= 0)
 			return;
-
 		_channel.resume();
-
 		active = (_channel != null);
 	}
 
@@ -625,14 +537,12 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * Call this function to make this sound fade out over a certain time
-	 * interval.
+	 * Call this function to make this sound fade out over a certain time interval.
 	 * 
-	 * @param Seconds The amount of time the fade out operation should take.
-	 * @param PauseInstead Tells the sound to pause on fadeout, instead of
-	 *        stopping.
+	 * @param	Seconds			The amount of time the fade out operation should take.
+	 * @param	PauseInstead	Tells the sound to pause on fadeout, instead of stopping.
 	 */
-	public void fadeOut(float Seconds, boolean PauseInstead)
+	public void fadeOut(float Seconds,boolean PauseInstead)
 	{
 		_pauseOnFadeOut = PauseInstead;
 		_fadeInTimer = 0;
@@ -641,21 +551,20 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * Call this function to make this sound fade out over a certain time
-	 * interval.
+	 * Call this function to make this sound fade out over a certain time interval.
 	 * 
-	 * @param Seconds The amount of time the fade out operation should take.
+	 * @param	Seconds			The amount of time the fade out operation should take.
 	 */
 	public void fadeOut(float Seconds)
 	{
-		fadeOut(Seconds, false);
+		fadeOut(Seconds,false);
 	}
 
 	/**
-	 * Call this function to make a sound fade in over a certain time interval
-	 * (calls <code>play()</code> automatically).
+	 * Call this function to make a sound fade in over a certain
+	 * time interval (calls <code>play()</code> automatically).
 	 * 
-	 * @param Seconds The amount of time the fade-in operation should take.
+	 * @param	Seconds		The amount of time the fade-in operation should take.
 	 */
 	public void fadeIn(float Seconds)
 	{
@@ -666,8 +575,7 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * Set <code>volume</code> to a value between 0 and 1 to change how this
-	 * sound is.
+	 * Set <code>volume</code> to a value between 0 and 1 to change how this sound is.
 	 */
 	public float getVolume()
 	{
@@ -675,10 +583,9 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * Set <code>volume</code> to a value between 0 and 1 to change how this
-	 * sound is.
+	 * Set <code>volume</code> to a value between 0 and 1 to change how this sound is.
 	 * 
-	 * @param Volume The volume of the sound.
+	 * @param	Volume	The volume of the sound.
 	 */
 	public void setVolume(float Volume)
 	{
@@ -694,18 +601,18 @@ public class FlxSound extends FlxBasic
 	 * Returns the currently selected "real" volume of the sound (takes fades
 	 * and proximity into account).
 	 * 
-	 * @return The adjusted volume of the sound.
+	 * @return	The adjusted volume of the sound.
 	 */
 	public float getActualVolume()
 	{
-		return _volume * _volumeAdjust;
+		return _volume*_volumeAdjust;
 	}
 
 	/**
-	 * Set the pitch multiplier, 1 == default, >1 == faster, <1 == slower, the
-	 * value has to be between 0.5 and 2.0.
+	 * Set the pitch multiplier, 1 == default, >1 == faster, <1 == slower.
+	 * The value has to be between 0.5 and 2.0.
 	 * 
-	 * @param Pitch
+	 * @param	Pitch	The pitch multiplier.
 	 */
 	public void setPitch(float Pitch)
 	{
@@ -718,9 +625,9 @@ public class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * Returns the current ptich of the sound.
+	 * Returns the current pitch of the sound.
 	 * 
-	 * @return The ptich of the sound.
+	 * @return	The pitch of the sound.
 	 */
 	public float getPitch()
 	{
@@ -732,19 +639,18 @@ public class FlxSound extends FlxBasic
 	 */
 	protected void updateTransform()
 	{
-		_transform.volume = (FlxG.mute ? 0 : 1) * FlxG.getVolume() * _volume * _volumeAdjust;
+		_transform.volume = (FlxG.mute?0:1)*FlxG.getVolume()*_volume*_volumeAdjust;
 		_transform.pitch = _pitch;
 		if(_channel != null)
 			_channel.setSoundTransform(_transform);
 	}
 
 	/**
-	 * An internal helper function used to help Flash clean up and re-use
-	 * finished sounds.
+	 * An internal helper function used to help Flash clean up and re-use finished sounds.
 	 */
 	protected void stopped()
 	{
-		_channel.removeEventListener(Event.SOUND_COMPLETE, stoppedListener);
+		_channel.removeEventListener(Event.SOUND_COMPLETE,stoppedListener);
 		_channel = null;
 		active = false;
 		_isPausedOnFocusLost = false;
@@ -764,4 +670,16 @@ public class FlxSound extends FlxBasic
 		 * _sound.id3.artist; _sound.removeEventListener(Event.ID3, gotID3);
 		 */
 	}
+	
+	/**
+	 * Internal event listener.
+	 */
+	protected final IEventListener stoppedListener = new IEventListener()
+	{
+		@Override
+		public void onEvent(Event e)
+		{
+			stopped();
+		}
+	};
 }

@@ -29,19 +29,17 @@ public class FlxAnim
 	/**
 	 * Constructor
 	 * 
-	 * @param Name What this animation should be called (e.g. "run")
-	 * @param Frames An array of numbers indicating what frames to play in what
-	 *        order (e.g. 1, 2, 3)
-	 * @param FrameRate The speed in frames per second that the animation should
-	 *        play at (e.g. 40)
-	 * @param Looped Whether or not the animation is looped or just plays once
+	 * @param	Name		What this animation should be called (e.g. "run")
+	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3)
+	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40)
+	 * @param	Looped		Whether or not the animation is looped or just plays once
 	 */
 	public FlxAnim(String Name, int[] Frames, float FrameRate, boolean Looped)
 	{
 		name = Name;
 		delay = 0;
 		if(FrameRate > 0)
-			delay = 1.0f / FrameRate;
+			delay = 1.0f/FrameRate;
 		frames = new IntArray(Frames);
 		looped = Looped;
 	}
@@ -49,11 +47,9 @@ public class FlxAnim
 	/**
 	 * Constructor
 	 * 
-	 * @param Name What this animation should be called (e.g. "run")
-	 * @param Frames An array of numbers indicating what frames to play in what
-	 *        order (e.g. 1, 2, 3)
-	 * @param FrameRate The speed in frames per second that the animation should
-	 *        play at (e.g. 40)
+	 * @param	Name		What this animation should be called (e.g. "run")
+	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3)
+	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40)
 	 */
 	public FlxAnim(String Name, int[] Frames, float FrameRate)
 	{
@@ -63,9 +59,8 @@ public class FlxAnim
 	/**
 	 * Constructor
 	 * 
-	 * @param Name What this animation should be called (e.g. "run")
-	 * @param Frames An array of numbers indicating what frames to play in what
-	 *        order (e.g. 1, 2, 3)
+	 * @param	Name		What this animation should be called (e.g. "run")
+	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3)
 	 */
 	public FlxAnim(String Name, int[] Frames)
 	{

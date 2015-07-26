@@ -27,13 +27,11 @@ public class FlxPreloader extends FlxState
 	 */
 	protected FlxText _text;
 	/**
-	 * Useful for storing "real" stage width if you're scaling your preloader
-	 * graphics.
+	 * Useful for storing "real" stage width if you're scaling your preloader graphics.
 	 */
 	protected int _width;
 	/**
-	 * Useful for storing "real" stage height if you're scaling your preloader
-	 * graphics.
+	 * Useful for storing "real" stage height if you're scaling your preloader graphics.
 	 */
 	protected int _height;
 	/**
@@ -54,8 +52,7 @@ public class FlxPreloader extends FlxState
 	protected long _time;
 
 	/**
-	 * This should always be the name of your main project/document class (e.g.
-	 * GravityHook).
+	 * This should always be the name of your main project/document class (e.g. GravityHook).
 	 */
 	public String className;
 	/**
@@ -63,8 +60,7 @@ public class FlxPreloader extends FlxState
 	 */
 	public String myURL;
 	/**
-	 * Change this if you want the flixel logo to show for more or less time.
-	 * Default value is 0 seconds.
+	 * Change this if you want the flixel logo to show for more or less time.  Default value is 0 seconds.
 	 */
 	public float minDisplayTime;
 
@@ -74,7 +70,6 @@ public class FlxPreloader extends FlxState
 	public FlxPreloader()
 	{
 		minDisplayTime = 0;
-
 	}
 
 	@Override
@@ -90,15 +85,15 @@ public class FlxPreloader extends FlxState
 	}
 
 	/**
-	 * Override this to create your own preloader objects. Highly recommended
-	 * you also override update()!
+	 * Override this to create your own preloader objects.
+	 * Highly recommended you also override update()!
 	 */
 	@Override
 	public void create()
 	{
 		_min = 0;
 		if(!FlxG.debug)
-			_min = (int) (minDisplayTime * 1000);
+			_min = (int)(minDisplayTime*1000);
 		_time = System.currentTimeMillis();
 
 		FlxG.camera.setZoom(2);
@@ -153,7 +148,7 @@ public class FlxPreloader extends FlxState
 	/**
 	 * Override this function to manually update the preloader.
 	 * 
-	 * @param Percent How much of the program has loaded.
+	 * @param	Percent		How much of the program has loaded.
 	 */
 	protected void update(float Percent)
 	{

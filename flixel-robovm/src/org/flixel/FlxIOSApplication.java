@@ -26,8 +26,8 @@ import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
  *     }
  * }
  * </pre>
+ * 
  * @author kamstrup
- *
  */
 public class FlxIOSApplication extends IOSApplication.Delegate
 {
@@ -38,14 +38,14 @@ public class FlxIOSApplication extends IOSApplication.Delegate
 	/**
 	 * Run a given {@link FlxGame} instance as an iOS app with a given set
 	 * of command line arguments (normally passed directly from outer main()). 
-	 * @param args Command line args.
-	 * @param game The game instance to run.
+	 * @param	Args	Command line args.
+	 * @param	Game	The game instance to run.
 	 */
-	public static void main(String[] args, FlxGame game)
+	public static void main(String[] Args, FlxGame Game)
 	{
-		_game = game;
+		_game = Game;
 		NSAutoreleasePool pool = new NSAutoreleasePool();
-		UIApplication.main(args, null, FlxIOSApplication.class);
+		UIApplication.main(Args, null, FlxIOSApplication.class);
 		pool.close();
 	}
 

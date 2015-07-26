@@ -9,8 +9,7 @@ import com.badlogic.gdx.utils.ObjectIntMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 /**
- * A gamepad with common buttons. Keeps track of what keys are pressed and how
- * with handy booleans or strings.
+ * A gamepad with common buttons. Keeps track of what keys are pressed and how with handy booleans or strings.
  * 
  * @author Ka Wing Chin
  */
@@ -120,11 +119,11 @@ public class Gamepad extends Input
 	/**
 	 * Event handler so GamepadManager can toggle keys.
 	 * 
-	 * @param buttonCode The button code of the pressed key.
+	 * @param	ButtonCode	The button code of the pressed key.
 	 */
-	public void handleKeyDown(int buttonCode)
+	public void handleKeyDown(int ButtonCode)
 	{
-		KeyState object = _map.get(buttonCode);
+		KeyState object = _map.get(ButtonCode);
 
 		if(object == null)
 			return;
@@ -147,11 +146,11 @@ public class Gamepad extends Input
 	/**
 	 * Event handler so GamepadManager can toggle keys.
 	 * 
-	 * @param buttonCode The button code of the pressed key.
+	 * @param	ButtonCode	The button code of the pressed key.
 	 */
-	public void handleKeyUp(int buttonCode)
+	public void handleKeyUp(int ButtonCode)
 	{
-		KeyState object = _map.get(buttonCode);
+		KeyState object = _map.get(ButtonCode);
 
 		if(object == null)
 			return;
@@ -174,11 +173,11 @@ public class Gamepad extends Input
 	/**
 	 * Set the button mapping provided by <code>GamepadMapping</code>.
 	 * 
-	 * @param mapping The mapping that will be set to this gamepad.
+	 * @param	Mapping		The mapping that will be set to this gamepad.
 	 */
-	public void setMapping(GamepadMapping mapping)
+	public void setMapping(GamepadMapping Mapping)
 	{
-		ID = mapping.ID;
+		ID = Mapping.ID;
 		addKey("UP", GamepadMapping.UP);
 		addKey("UP_RIGHT", GamepadMapping.UP_RIGHT);
 		addKey("UP_LEFT", GamepadMapping.UP_LEFT);
@@ -188,40 +187,40 @@ public class Gamepad extends Input
 		addKey("DOWN_LEFT", GamepadMapping.DOWN_LEFT);
 		addKey("LEFT", GamepadMapping.LEFT);
 		addKey("CENTER", GamepadMapping.CENTER);
-		addKey("BUTTON_DPAD_UP", mapping.BUTTON_DPAD_UP);
-		addKey("BUTTON_DPAD_RIGHT", mapping.BUTTON_DPAD_RIGHT);
-		addKey("BUTTON_DPAD_DOWN", mapping.BUTTON_DPAD_DOWN);
-		addKey("BUTTON_DPAD_LEFT", mapping.BUTTON_DPAD_LEFT);
-		addKey("BUTTON_CIRCLE", mapping.BUTTON_CIRCLE);
-		addKey("BUTTON_A", mapping.BUTTON_A);
-		addKey("BUTTON_B", mapping.BUTTON_B);
-		addKey("BUTTON_X", mapping.BUTTON_X);
-		addKey("BUTTON_Y", mapping.BUTTON_Y);
-		addKey("BUTTON_Z", mapping.BUTTON_Z);
-		addKey("BUTTON_L1", mapping.BUTTON_L1);
-		addKey("BUTTON_R1", mapping.BUTTON_R1);
-		addKey("BUTTON_L2", mapping.BUTTON_L2);
-		addKey("BUTTON_R2", mapping.BUTTON_R2);
-		addKey("BUTTON_THUMBL", mapping.BUTTON_L3);
-		addKey("BUTTON_THUMBR", mapping.BUTTON_R3);
-		addKey("BUTTON_START", mapping.BUTTON_START);
-		addKey("BUTTON_SELECT", mapping.BUTTON_SELECT);
-		addKey("BUTTON_MODE", mapping.BUTTON_MODE);
-		AXIS_LEFT_X = mapping.AXIS_LEFT_X;
-		AXIS_LEFT_Y = mapping.AXIS_LEFT_Y;
-		AXIS_RIGHT_X = mapping.AXIS_RIGHT_X;
-		AXIS_RIGHT_Y = mapping.AXIS_RIGHT_Y;
+		addKey("BUTTON_DPAD_UP", Mapping.BUTTON_DPAD_UP);
+		addKey("BUTTON_DPAD_RIGHT", Mapping.BUTTON_DPAD_RIGHT);
+		addKey("BUTTON_DPAD_DOWN", Mapping.BUTTON_DPAD_DOWN);
+		addKey("BUTTON_DPAD_LEFT", Mapping.BUTTON_DPAD_LEFT);
+		addKey("BUTTON_CIRCLE", Mapping.BUTTON_CIRCLE);
+		addKey("BUTTON_A", Mapping.BUTTON_A);
+		addKey("BUTTON_B", Mapping.BUTTON_B);
+		addKey("BUTTON_X", Mapping.BUTTON_X);
+		addKey("BUTTON_Y", Mapping.BUTTON_Y);
+		addKey("BUTTON_Z", Mapping.BUTTON_Z);
+		addKey("BUTTON_L1", Mapping.BUTTON_L1);
+		addKey("BUTTON_R1", Mapping.BUTTON_R1);
+		addKey("BUTTON_L2", Mapping.BUTTON_L2);
+		addKey("BUTTON_R2", Mapping.BUTTON_R2);
+		addKey("BUTTON_THUMBL", Mapping.BUTTON_L3);
+		addKey("BUTTON_THUMBR", Mapping.BUTTON_R3);
+		addKey("BUTTON_START", Mapping.BUTTON_START);
+		addKey("BUTTON_SELECT", Mapping.BUTTON_SELECT);
+		addKey("BUTTON_MODE", Mapping.BUTTON_MODE);
+		AXIS_LEFT_X = Mapping.AXIS_LEFT_X;
+		AXIS_LEFT_Y = Mapping.AXIS_LEFT_Y;
+		AXIS_RIGHT_X = Mapping.AXIS_RIGHT_X;
+		AXIS_RIGHT_Y = Mapping.AXIS_RIGHT_Y;
 
-		axisData.put(mapping.AXIS_LEFT_X, 0f);
-		axisData.put(mapping.AXIS_LEFT_Y, 0f);
-		axisData.put(mapping.AXIS_RIGHT_X, 0f);
-		axisData.put(mapping.AXIS_RIGHT_Y, 0f);
+		axisData.put(Mapping.AXIS_LEFT_X, 0f);
+		axisData.put(Mapping.AXIS_LEFT_Y, 0f);
+		axisData.put(Mapping.AXIS_RIGHT_X, 0f);
+		axisData.put(Mapping.AXIS_RIGHT_Y, 0f);
 	}
 
 	/**
 	 * Get the data from L-axis.
 	 * 
-	 * @return A point which contains the x and y value.
+	 * @return	A point which contains the x and y value.
 	 */
 	public FlxPoint getAxisL()
 	{
@@ -235,7 +234,7 @@ public class Gamepad extends Input
 	/**
 	 * Get the data from R-axis.
 	 * 
-	 * @return A point which contains the x and y value.
+	 * @return	A point which contains the x and y value.
 	 */
 	public FlxPoint getAxisR()
 	{

@@ -1,7 +1,7 @@
 package flash.events;
 
 /**
- * A copy of Flash's <code>MouseEvent</code>.
+ * A MouseEvent object is dispatched into the event flow whenever mouse events occur
  * 
  * @author Ka Wing Chin
  * @author Thomas Weston
@@ -22,38 +22,27 @@ public class MouseEvent extends Event
 	static public final String MOUSE_WHEEL = "mouseWheel";
 
 	/**
-	 * The horizontal coordinate at which the event occurred in global
-	 * <code>Stage</code> coordinates.
+	 * The horizontal coordinate at which the event occurred in global Stage coordinates.
 	 */
 	public int stageX;
 	/**
-	 * The vertical coordinate at which the event occurred in global
-	 * <code>Stage</code> coordinates.
+	 * The vertical coordinate at which the event occurred in global Stage coordinates.
 	 */
 	public int stageY;
 	/**
-	 * Indicates how many lines should be scrolled for each unit the user
-	 * rotates the mouse wheel.
+	 * Indicates how many lines should be scrolled for each unit the user rotates the mouse wheel.
 	 */
 	public int delta;
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * mouse events.
+	 * Creates an Event object that contains information about mouse events.
 	 * 
-	 * @param type The type of event.
-	 * @param bubbles Determines whether the <code>Event</code> object
-	 *        participates in the bubbling stage of the event flow. The default
-	 *        value is <code>true</code>.
-	 * @param cancelable Determines whether the <code>Event</code> object can be
-	 *        cancelled. The default values is <code>false</code>.
-	 * @param localX The horizontal coordinate at which the event occurred
-	 *        relative to the containing sprite.
-	 * @param localY The vertical coordinate at which the event occurred
-	 *        relative to the containing sprite.
-	 * @param delta Indicates how many lines should be scrolled for each unit
-	 *        the user rotates the mouse wheel. A positive delta value indicates
-	 *        an upward scroll; a negative value indicates a downward scroll.
+	 * @param	type		The type of event.
+	 * @param	bubbles		Determines whether the Event object participates in the bubbling stage of the event flow.
+	 * @param	cancelable	Determines whether the Event object can be cancelled.
+	 * @param	localX		The horizontal coordinate at which the event occurred relative to the containing sprite.
+	 * @param	localY		The vertical coordinate at which the event occurred relative to the containing sprite.
+	 * @param	delta		Indicates how many lines should be scrolled for each unit the user rotates the mouse wheel. A positive delta value indicates an upward scroll; a negative value indicates a downward scroll.
 	 */
 	public MouseEvent(String type, boolean bubbles, boolean cancelable, int localX, int localY, int delta)
 	{
@@ -64,19 +53,13 @@ public class MouseEvent extends Event
 	}
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * mouse events.
+	 * Creates an Event object that contains information about mouse events.
 	 * 
-	 * @param type The type of event.
-	 * @param bubbles Determines whether the <code>Event</code> object
-	 *        participates in the bubbling stage of the event flow. The default
-	 *        value is <code>true</code>.
-	 * @param cancelable Determines whether the <code>Event</code> object can be
-	 *        cancelled. The default values is <code>false</code>.
-	 * @param localX The horizontal coordinate at which the event occurred
-	 *        relative to the containing sprite.
-	 * @param localY The vertical coordinate at which the event occurred
-	 *        relative to the containing sprite.
+	 * @param	type		The type of event.
+	 * @param	bubbles		Determines whether the Event object participates in the bubbling stage of the event flow.
+	 * @param	cancelable	Determines whether the Event object can be cancelled.
+	 * @param	localX		The horizontal coordinate at which the event occurred relative to the containing sprite.
+	 * @param	localY		The vertical coordinate at which the event occurred relative to the containing sprite.
 	 */
 	public MouseEvent(String type, boolean bubbles, boolean cancelable, int localX, int localY)
 	{
@@ -84,17 +67,12 @@ public class MouseEvent extends Event
 	}
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * mouse events.
+	 * Creates an Event object that contains information about mouse events.
 	 * 
-	 * @param type The type of event.
-	 * @param bubbles Determines whether the <code>Event</code> object
-	 *        participates in the bubbling stage of the event flow. The default
-	 *        value is <code>true</code>.
-	 * @param cancelable Determines whether the <code>Event</code> object can be
-	 *        cancelled. The default values is <code>false</code>.
-	 * @param localX The horizontal coordinate at which the event occurred
-	 *        relative to the containing sprite.
+	 * @param	type		The type of event.
+	 * @param	bubbles		Determines whether the Event object participates in the bubbling stage of the event flow.
+	 * @param	cancelable	Determines whether the Event object can be cancelled.
+	 * @param	localX		The horizontal coordinate at which the event occurred relative to the containing sprite.
 	 */
 	public MouseEvent(String type, boolean bubbles, boolean cancelable, int localX)
 	{
@@ -102,15 +80,11 @@ public class MouseEvent extends Event
 	}
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * mouse events.
+	 * Creates an Event object that contains information about mouse events.
 	 * 
-	 * @param type The type of event.
-	 * @param bubbles Determines whether the <code>Event</code> object
-	 *        participates in the bubbling stage of the event flow. The default
-	 *        value is <code>true</code>.
-	 * @param cancelable Determines whether the <code>Event</code> object can be
-	 *        cancelled. The default values is <code>false</code>.
+	 * @param	type		The type of event.
+	 * @param	bubbles		Determines whether the Event object participates in the bubbling stage of the event flow.
+	 * @param	cancelable	Determines whether the Event object can be cancelled.
 	 */
 	public MouseEvent(String type, boolean bubbles, boolean cancelable)
 	{
@@ -118,13 +92,10 @@ public class MouseEvent extends Event
 	}
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * mouse events.
+	 * Creates an Event object that contains information about mouse events.
 	 * 
-	 * @param type The type of event.
-	 * @param bubbles Determines whether the <code>Event</code> object
-	 *        participates in the bubbling stage of the event flow. The default
-	 *        value is <code>true</code>.
+	 * @param	type		The type of event.
+	 * @param	bubbles		Determines whether the Event object participates in the bubbling stage of the event flow.
 	 */
 	public MouseEvent(String type, boolean bubbles)
 	{
@@ -132,10 +103,9 @@ public class MouseEvent extends Event
 	}
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * mouse events.
+	 * Creates an Event object that contains information about mouse events.
 	 * 
-	 * @param type The type of event.
+	 * @param	type		The type of event.
 	 */
 	public MouseEvent(String type)
 	{

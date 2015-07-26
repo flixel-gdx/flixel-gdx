@@ -1,7 +1,7 @@
 package flash.events;
 
 /**
- * A copy of Flash's <code>KeyboardEvent</code>
+ * A KeyboardEvent object id dispatched in response to user input through a keyboard.
  * 
  * @author Ka Wing Chin
  * @author Thomas Weston
@@ -31,23 +31,13 @@ public class KeyboardEvent extends Event
 	public int keyCode;
 
 	/**
-	 * Creates an <code>Event</code> object that containts information about
-	 * keyboard events.
+	 * Creates an Event object that contains information about keyboard events.
 	 * 
-	 * @param type The type of event. Possible values are:
-	 *        <code>KeyboardEvent.KEY_DOWN</code> and
-	 *        <code>KeyboardEvent.KEY_UP</code>.
-	 * @param bubbles Determines whether the <code>Event</code> object
-	 *        participates in the bubbling stage of the event flow. The default
-	 *        value is <code>true</code>.
-	 * @param cancelable Determines whether the <code>Event</code> object can be
-	 *        cancelled. The default values is <code>false</code>.
-	 * @param charCodeValue The character code value of the key pressed or
-	 *        released. The character code values returned are English keyboard
-	 *        values. For example, if you press Shift+3, the
-	 *        <code>Keyboard.charCode()</code> property returns # on a Japanese
-	 *        or a German keyboard, just as it does on an English keyboard.
-	 * @param keyCodeValue The key code value of the key pressed or released.
+	 * @param	type			The type of event. Possible values are: <code>KeyboardEvent.KEY_DOWN</code> and <code>KeyboardEvent.KEY_UP</code>
+	 * @param	bubbles			Determines whether the Event object participates in the bubbling stage of the event flow.
+	 * @param	cancelable		Determines whether the Event object can be cancelled.
+	 * @param	charCodeValue	The character code value of the key pressed or released. The character code values returned are English keyboard values. For example, if you press Shift+3, the <code>Keyboard.charCode()</code> property returns # on a Japanese or a German keyboard, just as it does on an English keyboard.
+	 * @param	keyCodeValue	The key code value of the key pressed or released.
 	 */
 	public KeyboardEvent(String type, boolean bubbles, boolean cancelable, char charCodeValue, int keyCodeValue)
 	{
@@ -57,22 +47,12 @@ public class KeyboardEvent extends Event
 	}
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * keyboard events.
+	 * Creates an Event object that contains information about keyboard events.
 	 * 
-	 * @param type The type of event. Possible values are:
-	 *        <code>KeyboardEvent.KEY_DOWN</code> and
-	 *        <code>KeyboardEvent.KEY_UP</code>.
-	 * @param bubbles Determines whether the <code>Event</code> object
-	 *        participates in the bubbling stage of the event flow. The default
-	 *        value is <code>true</code>.
-	 * @param cancelable Determines whether the <code>Event</code> object can be
-	 *        cancelled. The default values is <code>false</code>.
-	 * @param charCodeValue The character code value of the key pressed or
-	 *        released. The character code values returned are English keyboard
-	 *        values. For example, if you press Shift+3, the
-	 *        <code>Keyboard.charCode()</code> property returns # on a Japanese
-	 *        or a German keyboard, just as it does on an English keyboard.
+	 * @param	type			The type of event. Possible values are: <code>KeyboardEvent.KEY_DOWN</code> and <code>KeyboardEvent.KEY_UP</code>.
+	 * @param	bubbles			Determines whether the Event object participates in the bubbling stage of the event flow.
+	 * @param	cancelable		Determines whether the Event object can be cancelled.
+	 * @param	charCodeValue	The character code value of the key pressed or released. The character code values returned are English keyboard values. For example, if you press Shift+3, the <code>Keyboard.charCode()</code> property returns # on a Japanese or a German keyboard, just as it does on an English keyboard.
 	 */
 	public KeyboardEvent(String type, boolean bubbles, boolean cancelable, char charCodeValue)
 	{
@@ -80,17 +60,11 @@ public class KeyboardEvent extends Event
 	}
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * keyboard events.
+	 * Creates an Event object that contains information about keyboard events.
 	 * 
-	 * @param type The type of event. Possible values are:
-	 *        <code>KeyboardEvent.KEY_DOWN</code> and
-	 *        <code>KeyboardEvent.KEY_UP</code>.
-	 * @param bubbles Determines whether the <code>Event</code> object
-	 *        participates in the bubbling stage of the event flow. The default
-	 *        value is <code>true</code>.
-	 * @param cancelable Determines whether the <code>Event</code> object can be
-	 *        cancelled. The default values is <code>false</code>.
+	 * @param	type			The type of event. Possible values are: <code>KeyboardEvent.KEY_DOWN</code> and <code>KeyboardEvent.KEY_UP</code>.
+	 * @param	bubbles			Determines whether the Event object participates in the bubbling stage of the event flow.
+	 * @param	cancelable		Determines whether the Event object can be cancelled.
 	 */
 	public KeyboardEvent(String type, boolean bubbles, boolean cancelable)
 	{
@@ -98,15 +72,10 @@ public class KeyboardEvent extends Event
 	}
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * keyboard events.
+	 * Creates an Event object that contains information about keyboard events.
 	 * 
-	 * @param type The type of event. Possible values are:
-	 *        <code>KeyboardEvent.KEY_DOWN</code> and
-	 *        <code>KeyboardEvent.KEY_UP</code>.
-	 * @param bubbles Determines whether the <code>Event</code> object
-	 *        participates in the bubbling stage of the event flow. The default
-	 *        value is <code>true</code>.
+	 * @param	type			The type of event. Possible values are <code>KeyboardEvent.KEY_DOWN</code> and <code>KeyboardEvent.KEY_UP</code>.
+	 * @param	bubbles			Determines whether the Event object participates in the bubbling stage of the event flow.
 	 */
 	public KeyboardEvent(String type, boolean bubbles)
 	{
@@ -114,12 +83,9 @@ public class KeyboardEvent extends Event
 	}
 
 	/**
-	 * Creates an <code>Event</code> object that contains information about
-	 * keyboard events.
+	 * Creates an Event object that contains information about keyboard events.
 	 * 
-	 * @param type The type of event. Possible values are:
-	 *        <code>KeyboardEvent.KEY_DOWN</code> and
-	 *        <code>KeyboardEvent.KEY_UP</code>.
+	 * @param	type			The type of event. Possible values are: <code>KeyboardEvent.KEY_DOWN</code> and <code>KeyboardEvent.KEY_UP</code>.
 	 */
 	public KeyboardEvent(String type)
 	{

@@ -93,7 +93,7 @@ public class GdxGraphics implements Graphics
 	/**
 	 * Sets the projection matrix to be used for rendering.
 	 * 
-	 * @param matrix The matrix to set.
+	 * @param	matrix	The matrix to set.
 	 */
 	public void setProjectionMatrix(Matrix4 matrix)
 	{
@@ -101,8 +101,8 @@ public class GdxGraphics implements Graphics
 	}
 
 	/**
-	 * Starts a new drawing batch. The call to this method must be paired with a
-	 * call to end().
+	 * Starts a new drawing batch.
+	 * The call to this method must be paired with a call to end().
 	 */
 	public void begin()
 	{
@@ -121,7 +121,7 @@ public class GdxGraphics implements Graphics
 	/**
 	 * Gets the libgdx <code>ShapeRenderer</code>.
 	 * 
-	 * @return The <code>ShapeRenderer</code>.
+	 * @return	The <code>ShapeRenderer</code>.
 	 */
 	public ShapeRenderer getShapeRenderer()
 	{

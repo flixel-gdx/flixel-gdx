@@ -8,9 +8,8 @@ import org.flixel.gles20.FlxShaderProgram;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
-/*@formatter:off*/
 /**
- * Blend modes in OpenGL ES 2.0. If you don't the shaders anymore, you must dispose them by 
+ * Blend modes in OpenGL ES 2.0. If you don't use the shaders anymore, you must dispose them by 
  * calling <code>BlendModeGl20.destroy()</code>.
  * Requires GLES20.
  * 
@@ -20,7 +19,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
  * Photoblogstop: http://photoblogstop.com/photoshop/photoshop-blend-modes-explained
  * 
  * @author Ka Wing Chin
- */ /*@formatter:on*/
+ */
 
 public class BlendModeGL20
 {
@@ -102,7 +101,7 @@ public class BlendModeGL20
 	 * Either blend or base is chosen randomly at every pixel. The value of
 	 * Opacity is used as a probability factor for choosing the blend value.
 	 */
-	// public static final String DISSOLVE = "dissolve.glsl";
+	//public static final String DISSOLVE = "dissolve.glsl";
 	/**
 	 * Is similar to DIFFERENCE, but it produces an effect that is lower in
 	 * contrast (softer).
@@ -250,82 +249,87 @@ public class BlendModeGL20
 	public static final String VIVID_LIGHT = PATH + "vivid_light.glsl";
 
 	/**
-	 * Set the shader and blend values to the sprite. It will be used during
-	 * <code>FlxSprite.renderBlend()</code>. Create the shader program via
-	 * <code>BlendModeGL20.addBlendMode()</code> to load in to the
-	 * <code>AssetManager</code>.
+	 * Set the shader and blend values to the sprite.
+	 * It will be used during <code>FlxSprite.renderBlend()</code>.
+	 * Create the shader program via <code>BlendModeGL20.addBlendMode()</code>
+	 * to load in to the <code>AssetManager</code>.
 	 * 
-	 * @param shader The shader that will be used for the base.
-	 * @param base The base image (background).
-	 * @param blend The blend image (layer).
+	 * @param	Shader		The shader that will be used for the base.
+	 * @param	Base		The base image (background).
+	 * @param	Blend		The blend image (layer).
+	 * 
+	 * @return	The shader that was passed in.
 	 */
-	public static FlxShaderProgram blend(FlxShaderProgram shader, FlxSprite base, Texture blend)
+	public static FlxShaderProgram blend(FlxShaderProgram Shader, FlxSprite Base, Texture Blend)
 	{
-		base.blendGL20 = shader;
-		base.blendTexture = blend;
-		return shader;
+		Base.blendGL20 = Shader;
+		Base.blendTexture = Blend;
+		return Shader;
 	}
 
 	/**
-	 * Set the shader and blend values to the sprite. It will be used during
-	 * <code>FlxSprite.renderBlend()</code>. Create the shader program via
-	 * <code>BlendModeGL20.addBlendMode()</code> to load in to the
-	 * <code>AssetManager</code>.
+	 * Set the shader and blend values to the sprite.
+	 * It will be used during <code>FlxSprite.renderBlend()</code>.
+	 * Create the shader program via <code>BlendModeGL20.addBlendMode()</code>
+	 * to load in to the <code>AssetManager</code>.
 	 * 
-	 * @param shader The shader that will be used for the base.
-	 * @param base The base image (background).
-	 * @param blend The blend image (layer).
+	 * @param	Shader		The shader that will be used for the base.
+	 * @param	Base		The base image (background).
+	 * @param	Blend		The blend image (layer).
+	 * 
+	 * @return	The shader that was passed in.
 	 */
-	public static FlxShaderProgram blend(FlxShaderProgram shader, FlxSprite base, FlxSprite blend)
+	public static FlxShaderProgram blend(FlxShaderProgram Shader, FlxSprite Base, FlxSprite Blend)
 	{
-		return blend(shader, base, blend.getTexture());
+		return blend(Shader, Base, Blend.getTexture());
 	}
 
 	/**
-	 * Set the shader and blend values to the sprite. It will be used during
-	 * <code>FlxSprite.renderBlend()</code>.
+	 * Set the shader and blend values to the sprite.
+	 * It will be used during <code>FlxSprite.renderBlend()</code>.
 	 * 
-	 * @param name The name of the blend mode, e.g.
-	 *        <code>BlendModeGL20.ADD</code>.
-	 * @param base The base image (background).
-	 * @param blend The blend image (layer).
+	 * @param	Name		The name of the blend mode, e.g. <code>BlendModeGL20.ADD</code>.
+	 * @param	Base		The base image (background).
+	 * @param	Blend		The blend image (layer).
+	 * 
+	 * @return	The shader that was passed in.
 	 */
-	public static FlxShaderProgram blend(String name, FlxSprite base, Texture blend)
+	public static FlxShaderProgram blend(String Name, FlxSprite Base, Texture Blend)
 	{
-		return blend(createProgram(name), base, blend);
+		return blend(createProgram(Name), Base, Blend);
 	}
 
 	/**
-	 * Set the shader and blend values to the sprite. It will be used during
-	 * <code>FlxSprite.renderBlend()</code>.
+	 * Set the shader and blend values to the sprite.
+	 * It will be used during <code>FlxSprite.renderBlend()</code>.
 	 * 
-	 * @param name The name of the blend mode, e.g.
-	 *        <code>BlendModeGL20.ADD</code>.
-	 * @param base The base image (background).
-	 * @param blend The blend image (layer).
+	 * @param	Name		The name of the blend mode, e.g. <code>BlendModeGL20.ADD</code>.
+	 * @param	Base		The base image (background).
+	 * @param	Blend		The blend image (layer).
+	 * 
+	 * @return	The shader that was passed in.
 	 */
-	public static FlxShaderProgram blend(String name, FlxSprite base, FlxSprite blend)
+	public static FlxShaderProgram blend(String Name, FlxSprite Base, FlxSprite Blend)
 	{
-		return blend(name, base, blend.getTexture());
+		return blend(Name, Base, Blend.getTexture());
 	}
 
 	/**
-	 * Creates a shader program from the default vertex and blend mode. You may
-	 * want to create the shader during <code>FlxState.create()</code> and apply
-	 * it later to the
+	 * Creates a shader program from the default vertex and blend mode.
+	 * You may want to create the shader during <code>FlxState.create()</code> and apply it later.
 	 * 
-	 * @param name The name of the blend mode, e.g.
-	 *        <code>BlendModeGL20.ADD</code>.
-	 * @return The program shader that is created.
+	 * @param	Name	The name of the blend mode, e.g. <code>BlendModeGL20.ADD</code>.
+	 * 
+	 * @return	The program shader that is created.
 	 */
-	public static FlxShaderProgram createProgram(String name)
+	public static FlxShaderProgram createProgram(String Name)
 	{
 		FlxShaderProgram shader;
-		if(FlxG._cache.containsAsset(name, FlxShaderProgram.class))
-			shader = FlxG._cache.load(name, FlxShaderProgram.class);
+		if(FlxG._cache.containsAsset(Name, FlxShaderProgram.class))
+			shader = FlxG._cache.load(Name, FlxShaderProgram.class);
 		else
 		{
-			shader = FlxG.loadShader(name, VERTEX, name);
+			shader = FlxG.loadShader(Name, VERTEX, Name);
 			IFlxShaderProgram callback = new IFlxShaderProgram()
 			{
 				@Override
@@ -348,30 +352,32 @@ public class BlendModeGL20
 	/**
 	 * Add a new blend mode.
 	 * 
-	 * @param name The name of the blend mode
-	 * @param vertex The path of the vertex file.
-	 * @param fragment The path of the fragment file.
-	 * @return The program shader.
+	 * @param	Name		The name of the blend mode
+	 * @param	Vertex		The path of the vertex file.
+	 * @param	Fragment	The path of the fragment file.
+	 * 
+	 * @return	The program shader.
 	 */
-	public static FlxShaderProgram addBlendMode(String name, String vertex, String fragment)
+	public static FlxShaderProgram addBlendMode(String Name, String Vertex, String Fragment)
 	{
 		FlxShaderProgram shader;
-		if(FlxG._cache.containsAsset(name, FlxShaderProgram.class))
-			shader = FlxG._cache.load(name, FlxShaderProgram.class);
+		if(FlxG._cache.containsAsset(Name, FlxShaderProgram.class))
+			shader = FlxG._cache.load(Name, FlxShaderProgram.class);
 		else
-			shader = FlxG.loadShader(name, vertex, fragment);
+			shader = FlxG.loadShader(Name, Vertex, Fragment);
 		return shader;
 	}
 
 	/**
 	 * Add a new blend mode. Uses the default vertex file.
 	 * 
-	 * @param name The name of the blend mode
-	 * @param fragment The path of the fragment file.
-	 * @return The program shader.
+	 * @param	Name		The name of the blend mode
+	 * @param	Fragment	The path of the fragment file.
+	 * 
+	 * @return	The program shader.
 	 */
-	public static FlxShaderProgram addBlendMode(String name, String fragment)
+	public static FlxShaderProgram addBlendMode(String Name, String Fragment)
 	{
-		return addBlendMode(name, VERTEX, fragment);
+		return addBlendMode(Name, VERTEX, Fragment);
 	}
 }

@@ -28,19 +28,19 @@ public class TweenPoint implements TweenAccessor<FlxPoint>
 	public static final int XY = 3;
 
 	@Override
-	public int getValues(FlxPoint target, int tweenType, float[] returnValues)
+	public int getValues(FlxPoint Target, int TweenType, float[] ReturnValues)
 	{
-		switch(tweenType)
+		switch(TweenType)
 		{
 			case X:
-				returnValues[0] = target.x;
+				ReturnValues[0] = Target.x;
 				return 1;
 			case Y:
-				returnValues[0] = target.y;
+				ReturnValues[0] = Target.y;
 				return 1;
 			case XY:
-				returnValues[0] = target.x;
-				returnValues[1] = target.y;
+				ReturnValues[0] = Target.x;
+				ReturnValues[1] = Target.y;
 				return 2;
 			default:
 				assert false;
@@ -49,19 +49,19 @@ public class TweenPoint implements TweenAccessor<FlxPoint>
 	}
 
 	@Override
-	public void setValues(FlxPoint target, int tweenType, float[] newValues)
+	public void setValues(FlxPoint Target, int TweenType, float[] NewValues)
 	{
-		switch(tweenType)
+		switch(TweenType)
 		{
 			case X:
-				target.x = newValues[0];
+				Target.x = NewValues[0];
 				break;
 			case Y:
-				target.y = newValues[0];
+				Target.y = NewValues[0];
 				break;
 			case XY:
-				target.x = newValues[0];
-				target.y = newValues[1];
+				Target.x = NewValues[0];
+				Target.y = NewValues[1];
 				break;
 			default:
 				assert false;

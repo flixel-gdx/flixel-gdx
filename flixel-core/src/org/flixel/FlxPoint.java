@@ -21,8 +21,8 @@ public class FlxPoint
 	/**
 	 * Instantiate a new point object.
 	 * 
-	 * @param X The X-coordinate of the point in space.
-	 * @param Y The Y-coordinate of the point in space.
+	 * @param	X	The X-coordinate of the point in space.
+	 * @param	Y	The Y-coordinate of the point in space.
 	 */
 	public FlxPoint(float X, float Y)
 	{
@@ -33,7 +33,7 @@ public class FlxPoint
 	/**
 	 * Instantiate a new point object.
 	 * 
-	 * @param X The X-coordinate of the point in space.
+	 * @param	X	The X-coordinate of the point in space.
 	 */
 	public FlxPoint(float X)
 	{
@@ -51,8 +51,8 @@ public class FlxPoint
 	/**
 	 * Instantiate a new point object.
 	 * 
-	 * @param X The X-coordinate of the point in space.
-	 * @param Y The Y-coordinate of the point in space.
+	 * @param	X	The X-coordinate of the point in space.
+	 * @param	Y	The Y-coordinate of the point in space.
 	 */
 	public FlxPoint make(float X, float Y)
 	{
@@ -64,7 +64,7 @@ public class FlxPoint
 	/**
 	 * Instantiate a new point object.
 	 * 
-	 * @param X
+	 * @param	X	The X-coordinate of the point in space.
 	 */
 	public FlxPoint make(float X)
 	{
@@ -82,9 +82,9 @@ public class FlxPoint
 	/**
 	 * Helper function, just copies the values from the specified point.
 	 * 
-	 * @param Point Any <code>FlxPoint</code>.
+	 * @param	Point	Any <code>FlxPoint</code>.
 	 * 
-	 * @return A reference to itself.
+	 * @return	A reference to itself.
 	 */
 	public FlxPoint copyFrom(FlxPoint Point)
 	{
@@ -94,12 +94,11 @@ public class FlxPoint
 	}
 
 	/**
-	 * Helper function, just copies the values from this point to the specified
-	 * point.
+	 * Helper function, just copies the values from this point to the specified point.
 	 * 
-	 * @param Point Any <code>FlxPoint</code>.
+	 * @param	Point	Any <code>FlxPoint</code>.
 	 * 
-	 * @return A reference to the altered point parameter.
+	 * @return	A reference to the altered point parameter.
 	 */
 	public FlxPoint copyTo(FlxPoint Point)
 	{
@@ -111,9 +110,9 @@ public class FlxPoint
 	/**
 	 * Helper function, just copies the values from the specified libgdx vector.
 	 * 
-	 * @param Point Any <code>Point</code>.
+	 * @param	Point	Any <code>Point</code>.
 	 * 
-	 * @return A reference to itself.
+	 * @return	A reference to itself.
 	 */
 	public FlxPoint copyFromFlash(Vector2 Point)
 	{
@@ -123,12 +122,11 @@ public class FlxPoint
 	}
 
 	/**
-	 * Helper function, just copies the values from this point to the specified
-	 * libgdx vector.
+	 * Helper function, just copies the values from this point to the specified libgdx vector.
 	 * 
-	 * @param Point Any <code>Point</code>.
+	 * @param	Point	Any <code>Point</code>.
 	 * 
-	 * @return A reference to the altered point parameter.
+	 * @return	A reference to the altered point parameter.
 	 */
 	public Vector2 copyToFlash(Vector2 Point)
 	{

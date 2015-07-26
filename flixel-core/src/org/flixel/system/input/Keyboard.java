@@ -117,122 +117,118 @@ public class Keyboard extends Input
 	{
 		int i;
 
-		// LETTERS (A-Z)
+		//LETTERS (A-Z)
 		i = 65;
-		addKey("A", i++);
-		addKey("B", i++);
-		addKey("C", i++);
-		addKey("D", i++);
-		addKey("E", i++);
-		addKey("F", i++);
-		addKey("G", i++);
-		addKey("H", i++);
-		addKey("I", i++);
-		addKey("J", i++);
-		addKey("K", i++);
-		addKey("L", i++);
-		addKey("M", i++);
-		addKey("N", i++);
-		addKey("O", i++);
-		addKey("P", i++);
-		addKey("Q", i++);
-		addKey("R", i++);
-		addKey("S", i++);
-		addKey("T", i++);
-		addKey("U", i++);
-		addKey("V", i++);
-		addKey("W", i++);
-		addKey("X", i++);
-		addKey("Y", i++);
-		addKey("Z", i++);
+		addKey("A",i++);
+		addKey("B",i++);
+		addKey("C",i++);
+		addKey("D",i++);
+		addKey("E",i++);
+		addKey("F",i++);
+		addKey("G",i++);
+		addKey("H",i++);
+		addKey("I",i++);
+		addKey("J",i++);
+		addKey("K",i++);
+		addKey("L",i++);
+		addKey("M",i++);
+		addKey("N",i++);
+		addKey("O",i++);
+		addKey("P",i++);
+		addKey("Q",i++);
+		addKey("R",i++);
+		addKey("S",i++);
+		addKey("T",i++);
+		addKey("U",i++);
+		addKey("V",i++);
+		addKey("W",i++);
+		addKey("X",i++);
+		addKey("Y",i++);
+		addKey("Z",i++);
 
-		// NUMBERS (0-9)
+		//NUMBERS (0-9)
 		i = 48;
-		addKey("ZERO", i++);
-		addKey("ONE", i++);
-		addKey("TWO", i++);
-		addKey("THREE", i++);
-		addKey("FOUR", i++);
-		addKey("FIVE", i++);
-		addKey("SIX", i++);
-		addKey("SEVEN", i++);
-		addKey("EIGHT", i++);
-		addKey("NINE", i++);
+		addKey("ZERO",i++);
+		addKey("ONE",i++);
+		addKey("TWO",i++);
+		addKey("THREE",i++);
+		addKey("FOUR",i++);
+		addKey("FIVE",i++);
+		addKey("SIX",i++);
+		addKey("SEVEN",i++);
+		addKey("EIGHT",i++);
+		addKey("NINE",i++);
 		i = 96;
-		addKey("NUMPADZERO", i++);
-		addKey("NUMPADONE", i++);
-		addKey("NUMPADTWO", i++);
-		addKey("NUMPADTHREE", i++);
-		addKey("NUMPADFOUR", i++);
-		addKey("NUMPADFIVE", i++);
-		addKey("NUMPADSIX", i++);
-		addKey("NUMPADSEVEN", i++);
-		addKey("NUMPADEIGHT", i++);
-		addKey("NUMPADNINE", i++);
+		addKey("NUMPADZERO",i++);
+		addKey("NUMPADONE",i++);
+		addKey("NUMPADTWO",i++);
+		addKey("NUMPADTHREE",i++);
+		addKey("NUMPADFOUR",i++);
+		addKey("NUMPADFIVE",i++);
+		addKey("NUMPADSIX",i++);
+		addKey("NUMPADSEVEN",i++);
+		addKey("NUMPADEIGHT",i++);
+		addKey("NUMPADNINE",i++);
 		addKey("PAGEUP", 33);
 		addKey("PAGEDOWN", 34);
 		addKey("HOME", 36);
 		addKey("END", 35);
 		addKey("INSERT", 45);
 
-		// FUNCTION KEYS (F1-F12)
+		//FUNCTION KEYS
 		i = 1;
 		while(i <= 12)
-			addKey("F" + i, 111 + (i++));
+			addKey("F"+i,111+(i++));
 
-		// SPECIAL KEYS + PUNCTUATION
-		addKey("ESCAPE", 27);
-		addKey("MINUS", 189);
-		addKey("NUMPADMINUS", 109);
-		addKey("PLUS", 187);
-		addKey("NUMPADPLUS", 107);
-		addKey("DELETE", 46);
-		addKey("BACKSPACE", 8);
-		addKey("LBRACKET", 219);
-		addKey("RBRACKET", 221);
-		addKey("BACKSLASH", 220);
-		addKey("CAPSLOCK", 20);
-		addKey("SEMICOLON", 186);
-		addKey("QUOTE", 222);
-		addKey("ENTER", 13);
-		addKey("SHIFT", 16);
-		addKey("COMMA", 188);
-		addKey("PERIOD", 190);
-		addKey("NUMPADPERIOD", 110);
-		addKey("SLASH", 191);
-		addKey("NUMPADSLASH", 191);
-		addKey("CONTROL", 17);
-		addKey("ALT", 18);
-		addKey("SPACE", 32);
-		addKey("UP", 38);
-		addKey("DOWN", 40);
-		addKey("LEFT", 37);
-		addKey("RIGHT", 39);
-		addKey("TAB", 9);
+		//SPECIAL KEYS + PUNCTUATION
+		addKey("ESCAPE",27);
+		addKey("MINUS",189);
+		addKey("NUMPADMINUS",109);
+		addKey("PLUS",187);
+		addKey("NUMPADPLUS",107);
+		addKey("DELETE",46);
+		addKey("BACKSPACE",8);
+		addKey("LBRACKET",219);
+		addKey("RBRACKET",221);
+		addKey("BACKSLASH",220);
+		addKey("CAPSLOCK",20);
+		addKey("SEMICOLON",186);
+		addKey("QUOTE",222);
+		addKey("ENTER",13);
+		addKey("SHIFT",16);
+		addKey("COMMA",188);
+		addKey("PERIOD",190);
+		addKey("NUMPADPERIOD",110);
+		addKey("SLASH",191);
+		addKey("NUMPADSLASH",191);
+		addKey("CONTROL",17);
+		addKey("ALT",18);
+		addKey("SPACE",32);
+		addKey("UP",38);
+		addKey("DOWN",40);
+		addKey("LEFT",37);
+		addKey("RIGHT",39);
+		addKey("TAB",9);
 
-		// MOBILE KEYS
-		addKey("BACK", flash.ui.Keyboard.BACK);
-		addKey("MENU", flash.ui.Keyboard.MENU);
-		addKey("SEARCH", flash.ui.Keyboard.SEARCH);
-		// addKey("VOLUME_DOWN", flash.ui.Keyboard.VOLUME_DOWN);
-		// addKey("VOLUME_UP", flash.ui.Keyboard.VOLUME_UP);
+		//MOBILE KEYS
+		addKey("BACK",flash.ui.Keyboard.BACK);
+		addKey("MENU",flash.ui.Keyboard.MENU);
+		addKey("SEARCH",flash.ui.Keyboard.SEARCH);
+		//addKey("VOLUME_DOWN", flash.ui.Keyboard.VOLUME_DOWN);
+		//addKey("VOLUME_UP", flash.ui.Keyboard.VOLUME_UP);
 	}
 
 	/**
 	 * Event handler so FlxGame can toggle keys.
 	 * 
-	 * @param Event A <code>KeyboardEvent</code> object.
+	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
 	 */
-	public void handleKeyDown(KeyboardEvent Event)
+	public void handleKeyDown(KeyboardEvent FlashEvent)
 	{
-		KeyState object = _map.get(Event.keyCode);
-
-		if(object == null)
-			return;
-		if(object.current > 0)
-			object.current = 1;
-		else
-			object.current = 2;
+		KeyState object = _map.get(FlashEvent.keyCode);
+		if(object == null) return;
+		if(object.current > 0) object.current = 1;
+		else object.current = 2;
 
 		try
 		{ // TODO: Reflection is fairly slow, could we use a BooleanMap instead?
@@ -247,18 +243,14 @@ public class Keyboard extends Input
 	/**
 	 * Event handler so FlxGame can toggle keys.
 	 * 
-	 * @param Event A <code>KeyboardEvent</code> object.
+	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
 	 */
-	public void handleKeyUp(KeyboardEvent Event)
+	public void handleKeyUp(KeyboardEvent FlashEvent)
 	{
-		KeyState object = _map.get(Event.keyCode);
-
-		if(object == null)
-			return;
-		if(object.current > 0)
-			object.current = -1;
-		else
-			object.current = 0;
+		KeyState object = _map.get(FlashEvent.keyCode);
+		if(object == null) return;
+		if(object.current > 0) object.current = -1;
+		else object.current = 0;
 
 		try
 		{

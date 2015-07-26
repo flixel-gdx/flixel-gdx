@@ -3,8 +3,7 @@ package org.flixel.system.input;
 import com.badlogic.gdx.Input.Keys;
 
 /**
- * A generic controller mapping. By default it uses indices from
- * <code>Keys</code>.
+ * A generic controller mapping. By default it uses indices from <code>Keys</code>.
  * 
  * @author Ka Wing Chin
  */
@@ -50,7 +49,7 @@ public class GamepadMapping
 	/**
 	 * Creates a new <code>GamepadMapping</code> object.
 	 * 
-	 * @param ID The ID that is equal to the <code>Controller.getName()</code>.
+	 * @param	ID		The ID that is equal to the <code>Controller.getName()</code>.
 	 */
 	public GamepadMapping(String ID)
 	{
@@ -58,10 +57,9 @@ public class GamepadMapping
 	}
 
 	/**
-	 * Creates a new <code>GamepadMapping</code> object. Some same controllers
-	 * got different
+	 * Creates a new <code>GamepadMapping</code> object. Some same controllers got different
 	 * 
-	 * @param IDs Multiple IDs that are equal to the
+	 * @param	IDs		Multiple IDs that are equal to the
 	 *        <code>Controller.getName()</code>.
 	 */
 	public GamepadMapping(String[] IDs)

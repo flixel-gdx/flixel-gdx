@@ -1,11 +1,7 @@
 package flash.ui;
 
 /**
- * The Keyboard class is used to build an interface that can be controlled by a
- * user with a standard keyboard. You can use the methods and properties of the
- * Keyboard class without using a constructor. The properties of the Keyboard
- * class are constants representing the keys that are most commonly used to
- * control games.
+ * The Keyboard class is used to build an interface that can be controlled by a user with a standard keyboard.
  * 
  * @author Thomas Weston
  */
@@ -22,8 +18,7 @@ public class Keyboard
 	public static final int B = 66;
 
 	/**
-	 * Constant associated with the key code value for the button for returning
-	 * to the previous page in the application.
+	 * Constant associated with the key code value for the button for returning to the previous page in the application.
 	 */
 	public static final int BACK = 0x01000016;
 
@@ -223,8 +218,7 @@ public class Keyboard
 	public static final int M = 77;
 
 	/**
-	 * Constant associated with the key code value for the button for engaging
-	 * the menu.
+	 * Constant associated with the key code value for the button for engaging the menu.
 	 */
 	public static final int MENU = 0x01000012;
 
@@ -289,98 +283,82 @@ public class Keyboard
 	public static final int NUMBER_9 = 57;
 
 	/**
-	 * Constant associated with the key code value for the number 0 key on the
-	 * number pad (96).
+	 * Constant associated with the key code value for the number 0 key on the number pad (96).
 	 */
 	public static final int NUMPAD_0 = 96;
 
 	/**
-	 * Constant associated with the key code value for the number 1 key on the
-	 * number pad (97).
+	 * Constant associated with the key code value for the number 1 key on the number pad (97).
 	 */
 	public static final int NUMPAD_1 = 97;
 
 	/**
-	 * Constant associated with the key code value for the number 2 key on the
-	 * number pad (98).
+	 * Constant associated with the key code value for the number 2 key on the number pad (98).
 	 */
 	public static final int NUMPAD_2 = 98;
 
 	/**
-	 * Constant associated with the key code value for the number 3 key on the
-	 * number pad (99).
+	 * Constant associated with the key code value for the number 3 key on the number pad (99).
 	 */
 	public static final int NUMPAD_3 = 99;
 
 	/**
-	 * Constant associated with the key code value for the number 4 key on the
-	 * number pad (100).
+	 * Constant associated with the key code value for the number 4 key on the number pad (100).
 	 */
 	public static final int NUMPAD_4 = 100;
 
 	/**
-	 * Constant associated with the key code value for the number 5 key on the
-	 * number pad (101).
+	 * Constant associated with the key code value for the number 5 key on the number pad (101).
 	 */
 	public static final int NUMPAD_5 = 101;
 
 	/**
-	 * Constant associated with the key code value for the number 6 key on the
-	 * number pad (102).
+	 * Constant associated with the key code value for the number 6 key on the number pad (102).
 	 */
 	public static final int NUMPAD_6 = 102;
 
 	/**
-	 * Constant associated with the key code value for the number 7 key on the
-	 * number pad (103).
+	 * Constant associated with the key code value for the number 7 key on the number pad (103).
 	 */
 	public static final int NUMPAD_7 = 103;
 
 	/**
-	 * Constant associated with the key code value for the number 8 key on the
-	 * number pad (104).
+	 * Constant associated with the key code value for the number 8 key on the number pad (104).
 	 */
 	public static final int NUMPAD_8 = 104;
 
 	/**
-	 * Constant associated with the key code value for the number 9 key on the
-	 * number pad (105).
+	 * Constant associated with the key code value for the number 9 key on the number pad (105).
 	 */
 	public static final int NUMPAD_9 = 105;
 
 	/**
-	 * Constant associated with the key code value for the addition key on the
-	 * number pad (107).
+	 * Constant associated with the key code value for the addition key on the number pad (107).
 	 */
 	public static final int NUMPAD_ADD = 107;
 
 	/**
-	 * Constant associated with the key code value for the decimal key on the
-	 * number pad (110).
+	 * Constant associated with the key code value for the decimal key on the number pad (110).
 	 */
 	public static final int NUMPAD_DECIMAL = 110;
 
 	/**
-	 * Constant associated with the key code value for the division key on the
-	 * number pad (111).
+	 * Constant associated with the key code value for the division key on the number pad (111).
 	 */
 	public static final int NUMPAD_DIVIDE = 111;
 
 	/**
-	 * Constant associated with the key code value for the Enter key on the
-	 * number pad (108).
+	 * Constant associated with the key code value for the Enter key on the number pad (108).
 	 */
 	public static final int NUMPAD_ENTER = 108;
 
 	/**
-	 * Constant associated with the key code value for the multiplication key on
-	 * the number pad (106).
+	 * Constant associated with the key code value for the multiplication key on the number pad (106).
 	 */
 	public static final int NUMPAD_MULTIPLY = 106;
 
 	/**
-	 * Constant associated with the key code value for the subtraction key on
-	 * the number pad (109).
+	 * Constant associated with the key code value for the subtraction key on the number pad (109).
 	 */
 	public static final int NUMPAD_SUBTRACT = 109;
 
@@ -440,8 +418,7 @@ public class Keyboard
 	public static final int S = 83;
 
 	/**
-	 * Constant associated with the key code value for the button for the search
-	 * button.
+	 * Constant associated with the key code value for the button for the search button.
 	 */
 	public static final int SEARCH = 0x0100001F;
 

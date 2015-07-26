@@ -5,9 +5,9 @@ import org.flixel.FlxObject;
 import com.badlogic.gdx.utils.Pool;
 
 /**
- * A miniature linked list class. Useful for optimizing time-critical or highly
- * repetitive tasks! See <code>FlxQuadTree</code> for how to use it, IF YOU
- * DARE.
+ * A miniature linked list class.
+ * Useful for optimizing time-critical or highly repetitive tasks!
+ * See <code>FlxQuadTree</code> for how to use it, IF YOU DARE.
  * 
  * @author Ka Wing Chin
  */
@@ -23,8 +23,7 @@ public class FlxList
 	public FlxList next;
 
 	/**
-	 * Internal, a pool of <code>FlxQuadTree</code>s to prevent constant
-	 * <code>new</code> calls.
+	 * Internal, a pool of <code>FlxQuadTree</code>s to prevent constant <code>new</code> calls.
 	 */
 	static private Pool<FlxList> _pool = new Pool<FlxList>()
 	{
@@ -38,7 +37,7 @@ public class FlxList
 	/**
 	 * Gets a new <code>FlxList</code> from the pool.
 	 * 
-	 * @return A new <code>FlxList</code>.
+	 * @return	A new <code>FlxList</code>.
 	 */
 	static public FlxList getNew()
 	{
@@ -46,8 +45,7 @@ public class FlxList
 	}
 
 	/**
-	 * Creates a new link, and sets <code>object</code> and <code>next</code> to
-	 * <code>null</code>. Has to be public for GWT reflection.
+	 * Creates a new link, and sets <code>object</code> and <code>next</code> to <code>null</code>.
 	 */
 	public FlxList()
 	{

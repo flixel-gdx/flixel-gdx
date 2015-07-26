@@ -38,8 +38,8 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	private static Array<Gamepad> pads;
 
 	/**
-	 * Creates a new <code>GamepadManager</code> object. Needs to be added to the
-	 * plugin, <code>FlxG.addPlugin()</code>.
+	 * Creates a new <code>GamepadManager</code> object.
+	 * Needs to be added to the plugin, <code>FlxG.addPlugin()</code>.
 	 */
 	public GamepadManager()
 	{
@@ -92,46 +92,45 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	/**
 	 * Add new mapping.
 	 * 
-	 * @param mapping The mapping that will be added.
+	 * @param	Mapping		The mapping that will be added.
 	 */
-	public static void addMapping(GamepadMapping mapping)
+	public static void addMapping(GamepadMapping Mapping)
 	{
-		// Don't bother adding a mapping twice.
+		//Don't bother adding a mapping twice.
 		for(int i = 0; i < mappings.size; i++)
 		{
-			if(mapping == mappings.get(i))
+			if(Mapping == mappings.get(i))
 				return;
 		}
-		mappings.add(mapping);
+		mappings.add(Mapping);
 	}
 
 	/**
 	 * Add a new gamepad.
 	 * 
-	 * @param gamepad The gamepad that will be added.
+	 * @param	Gamepad		The gamepad that will be added.
 	 */
-	public static void addGamepad(Gamepad gamepad)
+	public static void addGamepad(Gamepad Gamepad)
 	{
-		// Don't bother adding a gamepad twice.
+		//Don't bother adding a gamepad twice.
 		for(int i = 0; i < pads.size; i++)
 		{
-			if(gamepad == pads.get(i))
+			if(Gamepad == pads.get(i))
 				return;
 		}
-		pads.add(gamepad);
+		pads.add(Gamepad);
 
-		// Check if there is enough controllers available to hook a gamepad to
-		// it.
+		//Check if there is enough controllers available to hook a gamepad to it.
 		if(pads.size > Controllers.getControllers().size)
 		{
 			FlxG.log("Gamepad > Available controllers: " + Controllers.getControllers().size);
-			gamepad.setMapping(mappings.get(0));
+			Gamepad.setMapping(mappings.get(0));
 		}
 		else
 		{
 			Controller c = Controllers.getControllers().get(pads.size - 1);
 			c.addListener(listener);
-			controllers.put(c, gamepad);
+			controllers.put(c, Gamepad);
 			String controllerName = c.getName().toLowerCase();
 			String mappingName;
 			boolean mappingFound = false;
@@ -141,8 +140,8 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 				{
 					if(controllerName.equals(mappings.get(i).ID.toLowerCase()))
 					{
-						gamepad.setMapping(mappings.get(i));
-						gamepad.connected = true;
+						Gamepad.setMapping(mappings.get(i));
+						Gamepad.connected = true;
 						mappingFound = true;
 						break;
 					}
@@ -155,8 +154,8 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 						mappingName = mapping.IDs[ii].toLowerCase();
 						if(controllerName.equals(mappingName))
 						{
-							gamepad.setMapping(mapping);
-							gamepad.connected = true;
+							Gamepad.setMapping(mapping);
+							Gamepad.connected = true;
 							mappingFound = true;
 							break;
 						}
@@ -166,7 +165,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 			if(!mappingFound)
 			{
 				FlxG.log("No mapping found for controller: " + c.getName() + "\nUse default mapping.");
-				gamepad.setMapping(mappings.get(0));
+				Gamepad.setMapping(mappings.get(0));
 			}
 		}
 	}
@@ -174,14 +173,14 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	/**
 	 * Remove a gamepad.
 	 * 
-	 * @param gamepad The gamepad that will be moved.
+	 * @param	Gamepad		The gamepad that will be moved.
 	 */
-	public static void removeGamepad(Gamepad gamepad)
+	public static void removeGamepad(Gamepad Gamepad)
 	{
-		if(pads.removeValue(gamepad, true))
+		if(pads.removeValue(Gamepad, true))
 		{
-			gamepad.connected = false;
-			Controller c = controllers.findKey(gamepad, true);
+			Gamepad.connected = false;
+			Controller c = controllers.findKey(Gamepad, true);
 			if(c != null)
 			{
 				controllers.remove(c);
@@ -193,24 +192,25 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	/**
 	 * Get a gamepad by index.
 	 * 
-	 * @param index The index.
-	 * @return The gamepad.
+	 * @param	Index	The index.
+	 * 
+	 * @return	The gamepad.
 	 */
-	public static Gamepad get(int index)
+	public static Gamepad get(int Index)
 	{
-		if(index < pads.size)
-			return controllers.get(Controllers.getControllers().get(index));
+		if(Index < pads.size)
+			return controllers.get(Controllers.getControllers().get(Index));
 		return null;
 	}
 
 	@Override
-	public void connected(Controller controller)
+	public void connected(Controller Controller)
 	{
-		if(controllers.containsKey(controller))
-			controllers.get(controller).connected = true;
+		if(controllers.containsKey(Controller))
+			controllers.get(Controller).connected = true;
 		else
 		{
-			// add new controller
+			//add new controller
 			for(int i = 0; i < pads.size; i++)
 			{
 				if(pads.get(i).ID == null)
@@ -220,9 +220,9 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	}
 
 	@Override
-	public void disconnected(Controller controller)
+	public void disconnected(Controller Controller)
 	{
-		Gamepad gamepad = controllers.get(controller);
+		Gamepad gamepad = controllers.get(Controller);
 		if(gamepad != null)
 		{
 			gamepad.connected = false;
@@ -236,31 +236,31 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 	}
 
 	@Override
-	public boolean buttonDown(Controller controller, int buttonCode)
+	public boolean buttonDown(Controller Controller, int ButtonCode)
 	{
-		controllers.get(controller).handleKeyDown(buttonCode);
+		controllers.get(Controller).handleKeyDown(ButtonCode);
 		return false;
 	}
 
 	@Override
-	public boolean buttonUp(Controller controller, int buttonCode)
+	public boolean buttonUp(Controller Controller, int ButtonCode)
 	{
-		controllers.get(controller).handleKeyUp(buttonCode);
+		controllers.get(Controller).handleKeyUp(ButtonCode);
 		return false;
 	}
 
 	@Override
-	public boolean axisMoved(Controller controller, int axisCode, float value)
+	public boolean axisMoved(Controller Controller, int AxisCode, float Value)
 	{
-		controllers.get(controller).axisData.put(axisCode, value);
+		controllers.get(Controller).axisData.put(AxisCode, Value);
 		return false;
 	}
 
 	@Override
-	public boolean povMoved(Controller controller, int povCode, PovDirection value)
+	public boolean povMoved(Controller Controller, int PovCode, PovDirection Value)
 	{
-		Gamepad pad = controllers.get(controller);
-		if(value == PovDirection.center || pad.povDirection != value)
+		Gamepad pad = controllers.get(Controller);
+		if(Value == PovDirection.center || pad.povDirection != Value)
 		{
 			pad.handleKeyUp(GamepadMapping.UP);
 			pad.handleKeyUp(GamepadMapping.UP_RIGHT);
@@ -271,7 +271,7 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 			pad.handleKeyUp(GamepadMapping.DOWN_LEFT);
 			pad.handleKeyUp(GamepadMapping.LEFT);
 		}
-		switch(value)
+		switch(Value)
 		{
 			case north:
 				pad.handleKeyDown(GamepadMapping.UP);
@@ -300,30 +300,30 @@ public class GamepadManager extends FlxBasic implements ControllerListener
 			default:
 				break;
 		}
-		pad.povDirection = value;
+		pad.povDirection = Value;
 		return false;
 	}
 
 	@Override
-	public boolean xSliderMoved(Controller controller, int sliderCode, boolean value)
+	public boolean xSliderMoved(Controller Controller, int SliderCode, boolean Value)
 	{
 		// FlxG.log(sliderCode + " " + value);
 		return false;
 	}
 
 	@Override
-	public boolean ySliderMoved(Controller controller, int sliderCode, boolean value)
+	public boolean ySliderMoved(Controller Controller, int SliderCode, boolean Value)
 	{
 		// FlxG.log(sliderCode + " " + value);
 		return false;
 	}
 
 	@Override
-	public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value)
+	public boolean accelerometerMoved(Controller Controller, int AccelerometerCode, Vector3 Value)
 	{
-		controllers.get(controller).x = value.x;
-		controllers.get(controller).y = value.y;
-		controllers.get(controller).z = value.z;
+		controllers.get(Controller).x = Value.x;
+		controllers.get(Controller).y = Value.y;
+		controllers.get(Controller).z = Value.z;
 		return false;
 	}
 }

@@ -22,7 +22,7 @@ public class DebugPathDisplay extends FlxBasic
 	public DebugPathDisplay()
 	{
 		_paths = new Array<FlxPath>();
-		active = false; // don't call update on this plugin
+		active = false; //don't call update on this plugin
 	}
 
 	/**
@@ -31,15 +31,14 @@ public class DebugPathDisplay extends FlxBasic
 	@Override
 	public void destroy()
 	{
+		super.destroy();
 		clear();
 		_paths = null;
-		super.destroy();
 	}
 
 	/**
-	 * Called by <code>FlxG.drawPlugins()</code> after the game state has been
-	 * drawn. Cycles through cameras and calls <code>drawDebug()</code> on each
-	 * one.
+	 * Called by <code>FlxG.drawPlugins()</code> after the game state has been drawn.
+	 * Cycles through cameras and calls <code>drawDebug()</code> on each one.
 	 */
 	@Override
 	public void draw()
@@ -57,13 +56,11 @@ public class DebugPathDisplay extends FlxBasic
 	}
 
 	/**
-	 * Similar to <code>FlxObject</code>'s <code>drawDebug()</code>
-	 * functionality, this function calls <code>drawDebug()</code> on each
-	 * <code>FlxPath</code> for the specified camera. Very helpful for
-	 * debugging!
+	 * Similar to <code>FlxObject</code>'s <code>drawDebug()</code> functionality,
+	 * this function calls <code>drawDebug()</code> on each <code>FlxPath</code> for the specified camera.
+	 * Very helpful for debugging!
 	 * 
-	 * @param Camera Which <code>FlxCamera</code> object to draw the debug data
-	 *        to.
+	 * @param	Camera	Which <code>FlxCamera</code> object to draw the debug data to.
 	 */
 	@Override
 	public void drawDebug(FlxCamera Camera)
@@ -71,7 +68,7 @@ public class DebugPathDisplay extends FlxBasic
 		if(Camera == null)
 			Camera = FlxG.camera;
 
-		int i = _paths.size - 1;
+		int i = _paths.size-1;
 		FlxPath path;
 		while(i >= 0)
 		{
@@ -82,10 +79,9 @@ public class DebugPathDisplay extends FlxBasic
 	}
 
 	/**
-	 * Similar to <code>FlxObject</code>'s <code>drawDebug()</code>
-	 * functionality, this function calls <code>drawDebug()</code> on each
-	 * <code>FlxPath</code> for the specified camera. Very helpful for
-	 * debugging!
+	 * Similar to <code>FlxObject</code>'s <code>drawDebug()</code> functionality,
+	 * this function calls <code>drawDebug()</code> on each <code>FlxPath</code> for the specified camera.
+	 * Very helpful for debugging! 
 	 */
 	@Override
 	public void drawDebug()
@@ -94,10 +90,10 @@ public class DebugPathDisplay extends FlxBasic
 	}
 
 	/**
-	 * Add a path to the path debug display manager. Usually called
-	 * automatically by <code>FlxPath</code>'s constructor.
+	 * Add a path to the path debug display manager.
+	 * Usually called automatically by <code>FlxPath</code>'s constructor.
 	 * 
-	 * @param Path The <code>FlxPath</code> you want to add to the manager.
+	 * @param	Path	The <code>FlxPath</code> you want to add to the manager.
 	 */
 	public void add(FlxPath Path)
 	{
@@ -105,14 +101,14 @@ public class DebugPathDisplay extends FlxBasic
 	}
 
 	/**
-	 * Remove a path from the path debug display manager. Usually called
-	 * automatically by <code>FlxPath</code>'s <code>destroy()</code> function.
+	 * Remove a path from the path debug display manager.
+	 * Usually called automatically by <code>FlxPath</code>'s <code>destroy()</code> function.
 	 * 
-	 * @param Path The <code>FlxPath</code> you want to remove from the manager.
+	 * @param	Path	The <code>FlxPath</code> you want to remove from the manager.
 	 */
 	public void remove(FlxPath Path)
 	{
-		int index = _paths.indexOf(Path, true);
+		int index = _paths.indexOf(Path,true);
 		if(index >= 0)
 			_paths.removeIndex(index);
 	}
@@ -122,17 +118,14 @@ public class DebugPathDisplay extends FlxBasic
 	 */
 	public void clear()
 	{
-		if(_paths != null)
+		int i = _paths.size - 1;
+		FlxPath path;
+		while(i >= 0)
 		{
-			int i = _paths.size - 1;
-			FlxPath path;
-			while(i >= 0)
-			{
-				path = _paths.get(i--);
-				if(path != null)
-					path.destroy();
-			}
-			_paths.clear();
+			path = _paths.get(i--);
+			if(path != null)
+				path.destroy();
 		}
+		_paths.clear();
 	}
 }

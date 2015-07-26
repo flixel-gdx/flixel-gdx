@@ -1,5 +1,10 @@
 package flash.text;
 
+/**
+ * The TextFormat class represents character formatting information. Use the TextFormat class to create specific text formatting for text fields.
+ * 
+ * @author Thomas Weston
+ */
 public final class TextFormat
 {
 	/**

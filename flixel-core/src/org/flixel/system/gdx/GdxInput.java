@@ -33,6 +33,7 @@ public class GdxInput extends InputMultiplexer implements InputProcessor
 	private KeyboardEventPool _keyboardEvents;
 	private MouseEventPool _mouseEvents;
 	private TouchEventPool _touchEvents;
+	
 	/**
 	 * Cache the keycode and pass this in the <code>KEY_TYPED</code> event.
 	 */
@@ -51,11 +52,11 @@ public class GdxInput extends InputMultiplexer implements InputProcessor
 		_map.put(Keys.A, Keyboard.A);
 		_map.put(Keys.B, Keyboard.B);
 		_map.put(Keys.BACK, Keyboard.BACK);
-		// _map.put(Keys.BACKQUOTE, Keyboard.BACKQUOTE);
+		//_map.put(Keys.BACKQUOTE, Keyboard.BACKQUOTE);
 		_map.put(Keys.BACKSLASH, Keyboard.BACKSLASH);
 		_map.put(Keys.BACKSPACE, Keyboard.BACKSPACE);
 		_map.put(Keys.C, Keyboard.C);
-		// _map.put(Keys.CAPS_LOCK, Keyboard.CAPS_LOCK);
+		//_map.put(Keys.CAPS_LOCK, Keyboard.CAPS_LOCK);
 		_map.put(Keys.COMMA, Keyboard.COMMA);
 		_map.put(Keys.CONTROL_LEFT, Keyboard.CONTROL);
 		_map.put(Keys.CONTROL_RIGHT, Keyboard.CONTROL);
@@ -114,12 +115,12 @@ public class GdxInput extends InputMultiplexer implements InputProcessor
 		_map.put(Keys.NUMPAD_7, Keyboard.NUMPAD_7);
 		_map.put(Keys.NUMPAD_8, Keyboard.NUMPAD_8);
 		_map.put(Keys.NUMPAD_9, Keyboard.NUMPAD_9);
-		// _map.put(Keys.NUMPAD_ADD, Keyboard.NUMPAD_ADD);
-		// _map.put(Keys.NUMPAD_DECIMAL, Keyboard.NUMPAD_DECIMAL);
-		// _map.put(Keys.NUMPAD_DIVIDE, Keyboard.NUMPAD_DIVIDE);
-		// _map.put(Keys.NUMPAD_ENTER, Keyboard.NUMPAD_ENTER);
-		// _map.put(Keys.NUMPAD_MULTIPLY, Keyboard.NUMPAD_MULTIPLY);
-		// _map.put(Keys.NUMPAD_SUBTRACT, Keyboard.NUMPAD_SUBTRACT);
+		//_map.put(Keys.NUMPAD_ADD, Keyboard.NUMPAD_ADD);
+		//_map.put(Keys.NUMPAD_DECIMAL, Keyboard.NUMPAD_DECIMAL);
+		//_map.put(Keys.NUMPAD_DIVIDE, Keyboard.NUMPAD_DIVIDE);
+		//_map.put(Keys.NUMPAD_ENTER, Keyboard.NUMPAD_ENTER);
+		//_map.put(Keys.NUMPAD_MULTIPLY, Keyboard.NUMPAD_MULTIPLY);
+		//_map.put(Keys.NUMPAD_SUBTRACT, Keyboard.NUMPAD_SUBTRACT);
 		_map.put(Keys.O, Keyboard.O);
 		_map.put(Keys.P, Keyboard.P);
 		_map.put(Keys.PAGE_DOWN, Keyboard.PAGE_DOWN);
