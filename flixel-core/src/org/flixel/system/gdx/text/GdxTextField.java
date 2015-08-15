@@ -106,15 +106,20 @@ public class GdxTextField extends TextField
 			}
 		}
 
+		if(!format.align.equals(_currentFormat.align))
+		{
+			_currentFormat.align = format.align;
+			calcFrame();
+		}
+		
 		_currentFormat = new TextFormat(format.font, format.size, format.color, false, false, false, "", "", format.align);
-		calcFrame();
 	}
 	
 	public void calcFrame()
 	{
 		if(_fontCache != null)
 		{
-			GlyphLayout layout = _fontCache.setText(_text, 0, 3, width, flashAlignToGdx(_currentFormat.align), true);
+			GlyphLayout layout = _fontCache.setText(_text, 2, 3, width, flashAlignToGdx(_currentFormat.align), true);
 			height = layout.height + 4;
 		}
 	}
@@ -122,8 +127,7 @@ public class GdxTextField extends TextField
 	public void render()
 	{
 		// scaling
-		if(scaleX != 1f || scaleY != 1f)
-			_fontCache.getFont().getData().setScale(scaleX, scaleY);
+		_fontCache.getFont().getData().setScale(scaleX, scaleY);
 
 		// position
 		_fontCache.setPosition(x, y);

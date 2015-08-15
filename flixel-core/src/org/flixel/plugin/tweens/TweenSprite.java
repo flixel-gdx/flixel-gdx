@@ -52,38 +52,38 @@ public class TweenSprite implements TweenAccessor<FlxSprite>
 	public static final int SCALE_XY = 9;
 
 	@Override
-	public int getValues(FlxSprite target, int tweenType, float[] returnValues)
+	public int getValues(FlxSprite Target, int TweenType, float[] ReturnValues)
 	{
-		switch(tweenType)
+		switch(TweenType)
 		{
 			case X:
-				returnValues[0] = target.x;
+				ReturnValues[0] = Target.x;
 				return 1;
 			case Y:
-				returnValues[0] = target.y;
+				ReturnValues[0] = Target.y;
 				return 1;
 			case XY:
-				returnValues[0] = target.x;
-				returnValues[1] = target.y;
+				ReturnValues[0] = Target.x;
+				ReturnValues[1] = Target.y;
 				return 2;
 			case ANGLE:
-				returnValues[0] = target.angle;
+				ReturnValues[0] = Target.angle;
 				return 1;
 			case ALPHA:
-				returnValues[0] = target.getAlpha();
+				ReturnValues[0] = Target.getAlpha();
 				return 1;
 			case COLOR:
-				returnValues[0] = target.getColor();
+				ReturnValues[0] = Target.getColor();
 				return 1;
 			case SCALE_X:
-				returnValues[0] = target.scale.x;
+				ReturnValues[0] = Target.scale.x;
 				return 1;
 			case SCALE_Y:
-				returnValues[0] = target.scale.y;
+				ReturnValues[0] = Target.scale.y;
 				return 1;
 			case SCALE_XY:
-				returnValues[0] = target.scale.x;
-				returnValues[1] = target.scale.y;
+				ReturnValues[0] = Target.scale.x;
+				ReturnValues[1] = Target.scale.y;
 				return 2;
 			default:
 				assert false;
@@ -92,38 +92,38 @@ public class TweenSprite implements TweenAccessor<FlxSprite>
 	}
 
 	@Override
-	public void setValues(FlxSprite target, int tweenType, float[] newValues)
+	public void setValues(FlxSprite Target, int TweenType, float[] NewValues)
 	{
-		switch(tweenType)
+		switch(TweenType)
 		{
 			case X:
-				target.x = newValues[0];
+				Target.x = NewValues[0];
 				break;
 			case Y:
-				target.y = newValues[0];
+				Target.y = NewValues[0];
 				break;
 			case XY:
-				target.x = newValues[0];
-				target.y = newValues[1];
+				Target.x = NewValues[0];
+				Target.y = NewValues[1];
 				break;
 			case ANGLE:
-				target.angle = newValues[0];
+				Target.angle = NewValues[0];
 				break;
 			case ALPHA:
-				target.setAlpha(newValues[0]);
+				Target.setAlpha(NewValues[0]);
 				break;
 			case COLOR:
-				target.setColor((int) newValues[0]);
+				Target.setColor((int) NewValues[0]);
 				break;
 			case SCALE_X:
-				target.scale.x = newValues[0];
+				Target.scale.x = NewValues[0];
 				break;
 			case SCALE_Y:
-				target.scale.y = newValues[0];
+				Target.scale.y = NewValues[0];
 				break;
 			case SCALE_XY:
-				target.scale.x = newValues[0];
-				target.scale.y = newValues[1];
+				Target.scale.x = NewValues[0];
+				Target.scale.y = NewValues[1];
 				break;
 			default:
 				assert false;

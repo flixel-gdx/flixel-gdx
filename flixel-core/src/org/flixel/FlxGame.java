@@ -26,11 +26,10 @@ import flash.events.TouchEvent;
 import flash.ui.Keyboard;
 
 /**
- * FlxGame is the heart of all flixel games, and contains a bunch of basic game
- * loops and things. It is a long and sloppy file that you shouldn't have to
- * worry about too much! It is basically only used to create your game object in
- * the first place, after that FlxG and FlxState have all the useful stuff you
- * actually need.
+ * FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.
+ * It is a long and sloppy file that you shouldn't have to worry about too much!
+ * It is basically only used to create your game object in the first place,
+ * after that FlxG and FlxState have all the useful stuff you actually need.
  * 
  * @author Ka Wing Chin
  * @author Thomas Weston
@@ -44,16 +43,13 @@ public class FlxGame
 	 */
 	public boolean useSoundHotKeys;
 	/**
-	 * Tells flixel to use the default system mouse cursor instead of custom
-	 * Flixel mouse cursors.
-	 * 
+	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
 	 * @default false
 	 */
 	public boolean useSystemCursor;
 	/**
 	 * Initialize and allow the flixel debugger overlay even in release mode.
 	 * Also useful if you don't use FlxPreloader!
-	 * 
 	 * @default false
 	 */
 	public boolean forceDebugger;
@@ -68,10 +64,9 @@ public class FlxGame
 	FlxGroup _mouse;
 
 	/**
-	 * Class type of the initial/first game state for the game, usually
-	 * MenuState or something like that.
+	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
 	 */
-	Class<? extends FlxState> _iState;
+	protected Class<? extends FlxState> _iState;
 	/**
 	 * Whether the game object's basic initialization has finished yet.
 	 */
@@ -82,8 +77,8 @@ public class FlxGame
 	 */
 	protected long _total;
 	/**
-	 * Total number of milliseconds elapsed since last update loop. Counts down
-	 * as we step through the game loop.
+	 * Total number of milliseconds elapsed since last update loop.
+	 * Counts down as we step through the game loop.
 	 */
 	protected int _accumulator;
 	/**
@@ -91,21 +86,20 @@ public class FlxGame
 	 */
 	protected boolean _lostFocus;
 	/**
-	 * Milliseconds of time per step of the game loop. Event.g. 60 fps = 16ms.
+	 * Milliseconds of time per step of the game loop.  FlashEvent.g. 60 fps = 16ms.
 	 */
 	int _step;
 	/**
-	 * Framerate of the application (NOT the game loop). Default = 30.
+	 * Framerate of the Flash Player (NOT the game loop). Default = 30.
 	 */
 	int _flashFramerate;
 	/**
-	 * Max allowable accumulation (see _accumulator). Should always (and
-	 * automatically) be set to roughly 2x the application framerate.
+	 * Max allowable accumulation (see _accumulator).
+	 * Should always (and automatically) be set to roughly 2x the flash player framerate.
 	 */
 	int _maxAccumulation;
 	/**
-	 * If a state change was requested, the new state object is stored here
-	 * until we switch to it.
+	 * If a state change was requested, the new state object is stored here until we switch to it.
 	 */
 	FlxState _requestedState;
 	/**
@@ -134,8 +128,7 @@ public class FlxGame
 	 */
 	FlxDebugger _debugger;
 	/**
-	 * A handy boolean that keeps track of whether the debugger exists and is
-	 * currently visible.
+	 * A handy boolean that keeps track of whether the debugger exists and is currently visible.
 	 */
 	boolean _debuggerUp;
 
@@ -160,10 +153,10 @@ public class FlxGame
 	 */
 	boolean _recording;
 	/**
-	 * Array that keeps track of keypresses that can cancel a replay. Handy for
-	 * skipping cutscenes or getting out of attract modes!
+	 * Array that keeps track of keypresses that can cancel a replay.
+	 * Handy for skipping cutscenes or getting out of attract modes!
 	 */
-	Array<String> _replayCancelKeys;
+	String[] _replayCancelKeys;
 	/**
 	 * Helps time out a replay if necessary.
 	 */
@@ -194,46 +187,26 @@ public class FlxGame
 	protected boolean showSplashScreen = false;
 
 	/**
-	 * Internal event listener.
-	 */
-	private final IEventListener addedToStageListener = new IEventListener()
-	{
-		@Override
-		public void onEvent(Event e)
-		{
-			create(e);
-		}
-	};
-
-	/**
 	 * Instantiate a new game object.
 	 * 
-	 * @param GameSizeX The width of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param GameSizeY The height of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param InitialState The class name of the state you want to create and
-	 *        switch to first (e.g. MenuState).
-	 * @param Zoom The default level of zoom for the game's cameras (e.g. 2 =
-	 *        all pixels are now drawn at 2x). Default = 1.
-	 * @param GameFramerate How frequently the game should update (default is 30
-	 *        times per second).
-	 * @param FlashFramerate Sets the actual display framerate for application
-	 *        (default is 30 times per second).
-	 * @param UseSystemCursor Whether to use the default OS mouse pointer, or to
-	 *        use custom flixel ones.
-	 * @param ScaleMode How to scale the stage to fit the display (default is
-	 *        stretch).
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
+	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
+	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
+	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
+	 * @param	ScaleMode		How to scale the stage to fit the display (default is FlxCamera.STRETCH).
 	 */
-	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor, int ScaleMode)
+	public FlxGame(int GameSizeX,int GameSizeY,Class<? extends FlxState> InitialState,float Zoom,int GameFramerate,int FlashFramerate,boolean UseSystemCursor,int ScaleMode)
 	{
-		// super high priority init stuff (focus, mouse, etc)
+		//super high priority init stuff (focus, mouse, etc)
 		_lostFocus = false;
 		_mouse = new FlxGroup();
-		stage = new GdxStage((int) (GameSizeX * Zoom), (int) (GameSizeY * Zoom));
+		stage = new GdxStage();
 
-		// basic display and update setup stuff
-		FlxG.init(this, GameSizeX, GameSizeY, Zoom, ScaleMode);
+		//basic display and update setup stuff
+		FlxG.init(this,GameSizeX,GameSizeY,Zoom,ScaleMode);
 		FlxG.setFramerate(GameFramerate);
 		FlxG.setFlashFramerate(FlashFramerate);
 		_accumulator = (int) _step;
@@ -246,14 +219,14 @@ public class FlxGame
 		forceDebugger = false;
 		_debuggerUp = false;
 
-		// replay data
+		//replay data
 		_replay = new FlxReplay();
 		_replayRequested = false;
 		_recordingRequested = false;
 		_replaying = false;
 		_recording = false;
 
-		// then get ready to create the game object for real;
+		//then get ready to create the game object for real;
 		_iState = InitialState;
 		_requestedState = null;
 		_requestedReset = true;
@@ -264,102 +237,77 @@ public class FlxGame
 	/**
 	 * Instantiate a new game object.
 	 * 
-	 * @param GameSizeX The width of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param GameSizeY The height of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param InitialState The class name of the state you want to create and
-	 *        switch to first (e.g. MenuState).
-	 * @param Zoom The default level of zoom for the game's cameras (e.g. 2 =
-	 *        all pixels are now drawn at 2x). Default = 1.
-	 * @param GameFramerate How frequently the game should update (default is 30
-	 *        times per second).
-	 * @param FlashFramerate Sets the actual display framerate for application
-	 *        (default is 30 times per second).
-	 * @param UseSystemCursor Whether to use the default OS mouse pointer, or to
-	 *        use custom flixel ones.
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
+	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
+	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
+	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
-	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate, boolean UseSystemCursor)
+	public FlxGame(int GameSizeX,int GameSizeY,Class<? extends FlxState> InitialState,float Zoom,int GameFramerate,int FlashFramerate,boolean UseSystemCursor)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, UseSystemCursor, FlxCamera.STRETCH);
+		this(GameSizeX,GameSizeY,InitialState,Zoom,GameFramerate,FlashFramerate,UseSystemCursor,FlxCamera.STRETCH);
 	}
 
 	/**
 	 * Instantiate a new game object.
 	 * 
-	 * @param GameSizeX The width of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param GameSizeY The height of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param InitialState The class name of the state you want to create and
-	 *        switch to first (e.g. MenuState).
-	 * @param Zoom The default level of zoom for the game's cameras (e.g. 2 =
-	 *        all pixels are now drawn at 2x). Default = 1.
-	 * @param GameFramerate How frequently the game should update (default is 30
-	 *        times per second).
-	 * @param FlashFramerate Sets the actual display framerate for Flash player
-	 *        (default is 30 times per second).
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
+	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
+	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 */
-	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate, int FlashFramerate)
+	public FlxGame(int GameSizeX,int GameSizeY,Class<? extends FlxState> InitialState,float Zoom,int GameFramerate,int FlashFramerate)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, FlashFramerate, false, FlxCamera.STRETCH);
+		this(GameSizeX,GameSizeY,InitialState,Zoom,GameFramerate,FlashFramerate,false,FlxCamera.STRETCH);
 	}
 
 	/**
 	 * Instantiate a new game object.
 	 * 
-	 * @param GameSizeX The width of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param GameSizeY The height of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param InitialState The class name of the state you want to create and
-	 *        switch to first (e.g. MenuState).
-	 * @param Zoom The default level of zoom for the game's cameras (e.g. 2 =
-	 *        all pixels are now drawn at 2x). Default = 1.
-	 * @param GameFramerate How frequently the game should update (default is 30
-	 *        times per second).
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
+	 * @param	GameFramerate	How frequently the game should update (default is 30 times per second).
 	 */
-	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom, int GameFramerate)
+	public FlxGame(int GameSizeX,int GameSizeY,Class<? extends FlxState> InitialState,float Zoom,int GameFramerate)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, GameFramerate, 30, false, FlxCamera.STRETCH);
+		this(GameSizeX,GameSizeY,InitialState,Zoom,GameFramerate,30,false,FlxCamera.STRETCH);
 	}
 
 	/**
 	 * Instantiate a new game object.
 	 * 
-	 * @param GameSizeX The width of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param GameSizeY The height of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param InitialState The class name of the state you want to create and
-	 *        switch to first (e.g. MenuState).
-	 * @param Zoom The default level of zoom for the game's cameras (e.g. 2 =
-	 *        all pixels are now drawn at 2x). Default = 1.
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
+	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
 	 */
-	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState, float Zoom)
+	public FlxGame(int GameSizeX,int GameSizeY,Class<? extends FlxState> InitialState,float Zoom)
 	{
-		this(GameSizeX, GameSizeY, InitialState, Zoom, 30, 30, false, FlxCamera.STRETCH);
+		this(GameSizeX,GameSizeY,InitialState,Zoom,30,30,false,FlxCamera.STRETCH);
 	}
 
 	/**
 	 * Instantiate a new game object.
 	 * 
-	 * @param GameSizeX The width of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param GameSizeY The height of your game in game pixels, not necessarily
-	 *        final display pixels (see Zoom).
-	 * @param InitialState The class name of the state you want to create and
-	 *        switch to first (e.g. MenuState).
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
 	 */
-	public FlxGame(int GameSizeX, int GameSizeY, Class<? extends FlxState> InitialState)
+	public FlxGame(int GameSizeX,int GameSizeY,Class<? extends FlxState> InitialState)
 	{
-		this(GameSizeX, GameSizeY, InitialState, 1, 30, 30, false, FlxCamera.STRETCH);
+		this(GameSizeX,GameSizeY,InitialState,1,30,30,false,FlxCamera.STRETCH);
 	}
 
 	/**
 	 * Makes the little volume tray slide out.
 	 * 
-	 * @param Silent Whether or not it should beep.
+	 * @param	Silent	Whether or not it should beep.
 	 */
 	void showSoundTray(boolean Silent)
 	{
@@ -371,15 +319,13 @@ public class FlxGame
 			_soundTrayTimer = 1;
 			_soundTray.y = 0;
 			_soundTray.visible = true;
-			int globalVolume = Math.round(FlxG.getVolume() * 10);
+			int globalVolume = Math.round(FlxG.getVolume()*10);
 			if(FlxG.mute)
 				globalVolume = 0;
 			for(int i = 0; i < _soundTrayBars.size; i++)
 			{
-				if(i < globalVolume)
-					_soundTrayBars.get(i).setAlpha(1);
-				else
-					_soundTrayBars.get(i).setAlpha(0.5f);
+				if(i < globalVolume) _soundTrayBars.get(i).setAlpha(1);
+				else _soundTrayBars.get(i).setAlpha(0.5f);
 			}
 		}
 	}
@@ -395,15 +341,15 @@ public class FlxGame
 	/**
 	 * Internal event handler for input and focus.
 	 * 
-	 * @param Event Keyboard event.
+	 * @param	FlashEvent	Flash keyboard event.
 	 */
-	protected void onKeyUp(KeyboardEvent Event)
+	protected void onKeyUp(KeyboardEvent FlashEvent)
 	{
 		if(_debuggerUp && _debugger.watch.editing)
 			return;
 		if(!FlxG.mobile)
 		{
-			if((_debugger != null) && ((Event.keyCode == Keyboard.BACKQUOTE) || (Event.keyCode == Keyboard.BACKSLASH)))
+			if((_debugger != null) && ((FlashEvent.keyCode == Keyboard.BACKQUOTE) || (FlashEvent.keyCode == Keyboard.BACKSLASH)))
 			{
 				_debugger.visible = !_debugger.visible;
 				_debuggerUp = _debugger.visible;
@@ -416,14 +362,14 @@ public class FlxGame
 			}
 			if(useSoundHotKeys)
 			{
-				int code = Event.keyCode;
-				switch(code)
+				int c = FlashEvent.keyCode;
+				switch(c)
 				{
 					case Keyboard.NUMBER_0:
 					case Keyboard.NUMPAD_0:
 						FlxG.mute = !FlxG.mute;
 						if(FlxG.volumeHandler != null)
-							FlxG.volumeHandler.callback(FlxG.mute ? 0 : FlxG.getVolume());
+							FlxG.volumeHandler.callback(FlxG.mute?0:FlxG.getVolume());
 						showSoundTray();
 						break;
 					case Keyboard.MINUS:
@@ -445,28 +391,28 @@ public class FlxGame
 		}
 		if(_replaying)
 			return;
-		FlxG.keys.handleKeyUp(Event);
+		FlxG.keys.handleKeyUp(FlashEvent);
 	}
 
 	/**
 	 * Internal event handler for input and focus.
 	 * 
-	 * @param Event Keyboard event.
+	 * @param	FlashEvent	Flash keyboard event.
 	 */
-	protected void onKeyDown(KeyboardEvent Event)
+	protected void onKeyDown(KeyboardEvent FlashEvent)
 	{
 		if(_debuggerUp && _debugger.watch.editing)
 			return;
-		if(_replaying && (_replayCancelKeys != null) && (_debugger == null) && (Event.keyCode != Keyboard.BACKQUOTE) && (Event.keyCode != Keyboard.BACKSLASH))
+		if(_replaying && (_replayCancelKeys != null) && (_debugger == null) && (FlashEvent.keyCode != Keyboard.BACKQUOTE) && (FlashEvent.keyCode != Keyboard.BACKSLASH))
 		{
 			// boolean cancel = false;
 			String replayCancelKey;
 			int i = 0;
-			int l = _replayCancelKeys.size;
+			int l = _replayCancelKeys.length;
 			while(i < l)
 			{
-				replayCancelKey = _replayCancelKeys.get(i++);
-				if((replayCancelKey == "ANY") || (FlxG.keys.getKeyCode(replayCancelKey) == Event.keyCode))
+				replayCancelKey = _replayCancelKeys[i++];
+				if((replayCancelKey == "ANY") || (FlxG.keys.getKeyCode(replayCancelKey) == FlashEvent.keyCode))
 				{
 					if(_replayCallback != null)
 					{
@@ -480,15 +426,15 @@ public class FlxGame
 			}
 			return;
 		}
-		FlxG.keys.handleKeyDown(Event);
+		FlxG.keys.handleKeyDown(FlashEvent);
 	}
 
 	/**
 	 * Internal event handler for input and focus.
 	 * 
-	 * @param Event Mouse event.
+	 * @param	FlashEvent	Mouse event.
 	 */
-	protected void onMouseDown(TouchEvent Event)
+	protected void onMouseDown(TouchEvent FlashEvent)
 	{
 		if(_debuggerUp)
 		{
@@ -501,10 +447,10 @@ public class FlxGame
 		{
 			String replayCancelKey;
 			int i = 0;
-			int l = _replayCancelKeys.size;
+			int l = _replayCancelKeys.length;
 			while(i < l)
 			{
-				replayCancelKey = _replayCancelKeys.get(i++);
+				replayCancelKey = _replayCancelKeys[i++];
 				if((replayCancelKey.equals("MOUSE")) || (replayCancelKey.equals("ANY")))
 				{
 					if(_replayCallback != null)
@@ -519,39 +465,39 @@ public class FlxGame
 			}
 			return;
 		}
-		FlxG.mouse.handleMouseDown(Event);
+		FlxG.mouse.handleMouseDown(FlashEvent);
 	}
 
 	/**
 	 * Internal event handler for input and focus.
 	 * 
-	 * @param Event Mouse event.
+	 * @param	FlashEvent	Flash mouse event.
 	 */
-	protected void onMouseUp(TouchEvent Event)
+	protected void onMouseUp(TouchEvent FlashEvent)
 	{
 		if((_debuggerUp && _debugger.hasMouse) || _replaying)
 			return;
-		FlxG.mouse.handleMouseUp(Event);
+		FlxG.mouse.handleMouseUp(FlashEvent);
 	}
 
 	/**
 	 * Internal event handler for input and focus.
 	 * 
-	 * @param Event Mouse event.
+	 * @param	FlashEvent	Flash mouse event.
 	 */
-	protected void onMouseWheel(MouseEvent Event)
+	protected void onMouseWheel(MouseEvent FlashEvent)
 	{
 		if((_debuggerUp && _debugger.hasMouse) || _replaying)
 			return;
-		FlxG.mouse.handleMouseWheel(Event);
+		FlxG.mouse.handleMouseWheel(FlashEvent);
 	}
 
 	/**
 	 * Internal event handler for input and focus.
 	 * 
-	 * @param Event Stage event.
+	 * @param	FlashEvent	Flash event.
 	 */
-	protected void onFocus(Event Event)
+	protected void onFocus(Event FlashEvent)
 	{
 		if(!_debuggerUp && !useSystemCursor)
 			flash.ui.Mouse.hide();
@@ -565,9 +511,9 @@ public class FlxGame
 	/**
 	 * Internal event handler for input and focus.
 	 * 
-	 * @param Event Stage event.
+	 * @param	FlashEvent	Flash event.
 	 */
-	protected void onFocusLost(Event Event)
+	protected void onFocusLost(Event FlashEvent)
 	{
 		flash.ui.Mouse.show();
 		_lostFocus = /* _focus.visible = */true;
@@ -576,15 +522,14 @@ public class FlxGame
 	}
 
 	/**
-	 * Handles the onEnterFrame call and figures out how many updates and draw
-	 * calls to do.
+	 * Handles the onEnterFrame call and figures out how many updates and draw calls to do.
 	 * 
-	 * @param Event Stage event.
+	 * @param	FlashEvent	Flash event.
 	 */
-	public void onEnterFrame(Event Event)
+	public void onEnterFrame(Event FlashEvent)
 	{
 		long mark = System.currentTimeMillis();
-		long elapsedMS = mark - _total;
+		long elapsedMS = mark-_total;
 		_total = mark;
 		updateSoundTray(elapsedMS);
 		if(!_lostFocus)
@@ -623,28 +568,28 @@ public class FlxGame
 	}
 
 	/**
-	 * If there is a state change requested during the update loop, this
-	 * function handles actual destroying the old state and related processes,
+	 * If there is a state change requested during the update loop,
+	 * this function handles actual destroying the old state and related processes,
 	 * and calls creates on the new state and plugs it into the game object.
 	 */
-	private void switchState()
+	protected void switchState()
 	{
-		// Basic reset stuff
+		//Basic reset stuff
 		FlxG.resetCameras();
 		FlxG.resetInput();
 		FlxG.destroySounds();
 		FlxG.clearBitmapCache();
 
-		// Clear the debugger overlay's Watch window
+		//Clear the debugger overlay's Watch window
 		if(_debugger != null)
 			_debugger.watch.removeAll();
 
-		// Clear any timers left in the timer manager
+		//Clear any timers left in the timer manager
 		TimerManager timerManager = FlxTimer.getManager();
 		if(timerManager != null)
 			timerManager.clear();
 
-		// Destroy the old state (if there is an old state)
+		//Destroy the old state (if there is an old state)
 		if(_state != null)
 		{
 			_state.destroy();
@@ -658,21 +603,21 @@ public class FlxGame
 		}
 		else
 		{
-			// Finally assign and create the new state
+			//Finally assign and create the new state
 			_state = _requestedState;
 			_state.create();
 		}
-
 	}
 
 	/**
-	 * This is the main game update logic section. The onEnterFrame() handler is
-	 * in charge of calling this the appropriate number of times each frame.
+	 * This is the main game update logic section.
+	 * The onEnterFrame() handler is in charge of calling this
+	 * the appropriate number of times each frame.
 	 * This block handles state changes, replays, all that good stuff.
 	 */
 	protected void step()
 	{
-		// handle game reset request
+		//handle game reset request
 		if(_requestedReset)
 		{
 			_requestedReset = false;
@@ -691,11 +636,11 @@ public class FlxGame
 			FlxG.reset();
 		}
 
-		// handle replay-related requests
+		//handle replay-related requests
 		if(_recordingRequested)
 		{
 			_recordingRequested = false;
-			_replay.create((float) FlxG.globalSeed);
+			_replay.create(FlxG.globalSeed);
 			_recording = true;
 			if(_debugger != null)
 			{
@@ -713,11 +658,11 @@ public class FlxGame
 			_replaying = true;
 		}
 
-		// handle state switching requests
+		//handle state switching requests
 		if(_state != _requestedState)
 			switchState();
 
-		// finally actually step through the game physics
+		//finally actually step through the game physics
 		FlxBasic._ACTIVECOUNT = 0;
 		if(_replaying)
 		{
@@ -767,20 +712,20 @@ public class FlxGame
 	 */
 	protected void updateSoundTray(float MS)
 	{
-		// animate stupid sound tray thing
+		//animate stupid sound tray thing
 
 		if(_soundTray != null)
 		{
 			if(_soundTrayTimer > 0)
-				_soundTrayTimer -= MS / 1000;
+				_soundTrayTimer -= MS/1000;
 			else if(_soundTray.y > -_soundTray.height)
 			{
-				_soundTray.y -= (MS / 1000) * FlxG.height * 2;
+				_soundTray.y -= (MS/1000)*FlxG.height*2;
 				if(_soundTray.y <= -_soundTray.height)
 				{
 					_soundTray.visible = false;
 
-					// Save sound preferences
+					//Save sound preferences
 					FlxSave soundPrefs = new FlxSave();
 					if(soundPrefs.bind("flixel"))
 					{
@@ -794,14 +739,14 @@ public class FlxGame
 	}
 
 	/**
-	 * This function is called by step() and updates the actual game state. May
-	 * be called multiple times per "frame" or draw call.
+	 * This function is called by step() and updates the actual game state.
+	 * May be called multiple times per "frame" or draw call.
 	 */
 	protected void update()
 	{
 		long mark = System.currentTimeMillis();
 
-		FlxG.elapsed = FlxG.timeScale * (_step / 1000.f);
+		FlxG.elapsed = FlxG.timeScale*(_step/1000.f);
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
 		_state.update();
@@ -813,12 +758,11 @@ public class FlxGame
 			FlxG.visualDebug = !FlxG.visualDebug;
 
 		if(_debuggerUp)
-			_debugger.perf.flixelUpdate((int) (System.currentTimeMillis() - mark));
+			_debugger.perf.flixelUpdate((int)(System.currentTimeMillis()-mark));
 	}
 
 	/**
-	 * Goes through the game state and draws all the game objects and special
-	 * effects.
+	 * Goes through the game state and draws all the game objects and special effects.
 	 */
 	protected void draw()
 	{
@@ -860,35 +804,34 @@ public class FlxGame
 		}
 		FlxG.batch.end();
 		if(_debuggerUp)
-			_debugger.perf.flixelDraw((int) (System.currentTimeMillis() - mark));
+			_debugger.perf.flixelDraw((int)(System.currentTimeMillis()-mark));
 	}
 
 	/**
-	 * Used to instantiate the guts of the flixel game object once we have a
-	 * valid reference to the root.
+	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
 	 * 
-	 * @param event Just a system event, not too important for our purposes.
+	 * @param	FlashEvent	Just a Flash system event, not too important for our purposes.
 	 */
-	protected void create(Event event)
+	protected void create(Event FlashEvent)
 	{
 		if(_created)
 			return;
 		stage.removeEventListener(Event.ADDED_TO_STAGE, addedToStageListener);
 		_total = System.currentTimeMillis();
 
-		// Enable logging
+		//Enable logging
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-		// TODO: Move this back up to constructor
+		//TODO: Move this back up to constructor
 		if(!useSystemCursor)
 			flash.ui.Mouse.hide();
 
-		// Set up OpenGL
+		//Set up OpenGL
 		FlxG._gl = Gdx.gl20;
 
 		FlxG.batch = new SpriteBatch();
 
-		// Add basic input event listeners and mouse container
+		//Add basic input event listeners and mouse container
 		stage.addEventListener(TouchEvent.TOUCH_BEGIN, new IEventListener()
 		{
 			@Override
@@ -930,26 +873,26 @@ public class FlxGame
 			}
 		});
 
-		// Detect whether or not we're running on a mobile device
+		//Detect whether or not we're running on a mobile device
 		FlxG.mobile = (Gdx.app.getType().equals(ApplicationType.Android) || Gdx.app.getType().equals(ApplicationType.iOS));
 
-		// Let mobile devs opt out of unnecessary overlays.
+		//Let mobile devs opt out of unnecessary overlays.
 		if(!FlxG.mobile)
 		{
-			// Debugger overlay
+			//Debugger overlay
 			if(FlxG.debug || forceDebugger)
 			{
-				// _debugger = new
-				// FlxDebugger(FlxG.width*FlxCamera.defaultZoom,FlxG.height*FlxCamera.defaultZoom);
+				// _debugger = new FlxDebugger(FlxG.width*FlxCamera.defaultZoom,FlxG.height*FlxCamera.defaultZoom);
 				// addChild(_debugger);
 			}
 
-			// Volume display tab
+			//Volume display tab
 			createSoundTray();
+			
+			//Focus gained/lost monitoring
 			createFocusScreen();
 		}
 
-		// Focus gained/lost monitoring
 		stage.addEventListener(Event.DEACTIVATE, new IEventListener()
 		{
 			@Override
@@ -967,7 +910,7 @@ public class FlxGame
 			}
 		});
 
-		// More event listeners
+		//More event listeners
 		stage.addEventListener(Event.RESIZE, new IEventListener()
 		{
 			@Override
@@ -985,7 +928,7 @@ public class FlxGame
 			}
 		});
 
-		// Finally, set up an event listener for the actual game loop stuff.
+		//Finally, set up an event listener for the actual game loop stuff.
 		stage.addEventListener(Event.ENTER_FRAME, new IEventListener()
 		{
 			@Override
@@ -994,6 +937,7 @@ public class FlxGame
 				onEnterFrame(e);
 			}
 		});
+		
 		_created = true;
 
 		// TODO: Move to FlxDebugger
@@ -1005,8 +949,7 @@ public class FlxGame
 	}
 
 	/**
-	 * Sets up the "sound tray", the little volume meter that pops down
-	 * sometimes.
+	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
 	// TODO: Sound tray
 	protected void createSoundTray()
@@ -1052,10 +995,9 @@ public class FlxGame
 		// _soundTray.visible = false;
 		// addChild(_soundTray);
 
-		// load saved sound preferences for this game if they exist
+		//load saved sound preferences for this game if they exist
 		FlxSave soundPrefs = new FlxSave();
-		if(soundPrefs.bind("flixel"))// && (soundPrefs.data.get("sound") !=
-										// null))
+		if(soundPrefs.bind("flixel"))// && (soundPrefs.data.get("sound") != null))
 		{
 			if(soundPrefs.data.get("volume", Float.class) != null)
 				FlxG.setVolume(soundPrefs.data.get("volume", Float.class));
@@ -1066,8 +1008,7 @@ public class FlxGame
 	}
 
 	/**
-	 * Sets up the darkened overlay with the big white "play" button that
-	 * appears when a flixel game loses focus.
+	 * Sets up the darkened overlay with the big white "play" button that appears when a flixel game loses focus.
 	 */
 	// TODO: Focus screen
 	protected void createFocusScreen()
@@ -1108,17 +1049,22 @@ public class FlxGame
 		// addChild(_focus);
 	}
 
+	/**
+	 * Internal event handler for stage resizing.
+	 */
 	protected void onResize()
-	{
-		// TODO: get width and height without referencing libgdx?
-		FlxG.screenWidth = Gdx.graphics.getWidth();
-		FlxG.screenHeight = Gdx.graphics.getHeight();
-
-		// reset all the cameras
+	{		
+		if(FlxCamera.defaultScaleMode == FlxCamera.RESIZE_WIDTH)
+			FlxG.width = (int)((stage.getStageWidth()/(float)stage.getStageHeight())*FlxG.height);
+		
+		//reset all the cameras
 		for(FlxCamera camera : FlxG.cameras)
 			camera.setScaleMode(camera.getScaleMode());
 	}
 
+	/**
+	 * Internal event handler for stage destruction.
+	 */
 	protected void destroy()
 	{
 		_font.dispose();
@@ -1128,4 +1074,16 @@ public class FlxGame
 		FlxG.disposeAssetManager();
 		FlxG.batch.dispose();
 	}
+	
+	/**
+	 * Internal event listener.
+	 */
+	private final IEventListener addedToStageListener = new IEventListener()
+	{
+		@Override
+		public void onEvent(Event e)
+		{
+			create(e);
+		}
+	};
 }

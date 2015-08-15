@@ -54,7 +54,8 @@ public class GestureManager extends FlxBasic implements GestureListener
 
 	/**
 	 * Add a <code>FlxGesture</code> object.
-	 * @param Gesture	The object that will be added.
+	 * 
+	 * @param	Gesture		The object that will be added.
 	 */
 	public void add(FlxGesture Gesture)
 	{
@@ -63,7 +64,8 @@ public class GestureManager extends FlxBasic implements GestureListener
 
 	/**
 	 * Remove a <code>FlxGesture</code> object.
-	 * @param Gesture	The object that will be removed.
+	 * 
+	 * @param	Gesture		The object that will be removed.
 	 */
 	public void remove(FlxGesture Gesture)
 	{
@@ -90,9 +92,10 @@ public class GestureManager extends FlxBasic implements GestureListener
 	
 	/**
 	 * Update gestures by gesture type, e.g. <code>FlxGesture.PAN, FlxGesture.DIRECTION_DOWN, etc.</code>.
-	 * @param Gesture	The gesture type that needs to be updated.
+	 * 
+	 * @param	Gesture		The gesture type that needs to be updated.
 	 */
-	private void updateGestures(int Gesture, GestureData data)
+	private void updateGestures(int Gesture, GestureData Data)
 	{
 		int i = _gestures.size - 1;
 		FlxGesture gesture;
@@ -100,69 +103,69 @@ public class GestureManager extends FlxBasic implements GestureListener
 		{
 			gesture = _gestures.get(i--);
 			if(gesture != null)
-				gesture.callback(Gesture, data);
+				gesture.callback(Gesture, Data);
 		}
 	}
 
 	@Override
-	public boolean touchDown(float x, float y, int pointer, int button)
+	public boolean touchDown(float X, float Y, int Pointer, int Button)
 	{
 		data.clear();
-		data.x = x;
-		data.y = y;
-		data.pointer = pointer;
-		data.button = button;
+		data.x = X;
+		data.y = Y;
+		data.pointer = Pointer;
+		data.button = Button;
 		updateGestures(FlxGesture.TOUCH_DOWN, data);
 		return false;
 	}
 
 	@Override
-	public boolean tap(float x, float y, int count, int button)
+	public boolean tap(float X, float Y, int Count, int Button)
 	{
 		if(afterLongPress)
 			afterLongPress = false;
 		else
 		{
 			data.clear();
-			data.x = x;
-			data.y = y;
-			data.button = button;
-			if(count == 1)
+			data.x = X;
+			data.y = Y;
+			data.button = Button;
+			if(Count == 1)
 				updateGestures(FlxGesture.TAP, data);
-			else if(count == 2)
+			else if(Count == 2)
 				updateGestures(FlxGesture.DOUBLE_TAP, data);
 		}
 		return false;
 	}
 
 	@Override
-	public boolean longPress(float x, float y)
+	public boolean longPress(float X, float Y)
 	{
 		data.clear();
-		data.x = x;
-		data.y = y;
+		data.x = X;
+		data.y = Y;
 		updateGestures(FlxGesture.LONG_PRESS, data);
 		afterLongPress = true;
 		return false;
 	}
 
 	@Override
-	public boolean fling(float velocityX, float velocityY, int button)
+	public boolean fling(float VelocityX, float VelocityY, int Button)
 	{
 		data.clear();
-		data.velocityX = velocityX;
-		data.velocityY = velocityY;
-		data.button = button;
-		if(Math.abs(velocityX) > Math.abs(velocityY))
+		data.velocityX = VelocityX;
+		data.velocityY = VelocityY;
+		data.button = Button;
+		if(Math.abs(VelocityX) > Math.abs(VelocityY))
 		{
-			if(velocityX > 0)
+			if(VelocityX > 0)
 				updateGestures(FlxGesture.DIRECTION_RIGHT, data);
 			else
 				updateGestures(FlxGesture.DIRECTION_LEFT, data);
 		}
 		else
 		{
-			if(velocityY > 0)
+			if(VelocityY > 0)
 				updateGestures(FlxGesture.DIRECTION_DOWN, data);
 			else
 				updateGestures(FlxGesture.DIRECTION_UP, data);
@@ -171,46 +174,46 @@ public class GestureManager extends FlxBasic implements GestureListener
 	}
 
 	@Override
-	public boolean pan(float x, float y, float deltaX, float deltaY)
+	public boolean pan(float X, float Y, float DeltaX, float DeltaY)
 	{
 		data.clear();
-		data.x = x;
-		data.y = y;
-		data.deltaX = deltaX;
-		data.deltaY = deltaY;
+		data.x = X;
+		data.y = Y;
+		data.deltaX = DeltaX;
+		data.deltaY = DeltaY;
 		updateGestures(FlxGesture.PAN, data);
 		return false;
 	}
 	
 	@Override
-	public boolean panStop(float x, float y, int pointer, int button)
+	public boolean panStop(float X, float Y, int Pointer, int Button)
 	{
 		data.clear();
-		data.x = x;
-		data.y = y;
-		data.pointer = pointer;
-		data.button = button;
+		data.x = X;
+		data.y = Y;
+		data.pointer = Pointer;
+		data.button = Button;
 		return false;
 	}
 
 	@Override
-	public boolean zoom(float originalDistance, float currentDistance)
+	public boolean zoom(float OriginalDistance, float CurrentDistance)
 	{
 		data.clear();
-		data.originalDistance = originalDistance;
-		data.currentDistance = currentDistance;
+		data.originalDistance = OriginalDistance;
+		data.currentDistance = CurrentDistance;
 		updateGestures(FlxGesture.ZOOM, data);
 		return false;
 	}
 
 	@Override
-	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2)
+	public boolean pinch(Vector2 InitialPointer1, Vector2 InitialPointer2, Vector2 Pointer1, Vector2 Pointer2)
 	{
 		data.clear();
-		data.initialPointer1 = initialPointer1;
-		data.initialPointer2 = initialPointer2;
-		data.pointer1 = pointer1;
-		data.pointer2 = pointer2;
+		data.initialPointer1 = InitialPointer1;
+		data.initialPointer2 = InitialPointer2;
+		data.pointer1 = Pointer1;
+		data.pointer2 = Pointer2;
 		updateGestures(FlxGesture.PINCH, data);
 		return false;
 	}

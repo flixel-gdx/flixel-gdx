@@ -8,11 +8,11 @@ import org.flixel.system.replay.MouseRecord;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * The replay object both records and replays game recordings, as well as handle
- * saving and loading replays to and from files. Gameplay recordings are
- * essentially a list of keyboard and mouse inputs, but since Flixel is fairly
- * deterministic, we can use these to play back recordings of gameplay with a
- * decent amount of fidelity.
+ * The replay object both records and replays game recordings,
+ * as well as handle saving and loading replays to and from files.
+ * Gameplay recordings are essentially a list of keyboard and mouse inputs,
+ * but since Flixel is fairly deterministic, we can use these to play back
+ * recordings of gameplay with a decent amount of fidelity.
  * 
  * @author Thomas Weston
  */
@@ -40,19 +40,16 @@ public class FlxReplay
 	 */
 	protected Array<FrameRecord> _frames;
 	/**
-	 * Internal tracker for max number of frames we can fit before growing the
-	 * <code>_frames</code> again.
+	 * Internal tracker for max number of frames we can fit before growing the <code>_frames</code> again.
 	 */
 	protected int _capacity;
 	/**
-	 * Internal helper variable for keeping track of where we are in
-	 * <code>_frames</code> during recording or replay.
+	 * Internal helper variable for keeping track of where we are in <code>_frames</code> during recording or replay.
 	 */
 	protected int _marker;
 
 	/**
-	 * Instantiate a new replay object. Doesn't actually do much until you call
-	 * create() or load().
+	 * Instantiate a new replay object.  Doesn't actually do much until you call create() or load().
 	 */
 	public FlxReplay()
 	{
@@ -70,20 +67,19 @@ public class FlxReplay
 	 */
 	public void destroy()
 	{
-		if(_frames != null)
-		{
-			int i = frameCount - 1;
-			while(i >= 0)
-				_frames.get(i--).destroy();
-			_frames = null;
-		}
+		if(_frames == null)
+			return;
+		int i = frameCount-1;
+		while(i >= 0)
+			_frames.get(i--).destroy();
+		_frames = null;
+		
 	}
 
 	/**
-	 * Create a new gameplay recording. Requires the current random number
-	 * generator seed.
+	 * Create a new gameplay recording.  Requires the current random number generator seed.
 	 * 
-	 * @param Seed The current seed from the random number generator.
+	 * @param	Seed	The current seed from the random number generator.
 	 */
 	public void create(float Seed)
 	{
@@ -94,11 +90,11 @@ public class FlxReplay
 	}
 
 	/**
-	 * Load replay data from a <code>String</code> object. Strings can come from
-	 * embedded assets or external files loaded through the debugger overlay.
+	 * Load replay data from a <code>String</code> object.
+	 * Strings can come from embedded assets or external
+	 * files loaded through the debugger overlay.
 	 * 
-	 * @param FileContents A <code>String</code> object containing a gameplay
-	 *        recording.
+	 * @param	FileContents	A <code>String</code> object containing a gameplay recording.
 	 */
 	public void load(String FileContents)
 	{
@@ -130,8 +126,7 @@ public class FlxReplay
 	}
 
 	/**
-	 * Common initialization terms used by both <code>create()</code> and
-	 * <code>load()</code> to set up the replay object.
+	 * Common initialization terms used by both <code>create()</code> and <code>load()</code> to set up the replay object.
 	 */
 	protected void init()
 	{
@@ -142,16 +137,15 @@ public class FlxReplay
 
 	/**
 	 * Save the current recording data off to a <code>String</code> object.
-	 * Basically goes through and calls <code>FrameRecord.save()</code> on each
-	 * frame in the replay.
+	 * Basically goes through and calls <code>FrameRecord.save()</code> on each frame in the replay.
 	 * 
-	 * @return The gameplay recording in simple ASCII format.
+	 * @return	The gameplay recording in simple ASCII format.
 	 */
 	public String save()
 	{
 		if(frameCount <= 0)
 			return null;
-		String output = seed + "\n";
+		String output = seed+"\n";
 		int i = 0;
 		while(i < frameCount)
 			output += _frames.get(i++).save() + "\n";
@@ -159,8 +153,7 @@ public class FlxReplay
 	}
 
 	/**
-	 * Get the current input data from the input managers and store it in a new
-	 * frame record.
+	 * Get the current input data from the input managers and store it in a new frame record.
 	 */
 	public void recordFrame()
 	{
@@ -171,7 +164,7 @@ public class FlxReplay
 			frame++;
 			return;
 		}
-		_frames.add(new FrameRecord().create(frame++, keysRecord, mouseRecord));
+		_frames.add(new FrameRecord().create(frame++,keysRecord,mouseRecord));
 		frameCount++;
 		if(frameCount >= _capacity)
 		{

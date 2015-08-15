@@ -2,11 +2,14 @@ package org.flixel.system.debug;
 
 import org.flixel.FlxG;
 import org.flixel.system.FlxWindow;
+import org.flixel.system.gdx.text.GdxTextField;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.IntArray;
+
+import flash.text.TextField;
+import flash.text.TextFormat;
 
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
@@ -15,7 +18,7 @@ import com.badlogic.gdx.utils.IntArray;
  */
 public class Perf extends FlxWindow
 {
-	protected BitmapFont _text;
+	protected TextField _text;
 
 	protected long _lastTime;
 	protected int _updateTimer;
@@ -32,31 +35,34 @@ public class Perf extends FlxWindow
 	protected int _visibleObjectMarker;
 
 	/**
-	 * Creates flashPlayerFramerate new window object. This Flash-based class is
-	 * mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title The name of the window, displayed in the header bar.
-	 * @param Width The initial width of the window.
-	 * @param Height The initial height of the window.
-	 * @param Resizable Whether you can change the size of the window with
-	 *        flashPlayerFramerate drag handle.
-	 * @param Bounds A rectangle indicating the valid screen area for the
-	 *        window.
-	 * @param BGColor What color the window background should be, default is
-	 *        gray and transparent.
-	 * @param TopColor What color the window header bar should be, default is
-	 *        black and transparent.
+	 * @param	Title		The name of the window, displayed in the header bar.
+	 * @param	Width		The initial width of the window.
+	 * @param	Height		The initial height of the window.
+	 * @param	Resizable	Whether you can change the size of the window with flashPlayerFramerate drag handle.
+	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
+	 * @param	BGColor		What color the window background should be, default is gray and transparent.
+	 * @param	TopColor	What color the window header bar should be, default is black and transparent.
 	 */
 	public Perf(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds, int BGColor, int TopColor)
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
-		resize(90, 66);
+		resize(90,66);
 
 		_lastTime = 0;
 		_updateTimer = 0;
 
-		_text = new BitmapFont(Gdx.files.classpath("org/flixel/data/font/nokiafc22.fnt"), Gdx.files.classpath("org/flixel/data/font/nokiafc22.png"), true);
-
+		_text = new GdxTextField();
+		_text.width = _width;
+		_text.x = 2;
+		_text.y = 15;
+		//_text.multiline = true;
+		//_text.wordWrap = true;
+		//_text.selectable = true;
+		_text.defaultTextFormat = new TextFormat("Courier",12,0xffffff);
+		//addChild(_text);
+		
 		_flixelUpdate = new IntArray(32);
 		_flixelUpdate.size = 32;
 		_flixelUpdateMarker = 0;
@@ -75,18 +81,14 @@ public class Perf extends FlxWindow
 	}
 
 	/**
-	 * Creates flashPlayerFramerate new window object. This Flash-based class is
-	 * mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title The name of the window, displayed in the header bar.
-	 * @param Width The initial width of the window.
-	 * @param Height The initial height of the window.
-	 * @param Resizable Whether you can change the size of the window with
-	 *        flashPlayerFramerate drag handle.
-	 * @param Bounds A rectangle indicating the valid screen area for the
-	 *        window.
-	 * @param BGColor What color the window background should be, default is
-	 *        gray and transparent.
+	 * @param	Title		The name of the window, displayed in the header bar.
+	 * @param	Width		The initial width of the window.
+	 * @param	Height		The initial height of the window.
+	 * @param	Resizable	Whether you can change the size of the window with flashPlayerFramerate drag handle.
+	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
+	 * @param	BGColor		What color the window background should be, default is gray and transparent.
 	 */
 	public Perf(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds, int BGColor)
 	{
@@ -94,16 +96,13 @@ public class Perf extends FlxWindow
 	}
 
 	/**
-	 * Creates flashPlayerFramerate new window object. This Flash-based class is
-	 * mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title The name of the window, displayed in the header bar.
-	 * @param Width The initial width of the window.
-	 * @param Height The initial height of the window.
-	 * @param Resizable Whether you can change the size of the window with
-	 *        flashPlayerFramerate drag handle.
-	 * @param Bounds A rectangle indicating the valid screen area for the
-	 *        window.
+	 * @param	Title		The name of the window, displayed in the header bar.
+	 * @param	Width		The initial width of the window.
+	 * @param	Height		The initial height of the window.
+	 * @param	Resizable	Whether you can change the size of the window with flashPlayerFramerate drag handle.
+	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
 	 */
 	public Perf(String Title, float Width, float Height, boolean Resizable, Rectangle Bounds)
 	{
@@ -111,14 +110,12 @@ public class Perf extends FlxWindow
 	}
 
 	/**
-	 * Creates flashPlayerFramerate new window object. This Flash-based class is
-	 * mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title The name of the window, displayed in the header bar.
-	 * @param Width The initial width of the window.
-	 * @param Height The initial height of the window.
-	 * @param Resizable Whether you can change the size of the window with
-	 *        flashPlayerFramerate drag handle.
+	 * @param	Title		The name of the window, displayed in the header bar.
+	 * @param	Width		The initial width of the window.
+	 * @param	Height		The initial height of the window.
+	 * @param	Resizable	Whether you can change the size of the window with flashPlayerFramerate drag handle.
 	 */
 	public Perf(String Title, float Width, float Height, boolean Resizable)
 	{
@@ -126,12 +123,11 @@ public class Perf extends FlxWindow
 	}
 
 	/**
-	 * Creates flashPlayerFramerate new window object. This Flash-based class is
-	 * mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
-	 * @param Title The name of the window, displayed in the header bar.
-	 * @param Width The initial width of the window.
-	 * @param Height The initial height of the window.
+	 * @param	Title		The name of the window, displayed in the header bar.
+	 * @param	Width		The initial width of the window.
+	 * @param	Height		The initial height of the window.
 	 */
 	public Perf(String Title, float Width, float Height)
 	{
@@ -143,6 +139,7 @@ public class Perf extends FlxWindow
 	 */
 	public void destroy()
 	{
+		//removeChild(_text);
 		_text = null;
 		_flixelUpdate = null;
 		_flixelDraw = null;
@@ -153,9 +150,8 @@ public class Perf extends FlxWindow
 	}
 
 	/**
-	 * Called each frame, but really only updates once every second or so, to
-	 * save on performance. Takes all the data in the accumulators and parses it
-	 * into useful performance data.
+	 * Called each frame, but really only updates once every second or so, to save on performance.
+	 * Takes all the data in the accumulators and parses it into useful performance data.
 	 */
 	public void update()
 	{
@@ -173,20 +169,13 @@ public class Perf extends FlxWindow
 			StringBuilder output = new StringBuilder();
 
 			float flashPlayerFramerate = 0;
-
 			i = 0;
 			while(i < _flashMarker)
 				flashPlayerFramerate += _flash.get(i++);
 			flashPlayerFramerate /= _flashMarker;
-			output.append((int) (1 / (flashPlayerFramerate / 1000)) + "/" + FlxG.getFlashFramerate() + "fps\n");
+			output.append((int)(1 /(flashPlayerFramerate/1000)) + "/" + FlxG.getFlashFramerate() + "fps\n");
 
-			output.append((float) (((Gdx.app.getJavaHeap() + Gdx.app.getNativeHeap()) * 0.000000954f)/*
-																									 * .
-																									 * toFixed
-																									 * (
-																									 * 2
-																									 * )
-																									 */) + "MB\n");
+			output.append((float)( ( (Gdx.app.getJavaHeap()+Gdx.app.getNativeHeap()) * 0.000000954f)/*.toFixed(2)*/ ) + "MB\n");
 
 			int updateTime = 0;
 			i = 0;
@@ -201,10 +190,9 @@ public class Perf extends FlxWindow
 				activeCount += _activeObject.get(i);
 				visibleCount += _visibleObject.get(i++);
 			}
-			if(_objectMarker != 0)
-				activeCount /= _objectMarker;
+			activeCount /= _objectMarker;
 
-			output.append("U:" + activeCount + " " + (int) ((float) updateTime / _flixelDrawMarker) + "ms\n");
+			output.append("U:" + activeCount + " " + (int)((float)updateTime/_flixelDrawMarker) + "ms\n");
 
 			int drawTime = 0;
 			i = 0;
@@ -217,10 +205,10 @@ public class Perf extends FlxWindow
 				visibleCount += _visibleObject.get(i++);
 			visibleCount /= _visibleObjectMarker;
 
-			output.append("D:" + visibleCount + " " + (int) ((float) drawTime / _flixelDrawMarker) + "ms");
+			output.append("D:" + visibleCount + " " + (int)((float)drawTime/_flixelDrawMarker) + "ms");
 
-			// _text.text = output; can't draw here now.
-			// this.output = output.toString();
+			_text.setText(output.toString());
+			
 			_flixelUpdateMarker = 0;
 			_flixelDrawMarker = 0;
 			_flashMarker = 0;
@@ -233,75 +221,50 @@ public class Perf extends FlxWindow
 	/**
 	 * Keep track of how long updates take.
 	 * 
-	 * @param Time How long this update took.
+	 * @param	Time	How long this update took.
 	 */
 	public void flixelUpdate(int Time)
 	{
-		// if(_flixelUpdate.size <= _flixelUpdateMarker)
-		// return;
 		_flixelUpdate.set(_flixelUpdateMarker++, Time);
 	}
 
 	/**
 	 * Keep track of how long renders take.
 	 * 
-	 * @param Time How long this render took.
+	 * @param	Time	How long this render took.
 	 */
 	public void flixelDraw(int Time)
 	{
-		// if(_flixelDraw.size <= _flixelDrawMarker)
-		// return;
 		_flixelDraw.set(_flixelDrawMarker++, Time);
 	}
 
 	/**
 	 * Keep track of how long the Flash player and browser take.
 	 * 
-	 * @param Time How long Flash/browser took.
+	 * @param	Time	How long Flash/browser took.
 	 */
 	public void flash(int Time)
 	{
-		// if(_flash.size <= _flashMarker)
-		// return;
 		_flash.set(_flashMarker++, Time);
 	}
 
 	/**
 	 * Keep track of how many objects were updated.
 	 * 
-	 * @param Count How many objects were updated.
+	 * @param	Count	How many objects were updated.
 	 */
 	public void activeObjects(int Count)
 	{
-		// if(_activeObject.size <= _objectMarker)
-		// return;
 		_activeObject.set(_objectMarker++, Count);
 	}
 
 	/**
 	 * Keep track of how many objects were updated.
 	 * 
-	 * @param Count How many objects were updated.
+	 * @param	Count	How many objects were updated.
 	 */
 	public void visibleObjects(int Count)
 	{
-		// if(_visibleObject.size <= _visibleObjectMarker)
-		// return;
 		_visibleObject.set(_visibleObjectMarker++, Count);
-	}
-
-	public void draw()
-	{
-		// if(output != null)
-		{/*
-		 * ShapeRenderer flashGfx = FlxG.flashGfx;
-		 * flashGfx.setProjectionMatrix(FlxG.camera.glCamera.combined);
-		 * flashGfx.begin(ShapeType.FilledRectangle);
-		 * flashGfx.setColor(FlxU.colorFromHex(0x22222222));
-		 * flashGfx.filledRect(FlxG.width-60, 0, 60, 50); flashGfx.end();
-		 * FlxG.batch.begin(); _text.drawMultiLine(FlxG.batch, output,
-		 * FlxG.width-55, 5); FlxG.batch.end();
-		 */
-		}
 	}
 }

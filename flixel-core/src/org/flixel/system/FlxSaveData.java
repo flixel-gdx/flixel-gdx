@@ -24,7 +24,7 @@ public class FlxSaveData
 	/**
 	 * Creates a new <code>FlxSaveData</code>
 	 * 
-	 * @param SharedObject The Preferences to save to.
+	 * @param	SharedObject	The Preferences to save to.
 	 */
 	public FlxSaveData(Preferences SharedObject)
 	{
@@ -35,8 +35,8 @@ public class FlxSaveData
 	/**
 	 * Add a value to the data.
 	 * 
-	 * @param Key A <code>String</code>, used to retrieve the object later.
-	 * @param Value The object to store.
+	 * @param	Key		A <code>String</code>, used to retrieve the object later.
+	 * @param	Value	The object to store.
 	 */
 	public void put(String Key, Object Value)
 	{
@@ -44,13 +44,12 @@ public class FlxSaveData
 	}
 
 	/**
-	 * Get a value from the shared object. Returns null if the key doesn't
-	 * exist.
+	 * Get a value from the shared object. Returns null if the key doesn't exist.
 	 * 
-	 * @param Key The object's key.
-	 * @param Type The class of the object you are retrieving.
+	 * @param	Key		The object's key.
+	 * @param	Type	The class of the object you are retrieving.
 	 * 
-	 * @return The object.
+	 * @return	The object.
 	 */
 	public <T> T get(String Key, Class<T> Type)
 	{

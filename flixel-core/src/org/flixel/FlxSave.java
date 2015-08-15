@@ -18,7 +18,6 @@ public class FlxSave
 	static protected final int SUCCESS = 0;
 	static protected final int PENDING = 1;
 	static protected final int ERROR = 2;
-	
 	/**
 	 * Allows you to directly access the data container in the local shared object.
 	 * @default null
@@ -75,16 +74,13 @@ public class FlxSave
 	{
 		destroy();
 		name = Name;
-		
 		_sharedObject = Gdx.app.getPreferences(name);
-		
-		if (_sharedObject == null)
+		if(_sharedObject == null)
 		{
 			FlxG.log("ERROR: There was a problem binding to\nthe shared object data from FlxSave.");
 			destroy();
 			return false;
 		}
-		
 		data = new FlxSaveData(_sharedObject);
 		return true;
 	}
@@ -99,7 +95,7 @@ public class FlxSave
 	 *
 	 * @return	The result of result of the <code>flush()</code> call (see below for more details).
 	 */
-	public boolean close(int MinFileSize, IFlxSave OnComplete)
+	public boolean close(int MinFileSize,IFlxSave OnComplete)
 	{
 		_closeRequested = true;
 		return flush(MinFileSize,OnComplete);
@@ -116,7 +112,7 @@ public class FlxSave
 	 */
 	public boolean close(int MinFileSize)
 	{
-		return close(MinFileSize, null);
+		return close(MinFileSize,null);
 	}
 	
 	/**
@@ -128,7 +124,7 @@ public class FlxSave
 	 */
 	public boolean close()
 	{
-		return close(0, null);
+		return close(0,null);
 	}
 
 	/**
@@ -139,7 +135,7 @@ public class FlxSave
 	 *
 	 * @return	Whether or not the data was written immediately.  False could be an error OR a storage request popup.
 	 */
-	public boolean flush(int MinFileSize, IFlxSave OnComplete)
+	public boolean flush(int MinFileSize,IFlxSave OnComplete)
 	{
 		if(!checkBinding())
 			return false;
@@ -159,17 +155,17 @@ public class FlxSave
 	 */
 	public boolean flush(int MinFileSize)
 	{
-		return flush(MinFileSize, null);
+		return flush(MinFileSize,null);
 	}
 	
 	/**
 	 * Writes the local shared object to disk immediately.  Leaves the object open in memory.
 	 *
-	 * @return Whether or not the data was written immediately.  False could be an error OR a storage request popup.
+	 * @return	Whether or not the data was written immediately.  False could be an error OR a storage request popup.
 	 */
 	public boolean flush()
 	{
-		return flush(0, null);	
+		return flush(0,null);	
 	}
 	
 	/**
@@ -177,7 +173,7 @@ public class FlxSave
 	 * Data is immediately erased and the object is saved that way,
 	 * so use with caution!
 	 * 
-	 * @return Returns false if the save object is not bound yet.
+	 * @return	Returns false if the save object is not bound yet.
 	 */
 	public boolean erase()
 	{
@@ -192,7 +188,7 @@ public class FlxSave
 	 * Event handler for special case storage requests.
 	 * Handles logging of errors and calling of callback.
 	 *  
-	 * @return Whether the operation was a success or not.
+	 * @return	Whether the operation was a success or not.
 	 */
 	protected boolean onDone()
 	{
@@ -206,7 +202,7 @@ public class FlxSave
 	/**
 	 * Handy utility function for checking and warning if the shared object is bound yet or not.
 	 * 
-	 * @return Whether the shared object was bound yet.
+	 * @return	Whether the shared object was bound yet.
 	 */
 	protected boolean checkBinding()
 	{

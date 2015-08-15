@@ -31,8 +31,7 @@ public class SensorManager extends FlxBasic
 	public static float azimuth;
 	/**
 	 * The pitch is the angle of the device's orientation around the x-axis. The
-	 * positive x-axis roughly points to the west and is orthogonal to the z-
-	 * and y-axis.
+	 * positive x-axis roughly points to the west and is orthogonal to the z- and y-axis.
 	 */
 	public static float pitch;
 	/**

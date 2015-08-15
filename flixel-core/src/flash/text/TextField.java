@@ -1,6 +1,7 @@
 package flash.text;
 
 /**
+ * The TextField class is used to create display objects for text display and input.
  * 
  * @author Thomas Weston
  */

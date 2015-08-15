@@ -37,12 +37,11 @@ public class FlxSplashScreen extends FlxState
 	/**
 	 * Creates a new <code>FlxSpashScreen</code> object.
 	 * 
-	 * @param _requestedState The <code>FlxState</code> that needs to be switch
-	 *        to.
+	 * @param	State		The <code>FlxState</code> that needs to be switch to.
 	 */
-	public FlxSplashScreen(FlxState _requestedState)
+	public FlxSplashScreen(FlxState State)
 	{
-		_state = _requestedState;
+		_state = State;
 	}
 
 	@Override

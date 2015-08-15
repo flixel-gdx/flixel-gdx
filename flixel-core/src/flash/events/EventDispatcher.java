@@ -8,17 +8,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class replicates some of the EventDispatcher functionality from Flash.
+ * The EventDispatcher class is the base class for all classes that dispatch events.
  * 
  * @author Ka Wing Chin
  * @author Thomas Weston
  */
 public class EventDispatcher implements IEventDispatcher
 {
-	protected Map<String, List<IEventListener>> _listeners;
-
+	/**
+	 * All the listeners registered with this EventDispatcher.
+	 */
+	private Map<String, List<IEventListener>> _listeners;
+	/**
+	 * Used when creating a copy of the listeners list, so that it can be modified while being iterated over.
+	 */
 	private Pool<List<IEventListener>> _listenersForTypeCopyPool;
 
+	/**
+	 * Aggregates an instance of the EventDispatcher class.
+	 */
 	public EventDispatcher()
 	{
 		_listeners = new HashMap<String, List<IEventListener>>();

@@ -9,51 +9,48 @@ import org.flixel.FlxG;
  
 /**
  * A simple plugin for switching between fullscreen and windowed mode
+ * 
  * @author Noah Greenberg
  */
-public class FullscreenManager extends FlxBasic {
+public class FullscreenManager extends FlxBasic
+{
 	public String hotkey;
 	
 	private boolean inFullscreen = false;
 	private boolean useDesktopDisplayMode = false;
 	private int fullscreenWidth, fullscreenHeight, windowedWidth, windowedHeight;
 	
-	public FullscreenManager(int fullscreenWidth, int fullscreenHeight, int windowedWidth, int windowedHeight)
+	public FullscreenManager(int FullscreenWidth, int FullscreenHeight, int WindowedWidth, int WindowedHeight, String Hotkey)
 	{
-		this.fullscreenWidth = fullscreenWidth;
-		this.fullscreenHeight = fullscreenHeight;
-		this.windowedWidth = windowedWidth;
-		this.windowedHeight = windowedHeight;
+		fullscreenWidth = FullscreenWidth;
+		fullscreenHeight = FullscreenHeight;
+		windowedWidth = WindowedWidth;
+		windowedHeight = WindowedHeight;
+		hotkey = Hotkey;
 	}
 	
-	public FullscreenManager(int fullscreenWidth, int fullscreenHeight, int windowedWidth, int windowedHeight, String hotkey)
+	public FullscreenManager(int FullscreenWidth, int FullscreenHeight, int WindowedWidth, int WindowedHeight)
 	{
-		this.fullscreenWidth = fullscreenWidth;
-		this.fullscreenHeight = fullscreenHeight;
-		this.windowedWidth = windowedWidth;
-		this.windowedHeight = windowedHeight;
-		this.hotkey = hotkey;
+		this(FullscreenWidth, FullscreenHeight, WindowedWidth, WindowedHeight, null);
 	}
 	
-	public FullscreenManager(int windowedWidth, int windowedHeight)
+	public FullscreenManager(int WindowedWidth, int WindowedHeight, String Hotkey)
 	{
-		this.windowedWidth = windowedWidth;
-		this.windowedHeight = windowedHeight;
+		windowedWidth = WindowedWidth;
+		windowedHeight = WindowedHeight;
+		hotkey = Hotkey;
 		useDesktopDisplayMode = true;
 	}
 	
-	public FullscreenManager(int windowedWidth, int windowedHeight, String hotkey)
+	public FullscreenManager(int WindowedWidth, int WindowedHeight)
 	{
-		this.windowedWidth = windowedWidth;
-		this.windowedHeight = windowedHeight;
-		this.hotkey = hotkey;
-		useDesktopDisplayMode = true;
+		this(WindowedWidth, WindowedHeight, null);
 	}
 	
-	public void resize(int windowedWidth, int windowedHeight)
+	public void resize(int WindowedWidth, int WindowedHeight)
 	{
-		this.windowedWidth = windowedWidth;
-		this.windowedHeight = windowedHeight;
+		windowedWidth = WindowedWidth;
+		windowedHeight = WindowedHeight;
 	}
 	
 	/**

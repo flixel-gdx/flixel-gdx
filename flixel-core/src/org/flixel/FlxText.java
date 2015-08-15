@@ -22,6 +22,11 @@ public class FlxText extends FlxSprite
 	 */
 	protected TextField _textField;
 	/**
+	 * Whether the actual text field needs to be regenerated and stamped again.
+	 * This is NOT the same thing as <code>FlxSprite.dirty</code>.
+	 */
+	protected boolean _regen;
+	/**
 	 * Internal tracker for the text shadow color, default is clear/transparent.
 	 */
 	protected int _shadow;
@@ -37,7 +42,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText(float X, float Y, int Width, String Text, boolean EmbeddedFont)
 	{
-		super(X, Y);
+		super(X,Y);
 		width = frameWidth = Width;
 
 		if(Text == null)
@@ -49,6 +54,7 @@ public class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		
+		_regen = true;
 		_shadow = 0;
 		allowCollisions = NONE;
 		calcFrame();
@@ -97,11 +103,11 @@ public class FlxText extends FlxSprite
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	ShadowColor	An int representing the desired text shadow color 0xAARRGGBB format.
+	 * @param	ShadowColor	A uint representing the desired text shadow color 0xAARRGGBB format.
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(String Font, float Size, int Color, String Alignment, int ShadowColor)
+	public FlxText setFormat(String Font,float Size,int Color,String Alignment,int ShadowColor)
 	{
 		if(Font == null)
 			Font = "";
@@ -112,11 +118,9 @@ public class FlxText extends FlxSprite
 		format.align = Alignment;
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
-
 		_shadow = ShadowColor;
-
+		_regen = true;
 		calcFrame();
-
 		return this;
 	}
 
@@ -131,9 +135,9 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(String Font, float Size, int Color, String Alignment)
+	public FlxText setFormat(String Font,float Size,int Color,String Alignment)
 	{
-		return setFormat(Font, Size, Color, Alignment, 0);
+		return setFormat(Font,Size,Color,Alignment,0);
 	}
 
 	/**
@@ -146,9 +150,9 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(String Font, float Size, int Color)
+	public FlxText setFormat(String Font,float Size,int Color)
 	{
-		return setFormat(Font, Size, Color, null, 0);
+		return setFormat(Font,Size,Color,null,0);
 	}
 
 	/**
@@ -160,9 +164,9 @@ public class FlxText extends FlxSprite
 	 * 
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public FlxText setFormat(String Font, float Size)
+	public FlxText setFormat(String Font,float Size)
 	{
-		return setFormat(Font, Size, 0xFFFFFFFF, null, 0);
+		return setFormat(Font,Size,0xffffffff,null,0);
 	}
 
 	/**
@@ -175,7 +179,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat(String Font)
 	{
-		return setFormat(Font, 8, 0xFFFFFFFF, null, 0);
+		return setFormat(Font,8,0xffffffff,null,0);
 	}
 
 	/**
@@ -186,7 +190,7 @@ public class FlxText extends FlxSprite
 	 */
 	public FlxText setFormat()
 	{
-		return setFormat(null, 8, 0xFFFFFFFF, null, 0);
+		return setFormat(null,8,0xffffffff,null,0);
 	}
 
 	/**
@@ -206,6 +210,7 @@ public class FlxText extends FlxSprite
 		_textField.setText(Text);
 		if(!_textField.getText().equals(ot))
 		{
+			_regen = true;
 			calcFrame();
 		}
 	}
@@ -227,6 +232,7 @@ public class FlxText extends FlxSprite
 		format.size = Size;
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
+		_regen = true;
 		calcFrame();
 	}
 
@@ -249,6 +255,7 @@ public class FlxText extends FlxSprite
 		format.color = Color;
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
+		_regen = true;
 		calcFrame();
 	}
 	
@@ -269,6 +276,7 @@ public class FlxText extends FlxSprite
 		format.font = Font;
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
+		_regen = true;
 		calcFrame();
 	}
 
@@ -311,19 +319,22 @@ public class FlxText extends FlxSprite
 	@Override
 	protected void calcFrame()
 	{
+		_textField.width = width;
+		_textField.setText(_textField.getText()); //force text field to redraw
 		height = frameHeight = FlxU.ceil(_textField.height * 1.2f);
+		_regen = false;
+		dirty = false;
 	}
-
+	
 	@Override
 	public void draw()
 	{
-		if(_flickerTimer != 0)
-		{
-			_flicker = !_flicker;
-			if(_flicker)
-				return;
-		}
-
+		if(_flicker)
+			return;
+		
+		if(dirty)
+			calcFrame();
+		
 		FlxCamera camera = FlxG._activeCamera;
 
 		if(cameras == null)
@@ -335,10 +346,10 @@ public class FlxText extends FlxSprite
 		if(!onScreen(camera))
 			return;
 
-		_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
-		_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
-		_point.x += (_point.x > 0) ? 0.0000001f : -0.0000001f;
-		_point.y += (_point.y > 0) ? 0.0000001f : -0.0000001f;
+		_point.x = x - (camera.scroll.x*scrollFactor.x) - offset.x;
+		_point.y = y - (camera.scroll.y*scrollFactor.y) - offset.y;
+		_point.x += (_point.x > 0)?0.0000001f:-0.0000001f;
+		_point.y += (_point.y > 0)?0.0000001f:-0.0000001f;
 		
 		_textField.x = _point.x;
 		_textField.y = _point.y;

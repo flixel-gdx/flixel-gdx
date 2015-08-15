@@ -10,7 +10,8 @@ import com.badlogic.gdx.utils.IntMap.Entry;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 /**
- * Keeps track of what keys are pressed and how with handy booleans or strings.
+ * Basic input class that manages the fast-access Booleans and detailed key-state tracking.
+ * Keyboard extends this with actual specific key data.
  * 
  * @author Ka Wing Chin
  */
@@ -30,8 +31,7 @@ public class Input
 	final int _total = 256;
 
 	/**
-	 * Helper variable for tracking whether a key was just pressed or just
-	 * released.
+	 * Helper variable for tracking whether a key was just pressed or just released.
 	 */
 	protected int _last;
 
@@ -53,12 +53,9 @@ public class Input
 		while(entries.hasNext())
 		{
 			KeyState o = entries.next().value;
-			if(o == null)
-				continue;
-			if((o.last == -1) && (o.current == -1))
-				o.current = 0;
-			else if((o.last == 2) && (o.current == 2))
-				o.current = 1;
+			if(o == null) continue;
+			if((o.last == -1) && (o.current == -1)) o.current = 0;
+			else if((o.last == 2) && (o.current == 2)) o.current = 1;
 			o.last = o.current;
 		}
 	}
@@ -72,8 +69,7 @@ public class Input
 		while(entries.hasNext())
 		{
 			KeyState o = entries.next().value;
-			if(o == null)
-				continue;
+			if(o == null) continue;
 			try
 			{
 				ClassReflection.getField(Keyboard.class, o.name).set(this, false);
@@ -90,9 +86,9 @@ public class Input
 	/**
 	 * Check to see if this key is pressed.
 	 * 
-	 * @param Key One of the key constants listed above (e.g. "LEFT" or "A").
+	 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
 	 * 
-	 * @return Whether the key is pressed
+	 * @return	Whether the key is pressed
 	 */
 	public boolean pressed(String Key)
 	{
@@ -102,9 +98,9 @@ public class Input
 	/**
 	 * Check to see if this key was just pressed.
 	 * 
-	 * @param Key One of the key constants listed above (e.g. "LEFT" or "A").
+	 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
 	 * 
-	 * @return Whether the key was just pressed
+	 * @return	Whether the key was just pressed
 	 */
 	public boolean justPressed(String Key)
 	{
@@ -114,9 +110,9 @@ public class Input
 	/**
 	 * Check to see if this key is just released.
 	 * 
-	 * @param Key One of the key constants listed above (e.g. "LEFT" or "A").
+	 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
 	 * 
-	 * @return Whether the key is just released.
+	 * @return	Whether the key is just released.
 	 */
 	public boolean justReleased(String Key)
 	{
@@ -126,7 +122,7 @@ public class Input
 	/**
 	 * Check to see if any keys were just pressed.
 	 * 
-	 * @return Whether the key were just pressed.
+	 * @return	Whether the key were just pressed.
 	 */
 	public boolean justPressedAny()
 	{
@@ -144,7 +140,7 @@ public class Input
 	/**
 	 * Check to see if any keys were just released.
 	 * 
-	 * @return Whether any keys were just released.
+	 * @return	Whether any keys were just released.
 	 */
 	public boolean justReleasedAny()
 	{
@@ -159,10 +155,11 @@ public class Input
 	}
 
 	/**
-	 * If any keys are not "released" (0), this function will return an array
-	 * indicating which keys are pressed and what state they are in.
+	 * If any keys are not "released" (0),
+	 * this function will return an array indicating
+	 * which keys are pressed and what state they are in.
 	 * 
-	 * @return An array of key state data. Null if there is no data.
+	 * @return	An array of key state data.  Null if there is no data.
 	 */
 	public Array<KeyData> record()
 	{
@@ -176,16 +173,16 @@ public class Input
 				continue;
 			if(data == null)
 				data = new Array<KeyData>();
-			data.add(new KeyData(entry.key, o.current));
+			data.add(new KeyData(entry.key,o.current));
 		}
 		return data;
 	}
 
 	/**
-	 * Part of the keystroke recording system. Takes data about key presses and
-	 * sets it into array.
+	 * Part of the keystroke recording system.
+	 * Takes data about key presses and sets it into array.
 	 * 
-	 * @param Record Array of data about key states.
+	 * @param	Record	Array of data about key states.
 	 */
 	public void playback(Array<KeyData> Record)
 	{
@@ -215,9 +212,9 @@ public class Input
 	/**
 	 * Look up the key code for any given string name of the key or button.
 	 * 
-	 * @param KeyName The <code>String</code> name of the key.
+	 * @param	KeyName		The <code>String</code> name of the key.
 	 * 
-	 * @return The key code for that key.
+	 * @return	The key code for that key.
 	 */
 	public int getKeyCode(String KeyName)
 	{
@@ -227,7 +224,7 @@ public class Input
 	/**
 	 * Check to see if any keys are pressed right now.
 	 * 
-	 * @return Whether any keys are currently pressed.
+	 * @return	Whether any keys are currently pressed.
 	 */
 	public boolean any()
 	{
@@ -244,8 +241,8 @@ public class Input
 	/**
 	 * An internal helper function used to build the key array.
 	 * 
-	 * @param KeyName String name of the key (e.g. "LEFT" or "A")
-	 * @param KeyCode The numeric code for this key.
+	 * @param	KeyName		String name of the key (e.g. "LEFT" or "A")
+	 * @param	KeyCode		The numeric code for this key.
 	 */
 	protected void addKey(String KeyName, int KeyCode)
 	{

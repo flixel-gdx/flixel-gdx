@@ -20,7 +20,7 @@ public class TimerManager extends FlxBasic
 	public TimerManager()
 	{
 		_timers = new Array<FlxTimer>();
-		visible = false; // don't call draw on this plugin
+		visible = false; //don't call draw on this plugin
 	}
 
 	/**
@@ -31,18 +31,16 @@ public class TimerManager extends FlxBasic
 	{
 		clear();
 		_timers = null;
-		super.destroy();
 	}
 
 	/**
-	 * Called by <code>FlxG.updatePlugins()</code> before the game state has
-	 * been updated. Cycles through timers and calls <code>update()</code> on
-	 * each one.
+	 * Called by <code>FlxG.updatePlugins()</code> before the game state has been updated.
+	 * Cycles through timers and calls <code>update()</code> on each one.
 	 */
 	@Override
 	public void update()
 	{
-		int i = _timers.size - 1;
+		int i = _timers.size-1;
 		FlxTimer timer;
 		while(i >= 0)
 		{
@@ -53,10 +51,10 @@ public class TimerManager extends FlxBasic
 	}
 
 	/**
-	 * Add a new timer to the timer manager. Usually called automatically by
-	 * <code>FlxTimer</code>'s constructor.
+	 * Add a new timer to the timer manager.
+	 * Usually called automatically by <code>FlxTimer</code>'s constructor.
 	 * 
-	 * @param Timer The <code>FlxTimer</code> you want to add to the manager.
+	 * @param	Timer	The <code>FlxTimer</code> you want to add to the manager.
 	 */
 	public void add(FlxTimer Timer)
 	{
@@ -64,11 +62,10 @@ public class TimerManager extends FlxBasic
 	}
 
 	/**
-	 * Remove a timer from the timer manager. Usually called automatically by
-	 * <code>FlxTimer</code>'s <code>stop()</code> function.
+	 * Remove a timer from the timer manager.
+	 * Usually called automatically by <code>FlxTimer</code>'s <code>stop()</code> function.
 	 * 
-	 * @param Timer The <code>FlxTimer</code> you want to remove from the
-	 *        manager.
+	 * @param	Timer	The <code>FlxTimer</code> you want to remove from the manager.
 	 */
 	public void remove(FlxTimer Timer)
 	{
@@ -82,17 +79,14 @@ public class TimerManager extends FlxBasic
 	 */
 	public void clear()
 	{
-		if(_timers != null)
+		int i = _timers.size - 1;
+		FlxTimer timer;
+		while(i >= 0)
 		{
-			int i = _timers.size - 1;
-			FlxTimer timer;
-			while(i >= 0)
-			{
-				timer = _timers.get(i--);
-				if(timer != null)
-					timer.destroy();
-			}
-			_timers.clear();
+			timer = _timers.get(i--);
+			if(timer != null)
+				timer.destroy();
 		}
+		_timers.clear();
 	}
 }

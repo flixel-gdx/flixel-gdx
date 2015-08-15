@@ -6,10 +6,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 /**
- * This is an organizational class that can update and render a bunch of
- * <code>FlxBasic</code>s. NOTE: Although <code>FlxGroup</code> extends
- * <code>FlxBasic</code>, it will not automatically add itself to the global
- * collisions quad tree, it will only add its members.
+ * This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.
+ * NOTE: Although <code>FlxGroup</code> extends <code>FlxBasic</code>, it will not automatically
+ * add itself to the global collisions quad tree, it will only add its members.
  * 
  * @author Ka Wing Chin
  * @author Thomas Weston
@@ -30,20 +29,19 @@ public class FlxGroup extends FlxBasic
 	 */
 	public Array<FlxBasic> members;
 	/**
-	 * The number of entries in the members array. For performance and safety
-	 * you should check this variable instead of members.length unless you
-	 * really know what you're doing!
+	 * The number of entries in the members array.
+	 * For performance and safety you should check this variable
+	 * instead of members.length unless you really know what you're doing!
 	 */
 	public int length;
 
 	/**
-	 * Internal tracker for the maximum capacity of the group. Default is 0, or
-	 * no max capacity.
+	 * Internal tracker for the maximum capacity of the group.
+	 * Default is 0, or no max capacity.
 	 */
 	protected int _maxSize;
 	/**
-	 * Internal helper variable for recycling objects a la
-	 * <code>FlxEmitter</code>.
+	 * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
 	 */
 	protected int _marker;
 
@@ -78,9 +76,8 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Override this function to handle any deleting or "shutdown" type
-	 * operations you might need, such as removing traditional children like
-	 * Sprite objects.
+	 * Override this function to handle any deleting or "shutdown" type operations you might need,
+	 * such as removing traditional Flash children like Sprite objects.
 	 */
 	@Override
 	public void destroy()
@@ -91,15 +88,14 @@ public class FlxGroup extends FlxBasic
 			int i = 0;
 			while(i < length)
 			{
-				basic = members.pop();
+				basic = members.get(i++);
 				if(basic != null)
 					basic.destroy();
-				++i;
 			}
+			members.clear();
 			members = null;
 		}
 		_sortIndex = null;
-		super.destroy();
 	}
 
 	/**
@@ -147,8 +143,7 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * The maximum capacity of this group. Default is 0, meaning no max
-	 * capacity, and the group can just grow.
+	 * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
 	 */
 	public int getMaxSize()
 	{
@@ -156,8 +151,7 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * The maximum capacity of this group. Default is 0, meaning no max
-	 * capacity, and the group can just grow.
+	 * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
 	 */
 	public void setMaxSize(int Size)
 	{
@@ -167,32 +161,31 @@ public class FlxGroup extends FlxBasic
 		if((_maxSize == 0) || (members == null) || (_maxSize >= members.size))
 			return;
 
-		// If the max size has shrunk, we need to get rid of some objects
-		while(members.size > _maxSize)
+		//If the max size has shrunk, we need to get rid of some objects
+		FlxBasic basic;
+		int i = _maxSize;
+		int l = members.size;
+		while(i < l)
 		{
-			FlxBasic basic = members.pop();
+			basic = members.get(i++);
 			if(basic != null)
 				basic.destroy();
 		}
-		length = _maxSize;
-		members.shrink();
+		members.truncate(length = _maxSize);
 	}
 
 	/**
-	 * Adds a new <code>FlxBasic</code> subclass (FlxBasic, FlxSprite, Enemy,
-	 * etc) to the group. FlxGroup will try to replace a null member of the
-	 * array first. Failing that, FlxGroup will add it to the end of the member
-	 * array, assuming there is room for it, and doubling the size of the array
-	 * if necessary.
+	 * Adds a new <code>FlxBasic</code> subclass (FlxBasic, FlxSprite, Enemy, etc) to the group.
+	 * FlxGroup will try to replace a null member of the array first.
+	 * Failing that, FlxGroup will add it to the end of the member array,
+	 * assuming there is room for it, and doubling the size of the array if necessary.
 	 * 
-	 * <p>
-	 * WARNING: If the group has a maxSize that has already been met, the object
-	 * will NOT be added to the group!
-	 * </p>
+	 * <p>WARNING: If the group has a maxSize that has already been met,
+	 * the object will NOT be added to the group!</p>
 	 * 
-	 * @param Object The object you want to add to the group.
+	 * @param	Object		The object you want to add to the group.
 	 * 
-	 * @return The same <code>FlxBasic</code> object that was passed in.
+	 * @return	The same <code>FlxBasic</code> object that was passed in.
 	 */
 	public FlxBasic add(FlxBasic Object)
 	{
@@ -202,11 +195,11 @@ public class FlxGroup extends FlxBasic
 			return null;
 		}
 
-		// Don't bother adding an object twice.
+		//Don't bother adding an object twice.
 		if(members.indexOf(Object, true) >= 0)
 			return Object;
 
-		// First, look for a null entry where we can add the object.
+		//First, look for a null entry where we can add the object.
 		int i = 0;
 		int l = members.size;
 		while(i < l)
@@ -215,56 +208,48 @@ public class FlxGroup extends FlxBasic
 			{
 				members.set(i, Object);
 				if(i >= length)
-					length = i + 1;
+					length = i+1;
 				return Object;
 			}
 			i++;
 		}
 
-		// Failing that, expand the array (if we can) and add the object.
+		//Failing that, expand the array (if we can) and add the object.
 		if(_maxSize > 0)
 		{
 			if(members.size >= _maxSize)
 				return Object;
 		}
 
-		// If we made it this far, then we successfully grew the group,
-		// and we can go ahead and add the object at the first open slot.
+		//If we made it this far, then we successfully grew the group,
+		//and we can go ahead and add the object at the first open slot.
 		members.add(Object);
-		length = i + 1;
+		length = i+1;
 		return Object;
 	}
 
 	/**
-	 * Recycling is designed to help you reuse game objects without always
-	 * re-allocating or "newing" them.
+	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
 	 * 
-	 * <p>
-	 * If you specified a maximum size for this group (like in FlxEmitter), then
-	 * recycle will employ what we're calling "rotating" recycling. Recycle()
-	 * will first check to see if the group is at capacity yet. If group is not
-	 * yet at capacity, recycle() returns a new object. If the group IS at
-	 * capacity, then recycle() just returns the next object in line.
-	 * </p>
+	 * <p>If you specified a maximum size for this group (like in FlxEmitter),
+	 * then recycle will employ what we're calling "rotating" recycling.
+	 * Recycle() will first check to see if the group is at capacity yet.
+	 * If group is not yet at capacity, recycle() returns a new object.
+	 * If the group IS at capacity, then recycle() just returns the next object in line.</p>
 	 * 
-	 * <p>
-	 * If you did NOT specify a maximum size for this group, then recycle() will
-	 * employ what we're calling "grow-style" recycling. Recycle() will return
-	 * either the first object with exists == false, or, finding none, add a new
-	 * object to the array, doubling the size of the array if necessary.
-	 * </p>
+	 * <p>If you did NOT specify a maximum size for this group,
+	 * then recycle() will employ what we're calling "grow-style" recycling.
+	 * Recycle() will return either the first object with exists == false,
+	 * or, finding none, add a new object to the array,
+	 * doubling the size of the array if necessary.</p>
 	 * 
-	 * <p>
-	 * WARNING: If this function needs to create a new object, and no object
-	 * class was provided, it will return null instead of a valid object!
-	 * </p>
+	 * <p>WARNING: If this function needs to create a new object,
+	 * and no object class was provided, it will return null
+	 * instead of a valid object!</p>
 	 * 
-	 * @param ObjectClass The class type you want to recycle (e.g. FlxSprite,
-	 *        EvilRobot, etc). Do NOT "new" the class in the parameter!
+	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
 	 * 
-	 * @return A reference to the object that was created. Don't forget to cast
-	 *         it back to the Class you want (e.g. myObject =
-	 *         (myObjectClass) myGroup.recycle(myObjectClass);).
+	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = (myObjectClass) myGroup.recycle(myObjectClass);).
 	 */
 	public FlxBasic recycle(Class<? extends FlxBasic> ObjectClass)
 	{
@@ -311,32 +296,27 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Recycling is designed to help you reuse game objects without always
-	 * re-allocating or "newing" them.
+	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
 	 * 
-	 * <p>
-	 * If you specified a maximum size for this group (like in FlxEmitter), then
-	 * recycle will employ what we're calling "rotating" recycling. Recycle()
-	 * will first check to see if the group is at capacity yet. If group is not
-	 * yet at capacity, recycle() returns a new object. If the group IS at
-	 * capacity, then recycle() just returns the next object in line.
-	 * </p>
+	 * <p>If you specified a maximum size for this group (like in FlxEmitter),
+	 * then recycle will employ what we're calling "rotating" recycling.
+	 * Recycle() will first check to see if the group is at capacity yet.
+	 * If group is not yet at capacity, recycle() returns a new object.
+	 * If the group IS at capacity, then recycle() just returns the next object in line.</p>
 	 * 
-	 * <p>
-	 * If you did NOT specify a maximum size for this group, then recycle() will
-	 * employ what we're calling "grow-style" recycling. Recycle() will return
-	 * either the first object with exists == false, or, finding none, add a new
-	 * object to the array, doubling the size of the array if necessary.
-	 * </p>
+	 * <p>If you did NOT specify a maximum size for this group,
+	 * then recycle() will employ what we're calling "grow-style" recycling.
+	 * Recycle() will return either the first object with exists == false,
+	 * or, finding none, add a new object to the array,
+	 * doubling the size of the array if necessary.</p>
 	 * 
-	 * <p>
-	 * WARNING: If this function needs to create a new object, and no object
-	 * class was provided, it will return null instead of a valid object!
-	 * </p>
+	 * <p>WARNING: If this function needs to create a new object,
+	 * and no object class was provided, it will return null
+	 * instead of a valid object!</p>
 	 * 
-	 * @return A reference to the object that was created. Don't forget to cast
-	 *         it back to the Class you want (e.g. myObject =
-	 *         (myObjectClass) myGroup.recycle(myObjectClass);).
+	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
+	 * 
+	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = (myObjectClass) myGroup.recycle(myObjectClass);).
 	 */
 	public FlxBasic recycle()
 	{
@@ -346,15 +326,14 @@ public class FlxGroup extends FlxBasic
 	/**
 	 * Removes an object from the group.
 	 * 
-	 * @param Object The <code>FlxBasic</code> you want to remove.
-	 * @param Splice Whether the object should be cut from the array entirely or
-	 *        not.
+	 * @param	Object	The <code>FlxBasic</code> you want to remove.
+	 * @param	Splice	Whether the object should be cut from the array entirely or not.
 	 * 
-	 * @return The removed object.
+	 * @return	The removed object.
 	 */
-	public FlxBasic remove(FlxBasic Object, boolean Splice)
+	public FlxBasic remove(FlxBasic Object,boolean Splice)
 	{
-		int index = members.indexOf(Object, false);
+		int index = members.indexOf(Object, true);
 		if((index < 0) || (index >= members.size))
 			return null;
 		if(Splice)
@@ -370,26 +349,26 @@ public class FlxGroup extends FlxBasic
 	/**
 	 * Removes an object from the group.
 	 * 
-	 * @param Object The <code>FlxBasic</code> you want to remove.
+	 * @param	Object	The <code>FlxBasic</code> you want to remove.
 	 * 
-	 * @return The removed object.
+	 * @return	The removed object.
 	 */
 	public FlxBasic remove(FlxBasic Object)
 	{
-		return remove(Object, false);
+		return remove(Object,false);
 	}
 
 	/**
 	 * Replaces an existing <code>FlxBasic</code> with a new one.
 	 * 
-	 * @param OldObject The object you want to replace.
-	 * @param NewObject The new object you want to use instead.
+	 * @param	OldObject	The object you want to replace.
+	 * @param	NewObject	The new object you want to use instead.
 	 * 
-	 * @return The new object.
+	 * @return	The new object.
 	 */
-	public FlxBasic replace(FlxBasic OldObject, FlxBasic NewObject)
+	public FlxBasic replace(FlxBasic OldObject,FlxBasic NewObject)
 	{
-		int index = members.indexOf(OldObject, false);
+		int index = members.indexOf(OldObject, true);
 		if((index < 0) || (index >= members.size))
 			return null;
 		members.set(index, NewObject);
@@ -397,20 +376,16 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Call this function to sort the group according to a particular value and
-	 * order. For example, to sort game objects for Zelda-style overlaps you
-	 * might call <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
-	 * <code>FlxState.update()</code> override. To sort all existing objects
-	 * after a big explosion or bomb attack, you might call
-	 * <code>myGroup.sort("exists",DESCENDING)</code>.
+	 * Call this function to sort the group according to a particular value and order.
+	 * For example, to sort game objects for Zelda-style overlaps you might call
+	 * <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
+	 * <code>FlxState.update()</code> override.  To sort all existing objects after
+	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",DESCENDING)</code>.
 	 * 
-	 * @param Index The <code>String</code> name of the member variable you want
-	 *        to sort on. Default value is "y".
-	 * @param Order A <code>FlxGroup</code> constant that defines the sort
-	 *        order. Possible values are <code>ASCENDING</code> and
-	 *        <code>DESCENDING</code>. Default value is <code>ASCENDING</code>.
+	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
+	 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.
 	 */
-	public void sort(String Index, int Order)
+	public void sort(String Index,int Order)
 	{
 		_sortIndex = Index;
 		_sortOrder = Order;
@@ -418,47 +393,40 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Call this function to sort the group according to a particular value and
-	 * order. For example, to sort game objects for Zelda-style overlaps you
-	 * might call <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
-	 * <code>FlxState.update()</code> override. To sort all existing objects
-	 * after a big explosion or bomb attack, you might call
-	 * <code>myGroup.sort("exists",DESCENDING)</code>.
+	 * Call this function to sort the group according to a particular value and order.
+	 * For example, to sort game objects for Zelda-style overlaps you might call
+	 * <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
+	 * <code>FlxState.update()</code> override.  To sort all existing objects after
+	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",DESCENDING)</code>.
 	 * 
-	 * @param Index The <code>String</code> name of the member variable you want
-	 *        to sort on. Default value is "y".
+	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
 	 */
 	public void sort(String Index)
 	{
-		sort(Index, ASCENDING);
+		sort(Index,ASCENDING);
 	}
 
 	/**
-	 * Call this function to sort the group according to a particular value and
-	 * order. For example, to sort game objects for Zelda-style overlaps you
-	 * might call <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
-	 * <code>FlxState.update()</code> override. To sort all existing objects
-	 * after a big explosion or bomb attack, you might call
-	 * <code>myGroup.sort("exists",DESCENDING)</code>.
+	 * Call this function to sort the group according to a particular value and order.
+	 * For example, to sort game objects for Zelda-style overlaps you might call
+	 * <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
+	 * <code>FlxState.update()</code> override.  To sort all existing objects after
+	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",DESCENDING)</code>.
+	 * 
 	 */
 	public void sort()
 	{
-		sort("y", ASCENDING);
+		sort("y",ASCENDING);
 	}
 
 	/**
-	 * Go through and set the specified variable to the specified value on all
-	 * members of the group.
+	 * Go through and set the specified variable to the specified value on all members of the group.
 	 * 
-	 * @param VariableName The string representation of the variable name you
-	 *        want to modify, for example "visible" or "scrollFactor".
-	 * @param Value The value you want to assign to that variable.
-	 * @param Recurse Default value is true, meaning if <code>setAll()</code>
-	 *        encounters a member that is a group, it will call
-	 *        <code>setAll()</code> on that group rather than modifying its
-	 *        variable.
+	 * @param	VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
+	 * @param	Value			The value you want to assign to that variable.
+	 * @param	Recurse			Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
 	 */
-	public void setAll(String VariableName, Object Value, boolean Recurse)
+	public void setAll(String VariableName,Object Value,boolean Recurse)
 	{
 		FlxBasic basic;
 		int i = 0;
@@ -468,7 +436,7 @@ public class FlxGroup extends FlxBasic
 			if(basic != null)
 			{
 				if(Recurse && (basic instanceof FlxGroup))
-					((FlxGroup) basic).setAll(VariableName, Value, Recurse);
+					((FlxGroup) basic).setAll(VariableName,Value,Recurse);
 				else
 				{
 					try
@@ -486,30 +454,24 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Go through and set the specified variable to the specified value on all
-	 * members of the group.
+	 * Go through and set the specified variable to the specified value on all members of the group.
 	 * 
-	 * @param VariableName The string representation of the variable name you
-	 *        want to modify, for example "visible" or "scrollFactor".
-	 * @param Value The value you want to assign to that variable.
+	 * @param	VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
+	 * @param	Value			The value you want to assign to that variable.
 	 */
-	public void setAll(String VariableName, Object Value)
+	public void setAll(String VariableName,Object Value)
 	{
-		setAll(VariableName, Value, true);
+		setAll(VariableName,Value,true);
 	}
 
 	/**
 	 * Go through and call the specified function on all members of the group.
 	 * Currently only works on functions that have no required parameters.
 	 * 
-	 * @param FunctionName The string representation of the function you want to
-	 *        call on each object, for example "kill()" or "init()".
-	 * @param Recurse Default value is true, meaning if <code>callAll()</code>
-	 *        encounters a member that is a group, it will call
-	 *        <code>callAll()</code> on that group rather than calling the
-	 *        group's function.
+	 * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
+	 * @param	Recurse			Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
 	 */
-	public void callAll(String FunctionName, boolean Recurse)
+	public void callAll(String FunctionName,boolean Recurse)
 	{
 		FlxBasic basic;
 		int i = 0;
@@ -539,43 +501,39 @@ public class FlxGroup extends FlxBasic
 	 * Go through and call the specified function on all members of the group.
 	 * Currently only works on functions that have no required parameters.
 	 * 
-	 * @param FunctionName The string representation of the function you want to
-	 *        call on each object, for example "kill()" or "init()".
+	 * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
 	 */
 	public void callAll(String FunctionName)
 	{
-		callAll(FunctionName, true);
+		callAll(FunctionName,true);
 	}
 
 	/**
-	 * Call this function to retrieve the first object with exists == false in
-	 * the group. This is handy for recycling in general, e.g. respawning
-	 * enemies.
+	 * Call this function to retrieve the first object with exists == false in the group.
+	 * This is handy for recycling in general, e.g. respawning enemies.
 	 * 
-	 * @param objectClass An optional parameter that lets you narrow the results
-	 *        to instances of this particular class.
+	 * @param	ObjectClass		An optional parameter that lets you narrow the results to instances of this particular class.
 	 * 
-	 * @return A <code>FlxBasic</code> currently flagged as not existing.
+	 * @return	A <code>FlxBasic</code> currently flagged as not existing.
 	 */
-	public FlxBasic getFirstAvailable(Class<? extends FlxBasic> objectClass)
+	public FlxBasic getFirstAvailable(Class<? extends FlxBasic> ObjectClass)
 	{
 		FlxBasic basic;
 		int i = 0;
 		while(i < length)
 		{
 			basic = members.get(i++);
-			if((basic != null) && !basic.exists && ((objectClass == null) || (ClassReflection.isInstance(objectClass, basic))))
+			if((basic != null) && !basic.exists && ((ObjectClass == null) || (ClassReflection.isInstance(ObjectClass, basic))))
 				return basic;
 		}
 		return null;
 	}
 
 	/**
-	 * Call this function to retrieve the first object with exists == false in
-	 * the group. This is handy for recycling in general, e.g. respawning
-	 * enemies.
+	 * Call this function to retrieve the first object with exists == false in the group.
+	 * This is handy for recycling in general, e.g. respawning enemies.
 	 * 
-	 * @return A <code>FlxBasic</code> currently flagged as not existing.
+	 * @return	A <code>FlxBasic</code> currently flagged as not existing.
 	 */
 	public FlxBasic getFirstAvailable()
 	{
@@ -583,10 +541,10 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Call this function to retrieve the first index set to 'null'. Returns -1
-	 * if no index stores a null object.
+	 * Call this function to retrieve the first index set to 'null'.
+	 * Returns -1 if no index stores a null object.
 	 * 
-	 * @return An <code>int</code> indicating the first null slot in the group.
+	 * @return	An <code>int</code> indicating the first null slot in the group.
 	 */
 	public int getFirstNull()
 	{
@@ -603,11 +561,10 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Call this function to retrieve the first object with exists == true in
-	 * the group. This is handy for checking if everything's wiped out, or
-	 * choosing a squad leader, etc.
+	 * Call this function to retrieve the first object with exists == true in the group.
+	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
 	 * 
-	 * @return A <code>FlxBasic</code> currently flagged as existing.
+	 * @return	A <code>FlxBasic</code> currently flagged as existing.
 	 */
 	public FlxBasic getFirstExtant()
 	{
@@ -623,11 +580,10 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Call this function to retrieve the first object with alive == true in the
-	 * group. This is handy for checking if everything's wiped out, or choosing
-	 * a squad leader, etc.
+	 * Call this function to retrieve the first object with alive == true in the group.
+	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
 	 * 
-	 * @return A <code>FlxBasic</code> currently flagged as not dead.
+	 * @return	A <code>FlxBasic</code> currently flagged as not dead.
 	 */
 	public FlxBasic getFirstAlive()
 	{
@@ -643,11 +599,10 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Call this function to retrieve the first object with alive == false in
-	 * the group. This is handy for checking if everything's wiped out, or
-	 * choosing a squad leader, etc.
+	 * Call this function to retrieve the first object with alive == false in the group.
+	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
 	 * 
-	 * @return A <code>FlxBasic</code> currently flagged as dead.
+	 * @return	A <code>FlxBasic</code> currently flagged as dead.
 	 */
 	public FlxBasic getFirstDead()
 	{
@@ -663,11 +618,9 @@ public class FlxGroup extends FlxBasic
 	}
 
 	/**
-	 * Call this function to find out how many members of the group are not
-	 * dead.
+	 * Call this function to find out how many members of the group are not dead.
 	 * 
-	 * @return The number of <code>FlxBasic</code>s flagged as not dead. Returns
-	 *         -1 if group is empty.
+	 * @return	The number of <code>FlxBasic</code>s flagged as not dead.  Returns -1 if group is empty.
 	 */
 	public int countLiving()
 	{
@@ -691,8 +644,7 @@ public class FlxGroup extends FlxBasic
 	/**
 	 * Call this function to find out how many members of the group are dead.
 	 * 
-	 * @return The number of <code>FlxBasic</code>s flagged as dead. Returns -1
-	 *         if group is empty.
+	 * @return	The number of <code>FlxBasic</code>s flagged as dead.  Returns -1 if group is empty.
 	 */
 	public int countDead()
 	{
@@ -716,47 +668,43 @@ public class FlxGroup extends FlxBasic
 	/**
 	 * Returns a member at random from the group.
 	 * 
-	 * @param StartIndex Optional offset off the front of the array. Default
-	 *        value is 0, or the beginning of the array.
-	 * @param Length Optional restriction on the number of values you want to
-	 *        randomly select from.
+	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * 
-	 * @return A <code>FlxBasic</code> from the members list.
+	 * @return	A <code>FlxBasic</code> from the members list.
 	 */
-	public FlxBasic getRandom(int StartIndex, int Length)
+	public FlxBasic getRandom(int StartIndex,int Length)
 	{
 		if(Length == 0)
 			Length = length;
-		return FlxU.getRandom(members, StartIndex, Length);
+		return FlxU.getRandom(members,StartIndex,Length);
 	}
 
 	/**
 	 * Returns a member at random from the group.
 	 * 
-	 * @param StartIndex Optional offset off the front of the array. Default
-	 *        value is 0, or the beginning of the array.
+	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
 	 * 
-	 * @return A <code>FlxBasic</code> from the members list.
+	 * @return	A <code>FlxBasic</code> from the members list.
 	 */
 	public FlxBasic getRandom(int StartIndex)
 	{
-		return getRandom(StartIndex, 0);
+		return getRandom(StartIndex,0);
 	}
 
 	/**
 	 * Returns a member at random from the group.
 	 * 
-	 * @return A <code>FlxBasic</code> from the members list.
+	 * @return	A <code>FlxBasic</code> from the members list.
 	 */
 	public FlxBasic getRandom()
 	{
-		return getRandom(0, 0);
+		return getRandom(0,0);
 	}
 
 	/**
-	 * Remove all instances of <code>FlxBasic</code> subclass (FlxSprite,
-	 * FlxBlock, etc) from the list. WARNING: does not destroy() or kill() any
-	 * of these objects!
+	 * Remove all instances of <code>FlxBasic</code> subclass (FlxSprite, FlxBlock, etc) from the list.
+	 * WARNING: does not destroy() or kill() any of these objects!
 	 */
 	public void clear()
 	{
@@ -784,17 +732,16 @@ public class FlxGroup extends FlxBasic
 	/**
 	 * Helper function for the sort process.
 	 * 
-	 * @param Obj1 The first object being sorted.
-	 * @param Obj2 The second object being sorted.
+	 * @param	Obj1	The first object being sorted.
+	 * @param	Obj2	The second object being sorted.
 	 * 
-	 * @return An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1
-	 *         after Obj2).
+	 * @return	An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
 	 */
 	// TODO: sortHandler only works with floats
-	Comparator<FlxBasic> sortHandler = new Comparator<FlxBasic>()
+	protected Comparator<FlxBasic> sortHandler = new Comparator<FlxBasic>()
 	{
 		@Override
-		public int compare(FlxBasic Obj1, FlxBasic Obj2)
+		public int compare(FlxBasic Obj1,FlxBasic Obj2)
 		{
 			try
 			{

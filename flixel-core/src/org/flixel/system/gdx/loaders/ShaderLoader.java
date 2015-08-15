@@ -14,8 +14,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * <code>AssetLoader</code> to create a <ProgramShader> from vertex and fragment
- * file.
+ * <code>AssetLoader</code> to create a <ProgramShader> from vertex and fragment file.
  * 
  * @author Ka Wing Chin
  */

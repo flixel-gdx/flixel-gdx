@@ -57,7 +57,6 @@ public class FlxParticle extends FlxSprite
 			if(angularVelocity != 0)
 				angularVelocity = -angularVelocity;
 		}
-		
 		if(acceleration.y > 0) //special behavior for particles with gravity
 		{
 			if((touching & FLOOR) > 0)
