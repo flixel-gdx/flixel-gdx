@@ -54,20 +54,19 @@ public class FlxCamera extends FlxBasic
 	 */
 	static public final int NO_SCALE = 0;
 	/**
-	 * Camera "scale" mode preset: Scales the stage to fill the display in the x direction without stretching.
+	 * Camera "scale" mode preset: Scales the game to fill the display without stretching.
 	 */
-	static public final int FILL_X = 1;
+	static public final int FILL = 1;
 	/**
-	 * Camera "scale" mode preset: Scales the stage to fill the display in the y direction without stretching.
+	 * Camera "scale" mode preset: Scales the game to fit the screen without stretching.
 	 */
-	static public final int FILL_Y = 2;
+	static public final int FIT = 2;
 	/**
-	 * Camera "scale" mode preset: Stretches the game to fill the entire screen.
+	 * Camera "scale" mode preset: Stretches the game to fill the entire display.
 	 */
 	static public final int STRETCH = 3;
 	/**
-	 * Camera "scale" mode preset: Resizes the width of game to match the aspect ratio of the display,
-	 * then scales the game to fill the entire screen.
+	 * Camera "scale" mode preset: Resizes FlxG.width to match the aspect ratio of the display, then scales the game to fill the entire display.
 	 */
 	static public final int RESIZE_WIDTH = 4;
 	
@@ -913,7 +912,8 @@ public class FlxCamera extends FlxBasic
 				
 		int initialStageWidth = (int) (FlxG.width*FlxCamera.defaultZoom);
 		int initialStageHeight = (int) (FlxG.height*FlxCamera.defaultZoom);
-		float screenAspectRatio = stage.getStageWidth()/(float) stage.getStageHeight();
+		float stageAspectRatio = initialStageWidth/(float)initialStageHeight;
+		float screenAspectRatio = stage.getStageWidth()/(float)stage.getStageHeight();
 		
 		switch(_scaleMode)
 		{
@@ -921,14 +921,20 @@ public class FlxCamera extends FlxBasic
 				_glCamera.setToOrtho(true,stage.getStageWidth()/X,stage.getStageHeight()/Y);
 				break;
 
-			case FILL_X:
-				_glCamera.setToOrtho(true,(initialStageHeight*screenAspectRatio)/X,initialStageHeight/Y);
+			case FIT:
+				if(screenAspectRatio >= stageAspectRatio)
+					_glCamera.setToOrtho(true,(initialStageHeight*screenAspectRatio)/X,initialStageHeight/Y);
+				else
+					_glCamera.setToOrtho(true,initialStageWidth/X,initialStageWidth/screenAspectRatio/Y);
 				break;
-
-			case FILL_Y:
-				_glCamera.setToOrtho(true,initialStageWidth/X,initialStageWidth/screenAspectRatio/Y);
+				
+			case FILL:
+				if(screenAspectRatio >= stageAspectRatio)
+					_glCamera.setToOrtho(true,initialStageWidth/X,initialStageWidth/screenAspectRatio/Y);
+				else
+					_glCamera.setToOrtho(true,(initialStageHeight*screenAspectRatio)/X,initialStageHeight/Y);
 				break;
-
+				
 			case STRETCH:
 			default:
 				_glCamera.setToOrtho(true,initialStageWidth/X,initialStageHeight/Y);
