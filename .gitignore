@@ -7,6 +7,9 @@ classes/
 war/
 .gwt/
 
+.metadata
+.recommenders
+
 *.a
 *.jar
 *.so
