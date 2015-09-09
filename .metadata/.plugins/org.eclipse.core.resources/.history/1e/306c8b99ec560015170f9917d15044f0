@@ -2159,9 +2159,11 @@ public class FlxG
 		if(debugPathDisplay != null)
 			debugPathDisplay.clear();
 	}
+
+	
 	
 	/**
-	 * Called by the game loop to update elapsed time;
+	 * updates delta time
 	 */
 	 static void updateElapsed(){
 		long currentTime = System.currentTimeMillis();
