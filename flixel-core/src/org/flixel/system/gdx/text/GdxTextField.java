@@ -101,14 +101,16 @@ public class GdxTextField extends TextField
 	@Override
 	public void setTextFormat(TextFormat format)
 	{
-		if(format.font.length() == 0)
-			format.font = _currentFormat.font;
+		String font = format.font != null && format.font.length() > 0 ? format.font : _currentFormat.font;
+		String align = format.align != null ? format.align : "left";
+		float size = format.size;
+		int color = format.color;
 		
-		if(!format.font.equals(_currentFormat.font) || format.size != _currentFormat.size)
+		if(!font.equals(_currentFormat.font) || size != _currentFormat.size)
 		{
 			try
 			{
-				_fontCache = new BitmapFontCache(FlxG.loadFont(format.font, FlxU.round(format.size), _bitmapFontParameter));
+				_fontCache = new BitmapFontCache(FlxG.loadFont(font, FlxU.round(size), _bitmapFontParameter));
 			}
 			catch(Exception e)
 			{
@@ -117,13 +119,13 @@ public class GdxTextField extends TextField
 			}
 		}
 
-		if(!format.align.equals(_currentFormat.align))
+		if(!align.equals(_currentFormat.align))
 		{
-			_currentFormat.align = format.align;
+			_currentFormat.align = align;
 			calcFrame();
 		}
 		
-		_currentFormat = new TextFormat(format.font, format.size, format.color, false, false, false, "", "", format.align);
+		_currentFormat = new TextFormat(font, size, color, false, false, false, "", "", align);
 	}
 	
 	public void calcFrame()
