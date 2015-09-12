@@ -60,6 +60,14 @@ public class GdxTextField extends TextField
 	 * The smoothness of the font.
 	 */
 	private float _smoothness;
+	/**
+	 * Internal, for tracking if the scale has changed and the cache needs to be updated.
+	 */
+	private float _lastScaleX;
+	/**
+	 * Internal, for tracking if the scale has changed and the cache needs to be updated.
+	 */
+	private float _lastScaleY;
 	
 	public GdxTextField()
 	{
@@ -70,6 +78,9 @@ public class GdxTextField extends TextField
 		
 		_bitmapFontParameter = new BitmapFontParameter();
 		_bitmapFontParameter.flip = true;
+		
+		_lastScaleX = scaleX = 1;
+		_lastScaleY = scaleY = 1;
 	}
 
 	@Override
@@ -127,7 +138,12 @@ public class GdxTextField extends TextField
 	public void render()
 	{
 		// scaling
-		_fontCache.getFont().getData().setScale(scaleX, scaleY);
+		if(_lastScaleX != scaleX || _lastScaleY != scaleY)
+		{
+			_fontCache.getFont().getData().setScale(scaleX, scaleY);
+			_lastScaleX = scaleX; _lastScaleY = scaleY;
+			calcFrame();
+		}
 
 		// position
 		_fontCache.setPosition(x, y);
