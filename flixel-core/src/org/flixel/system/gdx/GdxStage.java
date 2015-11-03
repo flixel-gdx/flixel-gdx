@@ -4,6 +4,7 @@ import org.flixel.system.gdx.utils.EventPool;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
@@ -24,8 +25,7 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 
 	private GdxInput _input;
 	private GdxGraphics _graphics;
-
-	private static Pixmap _blankCursor;
+	private static Cursor _blankCursor;
 
 	/**
 	 * Creates a new <code>Stage</code> with the specified width and height. 
@@ -34,7 +34,7 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	{
 		_input = new GdxInput(this);
 		_graphics = new GdxGraphics();
-
+		
 		_applicationEvents = new EventPool(8);
 	}
 
@@ -111,9 +111,6 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	{
 		_graphics.dispose();
 		_graphics = null;
-
-		if(_blankCursor != null)
-			_blankCursor.dispose();
 		_blankCursor = null;
 
 		dispatchEvent(_applicationEvents.obtain(Event.REMOVED_FROM_STAGE));
@@ -122,13 +119,13 @@ public class GdxStage extends EventDispatcher implements Stage, ApplicationListe
 	public static void hideMouse()
 	{
 		if(_blankCursor == null)
-			_blankCursor = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
-		Gdx.input.setCursorImage(_blankCursor, 0, 0);
+			_blankCursor = Gdx.graphics.newCursor(new Pixmap(16, 16, Pixmap.Format.RGBA8888), 0, 0);		
+		Gdx.graphics.setCursor(_blankCursor);
 	}
 
 	public static void showMouse()
 	{
-		Gdx.input.setCursorImage(null, 0, 0);
+		Gdx.graphics.setCursor(null);
 	}
 
 	public GdxInput getInput()
