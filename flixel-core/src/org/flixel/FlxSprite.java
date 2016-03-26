@@ -851,7 +851,7 @@ public class FlxSprite extends FlxObject
 	 */
 	public void fill(int Color)
 	{
-		Pixmap.setBlending(Pixmap.Blending.SourceOver);
+		Pixmap.setBlending(Pixmap.Blending.None);
 		Pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
 
 		TextureData textureData = null;
