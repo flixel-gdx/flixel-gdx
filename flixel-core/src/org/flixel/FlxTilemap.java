@@ -402,13 +402,13 @@ public class FlxTilemap extends FlxObject
 	 * @param	Buffer		The <code>FlxTilemapBuffer</code> you are rendering to.
 	 * @param	Camera		The related <code>FlxCamera</code>, mainly for scroll values.
 	 */
-	protected void drawTilemap(FlxTilemapBuffer Buffer, FlxCamera Camera)
+	protected void drawTilemap(FlxTilemapBuffer Buffer,FlxCamera Camera)
 	{
 		Buffer.begin();
 
 		//Copy tile images into the tile buffer
-		_point.x = (int)(Camera.scroll.x*scrollFactor.x) - x; //modified from getScreenXY()
-		_point.y = (int)(Camera.scroll.y*scrollFactor.y) - y;
+		_point.x = (Camera.scroll.x*scrollFactor.x) - x; //modified from getScreenXY()
+		_point.y = (Camera.scroll.y*scrollFactor.y) - y;
 		int screenXInTiles = (int)((_point.x + ((_point.x > 0)?0.0000001f:-0.0000001f))/_tileWidth);
 		int screenYInTiles = (int)((_point.y + ((_point.y > 0)?0.0000001f:-0.0000001f))/_tileHeight);
 		int screenRows = Buffer.rows;
@@ -424,10 +424,10 @@ public class FlxTilemap extends FlxObject
 		if(screenYInTiles > heightInTiles-screenRows)
 			screenYInTiles = heightInTiles-screenRows;
 
-		_point.x = x - (int)(Camera.scroll.x*scrollFactor.x) + (screenXInTiles*_tileWidth); //copied from getScreenXY()
-		_point.y = y - (int)(Camera.scroll.y*scrollFactor.y) + (screenYInTiles*_tileHeight);
-		_point.x += (_point.x > 0)?0.0000001:-0.0000001;
-		_point.y += (_point.y > 0)?0.0000001:-0.0000001;
+		_point.x = x - (Camera.scroll.x*scrollFactor.x) + (screenXInTiles*_tileWidth); //copied from getScreenXY()
+		_point.y = y - (Camera.scroll.y*scrollFactor.y) + (screenYInTiles*_tileHeight);
+		_point.x += (_point.x > 0)?0.0000001f:-0.0000001f;
+		_point.y += (_point.y > 0)?0.0000001f:-0.0000001f;
 
 		int rowIndex = screenYInTiles*widthInTiles+screenXInTiles;
 		_flashPoint.y = 0;
@@ -456,8 +456,7 @@ public class FlxTilemap extends FlxObject
 					}
 					else
 						FlxG.batch.draw(_textureRegion, _flashPoint.x + _point.x, _flashPoint.y + _point.y);
-					// Buffer.addTile(_textureRegion, _flashPoint.x + _point.x,
-					// _flashPoint.y + _point.y);
+					// Buffer.addTile(_textureRegion, _flashPoint.x + _point.x, _flashPoint.y + _point.y);
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{
 						tile = _tileObjects.get(_data.get(columnIndex));
@@ -519,22 +518,21 @@ public class FlxTilemap extends FlxObject
 		buffer = _buffers.get(i++);
 		if(!buffer.dirty)
 		{
-			_point.x = x - (int) (camera.scroll.x*scrollFactor.x) + buffer.x; //copied from getScreenXY()
-			_point.y = y - (int) (camera.scroll.y*scrollFactor.y) + buffer.y;
-			buffer.dirty = true;// (_point.x > 0) || (_point.y > 0) || (_point.x
-								// + buffer.width < camera.width) || (_point.y +
+			_point.x = x - (camera.scroll.x*scrollFactor.x) + buffer.x; //copied from getScreenXY()
+			_point.y = y - (camera.scroll.y*scrollFactor.y) + buffer.y;
+			buffer.dirty = true;// (_point.x > 0) || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y +
 								// buffer.height < camera.height);
 		}
 		if(buffer.dirty)
 		{
-			drawTilemap(buffer, camera);
+			drawTilemap(buffer,camera);
 			buffer.dirty = false;
 		}
-		_flashPoint.x = x - (int)(camera.scroll.x*scrollFactor.x) + buffer.x; // copied from getScreenXY()
-		_flashPoint.y = y - (int)(camera.scroll.y*scrollFactor.y) + buffer.y;
+		_flashPoint.x = x - (camera.scroll.x*scrollFactor.x) + buffer.x; //copied from getScreenXY()
+		_flashPoint.y = y - (camera.scroll.y*scrollFactor.y) + buffer.y;
 		_flashPoint.x += (_flashPoint.x > 0)?0.0000001f:-0.0000001f;
 		_flashPoint.y += (_flashPoint.y > 0)?0.0000001f:-0.0000001f;
-		buffer.draw(camera, _flashPoint);
+		buffer.draw(camera,_flashPoint);
 		_VISIBLECOUNT++;
 	}
 

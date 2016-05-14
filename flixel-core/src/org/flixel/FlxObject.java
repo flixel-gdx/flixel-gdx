@@ -482,10 +482,10 @@ public class FlxObject extends FlxBasic
 			Camera = FlxG.camera;
 
 		//get bounding box coordinates
-		float boundingBoxX = x - (int)(Camera.scroll.x*scrollFactor.x); //copied from getScreenXY()
-		float boundingBoxY = y - (int)(Camera.scroll.y*scrollFactor.y);
-		boundingBoxX = (int)(boundingBoxX + ((boundingBoxX > 0)?0.0000001f:-0.0000001f));
-		boundingBoxY = (int)(boundingBoxY + ((boundingBoxY > 0)?0.0000001f:-0.0000001f));
+		float boundingBoxX = x - (Camera.scroll.x*scrollFactor.x); //copied from getScreenXY()
+		float boundingBoxY = y - (Camera.scroll.y*scrollFactor.y);
+		boundingBoxX = (boundingBoxX + ((boundingBoxX > 0)?0.0000001f:-0.0000001f));
+		boundingBoxY = (boundingBoxY + ((boundingBoxY > 0)?0.0000001f:-0.0000001f));
 		int boundingBoxWidth = (int)((width != (int)width)?width:width-1);
 		int boundingBoxHeight = (int)((height != (int)height)?height:height-1);
 
@@ -899,7 +899,7 @@ public class FlxObject extends FlxBasic
 		if(Camera == null)
 			Camera = FlxG.camera;
 		FlxPoint objectScreenPos = object.getScreenXY(null,Camera);
-		_point.x = X - (Camera.scroll.x*scrollFactor.x); // copied from getScreenXY()
+		_point.x = X - (Camera.scroll.x*scrollFactor.x); //copied from getScreenXY()
 		_point.y = Y - (Camera.scroll.y*scrollFactor.y);
 		_point.x += (_point.x > 0)?0.0000001f:-0.0000001f;
 		_point.y += (_point.y > 0)?0.0000001f:-0.0000001f;
@@ -1024,8 +1024,8 @@ public class FlxObject extends FlxBasic
 			Point = new FlxPoint();
 		if(Camera == null)
 			Camera = FlxG.camera;
-		Point.x = x - (int)(Camera.scroll.x*scrollFactor.x);
-		Point.y = y - (int)(Camera.scroll.y*scrollFactor.y);
+		Point.x = x - (Camera.scroll.x*scrollFactor.x);
+		Point.y = y - (Camera.scroll.y*scrollFactor.y);
 		Point.x += (Point.x > 0)?0.0000001f:-0.0000001f;
 		Point.y += (Point.y > 0)?0.0000001f:-0.0000001f;
 		return Point;
