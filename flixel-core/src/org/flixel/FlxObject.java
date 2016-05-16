@@ -491,6 +491,7 @@ public class FlxObject extends FlxBasic
 
 		//fill static graphics object with square shape
 		Graphics gfx = FlxG.flashGfx;
+		gfx.moveTo(boundingBoxX,boundingBoxY);
 		int boundingBoxColor;
 		if(allowCollisions > 0)
 		{
@@ -504,7 +505,10 @@ public class FlxObject extends FlxBasic
 		else
 			boundingBoxColor = FlxG.BLUE;
 		gfx.lineStyle(1f,boundingBoxColor,0.5f);
-		gfx.drawRect(boundingBoxX, boundingBoxY, boundingBoxWidth, boundingBoxHeight);
+		gfx.lineTo(boundingBoxX+boundingBoxWidth,boundingBoxY);
+		gfx.lineTo(boundingBoxX+boundingBoxWidth,boundingBoxY+boundingBoxHeight);
+		gfx.lineTo(boundingBoxX,boundingBoxY+boundingBoxHeight);
+		gfx.lineTo(boundingBoxX,boundingBoxY);
 	}
 
 	/**
