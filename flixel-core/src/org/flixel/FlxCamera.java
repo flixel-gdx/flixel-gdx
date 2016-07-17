@@ -849,8 +849,8 @@ public class FlxCamera extends FlxBasic
 	 */
 	public void setAngle(float Angle)
 	{
-		_angle = Angle;
-		_glCamera.rotate(Angle,0,0,1);
+		_glCamera.rotate(Angle-_angle,0,0,1);
+		_angle=Angle;
 	}
 
 	/**
