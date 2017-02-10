@@ -222,6 +222,18 @@ public class Input
 	}
 
 	/**
+	 * Look up the key name for any given key code of the key or button.
+	 *
+	 * @param KeyCode The <code>int</code> name of the key.
+	 *
+	 * @return The key name for that key.
+	 */
+	public String getKeyName(int KeyCode)
+    {
+        return _map.get(KeyCode).name;
+    }
+
+	/**
 	 * Check to see if any keys are pressed right now.
 	 * 
 	 * @return	Whether any keys are currently pressed.
