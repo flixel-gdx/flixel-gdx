@@ -13,6 +13,8 @@ import flash.events.KeyboardEvent;
  */
 public class Keyboard extends Input
 {
+	private static final int MAX_KEYCODE = 255;
+
 	public boolean ESCAPE;
 	public boolean F1;
 	public boolean F2;
@@ -216,6 +218,50 @@ public class Keyboard extends Input
 		addKey("SEARCH",flash.ui.Keyboard.SEARCH);
 		//addKey("VOLUME_DOWN", flash.ui.Keyboard.VOLUME_DOWN);
 		//addKey("VOLUME_UP", flash.ui.Keyboard.VOLUME_UP);
+	}
+
+	/**
+	 * Was any button just pressed
+	 *
+	 * @return <b>true</b> if any button was just pressed
+	 */
+	public boolean justPressedAny() {
+		int key = 0;
+
+		KeyState keyState;
+		while (key <= MAX_KEYCODE) {
+			keyState = _map.get(key);
+
+			if (keyState != null && keyState.current == 2) {
+				return true;
+			}
+
+			key++;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Was any button just released
+	 *
+	 * @return <b>true</b> if any button was just released
+	 */
+	public boolean justReleasedAny() {
+		int key = 0;
+
+		KeyState keyState;
+		while (key <= MAX_KEYCODE) {
+			keyState = _map.get(key);
+
+			if (keyState != null && keyState.current == -1) {
+				return true;
+			}
+
+			key++;
+		}
+
+		return false;
 	}
 
 	/**
