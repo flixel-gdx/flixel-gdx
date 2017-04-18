@@ -6,7 +6,7 @@ flixel community - https://github.com/FlixelCommunity/flixel
 libgdx - http://github.com/libgdx/libgdx  
 
 ---
-###flixel-gdx
+### flixel-gdx
 **Copyright (c) 2011, Ka Wing Chin and Thomas Weston**  
 All rights reserved.
 
@@ -28,7 +28,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
-###Flixel Community
+### Flixel Community
 **Copyright (c) 2012, community of flixel**
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,7 +42,7 @@ The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
 ---
-###flixel
+### flixel
 **Copyright (c) 2010, Semi Secret Software, LLC**
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -56,7 +56,7 @@ The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
 ---
-###libgdx
+### libgdx
 **Copyright (c) 2011, Mario Zechner and Nathan Sweet**
 
 Licensed under the Apache License, Version 2.0 (the "License");
