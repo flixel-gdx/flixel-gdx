@@ -528,6 +528,7 @@ public class FlxGame
 	 */
 	public void onEnterFrame(Event FlashEvent)
 	{
+		FlxG.updateElapsed();
 		long mark = System.currentTimeMillis();
 		long elapsedMS = mark-_total;
 		_total = mark;
